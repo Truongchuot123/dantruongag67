@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Góp ý - Nguyễn Mai Đan Trường</title>
+    
+     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:image" content="/hinhanh/logo web.png">
+    <meta property="og:url" content="https://dantruongag.id.vn">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/hinhanh/logo web.png" type="">
+    <link rel="stylesheet" href="/style.css">
+        
+ 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 for beautiful pop-ups -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Swiper.js for banner slider -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- Confetti.js for effects -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+
+
+    <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GZYHW8CJY9"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-GZYHW8CJY9');
+      </script>
+  </head>
+    <body class="bg-gray-900">
+
+    
+    <div id="header-placeholder"></div>
+    <div id="search-placeholder"></div>
+<!-- giới thiệu -->
+        <section class="banner_trangcon event-banner">
+            <div class="banner_trangcon_header">
+                <h1>GÓP Ý</h1>
+            </div>
+        </section>
+    <section class="about-us">
+        <div class="hopthoaigopy">
+            <!-- BIỂU MẪU GÓP Ý -->
+            <section id="gop-y" style="padding: 50px; border-radius: 10px; margin-bottom: 20px;">
+                <h2 style="text-align: center;color: #f0f0f0;">HỘP THOẠI GÓP Ý</h2>
+                <form id="feedbackForm" class="feedback-form" action="https://script.google.com/macros/s/AKfycbyw7Y0n0-DWx2fX_DCztR7cq0F_RlX9oFHeW1qURjxalo0OpVIuwELlrxdFhDpLrNQp/exec" method="POST">
+                  <input type="text" name="name" placeholder="Họ tên" required style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px;color:black;">
+                  <input type="email" name="email" placeholder="Email" required style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px;color:black;">
+                  <textarea name="feedback" placeholder="Ý kiến" rows="4" required style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px;color:black;"></textarea>
+                  <button type="submit" style="width: 100%; padding: 10px; background-color: #4d128b; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                    Gửi ý kiến
+                  </button>
+                </form>
+
+                <script>
+                  const scriptURL = "https://script.google.com/macros/s/AKfycbyw7Y0n0-DWx2fX_DCztR7cq0F_RlX9oFHeW1qURjxalo0OpVIuwELlrxdFhDpLrNQp/exec";
+                  document.getElementById("feedbackForm").addEventListener("submit", function(e) {
+                    e.preventDefault();
+                    var formData = new FormData(this);
+                    fetch(this.action, {
+                      method: "POST",
+                      body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                      if (data.status === "success") {
+                        Swal.fire({
+                          title: "CẢM ƠN BẠN ĐÃ ĐÓNG GÓP Ý KIẾN",
+                          text: data.message,
+                          icon: "success",
+                          confirmButtonText: "Đóng"
+                        });
+                        this.reset();
+                      } else {
+                        Swal.fire({
+                          title: "Lỗi!",
+                          text: "Gửi thất bại, vui lòng thử lại.",
+                          icon: "error",
+                          confirmButtonText: "Đóng"
+                        });
+                      }
+                    })
+                    .catch(error => {
+                      console.error("Lỗi khi gửi biểu mẫu:", error);
+                      Swal.fire({
+                        title: "Lỗi!",
+                        text: "Đã xảy ra lỗi, vui lòng thử lại.",
+                        icon: "error",
+                        confirmButtonText: "Đóng"
+                      });
+                    });
+                  });
+                </script>
+              </section>
+              </div>
+              </section>
+    <!-- Placeholder for Footer -->
+    <div id="footer-placeholder"></div>
+    
+    <script src="script.js"></script>
+    <script src="/search.js"></script>
+</body>
+</html>

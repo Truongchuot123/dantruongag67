@@ -1,0 +1,24 @@
+<section class="he_thong">
+                <div class="he_thong_tra_cuu">
+                    <h1>HỆ THỐNG TRA CỨU</h1>
+                    <div class="tabs">
+                        <button class="tab-button active" onclick="switchTab('documents')">📚 Tra cứu tài liệu</button>
+                        <button class="tab-button" onclick="switchTab('points')">🔍 Tra cứu huyệt</button>
+                    </div>
+                    <div id="documents" class="search-section active">
+                        <h2 style="color: #007bff;margin-bottom: 15px;">Tra cứu tài liệu</h2>
+                        <div class="search-box">
+                            <input id="docSearch" type="text" placeholder="Nhập tên tài liệu.">
+                            <button onclick="fetchData('TAI_LIEU', 'docSearch')"><i class="fas fa-search"></i> Tìm kiếm</button>
+                        </div>
+                    </div>
+                    <div id="points" class="search-section">
+                        <h2 style="color: #ff6b6b;margin-bottom: 15px;">Tra cứu huyệt</h2>
+                        <div class="search-box">
+                            <input id="pointSearch" type="text" placeholder="Nhập tên huyệt.">
+                            <button onclick="fetchData('HUYET', 'pointSearch')"><i class="fas fa-search"></i> Tìm kiếm</button>
+                        </div>
+                    </div>
+                    <div id="resultTable"></div>
+                </div>
+            </section>

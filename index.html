@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Chủ - Nguyễn Mai Đan Trường</title>
+     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:title" content="Trang Chủ - Nguyễn Mai Đan Trường">
+    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:image" content="/hinhanh/logo web.png">
+    <meta property="og:url" content="https://dantruongag.id.vn">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/hinhanh/logo web.png" type="">
+    <link rel="stylesheet" href="/style.css">
+        
+ 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 for beautiful pop-ups -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Swiper.js for banner slider -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- Confetti.js for effects -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+</head>
+    <body class="bg-gray-900">
+    <div id="header-placeholder"></div>
+    <div id="search-placeholder"></div>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Default Banner -->
+        <section class="banner_trangcon event-banner">
+            <div class="banner_trangcon_header">
+                <h1>CHÀO MỪNG BẠN ĐẾN VỚI WEBSITE CỦA ĐAN TRƯỜNG</h1>
+                <div class="banner_trangcon_header_underline"></div>
+                <p>
+                    <a href="/gopy.html">
+                        <button class="banner_trangcon_btn btn">GÓP Ý</button>
+                    </a>
+                </p>
+            </div>
+        </section>
+
+        <!-- Giỗ Tổ Hùng Vương -->
+        <section class="ngay_gio_to_hung_vuong event-banner">
+            <div class="title_ngay_gio_to_hung_vuong">
+                <h1>GIỖ TỔ</h1>
+                <h2>HÙNG VƯƠNG</h2>
+                <div class="noidung_ngay_gio_to_hung_vuong">
+                    <p class="text_ngay_gio_to_hung_vuong">
+                        “Dù ai đi ngược về xuôi<br>
+                        Nhớ ngày Giỗ Tổ mồng mười tháng Ba”
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Giải phóng miền Nam -->
+        <section class="banner_giai_phong_mien_nam_30-4 event-banner">
+            <div class="noidung_giai_phong_mien_nam_30-4">
+                <div class="title_giai_phong_mien_nam_30-4">KỶ NIỆM</div>
+                <img src="https://placehold.co/250x250/c40000/ffffff?text=Sao+Vàng" alt="Logo phát sáng" class="logo-banner_phat_sang">
+                <h2>NGÀY GIẢI PHÓNG MIỀN NAM<br>THỐNG NHẤT ĐẤT NƯỚC</h2>
+                <p class="time_giai_phong_mien_nam_30-4">30/4/1975 - 30/4/2025</p>
+            </div>
+        </section>
+
+        <!-- Chiến thắng Điện Biên Phủ -->
+        <section class="banner_chien_thang_dien_bien_phu event-banner">
+            <div class="banner-content-inner">
+                <div class="title">KỶ NIỆM</div>
+                <h1>CHIẾN THẮNG ĐIỆN BIÊN PHỦ</h1>
+                <h2>07/05/1954 - 07/05/2025</h2>
+            </div>
+        </section>
+
+        <!-- Sinh nhật Bác -->
+        <section class="banner_ngay_sinh_chu_tich_HCM_1905 event-banner">
+             <div class="banner-content-inner">
+                <div class="title">KỶ NIỆM</div>
+                <h1>NGÀY SINH CHỦ TỊCH HỒ CHÍ MINH</h1>
+                <h2>19/05/1890 - 19/05/2025</h2>
+            </div>
+        </section>
+
+        <!-- Sinh nhật -->
+        <section class="banner_ngay_sinh_nhat_1807 event-banner">
+            <div class="noidung_ngay_sinh_nhat_1807">
+                <img src="/hinhanh/Trang chủ/HAPPY BIRTHDAY.png" alt="" class="ing_happybirthday" />
+                <div class="text_ngay_sinh_nhat_1807">ĐAN TRƯỜNG</div>
+                <div class="date_ngay_sinh_nhat_1807">18 - 07 - 2025</div>
+                <button id="nut_form_gui_loi_chuc">💌 Gửi lời chúc</button>
+                <div id="form_gui_loi_chuc">
+                    <div class="card_form_gui_loi_chuc">
+                        <div class="title_form_gui_loi_chuc">
+                            <img src="/hinhanh/Trang chủ/HAPPY BIRTHDAY.png" alt="" />
+                        </div>
+                        <div class="noidung_loi_chuc">
+                            <textarea placeholder="Viết lời chúc của bạn vào đây..."></textarea>
+                        </div>
+                        <div class="form_actions">
+                            <button id="nut_gui_loi_chuc">Gửi đi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cách mạng tháng Tám -->
+        <section class="banner_ngay_cach_mang_thang_tam event-banner">
+             <div class="banner-content-inner">
+                <div class="title">KỈ NIỆM</div>
+                <h1>NGÀY CÁCH MẠNG THÁNG TÁM THÀNH CÔNG</h1>
+                <h2>19/8/1945 - 19/8/2025</h2>
+            </div>
+        </section>
+
+        <!-- Quốc Khánh -->
+        <section class="banner_ngay_quoc_khanh event-banner">
+            <div class="banner-content-inner">
+                <div class="title">KỈ NIỆM</div>
+                <h1>QUỐC KHÁNH NƯỚC CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h1>
+                <h2>2/9/1945 - 2/9/2025</h2>
+            </div>
+        </section>
+   
+
+        <!--Nội dung -->
+        <section class="banner_mxh">
+            <div class="swiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="/hinhanh/banner fb.jpg" alt="" class="profile-image">
+                        <div class="profile-text">
+                            <h2>Trang Facebook</h2>
+                            <a href="https://web.facebook.com/dantruongag/" target="_blank">Xem ngay</a>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="/hinhanh/banner titok.PNG" alt="" class="profile-image">
+                        <div class="profile-text">
+                            <h2>Trang TikTok</h2>
+                            <a href="https://www.tiktok.com/@dantruongag?_t=ZS-8x5Kf6XKVAz&_r=1" target="_blank">Xem ngay</a>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="/hinhanh/banner ins.PNG" alt="" class="profile-image">
+                        <div class="profile-text">
+                            <h2>Trang Instagram</h2>
+                            <a href="https://www.instagram.com/dantruongag/" target="_blank">Theo dõi</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </section>
+        <!-- Protected Content Area -->
+        <div id="protected-content" class="hidden">
+
+            
+        </div>
+    </main>
+    <div id="footer-placeholder"></div>
+
+        <script src="/script.js"></script>
+        <script src="/search.js"></script>
+        <script src="/baiviet_trang_chu.js"></script>
+</body>
+</html>
