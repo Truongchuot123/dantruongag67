@@ -635,7 +635,7 @@
             transition: background 0.3s;
         }
         .swiper-button-prev:hover, .swiper-button-next:hover {
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(175, 44, 136, 0.8);
         }
         .swiper-button-prev::after, .swiper-button-next::after {
             font-size: 20px;

@@ -179,6 +179,7 @@ function setupCardPaginator(cardElement, config) {
                     '/benhhoc/tailieu/benh_alzhemer.html',
                     '/benhhoc/tailieu/Parkinson.html',
                     '/benhhoc/tailieu/HC_duong_ham_co_tay.html',
+                    '/benhhoc/tailieu/liet_mat_ngoai_bien.htmll',
                     '/benhhoc/tailieu/dau_day_than_kinh_tam_thoa.html'
                 ],
                 countUnit: 'tài liệu'
@@ -249,8 +250,10 @@ function setupCardPaginator(cardElement, config) {
                     '/benhhoc/tailieu/gout.html',
                     '/benhhoc/tailieu/HC_ De_Quuervain.html',
                     '/benhhoc/tailieu/HC_ngon_tay_lo_xo.html',
+                    '/benhhoc/tailieu/HC_duong_ham_co_tay.html',
                     '/benhhoc/tailieu/Golfer`s elbow.html', 
-                    '/benhhoc/tailieu/Tennis elbow.html',  
+                    '/benhhoc/tailieu/Tennis elbow.html',
+                    '/benhhoc/tailieu/ton_thuong_day_chang_cheo.html',    
                     '/benhhoc/tailieu/loang_xuong.html'
                 ],
                 countUnit: 'tài liệu'

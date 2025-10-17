@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Lịch Đi Làm</title>
+    <!-- Tải Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Cài đặt Font Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d0e12; /* Nền tối */
+            color: #e5e7eb; /* Chữ sáng */
+            min-height: 100vh;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+        .day-cell {
+            aspect-ratio: 1 / 1; /* Đảm bảo ô vuông */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            user-select: none;
+            text-align: center;
+        }
+        .day-cell:hover:not(.day-off):not(.current-day) {
+            background-color: #2c2f37;
+        }
+        .day-cell.day-off {
+            background-color: #1e1f25;
+            color: #4b5563; /* Xám tối hơn cho ngày nghỉ */
+            cursor: default;
+        }
+        .day-cell.current-day {
+            background-color: #ef4444; /* Màu đỏ cho ngày hiện tại */
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+            border: 2px solid #f87171;
+        }
+        .day-status {
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-top: 2px;
+            line-height: 1;
+        }
+        .status-V { color: #34d399; } /* Xanh lá cây (Đã đi làm) */
+        .status-X { color: #f97316; } /* Cam đậm (Nghỉ phép) */
+        /* Màu nền khi đánh dấu */
+        .day-cell.marked-V { background-color: #047857; } /* Xanh đậm hơn */
+        .day-cell.marked-X { background-color: #c2410c; } /* Cam đậm hơn */
+
+        .month-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border-bottom: 2px solid #374151;
+        }
+    </style>
+    <!-- Cấu hình Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Bật log cho Firestore để dễ debug
+        setLogLevel('Debug');
+
+        // Định nghĩa hằng số cho Firestore
+        const CALENDAR_COLLECTION = "work_calendar_data";
+        const DOCUMENT_ID = "user_status_data";
+
+        // Biến toàn cục
+        let db = null; 
+        let auth = null;
+        let userId = null;
+        let calendarData = {}; // Lưu trữ dữ liệu lịch: {'YYYY-MM-DD': 'V' | 'X'}
+        let totalWorkDays = 0; // Tổng số ngày làm việc (T2-T6) trong phạm vi
+
+        // Ngày bắt đầu và kết thúc theo yêu cầu (27/08/2025 đến 27/02/2026)
+        const START_DATE = new Date('2025-08-27T00:00:00');
+        const END_DATE = new Date('2026-02-27T23:59:59');
+
+        // Hàm tiện ích: Trả về chuỗi ngày YYYY-MM-DD
+        const formatDate = (date) => {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        };
+
+        // Hàm tính tổng số ngày làm việc (T2-T6) trong phạm vi
+        const calculateTotalWorkingDays = () => {
+            let count = 0;
+            // Bắt đầu từ ngày bắt đầu
+            let loop = new Date(START_DATE.getTime());
+            
+            // Lặp qua từng ngày đến ngày kết thúc
+            while (loop <= END_DATE) {
+                const dayOfWeek = loop.getDay(); // 0 (CN) - 6 (T7)
+                // Chỉ đếm nếu là Thứ 2 (1) đến Thứ 6 (5)
+                if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+                    count++;
+                }
+                // Chuyển sang ngày tiếp theo
+                loop.setDate(loop.getDate() + 1);
+            }
+            totalWorkDays = count;
+            document.getElementById('total-work-days').textContent = totalWorkDays;
+        };
+
+        // Hàm lấy tham chiếu Document Firestore
+        const getUserCalendarDocRef = (db, currentUserId) => {
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            // Đường dẫn: /artifacts/{appId}/users/{userId}/work_calendar_data/user_status_data
+            return doc(db, `artifacts/${appId}/users/${currentUserId}/${CALENDAR_COLLECTION}/${DOCUMENT_ID}`);
+        };
+
+        // Hàm cập nhật UI cho trạng thái đăng nhập
+        const updateAuthUI = (isLoggedIn, currentUserId) => {
+            const loginButton = document.getElementById('login-button');
+            const userStatus = document.getElementById('user-status');
+
+            if (isLoggedIn) {
+                loginButton.classList.add('hidden');
+                userStatus.classList.remove('hidden');
+                userStatus.innerHTML = `
+                    <div class="text-sm text-gray-400">Đã đăng nhập với</div>
+                    <div class="text-lg font-bold text-green-400 truncate">${currentUserId}</div>
+                `;
+            } else {
+                loginButton.classList.remove('hidden');
+                userStatus.classList.add('hidden');
+            }
+        };
+
+        // Hàm Khởi tạo Firebase
+        const initFirebase = async () => {
+            calculateTotalWorkingDays(); // Tính toán tổng ngày làm việc trước
+            
+            const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+            const firebaseConfigString = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
+            
+            let isCanvasEnvironment = false;
+            try {
+                const testConfig = JSON.parse(firebaseConfigString);
+                isCanvasEnvironment = Object.keys(testConfig).length > 0;
+            } catch (e) {
+                isCanvasEnvironment = false;
+            }
+            
+            if (isCanvasEnvironment) {
+                // CHẠY TRONG MÔI TRƯỜNG CANVAS (Có Firebase)
+                try {
+                    const firebaseConfig = JSON.parse(firebaseConfigString);
+                    const app = initializeApp(firebaseConfig);
+                    db = getFirestore(app);
+                    auth = getAuth(app);
+                    
+                    if (initialAuthToken) {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+
+                    onAuthStateChanged(auth, (user) => {
+                        if (user) {
+                            userId = user.uid;
+                            updateAuthUI(true, userId);
+                            listenForData(); // Bắt đầu lắng nghe
+                        } else {
+                            // Rất khó xảy ra trong Canvas, nhưng vẫn xử lý
+                            userId = crypto.randomUUID();
+                            updateAuthUI(false, "Không xác định");
+                            renderCalendar();
+                        }
+                    });
+
+                } catch (error) {
+                    console.error("Lỗi khi khởi tạo Firebase/Auth:", error);
+                    initLocalFallback();
+                }
+
+            } else {
+                // CHẠY TRONG MÔI TRƯỜNG LOCAL
+                initLocalFallback();
+            }
+            
+            // Bắt đầu đếm ngược ở cả hai chế độ
+            setInterval(updateCountdown, 1000);
+        };
+
+        // Hàm khởi tạo chế độ chạy cục bộ (không có kết nối Firestore)
+        const initLocalFallback = () => {
+            console.warn("Chạy ngoài Canvas. Tắt lưu trữ Firestore. Dữ liệu sẽ không được lưu vĩnh viễn.");
+            // Set userId giả để logic ứng dụng chạy
+            userId =  crypto.randomUUID().substring(0, 8);
+            updateAuthUI(true, userId);
+            
+            // Tải dữ liệu từ localStorage nếu có (lưu tạm thời cho phiên)
+            try {
+                const localData = localStorage.getItem('localCalendarData');
+                if (localData) {
+                    calendarData = JSON.parse(localData);
+                }
+            } catch (e) {
+                console.error("Lỗi khi tải dữ liệu cục bộ:", e);
+            }
+            // Render lịch UI
+            renderCalendar();
+        };
+
+
+        // Hàm lắng nghe dữ liệu thời gian thực từ Firestore (Chỉ chạy trong Canvas)
+        const listenForData = () => {
+            if (!db || !userId) return;
+            const docRef = getUserCalendarDocRef(db, userId);
+
+            onSnapshot(docRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    // Dữ liệu trong Firestore được lưu dưới dạng một Map, không cần parse JSON
+                    calendarData = docSnap.data().statuses || {};
+                } else {
+                    calendarData = {};
+                }
+                console.log("Dữ liệu lịch đã cập nhật từ Firestore:", calendarData);
+                // Cập nhật UI sau khi dữ liệu được load
+                renderCalendar();
+            }, (error) => {
+                console.error("Lỗi lắng nghe dữ liệu Firestore:", error);
+                renderCalendar();
+            });
+        };
+        
+        // Hàm cập nhật trạng thái lên Firestore HOẶC localStorage
+        const updateStatusInFirestore = async (dateKey, status) => {
+            // Cập nhật dữ liệu cục bộ trước
+            if (status === null || status === undefined) {
+                 delete calendarData[dateKey];
+            } else {
+                 calendarData[dateKey] = status;
+            }
+
+            if (!db) {
+                // Chế độ Local Fallback: Lưu vào localStorage và cập nhật UI
+                try {
+                    localStorage.setItem('localCalendarData', JSON.stringify(calendarData));
+                } catch (e) {
+                    console.error("Lỗi khi lưu vào localStorage:", e);
+                }
+                renderCalendar(); // Cập nhật lại UI sau khi thay đổi cục bộ
+                return;
+            }
+
+            // Chế độ Canvas: Lưu vào Firestore
+            try {
+                const docRef = getUserCalendarDocRef(db, userId);
+                
+                // Sử dụng setDoc với merge: true để cập nhật một trường trong object
+                await setDoc(docRef, { statuses: calendarData }, { merge: true });
+                console.log(`Cập nhật trạng thái ${status} cho ngày ${dateKey} thành công.`);
+
+            } catch (e) {
+                console.error("Lỗi khi lưu dữ liệu lên Firestore: ", e);
+            }
+            // UI sẽ tự động cập nhật thông qua onSnapshot (chế độ Canvas)
+        };
+
+        // Hàm xử lý khi click vào ô ngày
+        const handleDayClick = (event) => {
+            const cell = event.currentTarget;
+            if (cell.classList.contains('day-off') || !userId) {
+                return; // Không làm gì nếu là ngày nghỉ hoặc chưa có userId
+            }
+            const dateKey = cell.dataset.date;
+            
+            let newStatus;
+            const currentStatus = calendarData[dateKey];
+            
+            // Logic chuyển đổi: V (Đi làm) -> X (Nghỉ phép) -> null (Trống) -> V
+            if (currentStatus === 'V') {
+                newStatus = 'X';
+            } else if (currentStatus === 'X') {
+                newStatus = null; // Trở lại trạng thái mặc định (chưa đánh dấu)
+            } else {
+                newStatus = 'V';
+            }
+            
+            // Cập nhật Firestore (hoặc localStorage nếu đang chạy cục bộ)
+            updateStatusInFirestore(dateKey, newStatus);
+        };
+        
+        // Hàm cập nhật bảng thống kê
+        const updateStats = () => {
+            let leaveDays = 0;
+            let workDaysMarkedV = 0;
+            
+            // Duyệt qua dữ liệu lịch để đếm ngày nghỉ phép ('X') và ngày đi làm ('V')
+            for (const dateKey in calendarData) {
+                const status = calendarData[dateKey];
+                
+                // Kiểm tra xem ngày này có nằm trong phạm vi không
+                const date = new Date(dateKey);
+                // getDay() trả về 0 cho Chủ nhật, 1 cho Thứ 2, ..., 6 cho Thứ 7
+                const dayOfWeek = date.getDay(); 
+
+                // Chỉ quan tâm đến ngày làm việc (Thứ 2 đến Thứ 6)
+                if (dayOfWeek >= 1 && dayOfWeek <= 5 && date >= START_DATE && date <= END_DATE) {
+                    if (status === 'X') {
+                        leaveDays++;
+                    } else if (status === 'V') {
+                         workDaysMarkedV++;
+                    }
+                }
+            }
+
+            document.getElementById('leave-days').textContent = leaveDays;
+            document.getElementById('work-days-v').textContent = workDaysMarkedV;
+            
+            // Cập nhật số ngày còn lại (Chưa đánh dấu)
+            const remainingDays = totalWorkDays - leaveDays - workDaysMarkedV;
+            document.getElementById('remaining-days').textContent = Math.max(0, remainingDays);
+        };
+        
+        // Hàm cập nhật đếm ngược thời gian
+        const updateCountdown = () => {
+            const now = new Date();
+            const diff = END_DATE.getTime() - now.getTime();
+            
+            const countdownEl = document.getElementById('countdown');
+
+            if (diff < 0) {
+                countdownEl.textContent = "Đã kết thúc.";
+                return;
+            }
+            
+            const seconds = Math.floor(diff / 1000);
+            const days = Math.floor(seconds / (3600 * 24));
+            const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+
+            countdownEl.innerHTML = `
+                <span class="text-2xl font-bold text-yellow-400">${days}</span> ngày 
+                <span class="text-2xl font-bold text-yellow-400">${String(hours).padStart(2, '0')}</span> giờ 
+                <span class="text-2xl font-bold text-yellow-400">${String(minutes).padStart(2, '0')}</span> phút 
+                <span class="text-2xl font-bold text-yellow-400">${String(remainingSeconds).padStart(2, '0')}</span> giây
+            `;
+        };
+        
+        // Hàm tạo và hiển thị lịch
+        const renderCalendar = () => {
+            const calendarContainer = document.getElementById('calendar-container');
+            calendarContainer.innerHTML = ''; // Xóa lịch cũ
+            
+            const todayKey = formatDate(new Date());
+            
+            // Thứ tự ngày: T2, T3, T4, T5, T6, T7, CN
+            const daysOfWeek = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+            
+            const renderMonth = (date) => {
+                const monthName = date.toLocaleString('vi-VN', { month: 'long', year: 'numeric' });
+                const monthDiv = document.createElement('div');
+                monthDiv.className = 'w-full';
+                
+                // Tiêu đề tháng
+                const title = document.createElement('div');
+                title.className = 'month-name text-center text-red-500';
+                title.textContent = monthName.toUpperCase();
+                monthDiv.appendChild(title);
+                
+                // Lưới lịch chính
+                const grid = document.createElement('div');
+                grid.className = 'calendar-grid';
+                
+                // Hàng tiêu đề ngày (T2, T3, ..., CN)
+                daysOfWeek.forEach(day => {
+                    const header = document.createElement('div');
+                    header.className = 'text-center font-bold text-sm p-2 text-gray-400';
+                    header.textContent = day;
+                    grid.appendChild(header);
+                });
+                
+                // Tính toán offset cho tuần bắt đầu bằng Thứ Hai
+                const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+                const startDayIndex = firstDayOfMonth.getDay(); // 0 (CN) - 6 (T7)
+                
+                // (dayIndex + 6) % 7: CN (0) -> 6, T2 (1) -> 0, T3 (2) -> 1, ...
+                const offset = (startDayIndex + 6) % 7; 
+                
+                // Tạo ô trống đầu tháng
+                for (let i = 0; i < offset; i++) {
+                    const emptyCell = document.createElement('div');
+                    emptyCell.className = 'day-cell bg-transparent cursor-default';
+                    grid.appendChild(emptyCell);
+                }
+                
+                // Tạo ngày trong tháng
+                let dayLoopDate = new Date(firstDayOfMonth.getTime()); // Bắt đầu lại từ ngày 1
+                while (dayLoopDate.getMonth() === firstDayOfMonth.getMonth()) {
+                    const dateKey = formatDate(dayLoopDate);
+                    const dayOfWeek = dayLoopDate.getDay(); 
+                    
+                    const cell = document.createElement('div');
+                    cell.dataset.date = dateKey;
+                    
+                    let classes = ['day-cell', 'bg-gray-800'];
+                    // Ngày nghỉ: Chủ nhật (0) hoặc Thứ Bảy (6) HOẶC ngoài phạm vi
+                    let isDayOff = dayOfWeek === 0 || dayOfWeek === 6 || dayLoopDate < START_DATE || dayLoopDate > END_DATE;
+                    
+                    if (isDayOff) {
+                        classes.push('day-off'); 
+                    } else {
+                        // Chỉ thêm sự kiện click cho ngày làm việc trong phạm vi
+                        cell.addEventListener('click', handleDayClick);
+                    }
+
+                    // Đánh dấu ngày hiện tại
+                    if (dateKey === todayKey) {
+                        classes.push('current-day');
+                    }
+
+                    // Hiển thị trạng thái đã lưu
+                    const status = calendarData[dateKey];
+                    let statusHtml = '';
+                    if (status === 'V') {
+                        classes.push('marked-V');
+                        statusHtml = '<div class="day-status status-V">V</div>';
+                    } else if (status === 'X') {
+                        classes.push('marked-X');
+                        statusHtml = '<div class="day-status status-X">X</div>';
+                    }
+
+                    cell.className = classes.join(' ');
+                    cell.innerHTML = `<div>${dayLoopDate.getDate()}</div>${statusHtml}`;
+                    grid.appendChild(cell);
+                    
+                    // Tiến lên ngày tiếp theo
+                    dayLoopDate.setDate(dayLoopDate.getDate() + 1);
+                    if (dayLoopDate.getMonth() !== firstDayOfMonth.getMonth()) break; 
+                }
+                
+                monthDiv.appendChild(grid);
+                calendarContainer.appendChild(monthDiv);
+            };
+
+            // Lặp qua từng tháng trong phạm vi
+            let loopDate = new Date(START_DATE.getFullYear(), START_DATE.getMonth(), 1);
+            const endMonthIndex = END_DATE.getMonth() + 12 * END_DATE.getFullYear();
+            
+            while ((loopDate.getMonth() + 12 * loopDate.getFullYear()) <= endMonthIndex) {
+                renderMonth(new Date(loopDate)); // Truyền bản sao của ngày
+                // Tiến lên 1 tháng
+                loopDate.setMonth(loopDate.getMonth() + 1);
+            }
+
+            // Sau khi render xong, cập nhật lại thống kê
+            updateStats();
+        };
+
+        // Khởi động ứng dụng khi cửa sổ được tải
+        window.onload = initFirebase;
+    </script>
+</head>
+<body>
+    <div class="max-w-4xl mx-auto p-4 md:p-8">
+        <h1 class="text-4xl font-extrabold text-center mb-6 text-red-500">
+            Lịch Quản Lý THỰC HÀNH KHÁM BỆNH CHỮA BỆNH
+        </h1>
+
+        <div class="bg-gray-800 p-6 rounded-xl shadow-2xl mb-8 flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <p class="text-lg font-semibold mb-2 text-yellow-400">Thời gian làm việc theo dõi:</p>
+                <p class="text-md text-gray-300">
+                    <span class="font-bold">27/08/2025</span> đến <span class="font-bold">27/02/2026</span>
+                </p>
+            </div>
+            
+            <!-- Trạng Thái Người Dùng (Thay thế ID Người Dùng) -->
+            <div id="user-status" class="mt-4 md:mt-0 p-2 text-center rounded-lg border border-gray-600 hidden">
+                <!-- Nội dung được cập nhật qua JS -->
+            </div>
+            <button id="login-button" class="mt-4 md:mt-0 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-200">
+                Tải Dữ Liệu Lịch
+            </button>
+        </div>
+
+        <!-- Bảng Thống Kê -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+             <!-- Tổng Ngày Làm Việc -->
+            <div class="col-span-2 md:col-span-1 bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-700 text-center">
+                <p class="text-sm font-semibold mb-1 text-gray-300">Tổng</p>
+                <p id="total-work-days" class="text-3xl font-extrabold text-white">0</p>
+            </div>
+
+            <!-- Ngày Nghỉ Phép -->
+            <div class="bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-700 text-center">
+                <p class="text-sm font-semibold mb-1 text-red-500">Nghỉ Phép:</p>
+                <p id="leave-days" class="text-3xl font-extrabold text-red-400">0</p>
+            </div>
+            
+            <!-- Ngày Đã Đánh Dấu Đi Làm -->
+            <div class="bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-700 text-center">
+                <p class="text-sm font-semibold mb-1 text-green-500">Đã Đi:</p>
+                <p id="work-days-v" class="text-3xl font-extrabold text-green-400">0</p>
+            </div>
+            
+            <!-- Ngày Còn Lại (Chưa Đánh Dấu) -->
+            <div class="bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-700 text-center">
+                <p class="text-sm font-semibold mb-1 text-blue-500">Chưa Đánh Dấu:</p>
+                <p id="remaining-days" class="text-3xl font-extrabold text-blue-400">0</p>
+            </div>
+        </div>
+        
+        <!-- Đếm Ngược -->
+        <div class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-700 mb-8">
+            <p class="text-xl font-semibold mb-2 text-yellow-500 text-center">Thời Gian Còn Lại Đến 27/02/2026:</p>
+            <div id="countdown" class="text-xl font-mono text-center text-white">
+                Đang tính...
+            </div>
+        </div>
+
+        <!-- Container Lịch -->
+        <div id="calendar-container" class="bg-gray-800 p-4 rounded-xl shadow-2xl space-y-4">
+            <!-- Lịch sẽ được tạo ở đây bởi JavaScript -->
+            <div class="text-center p-10 text-xl text-gray-500">Đang tải lịch...</div>
+        </div>
+    </div>
+
+</body>
+</html>

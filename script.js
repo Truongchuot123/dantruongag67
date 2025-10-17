@@ -427,7 +427,7 @@ function showContact() {
             <style>
                 .social-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: center; }
                 .social-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: #333; }
-                .social-item i { font-size: 3rem; margin-bottom: 10px; color: #555; transition: color 0.3s; }
+                .social-item i { font-size: 3rem; margin-bottom: 10px; color: #9f3df0ff; transition: color 0.3s; }
                 .social-item p { font-size: 1rem; font-weight: bold; }
                 .social-item:hover i { color: var(--button-hover); }
             </style>

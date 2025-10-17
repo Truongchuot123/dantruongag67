@@ -6,24 +6,19 @@ let currentPage = 1;
 // Danh sách liên kết bài viết
 const allExternalLinks = [
     "/đo_huyet_ap.html",
-    // VÍ DỤ: Thêm các link khác để thấy hiệu ứng cuộn và phân trang:
-    // "/bai_viet_2.html",
-    // "/bai_viet_3.html",
-    // "/bai_viet_4.html",
-    // "/bai_viet_5.html",
-    // "/bai_viet_6.html", 
 ];
 
 // totalPages sẽ lớn hơn 1 khi có TỪ 6 bài viết trở lên
 const totalPages = Math.ceil(allExternalLinks.length / ARTICLES_PER_PAGE);
 
-// Khởi tạo Intersection Observer cho hiệu ứng xuất hiện
+// Khởi tạo Intersection Observer cho hiệu ứng xuất hiện (chỉ giữ lại Fade-in)
 const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             // Khi phần tử đi vào viewport
-            entry.target.classList.remove('opacity-0', 'translate-x-full');
-            entry.target.classList.add('opacity-100', 'translate-x-0');
+            // CHỈNH SỬA: Chỉ loại bỏ opacity-0, không dùng translate-x
+            entry.target.classList.remove('opacity-0'); 
+            entry.target.classList.add('opacity-100');
             // Dừng quan sát sau khi đã xuất hiện
             observer.unobserve(entry.target);
         }
@@ -74,22 +69,18 @@ async function fetchAndParse(url) {
 
 /**
  * Tạo box bài viết.
- * ĐÃ CHỈNH SỬA: Thêm các class Tailwind CSS cho hiệu ứng trượt ngang.
  */
 async function createArticleBox(targetUrl, container, index) {
     // Tạm thời tạo box chứa loading state
     const box = document.createElement("a");
     box.href = targetUrl;
-    box.target = "_blank";
     
     // Thêm các class cho hiệu ứng xuất hiện:
-    // - opacity-0, translate-x-full: Bắt đầu ẩn và trượt ra ngoài bên phải
-    // - duration-700, ease-out: Tốc độ và kiểu chuyển động
-    // - delay: Dùng index để tạo độ trễ xếp tầng
+    // CHỈNH SỬA: Chỉ giữ lại opacity-0 cho hiệu ứng fade-in. Đã bỏ transform và translate-x-full.
     box.className =
         `article-box flex items-center p-4 rounded-xl shadow-lg border border-gray-700 bg-white/5 backdrop-blur-sm transition duration-700 ease-out 
-        hover:bg-white/10 hover:shadow-2xl hover:shadow-indigo-900/50 group 
-        opacity-0 transform translate-x-full`;
+         hover:bg-white/10 hover:shadow-2xl hover:shadow-indigo-900/50 group 
+         opacity-0`; 
     
     // Thêm delay dựa trên index
     box.style.transitionDelay = `${index * 50}ms`;
@@ -146,7 +137,6 @@ async function createArticleBox(targetUrl, container, index) {
 
 /**
  * Hiển thị các bài viết cho trang hiện tại.
- * ĐÃ CHỈNH SỬA: Thêm logic điều chỉnh lề dưới.
  */
 function renderArticles(page) {
     const container = document.getElementById("articles-container");

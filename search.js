@@ -67,6 +67,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             icon: 'fa-solid fa-person'
         },
         {
+            title: 'Điểm danh lâm sàng',
+            description: 'Hệ thống điểm danh lâm sàng  ',
+            url: '/diem_danh.html',
+            icon: 'fa-solid fa-person'
+        },
+        {
             title: 'Hệ thống tra cứu từ vựng tiếng anh',
             description: 'Hơn 500 từ tiếng anh với các ví dụ, định nghĩa đa dạng. ',
             url: '/tienganh/IPA.html',
