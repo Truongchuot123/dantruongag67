@@ -6,6 +6,7 @@ let currentPage = 1;
 // Danh sách liên kết bài viết
 const allExternalLinks = [
     "/đo_huyet_ap.html",
+    "/rua_tay.html",
 ];
 
 // totalPages sẽ lớn hơn 1 khi có TỪ 6 bài viết trở lên

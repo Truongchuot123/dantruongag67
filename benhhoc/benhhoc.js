@@ -179,7 +179,7 @@ function setupCardPaginator(cardElement, config) {
                     '/benhhoc/tailieu/benh_alzhemer.html',
                     '/benhhoc/tailieu/Parkinson.html',
                     '/benhhoc/tailieu/HC_duong_ham_co_tay.html',
-                    '/benhhoc/tailieu/liet_mat_ngoai_bien.htmll',
+                    '/benhhoc/tailieu/liet_mat_ngoai_bien.html',
                     '/benhhoc/tailieu/dau_day_than_kinh_tam_thoa.html'
                 ],
                 countUnit: 'tài liệu'
