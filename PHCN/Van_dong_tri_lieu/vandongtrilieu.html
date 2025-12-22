@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vận động trị liệu-Nguyễn Mai Đan Trường</title>
+     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:title" content="Trang Chủ - Nguyễn Mai Đan Trường">
+    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:image" content="/hinhanh/logo_web.png">
+    <meta property="og:url" content="https://dantruongag.id.vn">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/hinhanh/logo_web.png" type="">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/banner_trang_con.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+    </style>
+</head>
+    <body class="bg-gray-900">
+    <div id="header-placeholder"></div>
+    <div id="search-placeholder"></div>
+    <header class="main-banner_trang_con">
+        <div class="banner_trang_con-overlay"></div>
+        <div class="hbanner_trang_con-image-bg"></div>
+
+        <div class="hbanner_trang_con-content">
+            <h1 class="main-title">VẬN ĐỘNG TRỊ LIỆU</h1>
+            <p class="sub-text">Phục hồi chức năng là biện pháp giảm tối đa tác động của giảm chức năng và tàn tật, từ đó, giúp người bệnh hội nhập hoặc tái hội nhập với xã hội. Những chức năng này có thể thuộc về chức năng thể chất hoặc tâm thần (khả năng nhận thức, tư duy,…)</p>
+            <div class="hbanner_trang_con-tabs-wrap">
+                <div id="category-tabs" class="category-scroll" aria-label="Danh mục bài viết"></div>
+            </div>
+        </div>
+    </header>
+    <section id="articles-section" class="content-section">
+        <div class="section-container">
+            <div id="articles-container" class="articles-container"></div>
+        </div>
+    </section>
+
+    <script>
+        let currentCategory = 'tab_1';
+        const DEFAULT_IMAGE = '/hinhanh/logo_web.png';
+
+        const dataStore = {
+            tab_1: { name: 'Kỹ Thuật xoa bóp', articles: [
+                { url: '', title: 'Kỹ thuật xoa bóp chi trên' },
+                { url: '', title: 'Kỹ thuật xoa bóp chi dưới' },
+                { url: '', title: 'Kỹ thuật xoa bóp lưng' },
+                { url: '', title: 'Kỹ thuật xoa bóp cổ' }
+            ]},
+            tab_2: { name: 'Kỹ thuật tập vận động', articles: [
+                { url: '', title: 'Kỹ thuật tập vận động thụ động' },
+                { url: '', title: 'Kỹ thuật tập vận động có trợ giúp' },
+                { url: '', title: 'Kỹ thuật tập vận động chủ động tự do' },
+                { url: '', title: 'Kỹ thuật tập vận động chủ động có đề kháng' }
+            ]},
+            tab_3: { name: 'Kỹ thuật kéo giãn', articles: [
+                { url: '/index.html', title: 'Kéo giãn cơ ngực lớn' },
+                { url: '', title: 'Chăm sóc bệnh nhân COVID-19 tại nhà' }
+            ]},
+            tab_4: { name: 'Kỹ thuật di động khớp', articles: [
+                { url: '', title: 'Khớp cánh tay quay' },
+                { url: '/hoat_dong_vat_ly.html', title: 'Hoạt động thể lực phù hợp để cải thiện hô hấp' }
+            ]},
+            tab_5: { name: 'Kỹ thuật di chuyển với dụng cụ', articles: [
+                { url: '', title: 'Chế độ dinh dưỡng cho người bệnh phổi mạn tính' },
+                { url: '', title: 'Hoạt động thể lực phù hợp để cải thiện hô hấp' }
+            ]}
+        };
+
+        const categoryColors = {
+            tab_1: { bg:'linear-gradient(90deg,#06b6d4,#3b82f6)', activeColor:'#071033', inactiveColor:'#0ea5e9' },
+            tab_2: { bg:'linear-gradient(90deg,#ef4444,#fb923c)', activeColor:'#071033', inactiveColor:'#fb923c' },
+            tab_3: { bg:'linear-gradient(90deg,#8b5cf6,#06b6d4)', activeColor:'#071033', inactiveColor:'#8b5cf6' },
+            tab_4: { bg:'linear-gradient(90deg,#f59e0b,#10b981)', activeColor:'#071033', inactiveColor:'#f59e0b' }
+        };
+
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting){
+                    entry.target.classList.add('opacity-100');
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.08 });
+
+        function resolveArticleData(url){
+            for(const k of Object.keys(dataStore)){
+                const f = dataStore[k].articles.find(a => a.url === url);
+                if(f) return { title: f.title, imageUrl: DEFAULT_IMAGE };
+            }
+            return { title: 'Đang cập nhật', imageUrl: DEFAULT_IMAGE };
+        }
+
+        /* =========================
+        CREATE ARTICLE CARD
+        ========================= */
+        function createArticleBox(targetUrl, container, index){
+            const data = resolveArticleData(targetUrl);
+            const hasUrl = targetUrl && targetUrl.trim() !== '';
+
+            const box = document.createElement(hasUrl ? 'a' : 'div');
+
+            if(hasUrl){
+                box.href = targetUrl;
+            } else {
+                box.setAttribute('role', 'button');
+            }
+
+            box.className = 'article-card transition-observer';
+            box.style.transitionDelay = `${index * 50}ms`;
+
+            let categoryKey = currentCategory;
+            box.dataset.cat = categoryKey;
+
+            box.innerHTML = `
+                <div class="image-wrapper" aria-hidden="true">
+                    <img class="article-image"
+                        src="${DEFAULT_IMAGE}"
+                        alt="${data.title}"
+                        onerror="this.style.display='none'">
+                </div>
+                <div class="content-area">
+                    <span class="tag-pill">${dataStore[categoryKey].name}</span>
+                    <p class="article-title">${data.title}</p>
+                </div>
+            `;
+
+            // Chặn click nếu KHÔNG có URL
+            if(!hasUrl){
+                box.addEventListener('click', e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+            }
+
+            container.appendChild(box);
+            observer.observe(box);
+        }
+
+        /* =========================
+        RENDER CATEGORY TABS
+        ========================= */
+        function renderCategories(){
+            const tabs = document.getElementById('category-tabs');
+            if(!tabs) return;
+
+            tabs.innerHTML = '';
+            Object.keys(dataStore).forEach(key => {
+                const btn = document.createElement('button');
+                btn.className = 'category-btn';
+                btn.dataset.key = key;
+
+                const colorData = categoryColors[key] || {bg:'#374151', activeColor:'#fff', inactiveColor:'#94a3b8'};
+
+                if(key === currentCategory){
+                    btn.classList.add('active');
+                    btn.style.background = colorData.bg;
+                    btn.innerHTML = `<span style="color:${colorData.activeColor}">${dataStore[key].name}</span>
+                                    <span> (${dataStore[key].articles.length})</span>`;
+                } else {
+                    btn.classList.add('inactive');
+                    btn.innerHTML = `<span style="color:${colorData.inactiveColor}">${dataStore[key].name}</span>
+                                    <span> (${dataStore[key].articles.length})</span>`;
+                }
+
+                btn.onclick = () => {
+                    if(key === currentCategory) return;
+                    currentCategory = key;
+                    renderCategories();
+                    renderArticles();
+                    btn.scrollIntoView({behavior:'smooth', inline:'center'});
+                };
+
+                tabs.appendChild(btn);
+            });
+        }
+
+        /* =========================
+        RENDER ARTICLES
+        ========================= */
+        function renderArticles(){
+            const container = document.getElementById('articles-container');
+            const section = document.getElementById('articles-section');
+            if(!container || !section) return;
+
+            Array.from(container.children).forEach(c => observer.unobserve(c));
+            container.innerHTML = '';
+
+            const articles = dataStore[currentCategory]?.articles || [];
+
+            if(!articles.length){
+                container.innerHTML = `<div class="empty-state-box">
+                    Không có bài viết trong <strong>${dataStore[currentCategory].name}</strong>
+                </div>`;
+                return;
+            }
+
+            articles.forEach((a, i) => createArticleBox(a.url, container, i));
+            section.style.paddingBottom = '4rem';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+            renderArticles();
+
+            window.addEventListener('resize', () => {
+                clearTimeout(window._rt);
+                window._rt = setTimeout(() => {
+                    document.querySelectorAll('.article-card').forEach(el => observer.observe(el));
+                }, 120);
+            });
+        });
+        </script>
+
+        <div id="footer-placeholder"></div>
+
+        <script src="/script.js"></script>
+        <script src="/search.js"></script>
+        <script src="/banner_trang_con.js"></script>
+</body>
+</html>

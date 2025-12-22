@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6 Bước rửa tay đúng cách- Nguyễn Mai Đan Trường</title>
+    <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:title" content="Trang Chủ - Nguyễn Mai Đan Trường">
+    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám định thôi nào!.">
+    <meta property="og:image" content="/hinhanh/logo_web.png">
+    <meta property="og:url" content="https://dantruongag.id.vn">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/hinhanh/logo_web.png" type="">
+    <link rel="stylesheet" href="/style.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 for beautiful pop-ups -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Swiper.js for banner slider -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- Confetti.js for effects -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons (Để hiển thị icon) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CẤU HÌNH CƠ BẢN (RESET) --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .noidung_hoa_hoc_doi_song {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #c8dbed; /* Màu nền xám rất nhạt */
+            color: #334155; /* Màu chữ xám đậm */
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        /* --- CÁC CLASS TIỆN ÍCH CHUNG --- */
+        .container {
+            max-width: 900px;
+            margin: 0 auto; /* Căn giữa trang */
+            padding: 0 20px;
+        }
+
+        h1, h2, h3 {
+            font-weight: 700;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* --- THANH ĐIỀU HƯỚNG (NAVBAR) --- */
+        .navbar {
+            background-color: #1d4ed8; /* Màu xanh dương đậm */
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #bfdbfe; /* Màu xanh nhạt khi hover */
+        }
+
+        /* --- PHẦN TIÊU ĐỀ (HEADER) --- */
+        .tieu_de {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .hero-title {
+            color: #1e40af; /* Xanh đậm */
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .hero-desc {
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- NỘI DUNG CHÍNH --- */
+        .main-content {
+            padding: 40px 0;
+        }
+
+        /* Khối nội dung (Box trắng) */
+        .section-box {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid #f1f5f9;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: #f43a4d;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        /* Hộp thông tin nổi bật (Màu xanh nhạt) */
+        .info-box {
+            background-color: #eff6ff;
+            border: 1px solid #dbeafe;
+            color: #1e3a8a;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            margin-top: 15px;
+        }
+
+        /* --- KHỐI PHƯƠNG TRÌNH (DARK MODE) --- */
+        .dark-section {
+            background-color: #1e293b; /* Màu nền tối */
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .dark-title {
+            color: #93c5fd; /* Màu xanh sáng */
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #475569;
+            padding-bottom: 10px;
+        }
+
+        .equation-group {
+            margin-bottom: 25px;
+        }
+
+        .eq-label {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .chem-formula {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 600;
+            font-size: 1.2rem;
+            white-space: nowrap;
+            overflow-x: auto;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Mũi tên phản ứng tùy chỉnh */
+        .reaction-arrow {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 15px;
+            position: relative;
+            top: -2px;
+        }
+        
+        .reaction-condition {
+            font-size: 0.75rem;
+            color: #ef4444; /* Màu đỏ */
+            margin-bottom: -5px;
+        }
+        
+        .arrow-symbol {
+            font-size: 1.4rem;
+            color: #cbd5e1;
+        }
+
+        .symbol-precipitate { color: #facc15; } /* Kết tủa màu vàng */
+        .symbol-gas { color: #93c5fd; } /* Khí màu xanh */
+        
+        .legend {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #475569;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            display: flex;
+            gap: 20px;
+        }
+
+        /* --- LAYOUT LƯỚI (GRID) CHO PHẦN GIẢI PHÁP --- */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        @media (min-width: 768px) {
+            .grid-layout {
+                grid-template-columns: 1fr 1fr; /* Chia đôi màn hình trên Desktop */
+            }
+        }
+
+        .principle-box h3, .app-box h3 {
+            font-size: 1.1rem;
+            color: #334155;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Hộp phương trình thu gọn */
+        .simplified-eq-box {
+            background-color: #f8fafc;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+
+        /* Thẻ giải pháp (Chanh, Giấm) */
+        .solution-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .solution-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            border-left-width: 4px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .border-purple { border-left-color: #a855f7; }
+        .bg-purple-label { background-color: #f3e8ff; color: #7e22ce; }
+
+        .border-yellow { border-left-color: #eab308; }
+        .bg-yellow-label { background-color: #fef9c3; color: #a16207; }
+
+        .chem-label {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 0.8rem;
+            height: fit-content;
+        }
+        
+        /* Màu chữ đặc biệt */
+        .text-blue { color: #2563eb; }
+        .text-red { color: #ef4444; }
+        .text-bold { font-weight: bold; }
+        
+    </style>
+</head>
+<body class="bg-gray-900">
+    <div id="header-placeholder"></div>
+    <div id="search-placeholder"></div>
+
+        <!-- Main Content -->
+    <main id="main-content">
+<section class="noidung_hoa_hoc_doi_song">
+
+    <section class="tieu_de">
+        <div class="container">
+            <h1 class="hero-title">
+                Tại Sao Ấm Đun Nước Bị Đóng Cặn?
+            </h1>
+        </div>
+    </section>
+
+    <main class="container main-content">
+
+        <!-- Section 1: Explanation -->
+        <section id="nguyen-nhan" class="section-box">
+            <h2 class="section-title">
+                1. Nguyên Nhân
+            </h2>
+            <p style="margin-bottom: 15px;">
+                Nước sinh hoạt thường là <strong>nước cứng tạm thời</strong>, chứa các ion Canxi (<span class="chem-formula text-blue" style="display:inline">Ca<sup>2+</sup></span>) và Magie (<span class="chem-formula text-blue" style="display:inline">Mg<sup>2+</sup></span>) dưới dạng muối hidrocacbonat hòa tan.
+            </p>
+            <div class="info-box">
+                <strong><i class="fa-solid fa-circle-info"></i> Hiện tượng:</strong> Khi đun sôi, nhiệt độ cao làm các muối này bị nhiệt phân, tạo ra kết tủa trắng (<span class="chem-formula" style="display:inline; font-weight:bold;">CaCO<sub>3</sub></span>) bám vào thành ấm.
+            </div>
+
+            <!-- Image Illustration -->
+            <div style="margin-top: 25px; text-align: center;">
+                <img src="/hoahoc/Hinhanh/Can_am_dun_nuoc.jpg" alt="">
+            </div>
+        </section>
+
+        <!-- Section 2: Equations -->
+        <section id="phuong-trinh" class="dark-section">
+            <h2 class="dark-title">
+                2. Phương Trình Hóa Học
+            </h2>
+
+            <!-- Eq 1 -->
+            <div class="equation-group">
+                <p class="eq-label">Phản ứng 1: Phân hủy Canxi hidrocacbonat</p>
+                <div class="chem-formula">
+                    Ca(HCO<sub>3</sub>)<sub>2</sub>
+                    <div class="reaction-arrow">
+                        <span class="reaction-condition">t°</span>
+                        <span class="arrow-symbol">⟶</span>
+                    </div>
+                    CaCO<sub>3</sub><span class="symbol-precipitate">↓</span> + CO<sub>2</sub><span class="symbol-gas">↑</span> + H<sub>2</sub>O
+                </div>
+            </div>
+
+            <!-- Eq 2 -->
+            <div class="equation-group">
+                <p class="eq-label">Phản ứng 2: Phân hủy Magie hidrocacbonat</p>
+                <div class="chem-formula">
+                    Mg(HCO<sub>3</sub>)<sub>2</sub>
+                    <div class="reaction-arrow">
+                        <span class="reaction-condition">t°</span>
+                        <span class="arrow-symbol">⟶</span>
+                    </div>
+                    MgCO<sub>3</sub><span class="symbol-precipitate">↓</span> + CO<sub>2</sub><span class="symbol-gas">↑</span> + H<sub>2</sub>O
+                </div>
+            </div>
+            
+            <div class="legend">
+                <span><i class="fa-solid fa-arrow-down symbol-precipitate"></i> Kết tủa rắn (Cặn)</span>
+                <span><i class="fa-solid fa-arrow-up symbol-gas"></i> Khí bay hơi</span>
+            </div>
+        </section>
+
+        <!-- Section 3: Solutions -->
+        <section id="cach-xu-ly" class="section-box">
+            <h2 class="section-title">
+                3. Xử Lý Theo Nguyên Lý Hóa Học
+            </h2>
+
+            <div class="grid-layout">
+                <!-- Column 1: Principle -->
+                <div class="principle-box">
+                    <h3>
+                        <i class="fa-solid fa-microscope text-blue"></i> Nguyên Lý
+                    </h3>
+                    <p style="text-align: justify; margin-bottom: 15px;">
+                        Cặn vôi là muối <strong>Canxi Cacbonat</strong>. Chất này không tan trong nước nhưng tan mạnh trong môi trường Axit. Ta dùng dung dịch chứa ion <span class="chem-formula text-red" style="display:inline">H<sup>+</sup></span> để hòa tan nó.
+                    </p>
+                    
+                    <!-- Simplified Equation -->
+                    <div class="simplified-eq-box">
+                        <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 8px; font-weight: bold;">Phương trình ion thu gọn:</p>
+                        <div class="chem-formula" style="font-size: 1.1rem; color: #1e3a8a;">
+                            CaCO<sub>3</sub> + 2H<sup>+</sup> ⟶ Ca<sup>2+</sup> + CO<sub>2</sub>↑ + H<sub>2</sub>O
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 2: Application -->
+                <div class="app-box">
+                    <h3>
+                        <i class="fa-solid fa-flask-vial" style="color: #a855f7;"></i> Ứng Dụng
+                    </h3>
+                    
+                    <div class="solution-list">
+                        <!-- Vinegar -->
+                        <div class="solution-card border-purple">
+                            <div class="chem-label bg-purple-label">CH<sub>3</sub>COOH</div>
+                            <div>
+                                <strong class="text-bold" style="color: #1e293b;">Giấm ăn</strong>
+                                <p style="font-size: 0.9rem; color: #64748b; margin-top: 5px;">Đổ ngập cặn, đun sôi nhẹ để phản ứng nhanh hơn.</p>
+                            </div>
+                        </div>
+
+                        <!-- Lemon -->
+                        <div class="solution-card border-yellow">
+                            <div class="chem-label bg-yellow-label">C<sub>6</sub>H<sub>8</sub>O<sub>7</sub></div>
+                            <div>
+                                <strong class="text-bold" style="color: #1e293b;">Chanh tươi</strong>
+                                <p style="font-size: 0.9rem; color: #64748b; margin-top: 5px;">Chà xát trực tiếp hoặc đun sôi cùng nước.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+</section>
+
+    <div id="footer-placeholder"></div>
+
+        <script src="/script.js"></script>
+        <script src="/search.js"></script>
+        <script src="/baiviet_trang_chu.js"></script>
+</body>
+</html>

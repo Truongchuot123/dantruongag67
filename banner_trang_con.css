@@ -1,0 +1,291 @@
+ :root {
+            font-family: 'Inter', sans-serif;
+            --color-dark-bg: #0d111c;
+            --color-text-light: #f3f4f6;
+            --color-highlight-cyan: #06b6d4;
+            --color-highlight-blue: #3b82f6;
+            --color-text-secondary: #94a3b8;
+
+            --container-max: 80rem;
+            --gap: 1.25rem;
+        }
+
+        /* ----- Layout container ----- */
+        .section-container {
+            max-width: var(--container-max);
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        /* ----- Banner chính ----- */
+        .main-banner_trang_con {
+            position: relative;
+            overflow: hidden;
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+            background-color: rgba(6, 16, 40, 0.92);
+            border-bottom: 4px solid rgba(6, 182, 212, 0.5);
+            backdrop-filter: blur(6px);
+        }
+
+        @media (min-width: 768px) {
+            .main-banner_trang_con {
+                padding-top: 6rem;
+                padding-bottom: 10rem;
+            }
+        }
+
+        .banner_trang_con-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(8,145,178,0.95), rgba(30,64,175,0.92));
+            opacity: 1;
+            pointer-events: none;
+        }
+
+        .hbanner_trang_con-image-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            opacity: 0.06;
+            filter: blur(4px);
+            background-image: url('/hinhanh/ki_niem_ngay_cach_mang_thang_tam_thanh_cong.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hbanner_trang_con-content {
+            position: relative;
+            z-index: 10;
+            max-width: var(--container-max);
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            text-align: center;
+        }
+
+        .main-title {
+            font-size: 2.0rem;
+            line-height: 1.12;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        @media (min-width: 640px) {
+            .main-title {
+                font-size: 3.2rem;
+            }
+        }
+
+        .sub-text {
+            margin-top: 0.75rem;
+            font-size: 1rem;
+            color: #cfeffd;
+            font-weight: 300;
+            max-width: 56rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ----- Tabs / danh mục ----- */
+        .hbanner_trang_con-tabs-wrap {
+            margin-top: 1.25rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .category-scroll {
+            display: flex;
+            gap: 0.75rem;
+            overflow-x: auto;
+            padding: 0.5rem 0.25rem;
+            width: auto;
+            max-width: 100%;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            justify-content: flex-start;
+            align-items: center;
+            padding-bottom: 0.5rem;
+        }
+
+        .category-scroll::-webkit-scrollbar { height: 8px; }
+        .category-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.08);
+            border-radius: 9999px;
+        }
+
+        .category-btn {
+            flex: 0 0 auto;
+            padding: 0.6rem 1rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            white-space: nowrap;
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.3s ease;
+            cursor: pointer;
+            color: var(--color-text-secondary);
+            font-size: 0.95rem;
+            display: inline-flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .category-name-span { font-weight: 800; transition: color 0.3s ease; }
+        .category-count-span { font-weight: 500; font-size: 0.88em; color: var(--color-text-secondary); }
+
+        .category-btn:active { transform: translateY(1px); }
+        .category-btn.inactive { background-color: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.04); opacity: 1; }
+        .category-btn.inactive:hover { background-color: rgba(255,255,255,0.03); box-shadow: 0 6px 14px rgba(2,6,23,0.35); }
+        .category-btn.active { box-shadow: 0 12px 30px rgba(2,6,23,0.5); }
+
+        /* ----- Content / Articles ----- */
+        .content-section {
+            position: relative;
+            z-index: 20;
+            margin-top: 1.75rem;
+            padding-top: 2rem;
+            padding-bottom: 4rem;
+        }
+
+        .articles-container {
+            display: grid;
+            gap: var(--gap);
+            grid-template-columns: 1fr;
+        }
+
+        /* two columns on medium+, three on very large screens */
+        @media (min-width: 768px) {
+            .articles-container { grid-template-columns: repeat(2, minmax(0,1fr)); }
+        }
+        @media (min-width: 1400px) {
+            .articles-container { grid-template-columns: repeat(3, minmax(0,1fr)); }
+        }
+
+        .article-card {
+            display: flex;
+            flex-direction: row;        /* LUÔN NGANG */
+            align-items: center;
+            gap: 1rem;
+            padding: 1.15rem;
+            border-radius: 1rem;
+            background-color: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 6px 20px rgba(2,6,23,0.22);
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s;
+            will-change: transform, box-shadow;
+            overflow: hidden;
+            min-height: 8rem;
+            flex-wrap: nowrap;          /* CHỐNG XUỐNG HÀNG */
+        }
+
+        .image-wrapper {
+            flex: 0 0 auto;
+            width: 100%;
+            height: 10.5rem;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            position: relative;
+            background: linear-gradient(45deg, #1f2937, #374151);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (min-width: 720px) {
+            .image-wrapper { width: 34%; max-width: 34%; height: 12.5rem; flex-basis: 34%; }
+        }
+
+        @media (min-width: 1280px) {
+            .image-wrapper { width: 30%; max-width: 30%; height: 14rem; flex-basis: 30%; }
+        }
+
+        .article-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            opacity: 0.95;
+            transition: opacity 0.28s ease, transform 0.5s ease;
+        }
+
+        .content-area {
+            flex: 1 1 auto;
+            min-width: 0;
+            padding: 0.25rem 0;
+        }
+
+        .tag-pill {
+            display: inline-block;
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            margin-bottom: 0.5rem;
+            background-color: var(--color-highlight-blue);
+            color: #e0f2fe;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.28);
+        }
+
+        .article-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #fff;
+            margin: 0;
+            line-height: 1.15;
+        }
+
+        .article-description {
+            margin-top: 0.35rem;
+            color: #c1c8d4;
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        /* category-based subtle backgrounds */
+        .article-card[data-cat="ky_thuat_ho_hap"] { background: linear-gradient(180deg, rgba(6,182,212,0.04), rgba(59,130,246,0.02)); }
+        .article-card[data-cat="so_cap_cuu"] { background: linear-gradient(180deg, rgba(239,68,68,0.03), rgba(245,158,11,0.02)); }
+        .article-card[data-cat="cham_soc_man_tinh"] { background: linear-gradient(180deg, rgba(124,58,237,0.03), rgba(14,165,233,0.02)); }
+        .article-card[data-cat="dinh_duong"] { background: linear-gradient(180deg, rgba(245,158,11,0.03), rgba(34,197,94,0.02)); }
+
+        .article-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 30px 70px rgba(2,6,23,0.28);
+            border-color: rgba(59,130,246,0.28);
+        }
+        .article-card:hover .article-image { opacity: 1; transform: scale(1.03); }
+
+        @media (max-width: 420px) {
+            .article-card { padding: 0.9rem; gap: 0.75rem; }
+            .image-wrapper { height: 9rem; }
+            .article-title { font-size: 1rem; }
+            .category-btn { padding: 0.5rem 0.8rem; font-size: 0.92rem; }
+        }
+
+        .empty-state-box {
+            padding: 2rem;
+            text-align: center;
+            color: #9ca3af;
+            background: rgba(255,255,255,0.02);
+            border-radius: 1rem;
+            border: 1px dashed rgba(255,255,255,0.02);
+        }
+
+        /* animation observer helper */
+        .article-card.transition-observer { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .article-card.transition-observer.opacity-100 { opacity: 1; transform: translateY(0); }
+        @media (max-width: 480px) {
+            .image-wrapper {
+                width: 38%;
+                height: 8.5rem;
+                flex-basis: 38%;
+            }
+            .article-title {
+                font-size: 0.95rem;
+            }
+        }

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiếng anh - Nguyễn Mai Đan Trường</title>
+    
+     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:image" content="/hinhanh/logo_web.png">
+    <meta property="og:url" content="https://dantruongag.id.vn">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="icon" href="/hinhanh/logo_web.png" type="">
+        
+ 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 for beautiful pop-ups -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Swiper.js for banner slider -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- Confetti.js for effects -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<style>
+.intro-features {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  text-align: center;
+  padding: 40px 20px;
+  flex-wrap: wrap;
+  background-color: #f9f9f9;
+}
+
+.intro-features a {
+  text-decoration: none;
+  color: inherit;
+  flex: 1 1 30%;
+  max-width: 300px;
+  min-width: 260px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  /* Thêm các thuộc tính flexbox để căn giữa nội dung bên trong */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.intro-features a:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.intro-features img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.intro-features p {
+  font-size: 16px;
+  color: #333;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Animation khi xuất hiện */
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.feature {
+  opacity: 0;
+  animation: fadeUp 0.8s ease-out forwards;
+}
+
+.feature:nth-child(1) {
+  animation-delay: 0.2s;
+}
+.feature:nth-child(2) {
+  animation-delay: 0.4s;
+}
+.feature:nth-child(3) {
+  animation-delay: 0.6s;
+}
+/* Tablet: Hiển thị 2 cột */
+@media (max-width: 992px) {
+  .intro-features {
+    gap: 30px;
+  }
+
+  .intro-features a {
+    flex: 1 1 45%;
+  }
+}
+
+/* Mobile: Hiển thị 2 cột */
+@media (max-width: 600px) {
+    .intro-features {
+    gap: 20px;
+  }
+  .intro-features a {
+    flex: 1 1 48%;
+  }
+}
+@media (max-width: 480px) {
+  .intro-features {
+    gap: 16px;
+  }
+
+  .intro-features a {
+    flex: 1 1 48%; /* Hoặc 50% nếu bạn muốn đều hơn */
+  }
+}
+
+
+</style>
+<body class="bg-gray-900">
+
+    
+    <div id="header-placeholder"></div>
+    <div id="search-placeholder"></div>
+<!-- giới thiệu -->
+        <section class="banner_trangcon event-banner">
+            <div class="banner_trangcon_header">
+                <h1>TIẾNG ANH</h1>
+                <div class="banner_trangcon_header_underline"></div>
+                <p>
+                    <a href="/gopy.html">
+                        <button class="banner_trangcon_btn btn">GÓP Ý</button>
+                    </a>
+                </p>
+            </div>
+        </section>
+
+
+<section class="intro-features">
+  <a href="/tienganh/IPA.html" class="feature" data-aos="fade-up" data-aos-delay="0">
+    <img src="/tienganh/hinhanh.tienganh/IPA.png" alt="">
+    <p><strong>Ngữ âm IPA</strong></p>
+  </a>
+  <a href="/tienganh/vocabulary.html" class="feature" data-aos="fade-up" data-aos-delay="0">
+    <img src="/tienganh/hinhanh.tienganh/vocabulary.png" alt="">
+    <p><strong>Hệ thống học từ vựng tiếng anh</strong></p>
+  </a>
+    <a href="/tienganh/listeing/listening.html" class="feature" data-aos="fade-up" data-aos-delay="100">
+    <img src="/tienganh/hinhanh.tienganh/listening.png" alt="">
+    <p><strong>Hệ thống học nghe tiếng anh</strong></p>
+  </a>
+  <a href="/tienganh/writting/writting.html" class="feature" data-aos="fade-up" data-aos-delay="100">
+    <img src="/tienganh/hinhanh.tienganh/writting.png" alt="">
+    <p><strong>Hệ thống học viết tiếng anh</strong></p>
+  </a>
+
+  <a href="/tienganh/VSTEP/Speaking/he_thong_luyen_noi.html" class="feature" data-aos="fade-up" data-aos-delay="200">
+    <img src="/tienganh/hinhanh.tienganh/Everyday English Learning.png" alt="">
+    <p><strong>Hệ thống luyện thi nói tiếng anh </strong></p>
+  </a>
+  <a href="/tienganh/VSTEP/VSTEP.html" class="feature" data-aos="fade-up" data-aos-delay="200">
+    <img src="/tienganh/hinhanh.tienganh/vocabulary.png" alt="">
+    <p><strong>HỌC VSTEP </strong></p>
+  </a>
+</section>
+
+
+
+    <!-- Placeholder for Footer -->
+    <div id="footer-placeholder"></div>
+    
+  </section>  
+      <script src="./script.js"></script>
+          <script src="/search.js"></script>
+      <!-- AOS Animation JS -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init();
+</script>
+
+  </body>
+  </html>
+  

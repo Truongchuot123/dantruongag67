@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nguyễn Mai Đan Trường</title>
+     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:title" content="Trang Chủ - Nguyễn Mai Đan Trường">
+    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:image" content="/hinhanh/logo_web.png">
+    <meta property="og:url" content="https://dantruongag.id.vn">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/hinhanh/logo_web.png" type="">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 for beautiful pop-ups -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Swiper.js for banner slider -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- Confetti.js for effects -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%);
+        }
+
+        .search-shadow:focus {
+            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.2);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 640px) {
+            .table-container {
+                display: none; /* Ẩn bảng trên mobile, dùng card thay thế */
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0d9488;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-gray-900">
+    <div id="header-placeholder"></div>
+    <div id="search-placeholder"></div>
+    
+    <main id="main-content">
+    <header class="gradient-bg text-white py-10 px-4 shadow-lg">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-3xl md:text-5xl font-extrabold mb-3 flex items-center justify-center gap-3">
+                <i class="fas fa-leaf"></i> Tra Cứu Huyệt
+            </h1>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 -mt-8 mb-20">
+        <div class="glass-morphism rounded-2xl shadow-xl p-4 md:p-6 mb-8">
+            <div class="flex flex-col gap-4">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-center">
+                    <div class="lg:col-span-2 relative">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input 
+                            type="text" 
+                            id="searchInput"
+                            placeholder="Tìm tên huyệt, vị trí hoặc chỉ định..." 
+                            class="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 search-shadow focus:border-teal-500 outline-none transition-all text-gray-700"
+                        >
+                    </div>
+                    <div class="flex items-center justify-between lg:justify-end gap-3">
+                        <div class="bg-teal-50 text-teal-700 px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap">
+                            <span id="totalCount">0</span> huyệt
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fas fa-filter"></i> Lọc theo kinh mạch
+                    </label>
+                    <div id="filterContainer" class="flex flex-wrap gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                        <button onclick="filterByKinh('All')" class="filter-btn active bg-teal-600 text-white px-4 py-1.5 rounded-full text-sm font-medium transition-all shadow-sm">
+                            Tất cả
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="statusMessage" class="text-center py-10">
+            <div id="loader" class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-teal-500 border-t-transparent"></div>
+            <p id="statusText" class="mt-4 text-gray-500 font-medium">Hệ thống đang lấy dữ liệu...</p>
+        </div>
+        <div id="gridView" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10 hidden">
+        </div>
+    </main>
+
+    <script>
+        const sheetID = '10oHOyDLFBa8CaluW9O5As1R6EVJO8Cwnloa0BU-4m90'; 
+        const sheetName = 'HUYET'; 
+        const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:csv&sheet=${sheetName}`;
+
+        let allAcupoints = [];
+        let currentFilter = 'All';
+
+        async function fetchData() {
+            const statusMessage = document.getElementById('statusMessage');
+            const statusText = document.getElementById('statusText');
+            const loader = document.getElementById('loader');
+            const gridView = document.getElementById('gridView');
+
+            statusMessage.classList.remove('hidden');
+            loader.classList.remove('hidden');
+            statusText.innerText = "Đang lấy dữ liệu từ hệ thống...";
+            gridView.classList.add('hidden');
+
+            try {
+                const response = await fetch(csvUrl);
+                if (!response.ok) throw new Error('Không thể tải dữ liệu. Vui lòng kiểm tra quyền truy cập Sheet.');
+                
+                const data = await response.text();
+                allAcupoints = parseCSV(data);
+                
+                if (allAcupoints.length === 0) {
+                    statusText.innerText = "Không tìm thấy dữ liệu trong bảng tính.";
+                    loader.classList.add('hidden');
+                    return;
+                }
+
+                renderFilters();
+                renderAll(allAcupoints);
+                
+                statusMessage.classList.add('hidden');
+            } catch (error) {
+                console.error(error);
+                loader.classList.add('hidden');
+                statusText.innerHTML = `<span class="text-red-500 font-bold">Lỗi:</span> ${error.message}`;
+            }
+        }
+
+        function parseCSV(csv) {
+            const lines = csv.split('\n');
+            if (lines.length < 2) return [];
+
+            return lines.slice(1).map(line => {
+                const columns = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                if (columns.length < 2) return null;
+
+                return {
+                    kinh: clean(columns[0]) || 'Khác',
+                    huyet: clean(columns[1]),
+                    vitri: clean(columns[2]),
+                    chidinh: clean(columns[3])
+                };
+            }).filter(item => item && item.huyet);
+        }
+
+        function clean(str) {
+            if (!str) return '';
+            return str.replace(/^"|"$/g, '').trim();
+        }
+
+        function renderFilters() {
+            const filterContainer = document.getElementById('filterContainer');
+            const kinhList = [...new Set(allAcupoints.map(item => item.kinh))].sort();
+            
+            filterContainer.innerHTML = `
+                <button onclick="filterByKinh('All')" class="filter-btn active bg-teal-600 text-white px-4 py-1.5 rounded-full text-sm font-medium transition-all shadow-sm">
+                    Tất cả
+                </button>
+            `;
+
+            kinhList.forEach(kinh => {
+                const btn = document.createElement('button');
+                btn.onclick = () => filterByKinh(kinh);
+                btn.className = "filter-btn bg-white text-gray-600 border border-gray-200 px-4 py-1.5 rounded-full text-sm font-medium transition-all hover:bg-teal-50 hover:border-teal-200";
+                btn.innerText = kinh;
+                filterContainer.appendChild(btn);
+            });
+        }
+
+        function filterByKinh(kinh) {
+            currentFilter = kinh;
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                if (btn.innerText === kinh || (kinh === 'All' && btn.innerText === 'Tất cả')) {
+                    btn.classList.add('bg-teal-600', 'text-white', 'active');
+                    btn.classList.remove('bg-white', 'text-gray-600', 'border-gray-200');
+                } else {
+                    btn.classList.remove('bg-teal-600', 'text-white', 'active');
+                    btn.classList.add('bg-white', 'text-gray-600', 'border-gray-200');
+                }
+            });
+            applySearchAndFilter();
+        }
+
+        function applySearchAndFilter() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allAcupoints.filter(item => {
+                const matchesKinh = currentFilter === 'All' || item.kinh === currentFilter;
+                const matchesSearch = 
+                    item.huyet.toLowerCase().includes(searchTerm) ||
+                    item.vitri.toLowerCase().includes(searchTerm) ||
+                    item.chidinh.toLowerCase().includes(searchTerm) ||
+                    item.kinh.toLowerCase().includes(searchTerm);
+                return matchesKinh && matchesSearch;
+            });
+            renderAll(filtered);
+        }
+
+        function renderAll(data) {
+            const gridView = document.getElementById('gridView');
+            const totalCount = document.getElementById('totalCount');
+
+            gridView.innerHTML = '';
+            totalCount.innerText = data.length;
+
+            if (data.length === 0) {
+                gridView.innerHTML = `<div class="col-span-full py-10 text-center text-gray-400">Không tìm thấy huyệt đạo nào phù hợp.</div>`;
+                gridView.classList.remove('hidden');
+                return;
+            }
+
+            data.forEach(item => {
+                const card = `
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 card-hover flex flex-col h-full">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="bg-teal-100 text-teal-800 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-tighter">
+                                ${item.kinh}
+                            </span>
+                            <i class="far fa-star text-gray-300 hover:text-yellow-400 cursor-pointer transition-colors"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">${item.huyet}</h3>
+                        <div class="space-y-4 flex-grow">
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase block mb-1">Vị trí</label>
+                                <p class="text-gray-600 text-sm leading-relaxed">${item.vitri || ''}</p>
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase block mb-1">Chỉ định</label>
+                                <p class="text-teal-700 text-sm font-medium leading-relaxed">${item.chidinh || ''}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                gridView.innerHTML += card;
+            });
+            gridView.classList.remove('hidden');
+        }
+
+        document.getElementById('searchInput').addEventListener('input', applySearchAndFilter);
+        window.onload = fetchData;
+    </script>
+    </main>
+    <div id="footer-placeholder"></div>
+
+        <script src="/script.js"></script>
+        <script src="/search.js"></script>
+        <script src="/baiviet_trang_chu.js"></script>
+</body>
+</html>

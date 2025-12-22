@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kỹ thuật di động khớp vai - Nguyễn Mai Đan Trường</title>
+     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:title" content="Trang Chủ - Nguyễn Mai Đan Trường">
+    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:image" content="/hinhanh/logo_web.png">
+    <meta property="og:url" content="https://dantruongag.id.vn">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/hinhanh/logo_web.png" type="">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 for beautiful pop-ups -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Swiper.js for banner slider -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- Confetti.js for effects -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+                :root {
+            --primary: #38bdf8;
+            --secondary: #0ea5e9;
+            --accent: rgba(56, 189, 248, 0.1);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --border-color: #334155;
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #0369a1 100%);
+            padding: 5rem 1rem;
+            text-align: center;
+            color: white;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-container {
+            padding: 5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 2.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .section-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .video-container {
+                grid-column: span 3;
+            }
+        }
+
+        .info-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 1.25rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            transition: var(--transition-smooth);
+            height: 100%;
+        }
+
+        .info-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+            border-color: var(--primary);
+        }
+
+        .section-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--text-main);
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .icon-wrapper {
+            background: var(--accent);
+            color: var(--primary);
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .video-wrapper {
+            background: #020617;
+            border-radius: 1.25rem;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .video-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-label {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(14, 165, 233, 0.8);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-item {
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 1rem;
+            font-size: 0.935rem;
+            color: var(--text-muted);
+        }
+
+        .step-item::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        h3 {
+            color: var(--text-main);
+        }
+
+    </style>
+</head>
+ <body class="bg-gray-900">
+    <div id="header-placeholder"></div>
+    <div id="search-placeholder"></div>
+
+    <!-- Hero -->
+    <header class="hero-gradient">
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Kỹ Thuật Di Động Khớp Vai</h1>
+        <p class="text-lg opacity-80 max-w-2xl mx-auto font-light">
+            Nền tảng kiến thức và video minh họa chuẩn lâm sàng dành cho kỹ thuật viên vật lý trị liệu.
+        </p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4">
+
+        <section id="t-1" class="section-container">
+            <h2 class="section-title">1. Tách Khớp Ổ Chảo - Cánh Tay</h2>
+            <div class="section-grid">
+                <div class="video-container">
+                    <div class="video-wrapper">
+                        <span class="video-label">Video Minh Họa</span>
+                        <iframe src="https://www.youtube.com/embed/S2H_h0p-9dM" title="Shoulder Distraction" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="icon-wrapper">🎯</div>
+                    <h3 class="text-xl font-bold mb-3">Mục đích</h3>
+                    <ul class="step-list">
+                        <li class="step-item">Giảm đau khớp vai dao động mức độ 1 và 2.</li>
+                        <li class="step-item">Kiểm soát co thắt cơ vùng vai.</li>
+                        <li class="step-item">Chuẩn bị cho các kỹ thuật trượt sâu.</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <div class="icon-wrapper">🧘</div>
+                    <h3 class="text-xl font-bold mb-3">Tư thế</h3>
+                    <ul class="step-list">
+                        <li class="step-item">BN: Nằm ngửa, vai tư thế nghỉ.</li>
+                        <li class="step-item">KTV: Năng đỡ cẳng tay bệnh nhân giữa thân mình và khuỷu tay.Bàn tay gần vai đặt trong nách của bệnh nhân, với ngón cái ở phía trước bờ khớp và các ngón ở phía sau. Bàn tay kia năng đỡ xương cánh tay ở mặt ngoài.</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <div class="icon-wrapper">⚙️</div>
+                    <h3 class="text-xl font-bold mb-3">Kỹ thuật</h3>
+                    <ul class="step-list">
+                        <li class="step-item">Di chuyển xương cánh tay ra ngoài. Với bàn tay đặt ở trong nách. Toàn bộ cánh tay di chuyển theo chuyển động tịnh tiến ra khỏi mặt phẳng của hố ổ chảo</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="t-2" class="section-container">
+            <h2 class="section-title">2. Trượt Khớp Ổ Chảo Cánh Tay Ra Trước</h2>
+            <div class="section-grid">
+                <div class="video-container">
+                    <div class="video-wrapper">
+                        <span class="video-label">Video Minh Họa</span>
+                        <iframe src="https://www.youtube.com/embed/nU6pW7E7W1w" title="Shoulder Anterior Glide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="icon-wrapper">🎯</div>
+                    <h3 class="text-xl font-bold mb-3">Mục đích</h3>
+                    <ul class="step-list">
+                        <li class="step-item">Tăng tầm vận động Duỗi vai.</li>
+                        <li class="step-item">Tăng tầm vận động Xoay ngoài.</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <div class="icon-wrapper">🧘</div>
+                    <h3 class="text-xl font-bold mb-3">Tư thế</h3>
+                    <ul class="step-list">
+                        <li class="step-item">BN: Nằm sấp, vai sát mép giường.</li>
+                        <li class="step-item">Gối kê dưới mỏm quạ để cố định.</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <div class="icon-wrapper">⚙️</div>
+                    <h3 class="text-xl font-bold mb-3">Kỹ thuật</h3>
+                    <ul class="step-list">
+                        <li class="step-item">Tách nhẹ Grade I trước khi trượt.</li>
+                        <li class="step-item">Ấn đầu xương cánh tay hướng ra trước.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="t-3" class="section-container" style="border-bottom: none;">
+            <h2 class="section-title">3. Trượt Khớp Ổ Chảo Cánh Tay Ra Sau</h2>
+            <div class="section-grid">
+                <div class="video-container">
+                    <div class="video-wrapper">
+                        <span class="video-label">Video Minh Họa</span>
+                        <iframe src="https://www.youtube.com/embed/o0HAnXJqU2U" title="Shoulder Posterior Glide" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="icon-wrapper">🎯</div>
+                    <h3 class="text-xl font-bold mb-3">Mục đích</h3>
+                    <ul class="step-list">
+                        <li class="step-item">Tăng tầm vận động Gấp vai.</li>
+                        <li class="step-item">Tăng tầm vận động Xoay trong.</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <div class="icon-wrapper">🧘</div>
+                    <h3 class="text-xl font-bold mb-3">Tư thế</h3>
+                    <ul class="step-list">
+                        <li class="step-item">BN: Nằm ngửa, cánh tay trên giường.</li>
+                        <li class="step-item">KTV: Nâng đỡ khuỷu tay bệnh nhân.</li>
+                    </ul>
+                </div>
+                <!-- Technique -->
+                <div class="info-card">
+                    <div class="icon-wrapper">⚙️</div>
+                    <h3 class="text-xl font-bold mb-3">Kỹ thuật</h3>
+                    <ul class="step-list">
+                        <li class="step-item">Dồn trọng lượng qua tay ngoài.</li>
+                        <li class="step-item">Đẩy đầu xương cánh tay thẳng ra sau.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+        <div id="footer-placeholder"></div>
+
+        <script src="/script.js"></script>
+        <script src="/search.js"></script>
+        <script src="/baiviet_trang_chu.js"></script>
+
+</body>
+</html>

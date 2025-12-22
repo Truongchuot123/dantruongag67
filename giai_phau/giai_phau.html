@@ -1,0 +1,315 @@
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giải phẩu-Nguyễn Mai Đan Trường</title>
+     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:title" content="Trang Chủ - Nguyễn Mai Đan Trường">
+    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:image" content="/hinhanh/logo_web.png">
+    <meta property="og:url" content="https://dantruongag.id.vn">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/hinhanh/logo_web.png" type="">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/banner_trang_con.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- Confetti.js for effects -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    :root {
+        --primary-color: #0c7ec4; /* Blue */
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f7f9fc;
+        min-height: 100vh;
+    }
+    .main-container {
+        max-width: 1280px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1rem;
+    }
+    @media (min-width: 640px) {
+        .main-container {
+            padding: 2rem;
+        }
+    }
+    @media (min-width: 1024px) {
+        .main-container {
+            padding: 3rem;
+        }
+    }
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(1, minmax(0, 1fr)); 
+        gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+        .services-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 2rem;
+        }
+    }
+    @media (min-width: 1024px) {
+        .services-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr)); 
+            gap: 2rem;
+        }
+    }
+    .service-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 1.5rem;
+        background-color: #ffffff;
+        border-radius: 1rem; /* Stronger rounding */
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); /* shadow-xl */
+        border: 2px solid transparent;
+        text-decoration: none;
+        /* NEW: Set up 3D space */
+        transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        position: relative;
+        overflow: hidden;
+        transform-style: preserve-3d;
+        perspective: 1000px;
+    }
+    .service-card:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 4px; /* Thin bottom accent */
+        background-color: var(--card-border-color);
+        transition: all 0.4s ease;
+        transform: scaleX(0); /* Initially hidden */
+        transform-origin: bottom center;
+        border-radius: 0 0 8px 8px; /* Match card bottom rounding */
+    }
+    
+    .service-card:hover {
+        transform: translateY(-4px) rotateX(2deg) scale(1.01); 
+        box-shadow: 0 25px 40px rgba(0, 0, 0, 0.2); 
+        border-color: var(--card-border-color); 
+    }
+
+    .service-card:hover:after {
+        transform: scaleX(1); 
+        height: 8px; //
+        box-shadow: 0 0 20px 5px var(--card-border-color); /* Glow effect */
+    }
+
+    .card-1 { --card-color: #3b82f6; --card-light: #eff6ff; --card-border-color: #2563eb; } 
+    .card-2 { --card-color: #10b981; --card-light: #ecfdf5; --card-border-color: #059669; } 
+    .card-3 { --card-color: #8b5cf6; --card-light: #f5f3ff; --card-border-color: #7c3aed; } 
+    .card-4 { --card-color: #f97316; --card-light: #fff7ed; --card-border-color: #ea580c; } 
+    
+    .card-5 { --card-color: #3b82f6; --card-light: #eff6ff; --card-border-color: #2563eb; }
+    .card-6 { --card-color: #10b981; --card-light: #ecfdf5; --card-border-color: #059669; }
+    .card-7 { --card-color: #8b5cf6; --card-light: #f5f3ff; --card-border-color: #7c3aed; }
+    .card-8 { --card-color: #f97316; --card-light: #fff7ed; --card-border-color: #ea580c; }
+
+
+    .icon-container {
+        width: 4rem;
+        height: 4rem;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 1rem;
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--card-light);
+        color: var(--card-color);
+        padding: 1rem;
+        transition: all 0.3s ease;
+        border: 2px solid var(--card-color);
+    }
+    .service-card:hover .icon-container {
+        background-color: var(--card-color);
+        color: #ffffff;
+        box-shadow: 0 0 15px var(--card-border-color);
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+    .card-description {
+        /* Keeping this style but it won't be used in HTML */
+        font-size: 0.875rem;
+        color: #6b7280;
+        text-align: center;
+        margin-bottom: 1rem;
+        flex-grow: 1; 
+    }
+
+    /* CTA Button Styling */
+    .cta-button {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+        margin-top: 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        background-color: var(--card-color);
+        color: #ffffff;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        cursor: pointer;
+    }
+
+    .service-card:hover .cta-button {
+        background-color: var(--card-border-color);
+        transform: scale(1.02);
+        box-shadow: 0 4px 10px var(--card-border-color);
+    }
+    </style>
+</head>
+     <body class="bg-gray-900">
+    <div id="header-placeholder"></div>
+    <div id="search-placeholder"></div>
+    <header class="main-banner_trang_con">
+        <div class="banner_trang_con-overlay"></div>
+        <div class="hbanner_trang_con-image-bg"></div>
+
+        <div class="hbanner_trang_con-content">
+            <h1 class="main-title">GIẢI PHẨU SINH LÝ <span class="icon-span"></span></h1>
+            <p class="sub-text">Giải phẩu sinh lý là một môn khoa học nghiên cứu hình thái, cấu trúc và các quy luật hoạt động sinh lý của các cơ quan cơ thể người trong mối liên hệ thống nhất với nhau, cũng như mối liên hệ giữa cơ thể với môi trường sống.
+</p>
+            <div class="hbanner_trang_con-tabs-wrap">
+                <div id="category-tabs" class="category-scroll" aria-label="Danh mục bài viết"></div>
+            </div>
+        </div>
+    </header>
+<div class="main-container">
+        <div class="services-grid">
+            
+            <a href="/giai_phau/giai_phau_co.html" class="service-card card-1">
+                <div>
+                    <div class="icon-container">
+                        <i data-lucide="bone"></i>
+                    </div>
+                    <h2 class="card-title">Giải phẩu hệ xương</h2>
+                </div>
+                <button class="cta-button">XEM NGAY</button>
+            </a>
+
+            <a href="than_kinh_co.html" class="service-card card-2">
+                <div>
+                    <div class="icon-container">
+                        <i data-lucide="brain"></i>
+                    </div>
+                    <h2 class="card-title">Giải phẩu hệ cơ</h2>
+                </div>
+                <button class="cta-button">XEM NGAY</button>
+            </a>
+            <a href="than_kinh_co.html" class="service-card card-2">
+                <div>
+                    <div class="icon-container">
+                        <i data-lucide="brain"></i>
+                    </div>
+                    <h2 class="card-title">Giải phẩu hệ thần kinh</h2>
+                </div>
+                <button class="cta-button">XEM NGAY</button>
+            </a>
+
+            <a href="ho_hap.html" class="service-card card-3">
+                <div>
+                    <div class="icon-container">
+                        <i data-lucide="lungs"></i>
+                    </div>
+                    <h2 class="card-title">Giải phẩu hệ tuần hoàn</h2>
+                </div>
+                <button class="cta-button">XEM NGAY</button>
+            </a>
+
+            <a href="phcn_nhi.html" class="service-card card-4">
+                <div>
+                    <div class="icon-container">
+                        <i data-lucide="fa-lungs"></i>
+                    </div>
+                    <h2 class="card-title">Giải phẩu hệ hô hấp  </h2>
+                </div>
+                <button class="cta-button">XEM NGAY</button>
+            </a>
+
+             <a href="phcn_nhi.html" class="service-card card-4">
+                <div>
+                    <div class="icon-container">
+                        <i data-lucide="baby"></i>
+                    </div>
+                    <h2 class="card-title">Giải phẩu hệ tiêu hóa </h2>
+                </div>
+                <button class="cta-button">XEM NGAY</button>
+            </a>
+             <a href="phcn_nhi.html" class="service-card card-4">
+                <div>
+                    <div class="icon-container">
+                        <i data-lucide="baby"></i>
+                    </div>
+                    <h2 class="card-title">Giải phẩu hệ tiết niệu </h2>
+                </div>
+                <button class="cta-button">XEM NGAY</button>
+            </a>
+             <a href="phcn_nhi.html" class="service-card card-4">
+                <div>
+                    <div class="icon-container">
+                        <i data-lucide="baby"></i>
+                    </div>
+                    <h2 class="card-title">Giải phẩu hệ sinh dục </h2>
+                </div>
+                <button class="cta-button">XEM NGAY</button>
+            </a>
+             <a href="phcn_nhi.html" class="service-card card-4">
+                <div>
+                    <div class="icon-container">
+                        <i data-lucide="baby"></i>
+                    </div>
+                    <h2 class="card-title">Giải phẩu hệ nội tiết </h2>
+                </div>
+                <button class="cta-button">XEM NGAY</button>
+            </a>
+
+             <a href="phcn_nhi.html" class="service-card card-4">
+                <div>
+                    <div class="icon-container">
+                        <i data-lucide="baby"></i>
+                    </div>
+                    <h2 class="card-title">Giải phẩu mắt </h2>
+                </div>
+                <button class="cta-button">XEM NGAY</button>
+            </a>
+        </div>
+
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+    <div id="footer-placeholder"></div>
+
+      <script src="/script.js"></script>
+        <script src="/search.js"></script>
+      <script src="/banner_trang_con.css"></script>
+</body>
+</html>

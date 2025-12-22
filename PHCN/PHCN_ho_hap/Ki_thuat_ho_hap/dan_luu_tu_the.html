@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kĩ thuật PHCN hô hấp - Nguyễn Mai Đan Trường</title>
+  
+  <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+  <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+  <meta property="og:image" content="/hinhanh/logo_web.png">
+  <meta property="og:url" content="https://dantruongag.id.vn">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/ki_thuat_ho_hap.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- SweetAlert2 for beautiful pop-ups -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Swiper.js for banner slider -->
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <!-- Confetti.js for effects -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+</head>
+  <body class="bg-gray-900">
+  
+    <div id="header-placeholder"></div>
+    <div id="search-placeholder"></div> 
+
+
+  <section class="thong_dam-container section-lasegue">
+    <div class="main-card card-animate">
+      <h1 class="main-title title-animate">
+       DẪN LƯU TƯ THẾ
+      </h1>
+      <p class="sub-title subtitle-highlight" data-technique="thong_dam">(Kỹ thuật thông đàm)</p>
+      <p class="subtitle-2">
+        Sự thông đàm và thông khí có quan hệ tương hỗ nhau. Thông đàm mà không thông khí sẽ không đạt được kết quả cao.         </p>
+      
+
+        <div class="content-section">
+        <h2 class="section-title section-header">Đại cương</h2>
+        <p class="daicuong-text">
+          Dẫn lưu tư thế là kỹ thuật dùng tư thế thích hợp tùy theo vị trí tổn thương ở phổi để dẫn các dịch tiết trong đường hô hấp ra ngoài.
+          Thường kết hợp với các kỹ thuật khác trong phục hồi chức năng như vỗ, rung, ho, ho có trợ giúp…
+        </p>
+      </div>
+
+
+      <div class="content-section">
+        <h2 class="section-title section-header">Mục đích</h2>
+        <p id="mucDichContent" class="content-text">
+        </p>
+      </div>
+      <div class="content-section">
+        <h2 class="section-title section-header">Chỉ định</h2>
+        <p id="chiDinhContent" class="content-text">
+        </p>
+      </div>
+      <div class="content-section">
+        <h2 class="section-title section-header">Chống chỉ định</h2>
+        <p id="chongChiDinhContent" class="content-text">
+        </p>
+      </div>
+
+            <div class="content-section">
+                <h2 class="section-title section-header">Kĩ thuật</h2>
+                <ol class="procedure-list">
+                    <!-- Dẫn lưu phân thùy trên -->
+                    <li class="segment-item">
+                        <div class="segment-header" onclick="toggleSegment('upper-lobe')">
+                            <strong>1. Dẫn lưu phân thùy trên (Upper Lobe Drainage)</strong>
+                            <i class="fas fa-chevron-down toggle-icon" id="icon-upper-lobe"></i>
+                        </div>
+                        <ul id="upper-lobe" class="segment-content">
+                            <li>Phân thùy đỉnh (Apical segments): Bệnh nhân ngồi, hơi ngả lưng ra sau 30&deg;.</li>
+                            <li>Phân thùy sau (Posterior segments): Bệnh nhân ngồi, nghiêng về phía trước 30&deg; (hơi chúi đầu xuống).</li>
+                            <li>Phân thùy trước (Anterior segments): Bệnh nhân nằm ngửa trên mặt phẳng, đầu bằng.</li>
+                        </ul>
+                    </li>
+
+                    <!-- Dẫn lưu phân thùy giữa -->
+                    <li class="segment-item">
+                        <div class="segment-header" onclick="toggleSegment('middle-lobe')">
+                            <strong>2. Dẫn lưu phân thùy giữa (Middle Lobe Drainage)</strong>
+                            <i class="fas fa-chevron-down toggle-icon" id="icon-middle-lobe"></i>
+                        </div>
+                        <ul id="middle-lobe" class="segment-content">
+                            <li>Phổi phải (Middle Lobe): Bệnh nhân nằm nghiêng sang trái, xoay người 1/4 về phía sau. Giường nghiêng 15&deg; (chân cao hơn đầu).
+                                <img src="https://placehold.co/400x250/3b82f6/ffffff?text=Dẫn+lưu+Phân+thùy+giữa+phổi+phải" alt="Tư thế dẫn lưu thùy giữa phổi phải" class="posture-image">
+                            </li>
+                            <li>Phổi trái (Lingula): Bệnh nhân nằm nghiêng sang phải, xoay người 1/4 về phía sau. Giường nghiêng 15&deg; (chân cao hơn đầu).</li>
+                        </ul>
+                    </li>
+
+                    <!-- Dẫn lưu phân thùy dưới -->
+                    <li class="segment-item">
+                        <div class="segment-header" onclick="toggleSegment('lower-lobe')">
+                            <strong>3. Dẫn lưu phân thùy dưới (Lower Lobe Drainage)</strong>
+                            <i class="fas fa-chevron-down toggle-icon" id="icon-lower-lobe"></i>
+                        </div>
+                        <ul id="lower-lobe" class="segment-content">
+                            <li>Phân thùy đáy sau (Posterior basal segments): Bệnh nhân nằm sấp, kê gối dưới bụng, giường nghiêng 30&deg; (chân cao hơn đầu).</li>
+                            <li>Phân thùy đáy trước (Anterior basal segments): Bệnh nhân nằm ngửa, kê gối dưới hông, giường nghiêng 30&deg; (chân cao hơn đầu).
+                                <img src="https://placehold.co/400x250/3b82f6/ffffff?text=Dẫn+lưu+Phân+thùy+Đáy+trước" alt="Tư thế dẫn lưu phân thùy đáy trước" class="posture-image">
+                            </li>
+                            <li>Phân thùy đáy ngoài (Lateral basal segments): Bệnh nhân nằm nghiêng về phía đối diện, giường nghiêng 30&deg; (chân cao hơn đầu).
+                                <img src="https://placehold.co/400x250/3b82f6/ffffff?text=Dẫn+lưu+Phân+thùy+Đáy+ngoài" alt="Tư thế dẫn lưu phân thùy đáy ngoài" class="posture-image">
+                            </li>
+                            <li>Phân thùy trên (Superior segments): Bệnh nhân nằm sấp trên mặt phẳng, đầu bằng.</li>
+                        </ul>
+                    </li>
+                </ol>
+                <p class="content-text" style="padding-left: 0.75rem; margin-top: 1rem;">
+                    Lập lại 3-4 lần.
+                </p>
+            </div>
+
+      <!-- Video hướng dẫn -->
+      <div class="video-box">
+        <h2 class="video-title">Video Hướng Dẫn Kỹ Thuật Thông Đàm</h2>
+        <div class="iframe-wrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/LJU_zVMnF3o?si=dVlQOaf57fWGXsiQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>        
+        </div>
+      </div>
+      
+    </div>
+  </section>
+
+
+  
+  <div id="footer-placeholder"></div>
+
+   <script src="/script.js"></script>
+    <script src="/search.js"></script>
+   <script src="/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/ki_thuat_ho_hap.js"></script>
+</body>
+</html>

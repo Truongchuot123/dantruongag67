@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hướng dẫn đo huyết áp đúng cách-Nguyễn Mai Đan Trường</title>
+    
+     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:image" content="/hinhanh/">
+    <meta property="og:url" content="https://dantruongag.id.vn">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/giai_phau/giai_phau.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 for beautiful pop-ups -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Swiper.js for banner slider -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- Confetti.js for effects -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+</head>
+    <!-- Cấu hình Tailwind cho font Inter và màu sắc -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#059669',
+                        'secondary': '#10b981',
+                        'accent': '#f59e0b',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .header-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 40px 20px;
+            background: linear-gradient(rgba(17, 24, 39, 0.8), rgba(17, 24, 39, 0.8)), 
+                        url('https://images.unsplash.com/photo-1576091160550-2173dbc999ef?auto=format&fit=crop&q=80&w=1000') center/cover;
+            border-radius: 0 0 2rem 2rem;
+        }
+        .main-title {
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            font-weight: 800;
+            color: #d3ff0f;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-transform: uppercase;
+        }
+        .step-card {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .step-card.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            overflow: hidden;
+            border-radius: 1rem;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+<body class="bg-gray-900">
+    
+    <div id="header-placeholder"></div>
+    <div id="search-placeholder"></div> 
+    <!-- Hero Header -->
+    <section class="header-section">
+        <h1 class="main-title">HƯỚNG DẪN ĐO HUYẾT ÁP ĐÚNG CÁCH</h1>
+    </section>
+
+    <main class="max-w-4xl mx-auto px-4 pb-20 space-y-12">
+
+        <!-- Định nghĩa -->
+        <section class="glass-effect p-8 rounded-2xl shadow-2xl border-t-4 border-primary text-gray-800">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+                <i class="fas fa-heartbeat text-red-500 mr-3"></i>
+                Huyết áp là gì?
+            </h2>
+            <div class="space-y-4 text-lg leading-relaxed">
+                <p><strong><i class="fas fa-info-circle text-primary mr-2"></i>Huyết áp động mạch:</strong> Là áp lực của máu tác động lên thành động mạch. Áp lực này ảnh hưởng bởi lưu lượng máu, sức co bóp của tim và sức cản ngoại vi.</p>
+                <div class="grid md:grid-cols-2 gap-4 mt-6">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <span class="block font-bold text-blue-700">Huyết áp tâm thu (Tối đa)</span>
+                        Áp lực cao nhất khi tim co bóp.
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <span class="block font-bold text-green-700">Huyết áp tâm trương (Tối thiểu)</span>
+                        Áp lực thấp nhất khi tim giãn ra.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Các bước thực hiện -->
+        <div class="space-y-8">
+            <!-- Bước 1 -->
+            <div class="step-card glass-effect p-6 rounded-2xl shadow-xl text-gray-800">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-shrink-0 w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-3xl font-black shadow-lg">1</div>
+                    <div class="flex-grow">
+                        <h3 class="text-2xl font-bold text-primary mb-3">Chuẩn bị trước khi đo</h3>
+                        <ul class="space-y-2 list-disc list-inside text-gray-600">
+                      ``    <li>Máy đo huyết áp được kiểm chuẩn định kỳ, bao đo phù hợp chu vi cánh tay.</li>
+                            <li>Trước đo 30 phút, KHÔNG: uống chất có cồn, cà phê, trà đặc, tập thể dục, vận động gắng sức.</li>
+                            <li>Đi tiểu sạch nước tiểu.</li>
+                            <li>Nghỉ ngơi hoàn toàn ít nhất 5 phút trước đo.</li>
+                            <li>Có thể đo huyết áp ở tư thế ngồi hoặc nằm.</li>
+                        </ul>
+                    </div>
+                    <div class="w-full md:w-48 overflow-hidden rounded-xl">
+                        <img src="/hinhanh/Trang chủ/Đo huyết áp 1.jpg" alt="Nghỉ ngơi" class="w-full h-32 object-cover hover:scale-110 transition-transform">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bước 2 -->
+            <div class="step-card glass-effect p-6 rounded-2xl shadow-xl text-gray-800">
+                <div class="flex flex-col md:flex-row-reverse items-center gap-8">
+                    <div class="flex-shrink-0 w-16 h-16 bg-secondary text-white rounded-full flex items-center justify-center text-3xl font-black shadow-lg">2</div>
+                    <div class="flex-grow">
+                        <h3 class="text-2xl font-bold text-secondary mb-3">Tư thế</h3>
+                        <p class="text-gray-600">người được đo huyết áp ngồi ghế tựa, cánh tay duỗi thẳng trên bàn, nếp khuỷu ngang mức với tim. Ngoài ra, có thể đo ở các tư thế nằm, đứng. Đối với người cao tuổi hoặc có bệnh đái tháo đường, nên đo thêm huyết áp tư thế đứng nhằm xác định có hạ huyết áp tư thế hay không.</p>
+                    </div>
+                    <div class="w-full md:w-48 overflow-hidden rounded-xl">
+                        <img src="/hinhanh/Trang chủ/đo huyết áp 3.jpg" alt="Tư thế ngồi" class="w-full h-32 object-cover hover:scale-110 transition-transform">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bước 3 -->
+            <div class="step-card glass-effect p-6 rounded-2xl shadow-xl text-gray-800">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-shrink-0 w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-3xl font-black shadow-lg">3</div>
+                    <div class="flex-grow">
+                        <h3 class="text-2xl font-bold text-primary mb-3">Đặt vòng bít (Cuff)</h3>
+                        <p class="text-gray-600">Quấn băng đủ chặt trên nếp lằn khuỷu 2cm. Bề dài bao đo tối thiểu 80% chu vi cánh tay. Đảm bảo mốc 0 ngang mức tim.</p>
+                    </div>
+                    <div class="w-full md:w-48 overflow-hidden rounded-xl">
+                        <img src="/hinhanh/Trang chủ/đo huyết áp 4.jpg" alt="Vòng bít" class="w-full h-32 object-cover hover:scale-110 transition-transform">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bước 4 -->
+            <div class="step-card glass-effect p-6 rounded-2xl shadow-xl text-gray-800">
+                <div class="flex flex-col md:flex-row-reverse items-center gap-8">
+                    <div class="flex-shrink-0 w-16 h-16 bg-secondary text-white rounded-full flex items-center justify-center text-3xl font-black shadow-lg">4</div>
+                    <div class="flex-grow">
+                        <h3 class="text-2xl font-bold text-secondary mb-3">Thực hiện đo</h3>
+                        <p class="text-gray-600">Bơm hơi thêm 30mmHg sau khi mất mạch. Xả hơi chậm 2-3mmHg/giây. 
+                            <br><span class="text-red-600 font-semibold italic">* Không nói chuyện khi đang đo.</span>
+                        </p>
+                    </div>
+                    <div class="w-full md:w-48 overflow-hidden rounded-xl">
+                        <img src="/hinhanh/Trang chủ/Đo huyết áp 5.png" alt="Thực hiện đo" class="w-full h-32 object-cover hover:scale-110 transition-transform">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video Section -->
+        <section class="bg-gray-800 p-8 rounded-2xl shadow-inner border border-gray-700">
+            <h2 class="text-2xl font-bold text-accent mb-6 flex items-center">
+                <i class="fab fa-youtube mr-3"></i>
+                Âm thanh Korotkoff (Minh họa thực tế)
+            </h2>
+            <div class="video-container shadow-2xl ring-4 ring-gray-700">
+                <iframe 
+                    src="https://www.youtube.com/embed/UTJvWLi2uCM" 
+                    title="Âm thanh Korotkoff" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </section>
+
+        <!-- Lưu ý -->
+        <section class="bg-red-900/20 p-8 rounded-2xl border-l-8 border-red-500 shadow-lg">
+            <h2 class="text-2xl font-bold text-red-400 mb-4 flex items-center">
+                <i class="fas fa-exclamation-triangle mr-3"></i>
+                Lưu ý quan trọng
+            </h2>
+            <ul class="space-y-3 text-gray-300 text-lg">
+                <li class="flex items-start"><i class="fas fa-check-circle text-red-500 mt-1.5 mr-3"></i> Đo cách xa bữa ăn.</li>
+                <li class="flex items-start"><i class="fas fa-check-circle text-red-500 mt-1.5 mr-3"></i> Nếu không có ống nghe, có thể bắt mạch (chỉ lấy được HA tối đa và độ chính xác thấp).</li>
+                <li class="flex items-start"><i class="fas fa-check-circle text-red-500 mt-1.5 mr-3"></i> Trẻ em cần sử dụng máy đo và kích thước vòng bít chuyên dụng.</li>
+            </ul>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const stepCards = document.querySelectorAll('.step-card');
+            
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, observerOptions);
+
+            stepCards.forEach(card => observer.observe(card));
+        });
+    </script>
+    <div id="footer-placeholder"></div>
+
+      <script src="/script.js"></script>
+        <script src="/search.js"></script>
+      <script src="/benhhoc/benhhoc.js"></script>
+</body>
+</html>

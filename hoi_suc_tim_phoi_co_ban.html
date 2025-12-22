@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồi sức tim phổi cơ bản-Nguyễn Mai Đan Trường</title>  
+     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:image" content="/hinhanh/">
+    <meta property="og:url" content="https://dantruongag.id.vn">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/giai_phau/giai_phau.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#ef4444', // Red-500 for emergency/action
+                        'secondary': '#f97316', // Orange-500 for contrast
+                        'dark-bg': '#1f2937', // Darker background
+                        'card-bg': '#374151', // Slightly lighter card background
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                        display: ['Oswald', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'custom': '0 10px 15px -3px rgba(239, 68, 68, 0.5), 0 4px 6px -2px rgba(239, 68, 68, 0.25)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .main-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3rem;
+            text-align: center;
+            color: #ffffff;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            /* Animation for modern effect */
+            animation: title-glow 2s infinite alternate;
+            padding-top: 1rem;
+            padding-bottom: 2rem;
+        }
+
+        @keyframes title-glow {
+            from { text-shadow: 0 0 5px #ef4444, 0 0 10px #f97316; }
+            to { text-shadow: 0 0 10px #ef4444, 0 0 20px #f97316; }
+        }
+
+        .cpr-card {
+            background-color: #374151; /* card-bg */
+            color: #e5e7eb; /* Light text */
+            transition: all 0.3s ease-in-out;
+            border-left: 8px solid #2c03b4; /* primary */
+            transform: translateY(0);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        .cpr-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .step-title {
+            font-family: 'Oswald', sans-serif;
+            color: #ebf96f;
+            letter-spacing: 1px;
+            padding-bottom: 0.25rem;
+        }
+
+        .highlight-action {
+            color: #ff94dd; /* secondary color */
+            font-weight: 700;
+        }
+
+        /* Floating TOC (Table of Contents) */
+        #toc {
+            position: sticky;
+            top: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 0.75rem;
+            background-color: #1f2937; /* dark-bg */
+            padding: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid #374151;
+        }
+
+        .toc-link {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+            color: #80ff88;
+            font-size: 0.9rem;
+        }
+
+        .toc-link:hover {
+            background-color: #374151;
+            color: #a27aff;
+            transform: translateX(5px);
+        }
+
+        .toc-active {
+            background-color: #374151;
+            color: #a27aff;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(239, 68, 68, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-gray-900">
+    
+    <div id="header-placeholder"></div>
+    <div id="search-placeholder"></div> 
+
+    <div class="min-h-screen p-4 sm:p-8">
+
+        <header class="text-center mb-10">
+            <h1 class="main-title">HỒI SỨC TIM PHỔI CƠ BẢN</h1>
+            <img src="/hinhanh/hoi_suc_tim_phoi_co_ban_CPR.png" alt="" style="display: none;">
+        </header>
+        <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <aside class="hidden lg:block lg:col-span-1">
+                <div id="toc">
+                    <h3 class="text-xl font-display text-white mb-4 border-b pb-2 border-gray-600">Mục lục</h3>
+                    <a href="#dai-cuong" class="toc-link">1. Đại cương</a>
+                    <a href="#d-r-c-a-b" class="toc-link">2. Quy trình D-R-C-A-B</a>
+                    <a href="#buoc-1" class="toc-link">Đảm bảo an toàn (D)</a>
+                    <a href="#buoc-2" class="toc-link">Kiểm tra đáp ứng (R)</a>
+                    <a href="#buoc-3" class="toc-link">Gọi hỗ trợ & Ép tim (C)</a>
+                    <a href="#buoc-4" class="toc-link">Khai thông đường thở (A)</a>
+                    <a href="#buoc-5" class="toc-link">Hô hấp nhân tạo (B)</a>
+                    <a href="#A-E-D" class="toc-link">3. Hướng dẫn sử dụng máy phá rung tự động AED</a>
+                    <a href="#ngung-cpr" class="toc-link">4. Khi nào ngừng CPR</a>
+                </div>
+            </aside>
+
+
+            <main class="lg:col-span-3 space-y-12">
+
+                <section id="dai-cuong" class="cpr-card p-6 rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-bold step-title mb-4">1. Đại cương</h2>
+                    <p class="text-gray-300 text-lg leading-relaxed mb-4">
+                        <i class="fas fa-heartbeat text-primary mr-2"></i>
+                        <b>Ngừng tuần hoàn - hô hấp (Ngừng tim)</b> là sự mất đột ngột hoạt động bơm máu của tim, dẫn đến mất ý thức, ngừng thở hoặc chỉ thở bất thường (thở ngáp cá), và không có dấu hiệu tuần hoàn. Tình trạng này có thể dẫn đến tử vong trong vòng vài phút.
+                    </p>
+                    <p class="text-gray-300 text-lg leading-relaxed mb-4">
+                        <i class="fas fa-ambulance text-primary mr-2"></i>
+                        <b>Cấp cứu ngừng tuần hoàn - hô hấp</b> chia thành hai cấp độ: Hồi sinh Tim Phổi Cơ bản (Basic Life Support - BLS) và Hồi sinh Tim Phổi Nâng cao (Advanced Life Support - ACLS).
+                    </p>
+                    <p class="text-gray-300 text-lg leading-relaxed">
+                        <i class="fas fa-hand-holding-heart text-primary mr-2"></i>
+                        <b>Hồi sinh Tim Phổi Cơ bản</b> là chuỗi hành động được thực hiện ngay lập tức sau khi tiếp xúc với nạn nhân, tập trung vào việc duy trì cung cấp máu và oxy đến não và các cơ quan quan trọng khác cho đến khi nhân viên y tế chuyên nghiệp đến hoặc thiết bị chuyên dụng (như AED) được sử dụng. Gồm các hoạt động sau
+                        <br> (1) Nhận diện các trường hợp ngừng tuần hoàn - hô hấp và kích hoạt hệ thống cấp cứu
+                        <br> (2) tiến hành hồi sinh tim phổi cơ bản (Cardiopulmonary resuscitation - CPR)
+                        <br> (3) Sử dụng máy khử rung tim tự động ngoài (Automated External Defibrillator - AED)
+                    </p>
+
+                    <p class="text-gray-300 text-lg leading-relaxed mb-4">
+                        <i class="fas fa-heartbeat text-primary mr-2"></i>
+                        <b>Quy trình hồi sinh tim phổi</b> được thực hiện theo trình tự bắt buộc. Năm 2010, Hiệp hội Tim mạch Hoa Kỳ (American Heart Association - AHA) đã giới thiệu quy trình D-R-C-A-B để thay thế cho quy trình cũ A-B-C nhằm giúp cho việc ép tim ngoài lồng ngực được tiến hành sớm hơn, giảm thiểu được sự trì hoãn và gián đoạn trong thực hiện hồi sinh tim phổi. 
+                    </p>
+                </section>
+
+                <section id="d-r-c-a-b" class="cpr-card p-6 rounded-xl shadow-lg bg-card-bg">
+                    <h2 class="text-3xl font-bold step-title mb-4">2. Quy trình D-R-C-A-B</h2>
+                    <p class="text-gray-300 text-lg leading-relaxed mb-4">
+                        Quy trình cấp cứu ngừng tuần hoàn cho người lớn thường được tóm tắt bằng chuỗi D-R-C-A-B (hoặc C-A-B theo Hiệp hội Tim mạch Hoa Kỳ - AHA), tập trung vào các bước quan trọng sau:
+                    </p>
+                    <ul class="list-disc ml-6 space-y-2 text-gray-300 text-lg">
+                        <li><b class="highlight-action">D: Danger</b> - Đảm bảo An toàn</li>
+                        <li><b class="highlight-action">R: Response</b> - Kiểm tra Đáp ứng của nạn nhân</li>
+                        <li><b class="highlight-action">C: Circulation/Compressions</b> - Gọi hỗ trợ & Ép tim ngoài lồng ngực</li>
+                        <li><b class="highlight-action">A: Airway</b> - Khai thông đường thở</li>
+                        <li><b class="highlight-action">B: Breathing</b> - Hô hấp nhân tạo (thổi ngạt)</li>
+                    </ul>
+                    
+                </section>
+
+                <section id="buoc-1" class="cpr-card p-6 rounded-xl shadow-lg">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <div class="w-16 h-16 flex items-center justify-center rounded-full bg-primary text-white text-3xl font-display font-bold shadow-custom">
+                                D
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <h2 class="text-3xl font-bold step-title text-white">Đảm bảo An toàn (Danger)</h2>
+                            <p class="text-gray-300 text-lg leading-relaxed mt-2">
+                                <i class="fas fa-shield-alt text-secondary mr-2"></i>
+                                Trước khi tiếp cận nạn nhân, <b class="highlight-action">luôn kiểm tra an toàn cho bản thân và nạn nhân</b>. Di chuyển nạn nhân ra khỏi khu vực nguy hiểm (ví dụ: đường giao thông, khu vực cháy, dây điện rơi), trừ khi việc di chuyển gây nguy hiểm nghiêm trọng hơn.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="buoc-2" class="cpr-card p-6 rounded-xl shadow-lg">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <div class="w-16 h-16 flex items-center justify-center rounded-full bg-primary text-white text-3xl font-display font-bold shadow-custom">
+                                R
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <h2 class="text-3xl font-bold step-title text-white">Kiểm tra Đáp ứng (Response)</h2>
+                            <p class="text-gray-300 text-lg leading-relaxed mt-2 mb-4">
+                                <i class="fas fa-comment-dots text-secondary mr-2"></i>
+                                <b class="highlight-action">Lay nhẹ vào vai và hỏi lớn: "Bạn có sao không?"</b>
+                            </p>
+                            <ul class="list-disc ml-6 space-y-2 text-gray-300 text-lg">
+                                <li><b class="text-green-400">Nếu nạn nhân đáp ứng:</b> Giúp nạn nhân nằm thoải mái, theo dõi và gọi hỗ trợ y tế nếu cần.</li>
+                                <li><b class="text-red-400">Nếu nạn nhân không đáp ứng:</b> Chuyển sang bước C.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="buoc-3" class="cpr-card p-6 rounded-xl shadow-lg">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <div class="w-16 h-16 flex items-center justify-center rounded-full bg-primary text-white text-3xl font-display font-bold shadow-custom">
+                                C
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <h2 class="text-3xl font-bold step-title text-white">Gọi hỗ trợ & Ép tim (Circulation)</h2>
+                            
+                            <h3 class="text-2xl font-bold text-white mt-4 mb-3"><i class="fas fa-phone-alt text-primary mr-2"></i> Kích hoạt Hệ thống Cấp cứu</h3>
+                            <p class="text-gray-300 text-lg leading-relaxed mb-4">
+                                Nếu nạn nhân không đáp ứng, không thở hoặc thở bất thường: <b class="highlight-action">Gọi cấp cứu ngay lập tức (115)</b> hoặc cử người khác gọi trong khi bạn bắt đầu CPR. Yêu cầu mang theo AED (máy khử rung tim tự động ngoài) nếu có.
+                            </p>
+
+
+                            <h3 class="text-2xl font-bold text-white mt-6 mb-3"><i class="fas fa-redo-alt text-primary mr-2"></i> Kiểm tra mạch</h3>
+                             <p class="text-gray-300 text-lg leading-relaxed mb-4">
+                               Dùng 2 - 3 ngón tay để xác định khí quản của người bệnh. Từ khí quản, kéo trượt ngón tay về phía mình, xuống đến bên cạnh khối cơ ức đòn chũm, có thể sờ thấy động mạch cảnh. Dùng ngón tay để cảm nhận có mạch đập hay không, thời gian kiểm tra trong <b class="highlight-action">ít nhất 5 giây nhưng không quá 10 giây.</b> Nếu không thấy mạch hoặc nghi ngờ không có mạch, ngừng kiểm tra và tiến hành hồi sinh tim phổi ngay.
+                            </p>
+                            <h3 class="text-2xl font-bold text-white mt-6 mb-3"><i class="fas fa-redo-alt text-primary mr-2"></i> Ép Tim Ngoài Lồng Ngực (Chest Compression)</h3>
+                            <ul class="list-disc ml-6 space-y-3 text-gray-300 text-lg">
+                                <li><b class="text-primary">Vị trí:</b> Đặt nạn nhân nằm ngửa trên bề mặt phẳng, cứng cáp. Đặt gót bàn tay của bạn lên <b class="highlight-action">nửa dưới xương ức</b>, tay kia đặt chồng lên và đan các ngón tay vào nhau.</li>
+                                <li><b class="text-primary">Kỹ thuật:</b> Cánh tay duỗi thẳng, vai thẳng góc với xương ức của nạn nhân. Dùng trọng lượng cơ thể để ấn mạnh và nhanh.</li>
+                                <li><b class="text-primary">Tần suất:</b> Khoảng <b class="highlight-action">100 đến 120 lần/phút</b> (nhịp điệu tương đương với bài hát "Stayin' Alive").</li>
+                                <li><b class="text-primary">Độ sâu:</b> Khoảng <b class="highlight-action">5 - 6 cm</b> đối với người lớn.</li>
+                                <li><b class="text-primary">Quan trọng:</b> Cho phép lồng ngực <b class="highlight-action">phục hồi hoàn toàn</b> giữa các lần ép.</li>
+                            </ul>
+                            
+                        </div>
+                    </div>
+                </section>
+
+                <section id="buoc-4" class="cpr-card p-6 rounded-xl shadow-lg">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <div class="w-16 h-16 flex items-center justify-center rounded-full bg-primary text-white text-3xl font-display font-bold shadow-custom">
+                                A
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <h2 class="text-3xl font-bold step-title text-white">Khai thông đường thở (Airway)</h2>
+                            <p class="text-gray-300 text-lg leading-relaxed mt-2 mb-4">
+                                <i class="fas fa-lungs text-secondary mr-2"></i>
+                                Sau 30 lần ép tim, tiến hành khai thông đường thở bằng kỹ thuật <b class="highlight-action">Ngửa đầu - Nâng cằm (Head-tilt Chin-lift)</b>:
+                            </p>
+                            <ul class="list-disc ml-6 space-y-3 text-gray-300 text-lg">
+                                <li>Đặt một tay lên trán nạn nhân, dùng lực ấn xuống để ngửa đầu ra sau.</li>
+                                <li>Dùng ngón trỏ và ngón giữa của tay kia nâng cằm lên.</li>
+                                <li>Thao tác này giúp <b class="highlight-action">nâng gốc lưỡi</b>, là nguyên nhân phổ biến nhất gây tắc nghẽn đường thở ở người bất tỉnh.</li>
+                            </ul>
+                            
+                        </div>
+                    </div>
+                </section>
+
+                <section id="buoc-5" class="cpr-card p-6 rounded-xl shadow-lg">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <div class="w-16 h-16 flex items-center justify-center rounded-full bg-primary text-white text-3xl font-display font-bold shadow-custom">
+                                B
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <h2 class="text-3xl font-bold step-title text-white">Hô hấp nhân tạo (Breathing)</h2>
+                            <p class="text-gray-300 text-lg leading-relaxed mt-2 mb-4">
+                                <i class="fas fa-mask text-secondary mr-2"></i>
+                                Nếu bạn được huấn luyện và cảm thấy an toàn:
+                            </p>
+                            <ul class="list-disc ml-6 space-y-3 text-gray-300 text-lg">
+                                <li><b class="text-primary">Bịt mũi:</b> Dùng tay ấn lên trán để bịt chặt mũi nạn nhân.</li>
+                                <li><b class="text-primary">Thổi ngạt:</b> Hít một hơi sâu, áp miệng bạn kín miệng nạn nhân và thổi ngạt <b class="highlight-action">2 lần</b>, mỗi lần kéo dài khoảng 1 giây. Quan sát lồng ngực nâng lên.</li>
+                                <li><b class="text-primary">Tỷ lệ:</b> Tiếp tục chu trình <b class="highlight-action">30 lần ép tim và 2 lần thổi ngạt (30:2)</b>. Sau mỗi 2 phút ( khoảng 5 chu kỳ), ngừng ép tim để kiểm tra mạch. Thời gian kiểm tra không quá 10 giây.</li>
+                                <li><b class="text-yellow-400">Lưu ý:</b> tránh tăng thông khí quá mức (thổi hoặc bóp bóng quá nhanh và quá nhiều) vì sẽ tăng áp lực trong lồng ngực, làm giảm dòng máu về tim và giảm hiệu quả của ép tim; dạ dày có thể căng giãn quá mức dẫn đến nguy cơ trào ngược vào phổi.</li>
+                            </ul>
+                            
+                        </div>
+                    </div>
+                </section>
+
+                <section id="A-E-D" class="cpr-card p-6 rounded-xl shadow-lg border-l-8 border-green-500">
+                    <h2 class="text-3xl font-bold step-title mb-4 text-blue-500">3. Sử dụng máy phá rung tự động (AED-Automated External Defibrillation)</h2>
+                    <p class="text-gray-300 text-lg leading-relaxed mb-4">
+                        Sử dụng máy phá rung ngay (nếu có) khi có bệnh nhân ngừng tim. Ngay khi máy được đưa tới hiện trường, người cấp cứu cần đặt máy bên cạnh người bệnh ở vị 4 trí sao cho không cản trở công việc của người đang ép tim; việc ép tim vẫn tiếp tục tiến hành trong khi chuẩn bị máy phá rung.
+                    </p>
+                    <ul class="list-disc ml-6 space-y-3 text-gray-300 text-lg">
+                        <li><b class="text-green-400">Bước 1:</b>Bật máy phá rung tự động. Máy sẽ đưa ra các thông báo hướng dẫn sử dụng (bằng tiếng Anh)..</li>
+                        <li><b class="text-green-400">Bước 2</b> Gắn điện cực vào ngực người bệnh. Chọn bản điện cực người lớn cho người lớn và trẻ em 8 tuổi trở lên. Bóc lớp bảo vệ của bản điện cực ra, dán mặt có keo dính vào bệnh nhân. <b class="highlight-action">Một bản điện cực vào phía trên bên phải, ngay dưới xương đòn phải. Bản còn lại dán vào phía dưới bên dưới núm vú trái.</b></li>
+                        <li><b class="text-green-400">Bước 3</b> Phân tích nhịp. Máy sẽ nhắc bạn <b class="highlight-action">tránh xa bệnh nhân (clear)</b> để phân tích nhịp, nhóm cấp cứu cần dừng mọi hoạt động và đảm bảo không ai được chạm vào người bệnh. Mất từ 5 - 10 giây để phân tích loại rối loạn nhịp của người bệnh, máy sẽ tự động đưa ra thông báo nhịp có thể sốc (nếu phát hiện thấy rung thất hoặc nhanh thất) hoặc nhịp không thể sốc (vô tâm thu hoặc hoạt động điện vô mạch).</li>
+                        <li><b class="text-green-400">Bước 4</b> Nếu là nhịp có thể sốc, máy sẽ nhắc những người cấp cứu tránh xa người bệnh (clear) lần nữa. Đảm bảo không ai chạm vào người bệnh. <b class="highlight-action">Người cấp cứu hô to “tránh xa” và ấn nút sốc điện.</b> Sốc điện sẽ tạo ra hiện tượng đột ngột co cơ được nhìn thấy trên người bệnh. </li>
+                    </ul>
+                     <p class="text-xl font-bold text-yellow-400 mt-4">
+                        <i class="fas fa-exclamation-triangle mr-2"></i> Nếu là nhịp không có chỉ định sốc hoặc ngay sau khi sốc điện, tiếp tục CPR ngay bắt đầu bằng ép tim ngay. Sau 2 phút, kiểm tra lại nhịp tim theo các bước 3 và 4 và tiếp tục theo chu trình trên.
+                    </p>
+                </section>
+                <!-- Phần 8: Khi nào ngừng CPR -->
+                <section id="ngung-cpr" class="cpr-card p-6 rounded-xl shadow-lg border-l-8 border-green-500">
+                    <h2 class="text-3xl font-bold step-title mb-4 text-green-500">4. Khi nào ngừng CPR</h2>
+                    <p class="text-gray-300 text-lg leading-relaxed mb-4">
+                        Chỉ ngừng thực hiện CPR khi xảy ra một trong các trường hợp sau:
+                    </p>
+                    <ul class="list-disc ml-6 space-y-3 text-gray-300 text-lg">
+                        <li><b class="text-green-400">Nạn nhân có dấu hiệu hồi tỉnh:</b> Nạn nhân bắt đầu di chuyển, ho, thở bình thường.</li>
+                        <li><b class="text-green-400">Nhân viên y tế chuyên nghiệp đến</b> và tiếp nhận việc cấp cứu.</li>
+                        <li><b class="text-green-400">Bạn quá mệt</b> và không thể tiếp tục ép tim hiệu quả.</li>
+                        <li><b class="text-green-400">Hiện trường trở nên nguy hiểm</b>.</li>
+                    </ul>
+                    <p class="text-xl font-bold text-yellow-400 mt-4">
+                        <i class="fas fa-exclamation-triangle mr-2"></i> Hạn chế tối đa thời gian ngừng ép tim, chỉ ngừng ép khi kiểm tra mạch, khi thổi ngạt hoặc bóp bóng qua mask và khi sốc điện
+                    </p>
+                </section>
+
+            </main>
+        </div>
+
+    <script type="text/javascript">
+        // JavaScript để tự động tô sáng mục lục (TOC) khi cuộn
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('main section');
+            const tocLinks = document.querySelectorAll('#toc a');
+
+            const options = {
+                rootMargin: '0px 0px -50% 0px', // Active khi phần tử vượt qua 50% viewport
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const id = entry.target.getAttribute('id');
+                    const link = document.querySelector(`#toc a[href="#${id}"]`);
+
+                    if (link) {
+                        // Xóa active cũ
+                        tocLinks.forEach(l => l.classList.remove('toc-active'));
+                        
+                        // Thêm active mới nếu phần tử đang giao nhau (hoặc nằm trong ngưỡng)
+                        if (entry.isIntersecting) {
+                            link.classList.add('toc-active');
+                        }
+                    }
+                });
+            }, options);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</div>
+    
+    
+    <div id="footer-placeholder"></div>
+
+      <script src="/script.js"></script>
+        <script src="/search.js"></script>
+      <script src="/benhhoc/benhhoc.js"></script>
+</body>
+</html>
