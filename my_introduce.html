@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nguyễn Mai Đan Trường</title>
+    <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:title" content="Trang Chủ - Nguyễn Mai Đan Trường">
+    <meta property="og:description" content="Chào bạn! Đây là trang giới thiệu bản thân mình. Khám phá thôi nào!.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --neon-teal: #2dd4bf;
+            --dark-bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            --border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px 16px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Layout Grid */
+        .grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        .grid-cols-12 { grid-template-columns: repeat(12, 1fr); }
+
+        /* Khung Header kéo dài theo hàng ngang */
+        .header-full-width {
+            grid-column: span 12;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 32px;
+            padding: 40px;
+            background: linear-gradient(135deg, var(--card-bg) 0%, #111827 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        .avatar-wrapper {
+            width: 140px;
+            height: 140px;
+            flex-shrink: 0;
+            border: 3px solid var(--neon-teal);
+            padding: 5px;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(45, 212, 191, 0.2);
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #334155;
+        }
+
+        .header-content {
+            flex-grow: 1;
+            min-width: 0; /* Hỗ trợ text-overflow */
+        }
+
+        .header-content h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem); /* Tự động co giãn font chữ */
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+            color: white;
+            white-space: nowrap; /* Không cho xuống dòng */
+            overflow: hidden;
+            text-overflow: ellipsis; /* Hiện ... nếu quá dài trên màn hình cực nhỏ */
+        }
+
+        /* Icon vào giữa */
+        .social-links { 
+            display: flex; 
+            gap: 12px; 
+            margin-top: 16px;
+        }
+
+        .social-link {
+            width: 38px;
+            height: 38px;
+            background: #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            transition: 0.3s;
+            color: white;
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            background: var(--neon-teal);
+            color: var(--dark-bg);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive cho Header */
+        @media (max-width: 768px) {
+            .header-full-width {
+                flex-direction: column;
+                text-align: center;
+                padding: 30px 20px;
+                gap: 20px;
+            }
+            .header-content h1 { 
+                white-space: nowrap; /* Giữ yêu cầu không xuống dòng */
+                font-size: 1.5rem;
+            }
+            .social-links {
+                justify-content: center; /* Đưa icon vào chính giữa khi ở mobile */
+            }
+        }
+
+        /* Components */
+        .dark-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            padding: 28px;
+            height: 100%;
+        }
+
+        .dark-card:hover {
+            border-color: var(--neon-teal);
+            transform: translateY(-4px);
+        }
+
+        /* Layout Main Content */
+        .sidebar { grid-column: span 4; }
+        .main-content { grid-column: span 8; }
+
+        @media (max-width: 992px) {
+            .sidebar, .main-content { grid-column: span 12; }
+        }
+
+        /* Sidebar & Details */
+        h3.section-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--neon-teal);
+            letter-spacing: 0.15em;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(45, 212, 191, 0.1);
+            padding-bottom: 8px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+        }
+
+        .contact-item i { color: var(--neon-teal); width: 20px; }
+
+        .neon-text { color: var(--neon-teal); }
+        .sub-title { color: var(--neon-teal); font-weight: 500; font-size: 1.2rem; opacity: 0.9; }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 24px;
+            border-left: 2px solid #334155;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 32px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -32px;
+            top: 6px;
+            height: 14px;
+            width: 14px;
+            background: var(--neon-teal);
+            border: 3px solid var(--card-bg);
+            border-radius: 50%;
+        }
+
+        .exp-item {
+            padding-bottom: 24px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .exp-item:last-child { border: none; margin-bottom: 0; }
+
+        .flex-between { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+        .date-tag { font-size: 0.75rem; color: var(--text-dim); font-weight: 600; background: #334155; padding: 2px 8px; border-radius: 4px; }
+
+        .badge {
+            background: rgba(45, 212, 191, 0.1);
+            color: var(--neon-teal);
+            border: 1px solid rgba(45, 212, 191, 0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 8px;
+            margin-top: 8px;
+        }
+
+        .text-muted { color: var(--text-muted); font-size: 0.95rem; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="grid grid-cols-12">
+            
+            <!-- HEADER KÉO DÀI THEO HÀNG NGANG -->
+            <header class="header-full-width">
+                <div class="avatar-wrapper">
+                    <img src="https://api.dicebear.com/9.x/micah/svg?seed=DanTruong" alt="Avatar" class="avatar-img">
+                </div>
+                <div class="header-content">
+                    <h1>NGUYỄN MAI ĐAN TRƯỜNG</h1>
+                    <p class="sub-title">Kỹ thuật viên Phục hồi chức năng</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fa-brands fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- CỘT TRÁI (SIDEBAR) -->
+            <aside class="sidebar grid">
+                <section class="dark-card">
+                    <h3 class="section-label">Thông tin liên hệ</h3>
+                    <div class="contact-item">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span>dantruong6904@gmail.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fa-solid fa-phone"></i>
+                        <span>0817 879 710</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>Phú Tân, An Giang</span>
+                    </div>
+                </section>
+
+                <section class="dark-card">
+                    <h3 class="section-label">Chứng chỉ</h3>
+                    <div class="contact-item" style="justify-content: space-between;">
+                        <span>Ứng dụng CNTT</span>
+                        <span class="neon-text" style="font-size: 0.75rem;">Cơ bản</span>
+                    </div>
+                    <div class="contact-item" style="justify-content: space-between;">
+                        <span>Tiếng Anh</span>
+                        <span style="color: var(--text-dim); font-size: 0.7rem;">Đang cập nhật</span>
+                    </div>
+                    <div class="contact-item" style="justify-content: space-between;">
+                        <span>CCHN</span>
+                        <span style="color: var(--text-dim); font-size: 0.7rem;">Đang cập nhật</span>
+                    </div>
+                </section>
+
+                <section class="dark-card">
+                    <h3 class="section-label">Sở thích</h3>
+                    <div class="badge"><i class="fa-solid fa-soccer-ball"></i> Bóng đá</div>
+                    <div class="badge"><i class="fa-solid fa-plane"></i> Du lịch</div>
+                </section>
+            </aside>
+
+            <main class="main-content grid">
+                <section class="dark-card">
+                    <h3 class="neon-text" style="margin-bottom: 15px;"><i class="fa-solid fa-crosshairs"></i> Mục tiêu nghề nghiệp</h3>
+                    <p class="text-muted">
+                       Tôi luôn đặt y đức lên hàng đầu, tận tâm và nhiệt huyết với nghề. Mong muốn được có cơ hội học hỏi và nâng cao trình độ chuyên môn
+                    </p>
+                </section>
+
+                <section class="dark-card">
+                    <h3 class="neon-text" style="margin-bottom: 25px;"><i class="fa-solid fa-graduation-cap"></i> Học vấn</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="flex-between">
+                                <h4 style="font-weight: 600;">Trường Cao đẳng Y tế Cần Thơ</h4>
+                                <span class="date-tag">2022 - 2025</span>
+                            </div>
+                            <p class="neon-text" style="font-size: 0.9rem;">Chuyên ngành: Phục hồi chức năng</p>
+                            <p class="text-muted" style="font-size: 0.85rem; margin-top: 5px;">Tốt nghiệp loại Giỏi (GPA: 3.18/4.0)</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="dark-card">
+                    <h3 class="neon-text" style="margin-bottom: 25px;"><i class="fa-solid fa-briefcase"></i> Kinh nghiệm thực tập</h3>
+                    
+                    <div class="exp-item">
+                        <div class="flex-between">
+                            <h4 style="font-weight: 600;">Bệnh viện Đa khoa Trung ương Cần Thơ</h4>
+                            <span class="date-tag">10/2024 - 11/2024</span>
+                        </div>
+                        <p class="text-muted" style="margin-top: 8px;">
+                            Tham gia hỗ trợ thực hiện các kỹ thuật Phục hồi chức năng, vận hành máy móc thiết bị đơn giản tại khoa Phục hồi chức năng và các khoa lâm sàng dưới sự giám sát của các kỹ thuật viên.
+                        </p>
+                    </div>
+
+                    <div class="exp-item">
+                        <div class="flex-between">
+                            <h4 style="font-weight: 600;">Bệnh viện Chỉnh hình và Phục hồi chức năng Cần Thơ</h4>
+                            <span class="date-tag">11/2024 - 05/2025</span>
+                        </div>
+                        <p class="text-muted" style="margin-top: 8px;">
+                            Tham gia hỗ trợ thực hiện các kỹ thuật lượng giá, vận hành máy móc thiết bị và các kỹ thuật Phục hồi chức năng cho bệnh nhân cơ xương khớp, thần kinh dưới sự giám sát của các kỹ thuật viên.
+                        </p>
+                    </div>
+
+                    <div class="exp-item">
+                        <div class="flex-between">
+                            <h4 style="font-weight: 600;">Bệnh viện Y học cổ truyền Cần Thơ</h4>
+                            <span class="date-tag">07/2024 - 03/2025</span>
+                        </div>
+                        <p class="text-muted" style="margin-top: 8px;">
+                            Tham gia thực hiện các kỹ thuật lượng giá, vận hành máy móc thiết bị và các kỹ thuật Phục hồi chức năng tại khoa Phục hồi chức năng và các khoa lâm sàng dưới sự giám sát của các kỹ thuật viên.
+                        </p>
+                    </div>
+                </section>
+            </main>
+
+        </div>
+    </div>
+
+</body>
+</html>

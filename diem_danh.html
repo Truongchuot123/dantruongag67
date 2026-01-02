@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Cài đặt Font Inter */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100.900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
             background-color: #0d0e12; /* Nền tối */
@@ -69,71 +69,6 @@
             border-bottom: 2px solid #374151;
         }
     </style>
-</head>
-<body>
-    <div class="max-w-4xl mx-auto p-4 md:p-8">
-        <h1 class="text-4xl font-extrabold text-center mb-6 text-red-500">
-            Lịch Quản Lý THỰC HÀNH KHÁM BỆNH CHỮA BỆNH
-        </h1>
-
-        <div class="bg-gray-800 p-6 rounded-xl shadow-2xl mb-8 flex flex-col md:flex-row justify-between items-center">
-            <div>
-                <p class="text-lg font-semibold mb-2 text-yellow-400">Thời gian làm việc theo dõi:</p>
-                <p class="text-md text-gray-300">
-                    <span class="font-bold">27/08/2025</span> đến <span class="font-bold">27/02/2026</span>
-                </p>
-            </div>
-            
-            <!-- Trạng Thái Người Dùng (Thay thế ID Người Dùng) -->
-            <div id="user-status" class="mt-4 md:mt-0 p-2 text-center rounded-lg border border-gray-600 hidden">
-                <!-- Nội dung được cập nhật qua JS -->
-            </div>
-            <button id="login-button" class="mt-4 md:mt-0 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-200">
-                Tải Dữ Liệu Lịch
-            </button>
-        </div>
-
-        <!-- Bảng Thống Kê -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-             <!-- Tổng Ngày Làm Việc -->
-            <div class="col-span-2 md:col-span-1 bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-700 text-center">
-                <p class="text-sm font-semibold mb-1 text-gray-300">Tổng</p>
-                <p id="total-work-days" class="text-3xl font-extrabold text-white">0</p>
-            </div>
-
-            <!-- Ngày Nghỉ Phép -->
-            <div class="bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-700 text-center">
-                <p class="text-sm font-semibold mb-1 text-red-500">Nghỉ Phép:</p>
-                <p id="leave-days" class="text-3xl font-extrabold text-red-400">0</p>
-            </div>
-            
-            <!-- Ngày Đã Đánh Dấu Đi Làm -->
-            <div class="bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-700 text-center">
-                <p class="text-sm font-semibold mb-1 text-green-500">Đã Đi:</p>
-                <p id="work-days-v" class="text-3xl font-extrabold text-green-400">0</p>
-            </div>
-            
-            <!-- Ngày Còn Lại (Chưa Đánh Dấu) -->
-            <div class="bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-700 text-center">
-                <p class="text-sm font-semibold mb-1 text-blue-500">Chưa Đánh Dấu:</p>
-                <p id="remaining-days" class="text-3xl font-extrabold text-blue-400">0</p>
-            </div>
-        </div>
-        
-        <!-- Đếm Ngược -->
-        <div class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-700 mb-8">
-            <p class="text-xl font-semibold mb-2 text-yellow-500 text-center">Thời Gian Còn Lại Đến 27/02/2026:</p>
-            <div id="countdown" class="text-xl font-mono text-center text-white">
-                Đang tính.
-            </div>
-        </div>
-
-        <!-- Container Lịch -->
-        <div id="calendar-container" class="bg-gray-800 p-4 rounded-xl shadow-2xl space-y-4">
-            <!-- Lịch sẽ được tạo ở đây bởi JavaScript -->
-            <div class="text-center p-10 text-xl text-gray-500">Đang tải lịch.</div>
-        </div>
-    </div>
     <!-- Cấu hình Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -378,7 +313,7 @@
                 
                 // Kiểm tra xem ngày này có nằm trong phạm vi không
                 const date = new Date(dateKey);
-                // getDay() trả về 0 cho Chủ nhật, 1 cho Thứ 2, ., 6 cho Thứ 7
+                // getDay() trả về 0 cho Chủ nhật, 1 cho Thứ 2, ..., 6 cho Thứ 7
                 const dayOfWeek = date.getDay(); 
 
                 // Chỉ quan tâm đến ngày làm việc (Thứ 2 đến Thứ 6)
@@ -450,7 +385,7 @@
                 const grid = document.createElement('div');
                 grid.className = 'calendar-grid';
                 
-                // Hàng tiêu đề ngày (T2, T3, ., CN)
+                // Hàng tiêu đề ngày (T2, T3, ..., CN)
                 daysOfWeek.forEach(day => {
                     const header = document.createElement('div');
                     header.className = 'text-center font-bold text-sm p-2 text-gray-400';
@@ -462,7 +397,7 @@
                 const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
                 const startDayIndex = firstDayOfMonth.getDay(); // 0 (CN) - 6 (T7)
                 
-                // (dayIndex + 6) % 7: CN (0) -> 6, T2 (1) -> 0, T3 (2) -> 1, .
+                // (dayIndex + 6) % 7: CN (0) -> 6, T2 (1) -> 0, T3 (2) -> 1, ...
                 const offset = (startDayIndex + 6) % 7; 
                 
                 // Tạo ô trống đầu tháng
@@ -538,5 +473,71 @@
         // Khởi động ứng dụng khi cửa sổ được tải
         window.onload = initFirebase;
     </script>
+</head>
+<body>
+    <div class="max-w-4xl mx-auto p-4 md:p-8">
+        <h1 class="text-4xl font-extrabold text-center mb-6 text-red-500">
+            Lịch Quản Lý THỰC HÀNH KHÁM BỆNH CHỮA BỆNH
+        </h1>
+
+        <div class="bg-gray-800 p-6 rounded-xl shadow-2xl mb-8 flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <p class="text-lg font-semibold mb-2 text-yellow-400">Thời gian làm việc theo dõi:</p>
+                <p class="text-md text-gray-300">
+                    <span class="font-bold">27/08/2025</span> đến <span class="font-bold">27/02/2026</span>
+                </p>
+            </div>
+            
+            <!-- Trạng Thái Người Dùng (Thay thế ID Người Dùng) -->
+            <div id="user-status" class="mt-4 md:mt-0 p-2 text-center rounded-lg border border-gray-600 hidden">
+                <!-- Nội dung được cập nhật qua JS -->
+            </div>
+            <button id="login-button" class="mt-4 md:mt-0 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-200">
+                Tải Dữ Liệu Lịch
+            </button>
+        </div>
+
+        <!-- Bảng Thống Kê -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+             <!-- Tổng Ngày Làm Việc -->
+            <div class="col-span-2 md:col-span-1 bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-700 text-center">
+                <p class="text-sm font-semibold mb-1 text-gray-300">Tổng</p>
+                <p id="total-work-days" class="text-3xl font-extrabold text-white">0</p>
+            </div>
+
+            <!-- Ngày Nghỉ Phép -->
+            <div class="bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-700 text-center">
+                <p class="text-sm font-semibold mb-1 text-red-500">Nghỉ Phép:</p>
+                <p id="leave-days" class="text-3xl font-extrabold text-red-400">0</p>
+            </div>
+            
+            <!-- Ngày Đã Đánh Dấu Đi Làm -->
+            <div class="bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-700 text-center">
+                <p class="text-sm font-semibold mb-1 text-green-500">Đã Đi:</p>
+                <p id="work-days-v" class="text-3xl font-extrabold text-green-400">0</p>
+            </div>
+            
+            <!-- Ngày Còn Lại (Chưa Đánh Dấu) -->
+            <div class="bg-gray-900 p-4 rounded-xl shadow-lg border border-gray-700 text-center">
+                <p class="text-sm font-semibold mb-1 text-blue-500">Chưa Đánh Dấu:</p>
+                <p id="remaining-days" class="text-3xl font-extrabold text-blue-400">0</p>
+            </div>
+        </div>
+        
+        <!-- Đếm Ngược -->
+        <div class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-700 mb-8">
+            <p class="text-xl font-semibold mb-2 text-yellow-500 text-center">Thời Gian Còn Lại Đến 27/02/2026:</p>
+            <div id="countdown" class="text-xl font-mono text-center text-white">
+                Đang tính...
+            </div>
+        </div>
+
+        <!-- Container Lịch -->
+        <div id="calendar-container" class="bg-gray-800 p-4 rounded-xl shadow-2xl space-y-4">
+            <!-- Lịch sẽ được tạo ở đây bởi JavaScript -->
+            <div class="text-center p-10 text-xl text-gray-500">Đang tải lịch...</div>
+        </div>
+    </div>
+
 </body>
 </html>

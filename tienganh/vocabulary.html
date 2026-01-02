@@ -6,7 +6,7 @@
     <title>Vocabulary - Nguyễn Mai Đan Trường</title>
     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
     <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:image" content="/hinhanh/logo_web.png">
+    <meta property="og:image" content="/hinhanh/logo web.png">
     <meta property="og:url" content="https://dantruongag.id.vn">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -115,7 +115,7 @@
         </header>
 
         <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="text" id="search" placeholder="Tìm kiếm từ vựng." class="w-full p-3 bg-gray-800 border-2 border-gray-600 rounded-lg focus:outline-none focus:border-purple-400 transition-colors">
+            <input type="text" id="search" placeholder="Tìm kiếm từ vựng..." class="w-full p-3 bg-gray-800 border-2 border-gray-600 rounded-lg focus:outline-none focus:border-purple-400 transition-colors">
             <div class="flex items-center justify-center space-x-1 bg-gray-800 p-1 rounded-lg">
                 <button onclick="setFilter('all', this)" class="filter-btn active w-full py-2 px-4 rounded-md font-semibold transition-all">Tất cả</button>
                 <button onclick="setFilter('checked', this)" class="filter-btn w-full py-2 px-4 rounded-md font-semibold transition-all">Đã học</button>
@@ -127,7 +127,7 @@
         
         <!-- Topic Search Input -->
         <div class="mb-4">
-            <input type="text" id="topic-search" placeholder="Tìm kiếm chủ đề." class="w-full p-3 bg-gray-800 border-2 border-gray-600 rounded-lg focus:outline-none focus:border-purple-400 transition-colors">
+            <input type="text" id="topic-search" placeholder="Tìm kiếm chủ đề..." class="w-full p-3 bg-gray-800 border-2 border-gray-600 rounded-lg focus:outline-none focus:border-purple-400 transition-colors">
         </div>
 
         <div id="topicNav" class="mb-4 border-b-2 border-gray-700 sticky top-0 bg-gray-900 py-2 z-10 overflow-x-auto whitespace-nowrap"></div>
@@ -135,7 +135,7 @@
         <div id="vocab-list" class="space-y-4">
             <div id="loader" class="text-center p-10">
                 <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-purple-400 mx-auto"></div>
-                <p class="mt-4 text-lg font-semibold text-gray-500">hệ thống đang lấy dữ liệu.</p>
+                <p class="mt-4 text-lg font-semibold text-gray-500">hệ thống đang lấy dữ liệu...</p>
             </div>
         </div>
     </div>
@@ -161,8 +161,8 @@
     
     async function apiCall(formData, isUpdate = false) {
         Swal.fire({
-            title: 'Hệ thống đang xử lý.',
-            html: 'Vui lòng đợi trong giây lát.',
+            title: 'Hệ thống đang xử lý...',
+            html: 'Vui lòng đợi trong giây lát...',
             allowOutsideClick: false,
             didOpen: () => { Swal.showLoading(); }
         });
@@ -252,8 +252,8 @@
     function setFilter(filter, btn) {
         currentFilter = filter;
         const activeClasses = ['active', 'bg-purple-500', 'text-white'];
-        $$('.filter-btn').forEach(b => b.classList.remove(.activeClasses));
-        btn.classList.add(.activeClasses);
+        $$('.filter-btn').forEach(b => b.classList.remove(...activeClasses));
+        btn.classList.add(...activeClasses);
         displayVocabulary();
     }
 
@@ -294,7 +294,7 @@
         }
         
         // Update the topic navigation bar
-        const allAvailableTopics = [.new Set(allWords.map(word => word.topic || 'Chưa phân loại'))];
+        const allAvailableTopics = [...new Set(allWords.map(word => word.topic || 'Chưa phân loại'))];
         updateTopicNav(allAvailableTopics);
 
         // --- RENDERING LOGIC ---
@@ -479,7 +479,7 @@
 
     function openForm(wordToEdit = null) {
         const isUpdate = wordToEdit !== null;
-        const uniqueTopics = [.new Set(allWords.map(word => word.topic).filter(topic => topic && topic !== 'Chưa phân loại'))].sort();
+        const uniqueTopics = [...new Set(allWords.map(word => word.topic).filter(topic => topic && topic !== 'Chưa phân loại'))].sort();
 
         Swal.fire({
             title: `<h2 class="text-2xl font-bold">${isUpdate ? 'Chỉnh sửa từ vựng' : 'Thêm từ vựng mới'}</h2>`,
@@ -490,16 +490,16 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label for="swal-eng" class="block mb-1 font-medium text-sm">Tiếng Anh <span class="text-red-500">*</span></label>
-                                <input id="swal-eng" class="swal2-input" placeholder="Nhập từ tiếng anh." value="${isUpdate ? wordToEdit.english : ''}" ${isUpdate ? 'readonly' : ''}>
+                                <input id="swal-eng" class="swal2-input" placeholder="Nhập từ tiếng anh..." value="${isUpdate ? wordToEdit.english : ''}" ${isUpdate ? 'readonly' : ''}>
                                 <div id="swal-eng-exists-warning" class="text-red-500 text-xs mt-1 h-4"></div>
                             </div>
                             <div>
                                 <label for="swal-ipa" class="block mb-1 font-medium text-sm">IPA <span class="text-red-500">*</span></label>
-                                <input id="swal-ipa" class="swal2-input" placeholder="Nhập phiên âm IPA." value="${isUpdate ? wordToEdit.ipa : ''}">
+                                <input id="swal-ipa" class="swal2-input" placeholder="Nhập phiên âm IPA..." value="${isUpdate ? wordToEdit.ipa : ''}">
                             </div>
                             <div>
                                 <label for="swal-type" class="block mb-1 font-medium text-sm">Loại từ</label>
-                                <input id="swal-type" class="swal2-input" placeholder="e.g., noun, verb." value="${isUpdate ? wordToEdit.type : ''}">
+                                <input id="swal-type" class="swal2-input" placeholder="e.g., noun, verb..." value="${isUpdate ? wordToEdit.type : ''}">
                             </div>
                             <div>
                                 <label for="swal-topic-select" class="block mb-1 font-medium text-sm">Chủ đề</label>
@@ -508,7 +508,7 @@
                                     ${uniqueTopics.map(topic => `<option value="${topic}" ${isUpdate && wordToEdit.topic === topic ? 'selected' : ''}>${topic}</option>`).join('')}
                                     <option value="--new-topic--">--- Nhập chủ đề mới ---</option>
                                 </select>
-                                <input id="swal-topic-new" class="swal2-input mt-2" placeholder="Nhập tên chủ đề mới." style="display: none;">
+                                <input id="swal-topic-new" class="swal2-input mt-2" placeholder="Nhập tên chủ đề mới..." style="display: none;">
                             </div>
                         </div>
                     </div>
@@ -516,16 +516,16 @@
                         <h3 class="text-lg font-semibold text-purple-400 mb-4">Nghĩa & Từ liên quan</h3>
                         <div>
                             <label for="swal-viet" class="block mb-1 font-medium text-sm">Tiếng Việt <span class="text-red-500">*</span></label>
-                            <input id="swal-viet" class="swal2-input" placeholder="Nhập nghĩa tiếng Việt." value="${isUpdate ? wordToEdit.vietnamese : ''}">
+                            <input id="swal-viet" class="swal2-input" placeholder="Nhập nghĩa tiếng Việt..." value="${isUpdate ? wordToEdit.vietnamese : ''}">
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                             <div>
                                 <label for="swal-syn" class="block mb-1 font-medium text-sm">Đồng nghĩa</label>
-                                <textarea id="swal-syn" class="swal2-textarea h-24" placeholder="Các từ cách nhau bằng dấu phẩy.">${isUpdate ? wordToEdit.synonym.join(', ') : ''}</textarea>
+                                <textarea id="swal-syn" class="swal2-textarea h-24" placeholder="Các từ cách nhau bằng dấu phẩy...">${isUpdate ? wordToEdit.synonym.join(', ') : ''}</textarea>
                             </div>
                             <div>
                                 <label for="swal-ant" class="block mb-1 font-medium text-sm">Trái nghĩa</label>
-                                <textarea id="swal-ant" class="swal2-textarea h-24" placeholder="Các từ cách nhau bằng dấu phẩy.">${isUpdate ? wordToEdit.antonym.join(', ') : ''}</textarea>
+                                <textarea id="swal-ant" class="swal2-textarea h-24" placeholder="Các từ cách nhau bằng dấu phẩy...">${isUpdate ? wordToEdit.antonym.join(', ') : ''}</textarea>
                             </div>
                         </div>
                     </div>
@@ -534,11 +534,11 @@
                         <div class="space-y-4">
                             <div>
                                 <label for="swal-def" class="block mb-1 font-medium text-sm">Định nghĩa</label>
-                                <textarea id="swal-def" class="swal2-textarea h-28" placeholder="Định nghĩa chi tiết bằng tiếng Anh.">${isUpdate ? wordToEdit.definition : ''}</textarea>
+                                <textarea id="swal-def" class="swal2-textarea h-28" placeholder="Định nghĩa chi tiết bằng tiếng Anh...">${isUpdate ? wordToEdit.definition : ''}</textarea>
                             </div>
                             <div>
                                 <label for="swal-ex" class="block mb-1 font-medium text-sm">Ví dụ</label>
-                                <textarea id="swal-ex" class="swal2-textarea h-28" placeholder="Các câu ví dụ, mỗi câu một dòng.">${isUpdate ? wordToEdit.example : ''}</textarea>
+                                <textarea id="swal-ex" class="swal2-textarea h-28" placeholder="Các câu ví dụ, mỗi câu một dòng...">${isUpdate ? wordToEdit.example : ''}</textarea>
                             </div>
                         </div>
                     </div>
@@ -666,7 +666,7 @@
         $('#search')?.addEventListener('input', displayVocabulary);
         $('#add-word-btn')?.addEventListener('click', () => openForm());
         $('#topic-search')?.addEventListener('input', () => {
-            const allAvailableTopics = [.new Set(allWords.map(word => word.topic || 'Chưa phân loại'))];
+            const allAvailableTopics = [...new Set(allWords.map(word => word.topic || 'Chưa phân loại'))];
             updateTopicNav(allAvailableTopics);
         });
         

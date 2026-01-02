@@ -535,7 +535,7 @@ function showProtectedContent() {
                                 <div class="noidung-noibat-ing"><img src="hinhanh/Trang chủ/GPSL.png" alt="Giải Phẫu"></div>
                                 <div class="noidung-noibat-text">
                                     <h2>GIẢI PHẨU</h2>
-                                    <a href="/giai_phau/trang_chu_giai_phau.html"><button>XEM NGAY</button></a>
+                                    <a href="/giai_phau/giai_phau.html"><button>XEM NGAY</button></a>
                                 </div>
                             </div>
                             <div class="noidung-noibat-iten">

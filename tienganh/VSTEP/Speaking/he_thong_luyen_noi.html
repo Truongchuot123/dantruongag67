@@ -7,11 +7,11 @@
     
     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
     <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:image" content="/hinhanh/logo_web.png">
+    <meta property="og:image" content="/hinhanh/logo web.png">
     <meta property="og:url" content="https://dantruongag.id.vn">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" href="/hinhanh/logo_web.png" type="">
+    <link rel="icon" href="/hinhanh/logo web.png" type="">
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/tienganh/writting/writting.css"> 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -353,7 +353,11 @@
 
     // Fetch questions from Google Sheet
     async function fetchQuestions() {
+<<<<<<< HEAD
         elements.question.textContent = "Đang tải câu hỏi.";
+=======
+        elements.question.textContent = "Đang tải câu hỏi...";
+>>>>>>> af8986cc9beca7c18e8e100d418ec470a0be7ad9
         elements.question.classList.add('animate-pulse');
         try {
             const response = await fetch(SCRIPT_URL + '?action=get_speaking_questions');

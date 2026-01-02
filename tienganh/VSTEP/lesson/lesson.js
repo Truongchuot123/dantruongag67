@@ -63,7 +63,11 @@
             const tbody = document.createElement('tbody');
             tbody.id = 'vocab-table-body';
             tbody.className = 'text-gray-700';
+<<<<<<< HEAD
             tbody.innerHTML = `<tr><td colspan="5" class="text-center p-8 text-gray-500">Đang tải.</td></tr>`;
+=======
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center p-8 text-gray-500">Đang tải...</td></tr>`;
+>>>>>>> af8986cc9beca7c18e8e100d418ec470a0be7ad9
 
             table.appendChild(thead);
             table.appendChild(tbody);
@@ -73,7 +77,11 @@
             const cardContainer = document.createElement('div');
             cardContainer.id = 'vocab-card-container';
             cardContainer.className = 'block md:hidden space-y-4';
+<<<<<<< HEAD
             cardContainer.innerHTML = `<div class="text-center p-8 text-gray-500">Đang tải.</div>`;
+=======
+            cardContainer.innerHTML = `<div class="text-center p-8 text-gray-500">Đang tải...</div>`;
+>>>>>>> af8986cc9beca7c18e8e100d418ec470a0be7ad9
             section.appendChild(cardContainer);
 
             mainContent.insertBefore(section, grammarSection);

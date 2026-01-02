@@ -43,10 +43,28 @@ document.addEventListener('DOMContentLoaded', async () => {
             icon: 'fa-phone'
         },
         {
+            title: 'Giới thiệu bản thân',
+            description: 'Trang giới thiệu về Nguyễn Mai Đan Trường.',
+            url: '/my_introduce.html',
+            icon: 'fa-envelope'
+        },
+        {
             title: 'Góp Ý',
             description: 'Đóng góp ý kiến để tôi cải thiện hơn.',
             url: '/gopy.html',
             icon: 'fa-envelope'
+        },
+        {
+            title: 'Quy trình rửa tay thường quy của bộ y tế',
+            description: 'Đo huyết áp là quá trình kiểm tra lực tác động của máu lên thành mạch máu khi tim co bóp và giãn ra',
+            url: '/đo_huyet_ap.html',
+            icon: 'fa-heartbeat'
+        },
+        {
+            title: 'Hướng dẫn đo huyết áp đúng cách',
+            description: 'Đo huyết áp là quá trình kiểm tra lực tác động của máu lên thành mạch máu khi tim co bóp và giãn ra',
+            url: '/đo_huyet_ap.html',
+            icon: 'fa-heartbeat'
         },
         {
             title: 'Bảng phiên âm quốc tế IPA',
@@ -235,7 +253,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         '/giai_phau/dau_mat_co/co_thang_dau_sau_lon.html',
         '/giai_phau/dau_mat_co/co_thang_dau_sau_be.html',
         '/giai_phau/dau_mat_co/co_cheo_dau_tren.html',
-        '/giai_phau/dau_mat_co/co_cheo_dau_duoi.html'
+        '/giai_phau/dau_mat_co/co_cheo_dau_duoi.html',
+
+         // ---HÓA HỌC ---
+         '/hoahoc/can_trong_am_dun_nuoc.html',
+        // ---Phục hồi chức năng ---
+        '/PHCN/phuc_hoi_chuc_nang.html',
+            // ---Các PP VLTL ---
+        '/PHCN/Điện trị liệu/dien_tri_lieu.css/Hongngoai.html', 
     ];
 
 

@@ -7,7 +7,7 @@
     
      <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
     <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:image" content="/hinhanh/">
+    <meta property="og:image" content="/hinhanh/logo web.png">
     <meta property="og:url" content="https://dantruongag.id.vn">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -35,36 +35,31 @@
                         sans: ['Inter', 'sans-serif'],
                     },
                     colors: {
-                        'primary': '#059669',
-                        'secondary': '#10b981',
-                        'accent': '#f59e0b',
+                        'primary': '#059669', // Xanh ngọc lục bảo
+                        'secondary': '#10b981', // Xanh lá sáng
+                        'accent': '#f59e0b', // Vàng cam
                     }
                 }
             }
         }
     </script>
-
     <style>
-        body { font-family: 'Inter', sans-serif; }
         .header-section {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding: 40px 20px;
-            background: linear-gradient(rgba(17, 24, 39, 0.8), rgba(17, 24, 39, 0.8)), 
-                        url('https://images.unsplash.com/photo-1576091160550-2173dbc999ef?auto=format&fit=crop&q=80&w=1000') center/cover;
-            border-radius: 0 0 2rem 2rem;
-        }
+    text-align: center; /* Tương đương với class 'text-center' */
+    margin-bottom: 3rem; /* Tương đương với class 'mb-12' (12 * 0.25rem = 3rem) */
+    padding: 20px; /* Thêm padding nhẹ để an toàn */
+}
         .main-title {
-            font-size: clamp(1.5rem, 5vw, 3rem);
-            font-weight: 800;
-            color: #d3ff0f;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            text-transform: uppercase;
+            font-size: 3rem; 
+            font-weight: 800; 
+            color: #d3ff0f; /* Ví dụ: Màu xanh đậm là màu primary */
+            margin-bottom: 0.5rem; 
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
         }
         .step-card {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
         .step-card.is-visible {
             opacity: 1;
@@ -73,9 +68,7 @@
         .video-container {
             position: relative;
             width: 100%;
-            padding-bottom: 56.25%;
-            overflow: hidden;
-            border-radius: 1rem;
+            padding-bottom: 56.25%; 
         }
         .video-container iframe {
             position: absolute;
@@ -83,162 +76,187 @@
             left: 0;
             width: 100%;
             height: 100%;
+            border-radius: 0.75rem; 
         }
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-        }
+
     </style>
 <body class="bg-gray-900">
     
     <div id="header-placeholder"></div>
     <div id="search-placeholder"></div> 
-    <!-- Hero Header -->
-    <section class="header-section">
+
+    <div class="min-h-screen p-4 sm:p-8">
+        <img src="/hinhanh/Trang chủ/đo huyết áp 3.jpg" alt="" style="display: none;">
+        <section class="header-section">
         <h1 class="main-title">HƯỚNG DẪN ĐO HUYẾT ÁP ĐÚNG CÁCH</h1>
-    </section>
-
-    <main class="max-w-4xl mx-auto px-4 pb-20 space-y-12">
-
-        <!-- Định nghĩa -->
-        <section class="glass-effect p-8 rounded-2xl shadow-2xl border-t-4 border-primary text-gray-800">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-                <i class="fas fa-heartbeat text-red-500 mr-3"></i>
-                Huyết áp là gì?
-            </h2>
-            <div class="space-y-4 text-lg leading-relaxed">
-                <p><strong><i class="fas fa-info-circle text-primary mr-2"></i>Huyết áp động mạch:</strong> Là áp lực của máu tác động lên thành động mạch. Áp lực này ảnh hưởng bởi lưu lượng máu, sức co bóp của tim và sức cản ngoại vi.</p>
-                <div class="grid md:grid-cols-2 gap-4 mt-6">
-                    <div class="bg-blue-50 p-4 rounded-lg">
-                        <span class="block font-bold text-blue-700">Huyết áp tâm thu (Tối đa)</span>
-                        Áp lực cao nhất khi tim co bóp.
-                    </div>
-                    <div class="bg-green-50 p-4 rounded-lg">
-                        <span class="block font-bold text-green-700">Huyết áp tâm trương (Tối thiểu)</span>
-                        Áp lực thấp nhất khi tim giãn ra.
-                    </div>
-                </div>
-            </div>
         </section>
 
-        <!-- Các bước thực hiện -->
-        <div class="space-y-8">
-            <!-- Bước 1 -->
-            <div class="step-card glass-effect p-6 rounded-2xl shadow-xl text-gray-800">
-                <div class="flex flex-col md:flex-row items-center gap-8">
-                    <div class="flex-shrink-0 w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-3xl font-black shadow-lg">1</div>
-                    <div class="flex-grow">
-                        <h3 class="text-2xl font-bold text-primary mb-3">Chuẩn bị trước khi đo</h3>
-                        <ul class="space-y-2 list-disc list-inside text-gray-600">
-                      ``    <li>Máy đo huyết áp được kiểm chuẩn định kỳ, bao đo phù hợp chu vi cánh tay.</li>
-                            <li>Trước đo 30 phút, KHÔNG: uống chất có cồn, cà phê, trà đặc, tập thể dục, vận động gắng sức.</li>
-                            <li>Đi tiểu sạch nước tiểu.</li>
-                            <li>Nghỉ ngơi hoàn toàn ít nhất 5 phút trước đo.</li>
-                            <li>Có thể đo huyết áp ở tư thế ngồi hoặc nằm.</li>
-                        </ul>
-                    </div>
-                    <div class="w-full md:w-48 overflow-hidden rounded-xl">
-                        <img src="/hinhanh/Trang chủ/Đo huyết áp 1.jpg" alt="Nghỉ ngơi" class="w-full h-32 object-cover hover:scale-110 transition-transform">
+        <main class="max-w-4xl mx-auto space-y-10">
+
+            <!-- Phần giới thiệu: Đã tăng cỡ chữ lên text-xl và khoảng cách dòng -->
+            <section class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-primary">
+                <h2 class="text-3xl font-bold text-gray-700 mb-4">Huyết áp là gì?</h2>
+                <p class="text-gray-600 text-xl leading-relaxed"><b>Huyết áp động mạch:</b>là áp lực của máu tác động lên thành động mạch. Áp lực này ảnh hưởng bởi các yếu tố: lưu lượng máu, sức co bóp của tim, sức cản ngoại vi (độ quánh của máu và sức cản của thành động mạch), thần kinh vận mạch
+                    <br><b>Huyết áp tâm thu (Huyết áp tối đa):</b>Là áp lực của máu trong động mạch lên đến mức cao nhất khi tim co bóp
+                    <br><b>Huyết áp tâm trương (Huyết áp tối thiểu):</b> Là áp lực của máu ở điểm thấp nhất khi tim dãn ra
+                </p>
+            </section>
+
+            <!-- Quy trình 6 bước -->
+            <section class="space-y-6">
+                <div id="step-1" class="step-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
+                        <div class="text-4xl font-extrabold text-white bg-primary rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">1</div>
+                        <div class="md:w-2/3">
+                            <h3 class="text-2xl font-semibold text-primary mb-2">Bước 1: Chuẩn bị trước khi đo</h3>
+                            <!-- Đã thêm text-lg và leading-relaxed để dễ đọc -->
+                            <p class="text-gray-600 text-lg leading-relaxed">Nghỉ ngơi trong phòng yên tĩnh ít nhất 5 – 10 phút trước khi đo huyết áp.
+                                <br>Không dùng chất kích thích (cà phê, hút thuốc, rượu bia) trước đó 2 giờ.
+                            </p>
+                        </div>
+                        <div class="md:w-1/3 flex justify-center">
+                            <!-- Placeholder image: Người đang nghỉ ngơi tĩnh tâm -->
+                            <img src="/hinhanh/Trang chủ/Cam_ruou_bia.jpg" alt="" class="rounded-lg shadow-lg">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Bước 2 -->
-            <div class="step-card glass-effect p-6 rounded-2xl shadow-xl text-gray-800">
-                <div class="flex flex-col md:flex-row-reverse items-center gap-8">
-                    <div class="flex-shrink-0 w-16 h-16 bg-secondary text-white rounded-full flex items-center justify-center text-3xl font-black shadow-lg">2</div>
-                    <div class="flex-grow">
-                        <h3 class="text-2xl font-bold text-secondary mb-3">Tư thế</h3>
-                        <p class="text-gray-600">người được đo huyết áp ngồi ghế tựa, cánh tay duỗi thẳng trên bàn, nếp khuỷu ngang mức với tim. Ngoài ra, có thể đo ở các tư thế nằm, đứng. Đối với người cao tuổi hoặc có bệnh đái tháo đường, nên đo thêm huyết áp tư thế đứng nhằm xác định có hạ huyết áp tư thế hay không.</p>
-                    </div>
-                    <div class="w-full md:w-48 overflow-hidden rounded-xl">
-                        <img src="/hinhanh/Trang chủ/đo huyết áp 3.jpg" alt="Tư thế ngồi" class="w-full h-32 object-cover hover:scale-110 transition-transform">
+                <div id="step-2" class="step-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex flex-col md:flex-row-reverse items-center space-y-4 md:space-y-0 md:space-x-reverse md:space-x-6">
+                        <div class="text-4xl font-extrabold text-white bg-secondary rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">2</div>
+                        <div class="md:w-2/3">
+                            <h3 class="text-2xl font-semibold text-secondary mb-2">Bước 2: Chọn tư thế ngồi chuẩn</h3>
+                            <!-- Đã thêm text-lg và leading-relaxed để dễ đọc -->
+                            <p class="text-gray-600 text-lg leading-relaxed">Người được đo huyết áp ngồi ghế tựa, cánh tay duỗi thẳng trên bàn, nếp khuỷu ngang mức với tim. Ngoài ra, có thể đo ở các tư thế nằm, đứng. Đối với người cao tuổi hoặc có bệnh đái tháo đường, nên đo thêm huyết áp tư thế đứng nhằm xác định có hạ huyết áp tư thế hay không.</p>
+                        </div>
+                        <div class="md:w-1/3 flex justify-center">
+                            <!-- Placeholder image: Tư thế ngồi thẳng lưng, chân chạm đất -->
+                            <img src="/hinhanh/Trang chủ/Đo huyết áp 1.jpg" alt="" class="rounded-lg shadow-lg">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Bước 3 -->
-            <div class="step-card glass-effect p-6 rounded-2xl shadow-xl text-gray-800">
-                <div class="flex flex-col md:flex-row items-center gap-8">
-                    <div class="flex-shrink-0 w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-3xl font-black shadow-lg">3</div>
-                    <div class="flex-grow">
-                        <h3 class="text-2xl font-bold text-primary mb-3">Đặt vòng bít (Cuff)</h3>
-                        <p class="text-gray-600">Quấn băng đủ chặt trên nếp lằn khuỷu 2cm. Bề dài bao đo tối thiểu 80% chu vi cánh tay. Đảm bảo mốc 0 ngang mức tim.</p>
-                    </div>
-                    <div class="w-full md:w-48 overflow-hidden rounded-xl">
-                        <img src="/hinhanh/Trang chủ/đo huyết áp 4.jpg" alt="Vòng bít" class="w-full h-32 object-cover hover:scale-110 transition-transform">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bước 4 -->
-            <div class="step-card glass-effect p-6 rounded-2xl shadow-xl text-gray-800">
-                <div class="flex flex-col md:flex-row-reverse items-center gap-8">
-                    <div class="flex-shrink-0 w-16 h-16 bg-secondary text-white rounded-full flex items-center justify-center text-3xl font-black shadow-lg">4</div>
-                    <div class="flex-grow">
-                        <h3 class="text-2xl font-bold text-secondary mb-3">Thực hiện đo</h3>
-                        <p class="text-gray-600">Bơm hơi thêm 30mmHg sau khi mất mạch. Xả hơi chậm 2-3mmHg/giây. 
-                            <br><span class="text-red-600 font-semibold italic">* Không nói chuyện khi đang đo.</span>
-                        </p>
-                    </div>
-                    <div class="w-full md:w-48 overflow-hidden rounded-xl">
-                        <img src="/hinhanh/Trang chủ/Đo huyết áp 5.png" alt="Thực hiện đo" class="w-full h-32 object-cover hover:scale-110 transition-transform">
+                <div id="step-3" class="step-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
+                        <div class="text-4xl font-extrabold text-white bg-primary rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">3</div>
+                        <div class="md:w-2/3">
+                            <h3 class="text-2xl font-semibold text-primary mb-2">Bước 3: Đặt vòng bít (Cuff) đúng vị trí</h3>
+                            <!-- Đã thêm text-lg và leading-relaxed để dễ đọc -->
+                            <p class="text-gray-600 text-lg leading-relaxed">Bề dài bao đo (nằm trong băng quấn) tối thiểu bằng 80% chu vi cánh tay, bề rộng tối thiểu bằng 40% chu vi cánh tay. Quấn băng quấn đủ chặt, bờ dưới của bao đo ở trên nếp lằn khuỷu 2cm. Đặt máy ở vị trí để đảm bảo máy hoặc mốc 0 của thang đo ngang mức với tim..</p>
+                        </div>
+                        <div class="md:w-1/3 flex justify-center">
+                            <!-- Placeholder image: Đặt vòng bít trên bắp tay -->
+                            <img src="/hinhanh/Trang chủ/đo huyết áp 3.jpg" alt="" class="rounded-lg shadow-lg">
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Video Section -->
-        <section class="bg-gray-800 p-8 rounded-2xl shadow-inner border border-gray-700">
-            <h2 class="text-2xl font-bold text-accent mb-6 flex items-center">
-                <i class="fab fa-youtube mr-3"></i>
-                Âm thanh Korotkoff (Minh họa thực tế)
-            </h2>
-            <div class="video-container shadow-2xl ring-4 ring-gray-700">
-                <iframe 
-                    src="https://www.youtube.com/embed/UTJvWLi2uCM" 
-                    title="Âm thanh Korotkoff" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-                </iframe>
-            </div>
-        </section>
+                <div id="step-4" class="step-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex flex-col md:flex-row-reverse items-center space-y-4 md:space-y-0 md:space-x-reverse md:space-x-6">
+                        <div class="text-4xl font-extrabold text-white bg-secondary rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">4</div>
+                        <div class="md:w-2/3">
+                            <h3 class="text-2xl font-semibold text-secondary mb-2">Bước 4: Thực hiện đo</h3>
+                            <!-- Đã thêm text-lg và leading-relaxed để dễ đọc -->
+                            <p class="text-gray-600 text-lg leading-relaxed">Nếu không dùng thiết bị đo tự động, trước khi đo phải xác định vị trí động mạnh cánh tay để đặt ống nghe. Bơm hơi thêm 30mmHg sau khi không còn thấy mạch đập. Xả hơi với tốc độ 2-3mmHg/nhịp đập. Huyết áp tâm thu tương ứng với lúc xuất hiện tiếng đập đầu tiên (pha I của Korotkoff) và huyết áp tâm trương tương ứng với khi mất hẳn tiếng đập (pha V của Korotkoff).
+                                <br>Không nói chuyện khi đang đo huyết áp.
+                            </p>
+                        </div>
+                        <div class="md:w-1/3 flex justify-center">
+                            <!-- Placeholder image: Đồng hồ đo huyết áp đang chạy -->
+                            <img src="/hinhanh//Trang chủ/đo huyết áp 4.jpg" alt="" class="rounded-lg shadow-lg">
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="step-5" class="step-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
+                        <div class="text-4xl font-extrabold text-white bg-primary rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">5</div>
+                        <div class="md:w-2/3">
+                            <h3 class="text-2xl font-semibold text-primary mb-2">Bước 5: Ghi nhận và lặp lại</h3>
+                            <p class="text-gray-600 text-lg leading-relaxed">Ghi lại số đo theo đơn vị mmHg dưới dạng HA tâm thu/HA tâm trương (ví dụ 126/82 mmHg) không làm tròn số quá hàng đơn vị và thông báo kết quả cho người được đo.</p>
+                        </div>
+                        <div class="md:w-1/3 flex justify-center">
+                            <img src="/hinhanh//Trang chủ/Đo huyết áp 5.png" alt="" class="rounded-lg shadow-lg">
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-        <!-- Lưu ý -->
-        <section class="bg-red-900/20 p-8 rounded-2xl border-l-8 border-red-500 shadow-lg">
-            <h2 class="text-2xl font-bold text-red-400 mb-4 flex items-center">
-                <i class="fas fa-exclamation-triangle mr-3"></i>
-                Lưu ý quan trọng
-            </h2>
-            <ul class="space-y-3 text-gray-300 text-lg">
-                <li class="flex items-start"><i class="fas fa-check-circle text-red-500 mt-1.5 mr-3"></i> Đo cách xa bữa ăn.</li>
-                <li class="flex items-start"><i class="fas fa-check-circle text-red-500 mt-1.5 mr-3"></i> Nếu không có ống nghe, có thể bắt mạch (chỉ lấy được HA tối đa và độ chính xác thấp).</li>
-                <li class="flex items-start"><i class="fas fa-check-circle text-red-500 mt-1.5 mr-3"></i> Trẻ em cần sử dụng máy đo và kích thước vòng bít chuyên dụng.</li>
-            </ul>
-        </section>
-    </main>
+            <!-- Phần Video Hướng Dẫn -->
+            <section class="bg-gray-100 p-6 rounded-xl shadow-inner">
+                <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-accent pb-2">Tiếng Korotkoff khi đo huyết áp</h2>
+                <div class="video-container shadow-2xl">
+                    <iframe 
+                        src="https://www.youtube.com/embed/UTJvWLi2uCM?si=_NmLzTmiAFqmTOPo" 
+                        title="YouTube video player: Hướng dẫn đo huyết áp tại nhà" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <!-- Đã thêm text-lg và leading-relaxed để dễ đọc -->
+                <p class="text-sm text-gray-500 mt-4 text-center text-lg leading-relaxed"></p>
+            </section>
+
+            <!-- Ghi chú quan trọng -->
+            <section class="bg-red-50 p-6 rounded-xl shadow-lg border-l-4 border-red-500">
+                <h2 class="text-2xl font-bold text-red-600 mb-3 flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.3 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    Lưu ý Quan trọng
+                </h2>
+                <!-- Đã thêm text-lg và leading-relaxed cho danh sách -->
+                <ul class="list-disc list-inside space-y-2 text-gray-700 text-lg leading-relaxed">
+                    <li>Nên đo cách xa bữa ăn, tay bệnh nhân thoải mái ngang mức tim.</li>
+                    <li>Nếu không có ống nghe có thể dùng tay để bắt mạch, trường hợp này chỉ nghe được huyết áp tối đa nhưng không chính xác.</li>
+                    <li>Đối với trẻ con nên dùng máy riêng.</li>
+                </ul>
+            </section>
+
+        </main>
+    </div>
 
     <script>
+        // JavaScript để thêm hiệu ứng động trượt/mờ dần cho các bước khi chúng xuất hiện trên màn hình
         document.addEventListener("DOMContentLoaded", () => {
             const stepCards = document.querySelectorAll('.step-card');
-            
+
+            // Cấu hình Intersection Observer
             const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
+                root: null, // Xem xét viewport
+                rootMargin: '0px',
+                threshold: 0.2 // Kích hoạt khi 20% của phần tử hiển thị
             };
 
-            const observer = new IntersectionObserver((entries) => {
+            const observerCallback = (entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
+                        // Thêm class để kích hoạt transition
                         entry.target.classList.add('is-visible');
+                        // Ngừng quan sát sau khi đã hiển thị
+                        observer.unobserve(entry.target);
                     }
                 });
-            }, observerOptions);
+            };
 
-            stepCards.forEach(card => observer.observe(card));
+            const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+            // Quan sát từng thẻ bước
+            stepCards.forEach(card => {
+                observer.observe(card);
+            });
+            
+            // Fallback: Nếu trình duyệt không hỗ trợ Intersection Observer, hiển thị tất cả sau 0.5s
+            if (!('IntersectionObserver' in window)) {
+                setTimeout(() => {
+                    stepCards.forEach(card => {
+                        card.classList.add('is-visible');
+                    });
+                }, 500);
+            }
         });
     </script>
+
+    
     <div id="footer-placeholder"></div>
 
       <script src="/script.js"></script>

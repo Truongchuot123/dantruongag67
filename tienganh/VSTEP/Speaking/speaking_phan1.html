@@ -7,26 +7,26 @@
     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
     <meta property="og:title" content="Trang Chủ - Nguyễn Mai Đan Trường">
     <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:image" content="/hinhanh/logo_web.png">
+    <meta property="og:image" content="/hinhanh/logo web.png">
     <meta property="og:url" content="https://dantruongag.id.vn">
 
     
     <script src="https://cdn.tailwindcss.com"></script>
+<<<<<<< HEAD
     <link rel="icon" href="/hinhanh/logo_web.png" type="">
+=======
+    <link rel="icon" href="/hinhanh/logo web.png" type="">
+>>>>>>> af8986cc9beca7c18e8e100d418ec470a0be7ad9
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/tienganh/VSTEP/Speaking/speaking.css">
 
  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- SweetAlert2 for beautiful pop-ups -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Swiper.js for banner slider -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <!-- Confetti.js for effects -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
         .timeline-connector { position: absolute; left: 2rem; width: 2px; height: 100%; background-color: #e2e8f0; top: 0; z-index: 1; }
@@ -233,7 +233,11 @@
                                 Viết bài nói
                             </button>
                             <div class="speaking-form mt-4">
+<<<<<<< HEAD
                                 <textarea placeholder="Nhập dàn ý hoặc nội dung nói của bạn cho câu hỏi này."></textarea>
+=======
+                                <textarea placeholder="Nhập dàn ý hoặc nội dung nói của bạn cho câu hỏi này..."></textarea>
+>>>>>>> af8986cc9beca7c18e8e100d418ec470a0be7ad9
                                 <div class="flex gap-2 mt-2">
                                     <button class="submit-btn bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg">Gửi bài</button>
                                     <button class="cancel-btn bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">Hủy</button>
@@ -242,7 +246,11 @@
                             <div class="submitted-articles-container">
                                 <h4 class="submitted-articles-title hidden">Bài đã nộp:</h4>
                                 <div class="articles-list"></div>
+<<<<<<< HEAD
                                 <div class="loading-indicator hidden text-sm text-gray-500">Đang tải.</div>
+=======
+                                <div class="loading-indicator hidden text-sm text-gray-500">Đang tải...</div>
+>>>>>>> af8986cc9beca7c18e8e100d418ec470a0be7ad9
                             </div>
                         </div>
                     </li>
@@ -338,7 +346,11 @@
                     if (!notesContent) {
                         Swal.fire({
                             icon: 'warning',
+<<<<<<< HEAD
                             title: 'Oops.',
+=======
+                            title: 'Oops...',
+>>>>>>> af8986cc9beca7c18e8e100d418ec470a0be7ad9
                             text: 'Ghi chú không được để trống.',
                             confirmButtonText: 'Đã hiểu'
                         });
@@ -350,7 +362,11 @@
                     const submissionNumber = btn.dataset.submissionNumber;
 
                     btn.disabled = true;
+<<<<<<< HEAD
                     btn.textContent = 'Đang lưu.';
+=======
+                    btn.textContent = 'Đang lưu...';
+>>>>>>> af8986cc9beca7c18e8e100d418ec470a0be7ad9
 
                     try {
                         const data = {
@@ -431,7 +447,11 @@
             if (!articleContent) {
                 Swal.fire({
                     icon: 'warning',
+<<<<<<< HEAD
                     title: 'Oops.',
+=======
+                    title: 'Oops...',
+>>>>>>> af8986cc9beca7c18e8e100d418ec470a0be7ad9
                     text: 'Vui lòng nhập nội dung bài nói.',
                     confirmButtonText: 'Đã hiểu'
                 });
@@ -442,7 +462,11 @@
             const data = { type: practiceType, topic, question, submissionNumber, articleContent };
 
             button.disabled = true;
+<<<<<<< HEAD
             button.textContent = 'Đang gửi.';
+=======
+            button.textContent = 'Đang gửi...';
+>>>>>>> af8986cc9beca7c18e8e100d418ec470a0be7ad9
 
             try {
                 await fetch(APPS_SCRIPT_URL, {
@@ -503,7 +527,11 @@
                          ${notesButtonHtml}
                     </div>
                     <div class="note-display" style="${isNotesExist ? '' : 'display: none;'}">${notes}</div>
+<<<<<<< HEAD
                     <textarea class="user-notes-textarea" placeholder="Nhập ghi chú của bạn vào đây.">${notes}</textarea>
+=======
+                    <textarea class="user-notes-textarea" placeholder="Nhập ghi chú của bạn vào đây...">${notes}</textarea>
+>>>>>>> af8986cc9beca7c18e8e100d418ec470a0be7ad9
                 </div>`;
 
             newArticle.innerHTML = `

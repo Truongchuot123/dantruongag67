@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hóa học-Nguyễn Mai Đan Trường</title>
+     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:title" content="Trang Chủ - Nguyễn Mai Đan Trường">
+    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:image" content="/hinhanh/logo_web.png">
+    <meta property="og:url" content="https://dantruongag.id.vn">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/hinhanh/logo_web.png" type="">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/banner_trang_con.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+    </style>
+</head>
+    <body class="bg-gray-900">
+    <div id="header-placeholder"></div>
+    <div id="search-placeholder"></div>
+
+    <header class="main-banner_trang_con">
+        <div class="banner_trang_con-overlay"></div>
+        <div class="hbanner_trang_con-image-bg"></div>
+
+        <div class="hbanner_trang_con-content">
+            <h1 class="main-title">HÓA HỌC</h1>
+            <p class="sub-text">
+                Hóa học là một lĩnh vực thuộc Khoa học tự nhiên, là ngành nghiên cứu toàn bộ về vật chất như thành phần, cấu trúc, tính chất cùng với sự thay đổi chúng. 
+                Hóa học gắn liền với các nguyên tố, hợp chất, nguyên tử, các phản ứng hóa học giữa những thành phần đó. Hóa học còn được gọi là “ trung tâm của khoa học” vì nó đóng vai trò như là mảnh kết nối của nhiều ngành khoa học tự nhiên khác. Ví dụ như: Sinh vật học, địa chất học, vật lý học….
+                Vậy nên, ngành Hóa học là ngành học nghiên cứu về các chất và sự biến đổi của chúng từ đó tạo ra ứng dụng có ích cho đời sống xã hội. </p>
+            <div class="hbanner_trang_con-tabs-wrap">
+                <div id="category-tabs" class="category-scroll" aria-label="Danh mục bài viết"></div>
+            </div>
+        </div>
+    </header>
+
+    <section id="articles-section" class="content-section">
+        <div class="section-container">
+            <div id="articles-container" class="articles-container"></div>
+        </div>
+    </section>
+
+    <script>
+        let currentCategory = 'tab_1';
+        const DEFAULT_IMAGE = '/hinhanh/logo_web.png';
+
+        const dataStore = {
+            tab_1: { name: 'Vô cơ ', articles: [
+                {   url: '', 
+                    title: 'Phục hồi chức năng viêm quanh khớp vai' 
+                },
+            
+                {   url: '', 
+                    title: 'Phục hồi chức năng uyghj' 
+                }
+                 
+            ]},
+            tab_2: { name: 'Hữu cơ', articles: [
+                {   url: '', 
+                    title: 'Kiểm soát hen suyễn: Hướng dẫn cho bệnh nhân' 
+                },
+                {   url: '/cham_soc_benh_nhan_covid.html', 
+                    title: '' 
+                }
+            ]},
+            tab_3: { name: 'Dinh Dưỡng & Lối Sống', articles: [
+                {   url: '', 
+                    title: 'Chế độ dinh dưỡng cho người bệnh phổi mạn tính' 
+                },
+                {   url: '/hoat_dong_vat_ly.html', 
+                    title: 'Hoạt động thể lực phù hợp để cải thiện hô hấp' 
+                }
+            ]}
+        };
+
+        const categoryColors = {
+            tab_1: { bg: 'linear-gradient(90deg,#06b6d4,#3b82f6)', activeColor:'#071033', inactiveColor: '#0ea5e9' },
+            tab_2: { bg: 'linear-gradient(90deg,#ef4444,#fb923c)', activeColor:'#071033', inactiveColor: '#fb923c' },
+            tab_3: { bg: 'linear-gradient(90deg,#8b5cf6,#06b6d4)', activeColor:'#071033', inactiveColor: '#8b5cf6' },
+            tab_4: { bg: 'linear-gradient(90deg,#f59e0b,#10b981)', activeColor:'#071033', inactiveColor: '#f59e0b' }
+        };
+
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting){
+                    entry.target.classList.add('opacity-100');
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.08 });
+    </script>
+
+        <div id="footer-placeholder"></div>
+
+        <script src="/script.js"></script>
+        <script src="/search.js"></script>
+        <script src="/banner_trang_con.js"></script>
+</body>
+</html>

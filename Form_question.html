@@ -111,12 +111,12 @@
             <div class="input-group">
                 <label for="subject">Môn học</label>
                 <select id="subjectSelect"></select>
-                <input type="text" id="newSubjectInput" style="display: none;" placeholder="Nhập tên môn học mới.">
+                <input type="text" id="newSubjectInput" style="display: none;" placeholder="Nhập tên môn học mới...">
             </div>
             <div class="input-group">
                 <label for="topic">Tên bài</label>
                 <select id="topicSelect"></select>
-                <input type="text" id="newTopicInput" style="display: none;" placeholder="Nhập tên bài mới.">
+                <input type="text" id="newTopicInput" style="display: none;" placeholder="Nhập tên bài mới...">
             </div>
             <div class="input-group">
                 <label for="question">Câu hỏi</label>
@@ -170,7 +170,7 @@
         // Lấy dữ liệu môn học từ Google Sheet
         async function fetchSubjectsAndTopics() {
             try {
-                showLoading('Đang tải dữ liệu môn học.');
+                showLoading('Đang tải dữ liệu môn học...');
                 const response = await fetch(SUBJECTS_DATA_URL);
                 const data = await response.json();
                 
@@ -197,7 +197,7 @@
         // Điền dữ liệu vào dropdown môn học
         function populateSubjects() {
             subjectSelect.innerHTML = '';
-            subjectSelect.innerHTML += '<option value="">Chọn môn học.</option>';
+            subjectSelect.innerHTML += '<option value="">Chọn môn học...</option>';
             Object.keys(subjectsAndTopics).sort().forEach(subject => {
                 subjectSelect.innerHTML += `<option value="${subject}">${subject}</option>`;
             });
@@ -212,7 +212,7 @@
             topicSelect.innerHTML = '';
             
             if (selectedSubject && subjectsAndTopics[selectedSubject]) {
-                topicSelect.innerHTML += '<option value="">Chọn tên bài.</option>';
+                topicSelect.innerHTML += '<option value="">Chọn tên bài...</option>';
                 subjectsAndTopics[selectedSubject].forEach(topic => {
                     topicSelect.innerHTML += `<option value="${topic}">${topic}</option>`;
                 });
@@ -266,7 +266,7 @@
                 return;
             }
 
-            showLoading('Đang lưu dữ liệu.');
+            showLoading('Đang lưu dữ liệu...');
             
             const data = {
                 subject: subject,

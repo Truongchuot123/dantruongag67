@@ -6,19 +6,15 @@
     <title>HỌC VSTEP - Nguyễn Mai Đan Trường</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" href="/hinhanh/logo_web.png" type="">
+    <link rel="icon" href="/hinhanh/logo web.png" type="">
     <link rel="stylesheet" href="/style.css">
  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- SweetAlert2 for beautiful pop-ups -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Swiper.js for banner slider -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <!-- Confetti.js for effects -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">    <style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">    <style>
         /* --- CÀI ĐẶT BIẾN MÀU SẮC VÀ FONT --- */
         :root {
             --primary-color: #007BFF;
@@ -240,7 +236,11 @@
 
         // 3. Hàm bất đồng bộ để tạo và hiển thị các thẻ bài học
         async function createLessonCards() {
+<<<<<<< HEAD
             // Sử dụng for.of để xử lý các tác vụ bất đồng bộ một cách tuần tự
+=======
+            // Sử dụng for...of để xử lý các tác vụ bất đồng bộ một cách tuần tự
+>>>>>>> af8986cc9beca7c18e8e100d418ec470a0be7ad9
             for (const lesson of lessons) {
                 const title = await getTitleFromFile(lesson.file);
 
