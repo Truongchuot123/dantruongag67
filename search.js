@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         {
             title: 'Giới thiệu bản thân',
             description: 'Trang giới thiệu về Nguyễn Mai Đan Trường.',
-            url: '/my_introduce.html',
+            url: '/CV.html',
             icon: 'fa-envelope'
         },
         {
