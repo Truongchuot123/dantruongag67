@@ -380,6 +380,7 @@
         @media (max-width: 768px) {
             .mobile-bottom-nav { display: block; }
             .main-footer { margin-bottom: 120px; }
+            .footer-logo img { max-width: 70px; }
         }
 
         /* --- LOCKET POPUP STYLES --- */
@@ -499,15 +500,6 @@
             font-family: 'Poppins', sans-serif; display: flex;
             justify-content: center; align-items: center; padding: 80px 20px;
         }
-        .he_thong_tra_cuu {
-            background: #ffffff; padding: 30px; border-radius: 20px;
-            text-align: center; width: 100%; max-width: 900px;
-            animation: fadeIn 0.5s ease;
-        }
-        .he_thong_tra_cuu h1 {
-            margin-bottom: 20px; color: var(--tieude_noi_dung);
-            font-size: 36px; font-weight: 700; letter-spacing: 1px;
-        }
         .tabs { display: flex; justify-content: space-around; margin-bottom: 20px; }
         .tab-button {
             padding: 12px 25px; border: none; border-radius: 30px; cursor: pointer;
@@ -543,7 +535,7 @@
         @media (max-width: 992px) { .noidung-noibat-iten { flex: 0 0 calc(100% / 2); } }
         @media (max-width: 768px) {
             .noidung-noibat-iten { flex: 0 0 100%; }
-            .he_thong_tra_cuu h1, .tieude-noidung-noibat h1 { font-size: 34px; }
+            .tieude-noidung-noibat h1 { font-size: 34px; }
             .tab-button { padding: 10px 20px; font-size: 14px; }
             td, th { font-size: 12px; }
             .search-box { flex-direction: column; gap: 10px; align-items: stretch; }
@@ -551,7 +543,7 @@
             .banner_ngay_quoc_khanh { background-image: url('/hinhanh/banner_quoc_khanh_0209_mobile.png'); }
         }
         @media (max-width: 480px) {
-            .he_thong_tra_cuu h1, .tieude-noidung-noibat h1 { font-size: 30px; }
+            .tieude-noidung-noibat h1 { font-size: 30px; }
             .tab-button { padding: 8px 15px; font-size: 12px; }
             td, th { font-size: 10px; }
         }
@@ -648,7 +640,7 @@
         @media (max-width: 992px) { .noidung-noibat-iten { flex: 0 0 calc(100% / 2); } }
         @media (max-width: 768px) {
             .noidung-noibat-iten { flex: 0 0 100%; }
-            .he_thong_tra_cuu h1, .tieude-noidung-noibat h1 { font-size: 34px; }
+            .tieude-noidung-noibat h1 { font-size: 34px; }
             .tab-button { padding: 10px 20px; font-size: 14px; }
             td, th { font-size: 12px; }
             .search-box { flex-direction: column; gap: 10px; align-items: stretch; }
@@ -659,7 +651,7 @@
             .swiper-button-prev::after, .swiper-button-next::after { font-size: 14px; }
         }
         @media (max-width: 480px) {
-            .he_thong_tra_cuu h1, .tieude-noidung-noibat h1 { font-size: 30px; }
+            .tieude-noidung-noibat h1 { font-size: 30px; }
             .tab-button { padding: 8px 15px; font-size: 12px; }
             td, th { font-size: 10px; }
             .profile-text h2 { font-size: 6vw; }
@@ -670,15 +662,6 @@
  /* CSS CHO DỮ LIỆU  */
 
                 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
-        .thong_ke_truy_cap {
-            background-color: #f4f7f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
 
         .stats-container {
             width: 300px;

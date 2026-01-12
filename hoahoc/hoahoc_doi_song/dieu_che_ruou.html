@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hóa Học Đời Sống - Điều Chế Rượu Sinh Học</title>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* CSS Truyền Thống */
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #059669;
+            text-align: center;
+            border-bottom: 2px solid #ecfdf5;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #1e40af;
+            border-left: 5px solid #3b82f6;
+            padding-left: 15px;
+            margin-top: 40px;
+        }
+
+        h3 {
+            color: #0f172a;
+            margin-bottom: 10px;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        .summary-box {
+            background-color: #f0fdf4;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #10b981;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+        }
+
+        .step-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-left: 8px solid #3b82f6;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .step-card.ferment { border-left-color: #10b981; }
+        .step-card.distill { border-left-color: #f59e0b; }
+
+        .equation-box {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow-x: auto;
+            text-align: center;
+            border: 1px solid #cbd5e1;
+        }
+        .comparison-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background: #fff7ed;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #ffedd5;
+        }
+
+        .comparison-col h3 { color: #9a3412; }
+
+        .warning-box {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #fecaca;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .energy-section {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .energy-section h2 { border-left: none; color: #34d399; }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .caption {
+            font-size: 0.8rem;
+            color: #64748b;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>ĐIỀU CHẾ ANCOL ETYLIC (ETHANOL) SINH HỌC</h1>
+        <!-- Tổng quan -->
+        <section id="tong-quan">
+            <h2>Tổng quan</h2>
+            <div class="summary-box">
+                <p style="margin: 0; font-size: 1.1rem;">
+                    Rượu etylic là chất lỏng không màu, sôi ở 78,3<sup>o</sup>C,
+                    Nhẹ hơn nước và tan vô hạn trong nước. Rượu etylic hòa tan được nhiều chất như iot, benzen,…
+                </p>
+            </div>
+        </section>
+
+        <!-- Quy trình -->
+        <section id="quy-trinh">
+            <h2>Quy Trình Điều Chế Chi Tiết</h2>
+            
+            <div class="step-card">
+                <h3>1. Giai đoạn Thủy phân</h3>
+                <p>Tinh bột được nấu chín và dùng enzyme amylase để phân tách thành các phân tử đường đơn.</p>
+                <div class="equation-box">
+                    $$(C_6H_{10}O_5)_n + nH_2O \xrightarrow[t^o]{enzyme} nC_6H_{12}O_6$$
+                </div>
+            </div>
+
+            <div class="step-card ferment">
+                <h3>2. Giai đoạn Lên men</h3>
+                <p>Glucose được lên men bằng nấm men trong điều kiện kỵ khí để tạo ra ethanol và khí $CO_2$.</p>
+                <div class="equation-box">
+                    $$C_6H_{12}O_6 \xrightarrow[30-35^oC]{men \, rượu} 2C_2H_5OH + 2CO_2 \uparrow$$
+                </div>
+            </div>
+
+            <div class="step-card distill">
+                <h3>3. Chưng cất & Làm sạch</h3>
+                <p>Tách ethanol ra khỏi hỗn hợp nước bằng nhiệt độ. Để dùng cho xăng sinh học, cần dùng rây phân tử để đạt độ tinh khiết trên 99%.</p>
+            </div>
+        </section>
+
+        <!-- So sánh rượu uống -->
+        <section id="ruou-uong">
+            <h2>Rượu Uống vs Rượu Nhiên Liệu</h2>
+            <div class="comparison-table">
+                <div class="comparison-col">
+                    <h3>🍶 Rượu Thực Phẩm</h3>
+                    <ul>
+                        <li>Nồng độ: 5% - 50%.</li>
+                        <li>Chứa các ester tạo hương vị.</li>
+                        <li>Loại bỏ Methanol.</li>
+                        <li>Dùng làm đồ uống.</li>
+                    </ul>
+                </div>
+                <div class="comparison-col">
+                    <h3>⛽ Rượu Sinh Học</h3>
+                    <ul>
+                        <li>Nồng độ: > 99.5%.</li>
+                        <li>Loại bỏ tối đa nước.</li>
+                        <li>Thường bị biến tính (có độc).</li>
+                        <li>Dùng làm nhiên liệu máy móc.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Năng lượng -->
+        <section class="energy-section">
+            <h2>Cơ Chế Năng Lượng</h2>
+            <p>Phản ứng đốt cháy tỏa nhiệt lượng cao:</p>
+            <div class="equation-box" style="background: #1e293b; border: none;">
+                $$C_2H_5OH + 3O_2 \xrightarrow{t^o} 2CO_2 + 3H_2O + Q$$
+            </div>
+            <p style="color: #34d399; font-weight: bold;">Cháy sạch - Ít muội than - Octane cao</p>
+        </section>
+
+        <!-- Ứng dụng -->
+        <section>
+            <h2>Giá Trị Thực Tiễn</h2>
+            <ul>
+                <li><strong>♻️ Giảm phát thải:</strong> Cân bằng chu trình Carbon toàn cầu.</li>
+                <li><strong>⛽ Xăng E5/E10:</strong> Tiết kiệm tài nguyên dầu mỏ và giảm ô nhiễm môi trường.</li>
+            </ul>
+        </section>
+    </div>
+
+</body>
+</html>

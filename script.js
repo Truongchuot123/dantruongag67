@@ -556,7 +556,7 @@ function showProtectedContent() {
                                 <div class="noidung-noibat-ing"><img src="hinhanh/Trang chủ/hoahoc.png" alt="Hóa Học"></div>
                                 <div class="noidung-noibat-text">
                                     <h2>HÓA HỌC</h2>
-                                    <a href=""><button>XEM NGAY</button></a>
+                                    <a href="/hoahoc/hoahoc.html"><button>XEM NGAY</button></a>
                                 </div>
                             </div>
                             <div class="noidung-noibat-iten">
