@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nguyễn Mai Đan Trường</title>
-    <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:title" content="Trang Chủ - Nguyễn Mai Đan Trường">
-    <meta property="og:description" content="Chào bạn! Đây là trang giới thiệu bản thân mình. Khám phá thôi nào!.">
+    <title>CV - Nguyễn Mai Đan Trường</title>
+    <meta name="description" content="Chào bạn! Đây là CV online của mình. Khám phá thôi nào!.">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
@@ -46,7 +44,6 @@
             animation: fadeInUp 0.8s ease-out;
         }
 
-        /* Layout Grid */
         .grid {
             display: grid;
             gap: 24px;
@@ -54,7 +51,7 @@
 
         .grid-cols-12 { grid-template-columns: repeat(12, 1fr); }
 
-        /* Khung Header kéo dài theo hàng ngang */
+        /* Header */
         .header-full-width {
             grid-column: span 12;
             display: flex;
@@ -88,20 +85,19 @@
 
         .header-content {
             flex-grow: 1;
-            min-width: 0; /* Hỗ trợ text-overflow */
+            min-width: 0;
         }
 
         .header-content h1 {
-            font-size: clamp(1.5rem, 4vw, 2.5rem); /* Tự động co giãn font chữ */
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
             letter-spacing: -0.02em;
             margin-bottom: 4px;
             color: white;
-            white-space: nowrap; /* Không cho xuống dòng */
+            white-space: nowrap;
             overflow: hidden;
-            text-overflow: ellipsis; /* Hiện ... nếu quá dài trên màn hình cực nhỏ */
+            text-overflow: ellipsis;
         }
 
-        /* Icon vào giữa */
         .social-links { 
             display: flex; 
             gap: 12px; 
@@ -127,7 +123,6 @@
             transform: translateY(-3px);
         }
 
-        /* Responsive cho Header */
         @media (max-width: 768px) {
             .header-full-width {
                 flex-direction: column;
@@ -136,15 +131,15 @@
                 gap: 20px;
             }
             .header-content h1 { 
-                white-space: nowrap; /* Giữ yêu cầu không xuống dòng */
-                font-size: 1.5rem;
+                white-space: normal;
+                font-size: 1.8rem;
             }
             .social-links {
-                justify-content: center; /* Đưa icon vào chính giữa khi ở mobile */
+                justify-content: center;
             }
         }
 
-        /* Components */
+        /* Cards */
         .dark-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -160,7 +155,6 @@
             transform: translateY(-4px);
         }
 
-        /* Layout Main Content */
         .sidebar { grid-column: span 4; }
         .main-content { grid-column: span 8; }
 
@@ -168,7 +162,6 @@
             .sidebar, .main-content { grid-column: span 12; }
         }
 
-        /* Sidebar & Details */
         h3.section-label {
             font-size: 0.8rem;
             text-transform: uppercase;
@@ -189,10 +182,30 @@
 
         .contact-item i { color: var(--neon-teal); width: 20px; }
 
-        .neon-text { color: var(--neon-teal); }
-        .sub-title { color: var(--neon-teal); font-weight: 500; font-size: 1.2rem; opacity: 0.9; }
+        /* Skill Bars */
+        .skill-item {
+            margin-bottom: 15px;
+        }
+        .skill-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+        }
+        .skill-bar {
+            height: 6px;
+            background: #334155;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .skill-progress {
+            height: 100%;
+            background: var(--neon-teal);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(45, 212, 191, 0.4);
+        }
 
-        /* Timeline */
+        /* Timeline & Badges */
         .timeline {
             position: relative;
             padding-left: 24px;
@@ -227,8 +240,8 @@
 
         .badge {
             background: rgba(45, 212, 191, 0.1);
-            color: rgb(205, 197, 197);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 6px 14px;
             border-radius: 20px;
             font-size: 0.8rem;
@@ -239,6 +252,8 @@
             margin-top: 8px;
         }
 
+        .neon-text { color: var(--neon-teal); }
+        .sub-title { color: var(--neon-teal); font-weight: 500; font-size: 1.2rem; opacity: 0.9; }
         .text-muted { color: var(--text-muted); font-size: 0.95rem; }
     </style>
 </head>
@@ -247,7 +262,7 @@
     <div class="container">
         <div class="grid grid-cols-12">
             
-            <!-- HEADER KÉO DÀI THEO HÀNG NGANG -->
+            <!-- HEADER -->
             <header class="header-full-width">
                 <div class="avatar-wrapper">
                     <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkdg5c_0KOtJuRMhl2UamVMlLFI9GyT3TQUP9gwPqi3asjjKLBD_Qs-PW3Y8Vd0pxhUlb6e3zVt36D2bD0KgnXPnubjhRcRlbXRwJGVbFTjVcH3TIkd1dB5HXrlrRPhNUUQcEze5ngk02JH58VX0Fhkrr79DVvIR5d-3LttZdTnCTU4--UtTzii_53w=w1280" alt="Avatar" class="avatar-img">
@@ -263,8 +278,9 @@
                 </div>
             </header>
 
-            <!-- CỘT TRÁI (SIDEBAR) -->
+            <!-- SIDEBAR -->
             <aside class="sidebar grid">
+                <!-- CONTACT -->
                 <section class="dark-card">
                     <h3 class="section-label">Thông tin liên hệ</h3>
                     <div class="contact-item">
@@ -281,22 +297,43 @@
                     </div>
                 </section>
 
+                <!-- SKILLS (THAY CHO CHỨNG CHỈ) -->
                 <section class="dark-card">
-                    <h3 class="section-label">Chứng chỉ</h3>
-                    <div class="contact-item" style="justify-content: space-between;">
-                        <span>Ứng dụng CNTT</span>
-                        <span class="neon-text" style="font-size: 0.75rem;">Cơ bản</span>
+                    <h3 class="section-label">Kỹ năng</h3>
+                    
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span>Lắng nghe</span>
+                            <span class="neon-text">90%</span>
+                        </div>
+                        <div class="skill-bar"><div class="skill-progress" style="width: 90%;"></div></div>
                     </div>
-                    <div class="contact-item" style="justify-content: space-between;">
-                        <span>Tiếng Anh</span>
-                        <span style="color: var(--text-dim); font-size: 0.7rem;">Đang cập nhật</span>
+
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span>Quản lý thời gian</span>
+                            <span class="neon-text">90%</span>
+                        </div>
+                        <div class="skill-bar"><div class="skill-progress" style="width: 90%;"></div></div>
                     </div>
-                    <div class="contact-item" style="justify-content: space-between;">
-                        <span>CCHN</span>
-                        <span style="color: var(--text-dim); font-size: 0.7rem;">Đang cập nhật</span>
+
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span>Trung thực và trách nhiệm</span>
+                            <span class="neon-text">100%</span>
+                        </div>
+                        <div class="skill-bar"><div class="skill-progress" style="width: 100%;"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span>Tin học văn phòng</span>
+                            <span class="neon-text">75%</span>
+                        </div>
+                        <div class="skill-bar"><div class="skill-progress" style="width: 75%;"></div></div>
                     </div>
                 </section>
 
+                <!-- INTERESTS -->
                 <section class="dark-card">
                     <h3 class="section-label">Sở thích</h3>
                     <div class="badge"><i class="fa-solid fa-soccer-ball"></i> Bóng đá</div>
@@ -304,14 +341,17 @@
                 </section>
             </aside>
 
+            <!-- MAIN CONTENT -->
             <main class="main-content grid">
+                <!-- OBJECTIVE -->
                 <section class="dark-card">
                     <h3 class="neon-text" style="margin-bottom: 15px;"><i class="fa-solid fa-crosshairs"></i> Mục tiêu nghề nghiệp</h3>
                     <p class="text-muted">
-                       Tôi luôn đặt y đức lên hàng đầu, tận tâm và nhiệt huyết với nghề. Mong muốn được có cơ hội học hỏi và nâng cao trình độ chuyên môn
+                      Là Kỹ thuật y Phục hồi chức năng mới ra trường, tôi mong muốn được tuyển dụng tại một phòng khám chất lượng, nơi tôi có thể vận dụng kiến thức đã học và phát triển kỹ năng nghề nghiệp. Trong thời gian tới, tôi sẽ chủ động học hỏi kinh nghiệm thực tế, rèn luyện kỹ năng chuyên môn và không ngừng nâng cao trình độ của mình để phục vụ người bệnh một cách hiệu quả, góp phần vào chất lượng chăm sóc sức khỏe chung.
                     </p>
                 </section>
 
+                <!-- EDUCATION -->
                 <section class="dark-card">
                     <h3 class="neon-text" style="margin-bottom: 25px;"><i class="fa-solid fa-graduation-cap"></i> Học vấn</h3>
                     <div class="timeline">
@@ -327,6 +367,7 @@
                     </div>
                 </section>
 
+                <!-- EXPERIENCE -->
                 <section class="dark-card">
                     <h3 class="neon-text" style="margin-bottom: 25px;"><i class="fa-solid fa-briefcase"></i> Kinh nghiệm thực tập</h3>
                     

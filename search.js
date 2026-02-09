@@ -37,6 +37,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             icon: 'fa-home'
         },
         {
+            title: 'Luyện tập',
+            description: 'Tạo câu hỏi ngắn và luyện tập.',
+            url: '/luyentap.html',
+            icon: 'fa-heartbeat'
+        },
+        {
             title: 'Liên Hệ Với Tôi',
             description: 'Tìm thông tin liên hệ: Facebook, Instagram. Gmail...',
             action: () => showContact(),
