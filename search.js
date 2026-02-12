@@ -43,10 +43,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             icon: 'fa-heartbeat'
         },
         {
-            title: 'Luyện tập 2',
-            description: 'Tạo câu hỏi ngắn và luyện tập.',
-            url: '/luyentap1.html',
-            icon: 'fa-heartbeat'
+            title: 'Dữ liệu',
+            description: 'Xem và quản lý dữ liệu trong hệ thống.',
+            url: '/dulieu.html',
+            icon: 'fa-database'
         },
         {
             title: 'Liên Hệ Với Tôi',

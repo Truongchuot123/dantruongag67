@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cơ sở dữ liệu - Nguyên Mai Đan Trường</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+
+        .btn-gradient {
+            background: linear-gradient(to right, #6366f1, #a855f7);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .btn-gradient:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .loader {
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top: 2px solid #6366f1;
+            border-radius: 50%;
+            width: 20px; height: 20px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .modal-animate { animation: modalIn 0.3s ease-out; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        
+        .stat-badge {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #818cf8;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+            <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
+                <i class="fas fa-cloud"></i> HỆ THỐNG CƠ SỞ DỮ LIỆU
+            </h1>
+            <div id="auth-status" class="flex items-center gap-3">
+                <!-- Status icon will appear here -->
+            </div>
+        </header>
+
+        <!-- Stats Bar -->
+        <div class="flex flex-wrap items-center gap-4 mb-4 px-2">
+            <div class="flex items-center gap-2">
+                <span class="text-slate-400 text-sm">Tổng cộng:</span>
+                <span id="totalCount" class="stat-badge">0 tài liệu</span>
+            </div>
+            <div id="filterResultContainer" class="hidden flex items-center gap-2">
+                <span class="text-slate-400 text-sm">Tìm thấy:</span>
+                <span id="filteredCount" class="stat-badge !text-emerald-400 !bg-emerald-400/10 !border-emerald-400/20">0</span>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="glass-card p-4 mb-6 grid grid-cols-1 md:grid-cols-12 gap-4">
+            <div class="md:col-span-4 relative">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                <input type="text" id="searchInput" placeholder="Tìm kiếm nhanh..." 
+                    class="w-full pl-10 pr-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg outline-none focus:border-indigo-500 text-sm transition-all">
+            </div>
+            <div class="md:col-span-3">
+                <select id="filterSubject" class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg outline-none focus:border-indigo-500 text-sm text-slate-300 cursor-pointer">
+                    <option value="">Môn học</option>
+                </select>
+            </div>
+            <div class="md:col-span-3">
+                <select id="filterTopic" class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg outline-none focus:border-indigo-500 text-sm text-slate-300 cursor-pointer">
+                    <option value="">Chủ đề</option>
+                </select>
+            </div>
+            <div class="md:col-span-2">
+                <button onclick="openModal()" class="w-full btn-gradient text-white py-2.5 rounded-lg font-bold text-sm flex items-center justify-center gap-2">
+                    <i class="fas fa-plus"></i> Thêm dữ liệu
+                </button>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="glass-card overflow-hidden">
+            <div class="overflow-x-auto custom-scrollbar">
+                <table class="w-full text-left text-sm">
+                    <thead>
+                        <tr class="bg-slate-800/50 border-b border-slate-700">
+                            <th class="px-6 py-4 font-semibold text-slate-400">Môn học</th>
+                            <th class="px-6 py-4 font-semibold text-slate-400">Chủ đề</th>
+                            <th class="px-6 py-4 font-semibold text-slate-400">Nội dung</th>
+                            <th class="px-6 py-4 font-semibold text-slate-400 text-center">Link</th>
+                            <th class="px-6 py-4 font-semibold text-slate-400 text-right">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable" class="divide-y divide-slate-800">
+                        <!-- Rows -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="mainLoader" class="py-20 text-center flex flex-col items-center gap-3">
+                <div class="loader !w-8 !h-8 !border-4"></div>
+                <span class="text-slate-500 animate-pulse">Hệ thống đang lấy dữ liệu...</span>
+            </div>
+            
+            <div id="emptyState" class="hidden py-20 text-center text-slate-500">
+                <i class="fas fa-inbox text-4xl mb-3 block"></i>
+                Hệ thống chưa có dữ liệu hoặc không tìm thấy kết quả
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="linkModal" class="fixed inset-0 bg-slate-950/90 hidden items-center justify-center z-50 p-4 backdrop-blur-sm">
+        <div class="bg-slate-900 w-full max-w-md rounded-xl border border-slate-800 modal-animate overflow-hidden shadow-2xl">
+            <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+                <h3 id="modalTitle" class="font-bold text-lg">Thêm dữ liệu</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="linkForm" class="p-6 space-y-4">
+                <input type="hidden" id="editId">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs text-slate-500 font-bold mb-1 block">MÔN HỌC</label>
+                        <input type="text" id="subject" list="subjectList" required class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-lg outline-none focus:border-indigo-500">
+                        <datalist id="subjectList"></datalist>
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-500 font-bold mb-1 block">CHỦ ĐỀ</label>
+                        <input type="text" id="topic" list="topicList" required class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-lg outline-none focus:border-indigo-500">
+                        <datalist id="topicList"></datalist>
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs text-slate-500 font-bold mb-1 block">TIÊU ĐỀ</label>
+                    <input type="text" id="title" required class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-lg outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-500 font-bold mb-1 block">Liên kết</label>
+                    <input type="url" id="url" required class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-lg outline-none focus:border-indigo-500">
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="button" onclick="closeModal()" class="flex-1 py-2 bg-slate-800 rounded-lg font-bold">Hủy</button>
+                    <button type="submit" id="submitBtn" class="flex-1 btn-gradient py-2 rounded-lg font-bold">Lưu dữ liệu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-lg bg-indigo-600 text-white font-bold shadow-xl opacity-0 translate-y-10 transition-all duration-300 z-[100] pointer-events-none"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
+            authDomain: "dulieuweb-6541e.firebaseapp.com",
+            projectId: "dulieuweb-6541e",
+            storageBucket: "dulieuweb-6541e.firebasestorage.app",
+            messagingSenderId: "215480268517",
+            appId: "1:215480268517:web:16600eafd6839fee5dc60c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'main-database-v1';
+
+        let allLinks = [];
+        let user = null;
+
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.error("Auth Fail:", err);
+                showToast("Lỗi kết nối Cloud: " + err.message);
+            }
+        };
+
+        onAuthStateChanged(auth, (u) => {
+            user = u;
+            const statusEl = document.getElementById('auth-status');
+            if (user) {
+                statusEl.innerHTML = `<span class="flex items-center gap-2 text-emerald-400 text-xs font-medium"><i class="fas fa-circle text-[8px] animate-pulse"></i> Đã kết nối Cloud</span>`;
+                startSync();
+            } else {
+                statusEl.innerHTML = `<span class="text-rose-400 text-xs font-medium italic">Đang ngoại tuyến...</span>`;
+            }
+        });
+
+        initAuth();
+
+        function startSync() {
+            if (!user) return;
+            const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'links');
+            
+            onSnapshot(colRef, (snap) => {
+                allLinks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                allLinks.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+                
+                render();
+                updateFilters();
+                updateStats();
+                document.getElementById('mainLoader').classList.add('hidden');
+            }, (err) => {
+                console.error("Sync Error:", err);
+                showToast("Lỗi quyền truy cập Cloud.");
+            });
+        }
+
+        function updateStats() {
+            const total = allLinks.length;
+            document.getElementById('totalCount').textContent = `${total} tài liệu`;
+        }
+
+        function render() {
+            const tbody = document.getElementById('dataTable');
+            const empty = document.getElementById('emptyState');
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const fSub = document.getElementById('filterSubject').value;
+            const fTop = document.getElementById('filterTopic').value;
+
+            const filtered = allLinks.filter(i => {
+                const matchesText = (i.title + (i.subject || "") + (i.topic || "")).toLowerCase().includes(search);
+                const matchesSub = !fSub || i.subject === fSub;
+                const matchesTop = !fTop || i.topic === fTop;
+                return matchesText && matchesSub && matchesTop;
+            });
+
+            // Update filtered stats
+            const filterStatContainer = document.getElementById('filterResultContainer');
+            if (search || fSub || fTop) {
+                filterStatContainer.classList.remove('hidden');
+                document.getElementById('filteredCount').textContent = filtered.length;
+            } else {
+                filterStatContainer.classList.add('hidden');
+            }
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '';
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            empty.classList.add('hidden');
+            tbody.innerHTML = filtered.map(item => `
+                <tr class="hover:bg-slate-800/30 transition-colors">
+                    <td class="px-6 py-4">
+                        <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-tighter bg-indigo-500/10 px-2 py-1 rounded border border-indigo-500/20 shadow-sm">${item.subject || 'N/A'}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="text-[10px] font-bold text-purple-400 uppercase tracking-tighter bg-purple-500/10 px-2 py-1 rounded border border-purple-500/20 shadow-sm">${item.topic || 'N/A'}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="font-bold text-slate-200 line-clamp-1">${item.title}</div>
+                        <div class="text-[10px] text-slate-600 truncate max-w-[200px]">${item.url}</div>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <a href="${item.url}" target="_blank" class="w-8 h-8 inline-flex items-center justify-center bg-slate-800 rounded-lg hover:bg-indigo-600 transition-all border border-slate-700">
+                            <i class="fas fa-external-link-alt text-xs"></i>
+                        </a>
+                    </td>
+                    <td class="px-6 py-4 text-right flex justify-end gap-1">
+                        <button onclick="window.editItem('${item.id}')" class="p-2 text-blue-400 hover:bg-blue-400/10 rounded-lg transition-colors"><i class="fas fa-edit"></i></button>
+                        <button onclick="window.deleteItem('${item.id}')" class="p-2 text-rose-400 hover:bg-rose-400/10 rounded-lg transition-colors"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateFilters() {
+            const subjects = [...new Set(allLinks.map(i => i.subject).filter(Boolean))].sort();
+            const topics = [...new Set(allLinks.map(i => i.topic).filter(Boolean))].sort();
+
+            const renderSelect = (id, data) => {
+                const el = document.getElementById(id);
+                const val = el.value;
+                el.innerHTML = `<option value="">Tất cả ${id === 'filterSubject' ? 'môn học' : 'chủ đề'}</option>` +
+                    data.map(d => `<option value="${d}" ${d === val ? 'selected' : ''}>${d}</option>`).join('');
+            };
+
+            renderSelect('filterSubject', subjects);
+            renderSelect('filterTopic', topics);
+            
+            document.getElementById('subjectList').innerHTML = subjects.map(s => `<option value="${s}">`).join('');
+            document.getElementById('topicList').innerHTML = topics.map(t => `<option value="${t}">`).join('');
+        }
+
+        document.getElementById('linkForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!user) return showToast("Chưa kết nối Cloud!");
+
+            const id = document.getElementById('editId').value;
+            const btn = document.getElementById('submitBtn');
+            const data = {
+                subject: document.getElementById('subject').value.trim(),
+                topic: document.getElementById('topic').value.trim(),
+                title: document.getElementById('title').value.trim(),
+                url: document.getElementById('url').value.trim(),
+                createdAt: serverTimestamp()
+            };
+
+            btn.disabled = true;
+            btn.innerHTML = `<div class="loader mx-auto"></div>`;
+
+            try {
+                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'links');
+                if (id) {
+                    await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id), data);
+                    showToast("Cập nhật thành công!");
+                } else {
+                    await addDoc(colRef, data);
+                    showToast("Đã lưu dữ liệu!");
+                }
+                closeModal();
+            } catch (err) {
+                console.error("Save Error:", err);
+                showToast("Lỗi khi lưu dữ liệu.");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Lưu dữ liệu";
+            }
+        });
+
+        window.deleteItem = async (id) => {
+            if (confirm("Xóa dữ liệu này khỏi Cloud?")) {
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id));
+                    showToast("Đã xóa dữ liệu.");
+                } catch (err) { showToast("Lỗi xóa dữ liệu."); }
+            }
+        };
+
+        window.editItem = (id) => {
+            const item = allLinks.find(l => l.id === id);
+            if (!item) return;
+            document.getElementById('editId').value = id;
+            document.getElementById('subject').value = item.subject || '';
+            document.getElementById('topic').value = item.topic || '';
+            document.getElementById('title').value = item.title || '';
+            document.getElementById('url').value = item.url || '';
+            document.getElementById('modalTitle').textContent = "Sửa dữ liệu";
+            openModal();
+        };
+
+        document.getElementById('searchInput').addEventListener('input', render);
+        document.getElementById('filterSubject').addEventListener('change', render);
+        document.getElementById('filterTopic').addEventListener('change', render);
+
+    </script>
+
+    <script>
+        function openModal() {
+            const m = document.getElementById('linkModal');
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+        }
+        function closeModal() {
+            const m = document.getElementById('linkModal');
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+            document.getElementById('linkForm').reset();
+            document.getElementById('editId').value = '';
+            document.getElementById('modalTitle').textContent = "Thêm dữ liệu";
+        }
+        function showToast(m) {
+            const t = document.getElementById('toast');
+            t.textContent = m;
+            t.classList.remove('opacity-0', 'translate-y-10');
+            setTimeout(() => t.classList.add('opacity-0', 'translate-y-10'), 3000);
+        }
+    </script>
+</body>
+</html>
