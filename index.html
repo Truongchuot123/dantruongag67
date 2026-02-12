@@ -2,436 +2,165 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cơ sở dữ liệu - Nguyên Mai Đan Trường</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Góp ý - Nguyễn Mai Đan Trường</title>
+    
+     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:image" content="/hinhanh/logo web.png">
+    <meta property="og:url" content="https://dantruongag.id.vn">
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            min-height: 100vh;
-            color: #f8fafc;
-            -webkit-tap-highlight-color: transparent;
-        }
+    <link rel="icon" href="/hinhanh/logo web.png" type="">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
 
-        .glass-card {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 1rem;
-        }
+    </head>
+    <body class="bg-gray-900">
+    <div id="header-placeholder"></div>
+    <div id="search-placeholder"></div>
 
-        /* Custom Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
-
-        .btn-gradient {
-            background: linear-gradient(to right, #6366f1, #a855f7);
-            transition: all 0.3s ease;
-        }
-        
-        .btn-gradient:active {
-            transform: scale(0.98);
-        }
-
-        .loader {
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-top: 2px solid #6366f1;
-            border-radius: 50%;
-            width: 20px; height: 20px;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        .modal-animate { 
-            animation: modalIn 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
-        }
-        
-        @keyframes modalIn { 
-            from { opacity: 0; transform: translateY(20px) scale(0.95); } 
-            to { opacity: 1; transform: translateY(0) scale(1); } 
-        }
-        
-        /* Clamp text for small screens */
-        .line-clamp-custom {
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        /* Responsive Table */
-        @media (max-width: 640px) {
-            .table-cell-mobile {
-                min-width: 120px;
-            }
-            .title-cell-mobile {
-                min-width: 180px;
-            }
-        }
-    </style>
-</head>
-<body class="p-3 sm:p-6 md:p-8">
-
-    <div class="max-w-6xl mx-auto">
-        <!-- Header -->
-        <header class="flex flex-col sm:flex-row justify-between items-center mb-6 md:mb-8 gap-4">
-            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 text-center sm:text-left">
-                <i class="fas fa-cloud mr-2"></i>CƠ SỞ DỮ LIỆU
-            </h1>
-            <div id="auth-status">
-            </div>
-        </header>
-
-        <!-- Stats Bar -->
-        <div class="flex flex-wrap items-center gap-3 mb-4 px-1">
-            <div class="flex items-center gap-2 bg-slate-800/40 px-3 py-1.5 rounded-full border border-slate-700/50">
-                <span class="text-slate-400 text-[11px] sm:text-xs uppercase font-bold tracking-wider">Tổng:</span>
-                <span id="totalCount" class="text-indigo-400 text-xs sm:text-sm font-bold">0</span>
-            </div>
-            <div id="filterResultContainer" class="hidden flex items-center gap-2 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/20">
-                <span class="text-emerald-500/70 text-[11px] sm:text-xs uppercase font-bold tracking-wider">Tìm thấy:</span>
-                <span id="filteredCount" class="text-emerald-400 text-xs sm:text-sm font-bold">0</span>
-            </div>
-        </div>
-
-        <!-- Filters Grid -->
-        <div class="glass-card p-4 mb-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 md:gap-4">
-            <div class="lg:col-span-4 relative">
-                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                <input type="text" id="searchInput" placeholder="Tìm kiếm nhanh..." 
-                    class="w-full pl-10 pr-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg outline-none focus:border-indigo-500 text-sm transition-all focus:ring-2 focus:ring-indigo-500/20">
-            </div>
-            <div class="lg:col-span-3">
-                <select id="filterSubject" class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg outline-none focus:border-indigo-500 text-sm text-slate-300 cursor-pointer appearance-none">
-                    <option value="">Tất cả môn học</option>
-                </select>
-            </div>
-            <div class="lg:col-span-3">
-                <select id="filterTopic" class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg outline-none focus:border-indigo-500 text-sm text-slate-300 cursor-pointer appearance-none">
-                    <option value="">Tất cả chủ đề</option>
-                </select>
-            </div>
-            <div class="lg:col-span-2">
-                <button onclick="openModal()" class="w-full btn-gradient text-white py-2.5 rounded-lg font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20">
-                    <i class="fas fa-plus"></i> <span>Thêm mới</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Content Table -->
-        <div class="glass-card overflow-hidden">
-            <div class="overflow-x-auto custom-scrollbar">
-                <table class="w-full text-left text-sm border-collapse">
-                    <thead>
-                        <tr class="bg-slate-800/50 border-b border-slate-700">
-                            <th class="px-4 py-4 font-semibold text-slate-400 uppercase tracking-wider text-[11px] table-cell-mobile">Môn học</th>
-                            <th class="px-4 py-4 font-semibold text-slate-400 uppercase tracking-wider text-[11px] table-cell-mobile">Chủ đề</th>
-                            <th class="px-4 py-4 font-semibold text-slate-400 uppercase tracking-wider text-[11px] title-cell-mobile">Nội dung</th>
-                            <th class="px-4 py-4 font-semibold text-slate-400 uppercase tracking-wider text-[11px] text-center">Link</th>
-                            <th class="px-4 py-4 font-semibold text-slate-400 uppercase tracking-wider text-[11px] text-right">Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dataTable" class="divide-y divide-slate-800/50">
-                        <!-- Dynamic Rows -->
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Loaders & Empty State -->
-            <div id="mainLoader" class="py-20 text-center flex flex-col items-center gap-3">
-                <div class="loader !w-8 !h-8 !border-4"></div>
-                <span class="text-slate-500 text-xs animate-pulse font-medium">Đang đồng bộ dữ liệu...</span>
-            </div>
-            
-            <div id="emptyState" class="hidden py-16 text-center text-slate-500">
-                <i class="fas fa-search text-3xl mb-3 opacity-20 block"></i>
-                <p class="text-sm">Không tìm thấy dữ liệu phù hợp</p>
-            </div>
-        </div>
-        
-        <footer class="mt-8 text-center text-slate-600 text-[10px] sm:text-xs uppercase tracking-[0.2em]">
-            &copy; 2024 Nguyên Mai Đan Trường • Database System
-        </footer>
-    </div>
-
-    <!-- Modal (Responsive Overlay) -->
-    <div id="linkModal" class="fixed inset-0 bg-slate-950/80 hidden items-end sm:items-center justify-center z-50 p-0 sm:p-4 backdrop-blur-md">
-        <div class="bg-slate-900 w-full max-w-md rounded-t-2xl sm:rounded-2xl border-t sm:border border-slate-700/50 modal-animate overflow-hidden shadow-2xl">
-            <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
-                <h3 id="modalTitle" class="font-bold text-base sm:text-lg text-indigo-400">Thêm dữ liệu</h3>
-                <button onclick="closeModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-800 text-slate-400 transition-colors">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <form id="linkForm" class="p-5 space-y-4">
-                <input type="hidden" id="editId">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] text-slate-500 font-black mb-1.5 block uppercase tracking-widest">Môn học</label>
-                        <input type="text" id="subject" list="subjectList" placeholder="VD: Toán" required class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl outline-none focus:border-indigo-500 text-sm">
-                        <datalist id="subjectList"></datalist>
-                    </div>
-                    <div>
-                        <label class="text-[10px] text-slate-500 font-black mb-1.5 block uppercase tracking-widest">Chủ đề</label>
-                        <input type="text" id="topic" list="topicList" placeholder="VD: Đại số" required class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl outline-none focus:border-indigo-500 text-sm">
-                        <datalist id="topicList"></datalist>
-                    </div>
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Default Banner -->
+        <section class="banner_trangcon event-banner">
+            <div class="banner_trangcon_header">
+                <h1>CHÀO MỪNG BẠN ĐẾN VỚI WEBSITE CỦA ĐAN TRƯỜNG</h1>
+                <div class="banner_trangcon_header_underline"></div>
+                <p>
+                    <a href="/gopy.html">
+                        <button class="banner_trangcon_btn btn">GÓP Ý</button>
+                    </a>
+                </p>
                 </div>
-                <div>
-                    <label class="text-[10px] text-slate-500 font-black mb-1.5 block uppercase tracking-widest">Tiêu đề tài liệu</label>
-                    <input type="text" id="title" placeholder="Nhập tiêu đề ngắn gọn..." required class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl outline-none focus:border-indigo-500 text-sm">
+        </section>
+
+        <!-- Giỗ Tổ Hùng Vương -->
+        <section class="ngay_gio_to_hung_vuong event-banner">
+            <div class="title_ngay_gio_to_hung_vuong">
+                <h1>GIỖ TỔ</h1>
+                <h2>HÙNG VƯƠNG</h2>
+                <div class="noidung_ngay_gio_to_hung_vuong">
+                    <p class="text_ngay_gio_to_hung_vuong">
+                        “Dù ai đi ngược về xuôi<br>
+                        Nhớ ngày Giỗ Tổ mồng mười tháng Ba”
+                    </p>
                 </div>
-                <div>
-                    <label class="text-[10px] text-slate-500 font-black mb-1.5 block uppercase tracking-widest">Đường dẫn (URL)</label>
-                    <input type="url" id="url" placeholder="https://..." required class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl outline-none focus:border-indigo-500 text-sm">
                 </div>
-                <div class="flex gap-3 pt-4 pb-2 sm:pb-0">
-                    <button type="button" onclick="closeModal()" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold text-sm transition-colors">Hủy</button>
-                    <button type="submit" id="submitBtn" class="flex-1 btn-gradient py-3 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-500/20">Lưu lại</button>
+        </section>
+
+        <!-- Giải phóng miền Nam -->
+        <section class="banner_giai_phong_mien_nam_30-4 event-banner">
+            <div class="noidung_giai_phong_mien_nam_30-4">
+                <div class="title_giai_phong_mien_nam_30-4">KỶ NIỆM</div>
+                <img src="https://placehold.co/250x250/c40000/ffffff?text=Sao+Vàng" alt="Logo phát sáng" class="logo-banner_phat_sang">
+                <h2>NGÀY GIẢI PHÓNG MIỀN NAM<br>THỐNG NHẤT ĐẤT NƯỚC</h2>
+                <p class="time_giai_phong_mien_nam_30-4">30/4/1975 - 30/4/2025</p>
                 </div>
-            </form>
-        </div>
-    </div>
+        </section>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 px-5 py-3 rounded-full bg-slate-800 border border-indigo-500/30 text-white text-xs font-bold shadow-2xl opacity-0 translate-y-10 transition-all duration-300 z-[100] pointer-events-none flex items-center gap-2">
-        <i class="fas fa-info-circle text-indigo-400"></i>
-        <span id="toastMsg">Thông báo</span>
-    </div>
+        <!-- Chiến thắng Điện Biên Phủ -->
+        <section class="banner_chien_thang_dien_bien_phu event-banner">
+            <div class="banner-content-inner">
+                <div class="title">KỶ NIỆM</div>
+                <h1>CHIẾN THẮNG ĐIỆN BIÊN PHỦ</h1>
+                <h2>07/05/1954 - 07/05/2025</h2>
+                </div>
+        </section>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        <!-- Sinh nhật Bác -->
+        <section class="banner_ngay_sinh_chu_tich_HCM_1905 event-banner">
+             <div class="banner-content-inner">
+                <div class="title">KỶ NIỆM</div>
+                <h1>NGÀY SINH CHỦ TỊCH HỒ CHÍ MINH</h1>
+                <h2>19/05/1890 - 19/05/2025</h2>
+                </div>
+        </section>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
-            authDomain: "dulieuweb-6541e.firebaseapp.com",
-            projectId: "dulieuweb-6541e",
-            storageBucket: "dulieuweb-6541e.firebasestorage.app",
-            messagingSenderId: "215480268517",
-            appId: "1:215480268517:web:16600eafd6839fee5dc60c"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'main-database-v1';
-
-        let allLinks = [];
-        let user = null;
-
-        // Auth
-        const initAuth = async () => {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (err) {
-                console.error("Auth Fail:", err);
-            }
-        };
-
-        onAuthStateChanged(auth, (u) => {
-            user = u;
-            const statusEl = document.getElementById('auth-status');
-            if (user) {
-                statusEl.innerHTML = ``;
-                startSync();
-            } else {
-                statusEl.innerHTML = ``;
-            }
-        });
-
-        initAuth();
-
-        function startSync() {
-            if (!user) return;
-            const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'links');
-            
-            onSnapshot(colRef, (snap) => {
-                allLinks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                allLinks.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-                
-                render();
-                updateFilters();
-                updateStats();
-                document.getElementById('mainLoader').classList.add('hidden');
-            }, (err) => {
-                console.error("Sync Error:", err);
-                showToast("Lỗi đồng bộ dữ liệu");
-            });
-        }
-
-        function updateStats() {
-            document.getElementById('totalCount').textContent = allLinks.length;
-        }
-
-        function render() {
-            const tbody = document.getElementById('dataTable');
-            const empty = document.getElementById('emptyState');
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            const fSub = document.getElementById('filterSubject').value;
-            const fTop = document.getElementById('filterTopic').value;
-
-            const filtered = allLinks.filter(i => {
-                const matchesText = (i.title + (i.subject || "") + (i.topic || "")).toLowerCase().includes(search);
-                const matchesSub = !fSub || i.subject === fSub;
-                const matchesTop = !fTop || i.topic === fTop;
-                return matchesText && matchesSub && matchesTop;
-            });
-
-            const filterStatContainer = document.getElementById('filterResultContainer');
-            if (search || fSub || fTop) {
-                filterStatContainer.classList.remove('hidden');
-                document.getElementById('filteredCount').textContent = filtered.length;
-            } else {
-                filterStatContainer.classList.add('hidden');
-            }
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = '';
-                empty.classList.remove('hidden');
-                return;
-            }
-
-            empty.classList.add('hidden');
-            tbody.innerHTML = filtered.map(item => `
-                <tr class="hover:bg-slate-800/30 transition-colors group">
-                    <td class="px-4 py-4 whitespace-nowrap">
-                        <span class="text-[10px] font-bold text-indigo-300 uppercase bg-indigo-500/10 px-2 py-1 rounded-md border border-indigo-500/20">${item.subject || 'N/A'}</span>
-                    </td>
-                    <td class="px-4 py-4 whitespace-nowrap">
-                        <span class="text-[10px] font-bold text-purple-300 uppercase bg-purple-500/10 px-2 py-1 rounded-md border border-purple-500/20">${item.topic || 'N/A'}</span>
-                    </td>
-                    <td class="px-4 py-4">
-                        <div class="font-semibold text-slate-200 line-clamp-custom text-xs sm:text-sm group-hover:text-indigo-400 transition-colors">${item.title}</div>
-                        <div class="text-[10px] text-slate-500 truncate max-w-[120px] sm:max-w-xs mt-0.5">${item.url}</div>
-                    </td>
-                    <td class="px-4 py-4 text-center">
-                        <a href="${item.url}" target="_blank" class="w-8 h-8 sm:w-9 sm:h-9 inline-flex items-center justify-center bg-slate-800 hover:bg-indigo-600 rounded-xl transition-all border border-slate-700 active:scale-90">
-                            <i class="fas fa-external-link-alt text-[10px] sm:text-xs"></i>
-                        </a>
-                    </td>
-                    <td class="px-4 py-4 text-right">
-                        <div class="flex justify-end gap-1">
-                            <button onclick="window.editItem('${item.id}')" class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center text-blue-400 hover:bg-blue-400/10 rounded-xl transition-colors active:scale-90"><i class="fas fa-edit text-xs"></i></button>
-                            <button onclick="window.deleteItem('${item.id}')" class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center text-rose-400 hover:bg-rose-400/10 rounded-xl transition-colors active:scale-90"><i class="fas fa-trash text-xs"></i></button>
+        <!-- Sinh nhật -->
+        <section class="banner_ngay_sinh_nhat_1807 event-banner">
+            <div class="noidung_ngay_sinh_nhat_1807">
+                <img src="/hinhanh/Trang chủ/HAPPY BIRTHDAY.png" alt="" class="ing_happybirthday" />
+                <div class="text_ngay_sinh_nhat_1807">ĐAN TRƯỜNG</div>
+                <div class="date_ngay_sinh_nhat_1807">18 - 07 - 2025</div>
+                <button id="nut_form_gui_loi_chuc">💌 Gửi lời chúc</button>
+                <div id="form_gui_loi_chuc">
+                    <div class="card_form_gui_loi_chuc">
+                        <div class="title_form_gui_loi_chuc">
+                            <img src="/hinhanh/Trang chủ/HAPPY BIRTHDAY.png" alt="" />
                         </div>
-                    </td>
-                </tr>
-            `).join('');
-        }
+                        <div class="noidung_loi_chuc">
+                            <textarea placeholder="Viết lời chúc của bạn vào đây."></textarea>
+                        </div>
+                        <div class="form_actions">
+                            <button id="nut_gui_loi_chuc">Gửi đi</button>
+                        </div>
+                    </div>
+                </div>
+               </div>
+        </section>
 
-        function updateFilters() {
-            const subjects = [...new Set(allLinks.map(i => i.subject).filter(Boolean))].sort();
-            const topics = [...new Set(allLinks.map(i => i.topic).filter(Boolean))].sort();
+        <!-- Cách mạng tháng Tám -->
+        <section class="banner_ngay_cach_mang_thang_tam event-banner">
+             <div class="banner-content-inner">
+                <div class="title">KỈ NIỆM</div>
+                <h1>NGÀY CÁCH MẠNG THÁNG TÁM THÀNH CÔNG</h1>
+                <h2>19/8/1945 - 19/8/2025</h2>
+                </div>
+        </section>
 
-            const renderSelect = (id, data, placeholder) => {
-                const el = document.getElementById(id);
-                const val = el.value;
-                el.innerHTML = `<option value="">${placeholder}</option>` +
-                    data.map(d => `<option value="${d}" ${d === val ? 'selected' : ''}>${d}</option>`).join('');
-            };
+        <!-- Quốc Khánh -->
+        <section class="banner_ngay_quoc_khanh event-banner">
+            <div class="banner-content-inner">
+                <div class="title">KỈ NIỆM</div>
+                <h1>QUỐC KHÁNH NƯỚC CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h1>
+                <h2>2/9/1945 - 2/9/2025</h2>
+                </div>
+        </section>
+   
 
-            renderSelect('filterSubject', subjects, "Tất cả môn học");
-            renderSelect('filterTopic', topics, "Tất cả chủ đề");
-            
-            document.getElementById('subjectList').innerHTML = subjects.map(s => `<option value="${s}">`).join('');
-            document.getElementById('topicList').innerHTML = topics.map(t => `<option value="${t}">`).join('');
-        }
+        <!--Nội dung -->
+        <section class="banner_mxh">
+            <div class="swiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="/hinhanh/banner fb.jpg" alt="" class="profile-image">
+                        <div class="profile-text">
+                            <h2>Trang Facebook</h2>
+                            <a href="https://web.facebook.com/dantruongag/" target="_blank">Xem ngay</a>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="/hinhanh/banner titok.PNG" alt="" class="profile-image">
+                        <div class="profile-text">
+                            <h2>Trang TikTok</h2>
+                            <a href="https://www.tiktok.com/@dantruongag?_t=ZS-8x5Kf6XKVAz&_r=1" target="_blank">Xem ngay</a>
+                        </div>
+                        </div>
+                    <div class="swiper-slide">
+                        <img src="/hinhanh/banner ins.PNG" alt="" class="profile-image">
+                        <div class="profile-text">
+                            <h2>Trang Instagram</h2>
+                            <a href="https://www.instagram.com/dantruongag/" target="_blank">Theo dõi</a>
+                        </div>
+                        </div>
+                </div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </section>
+        <div id="protected-content" class="hidden">
+       </div>
+    </main>
+    <div id="footer-placeholder"></div>
 
-        document.getElementById('linkForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('editId').value;
-            const btn = document.getElementById('submitBtn');
-            const data = {
-                subject: document.getElementById('subject').value.trim(),
-                topic: document.getElementById('topic').value.trim(),
-                title: document.getElementById('title').value.trim(),
-                url: document.getElementById('url').value.trim(),
-                createdAt: serverTimestamp()
-            };
-
-            btn.disabled = true;
-            btn.innerHTML = `<div class="loader mx-auto"></div>`;
-
-            try {
-                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'links');
-                if (id) {
-                    await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id), data);
-                    showToast("Đã cập nhật");
-                } else {
-                    await addDoc(colRef, data);
-                    showToast("Đã thêm mới");
-                }
-                closeModal();
-            } catch (err) {
-                showToast("Lỗi thao tác");
-            } finally {
-                btn.disabled = false;
-                btn.textContent = "Lưu lại";
-            }
-        });
-
-        window.deleteItem = async (id) => {
-            if (confirm("Xóa tài liệu này?")) {
-                try {
-                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id));
-                    showToast("Đã xóa");
-                } catch (err) { showToast("Lỗi xóa"); }
-            }
-        };
-
-        window.editItem = (id) => {
-            const item = allLinks.find(l => l.id === id);
-            if (!item) return;
-            document.getElementById('editId').value = id;
-            document.getElementById('subject').value = item.subject || '';
-            document.getElementById('topic').value = item.topic || '';
-            document.getElementById('title').value = item.title || '';
-            document.getElementById('url').value = item.url || '';
-            document.getElementById('modalTitle').textContent = "Cập nhật dữ liệu";
-            openModal();
-        };
-
-        document.getElementById('searchInput').addEventListener('input', render);
-        document.getElementById('filterSubject').addEventListener('change', render);
-        document.getElementById('filterTopic').addEventListener('change', render);
-
-    </script>
-
-    <script>
-        function openModal() {
-            const m = document.getElementById('linkModal');
-            m.classList.remove('hidden');
-            m.classList.add('flex');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeModal() {
-            const m = document.getElementById('linkModal');
-            m.classList.add('hidden');
-            m.classList.remove('flex');
-            document.body.style.overflow = '';
-            document.getElementById('linkForm').reset();
-            document.getElementById('editId').value = '';
-            document.getElementById('modalTitle').textContent = "Thêm dữ liệu";
-        }
-        function showToast(m) {
-            const t = document.getElementById('toast');
-            document.getElementById('toastMsg').textContent = m;
-            t.classList.remove('opacity-0', 'translate-y-10');
-            setTimeout(() => t.classList.add('opacity-0', 'translate-y-10'), 2500);
-        }
-    </script>
+        <script src="/script.js"></script>
+        <script src="/search.js"></script>
+        <script src="/baiviet_trang_chu.js"></script>
 </body>
 </html>

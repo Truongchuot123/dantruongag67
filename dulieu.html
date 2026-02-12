@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cơ sở dữ liệu - Nguyên Mai Đan Trường</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -14,16 +14,19 @@
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             min-height: 100vh;
             color: #f8fafc;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .glass-card {
             background: rgba(30, 41, 59, 0.7);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 1rem;
         }
 
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
 
@@ -32,13 +35,9 @@
             transition: all 0.3s ease;
         }
         
-        .btn-gradient:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.4);
-            filter: brightness(1.1);
+        .btn-gradient:active {
+            transform: scale(0.98);
         }
-
-        .btn-gradient:disabled { opacity: 0.6; cursor: not-allowed; }
 
         .loader {
             border: 2px solid rgba(255, 255, 255, 0.1);
@@ -49,145 +48,169 @@
         }
 
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .modal-animate { animation: modalIn 0.3s ease-out; }
-        @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         
-        .stat-badge {
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #818cf8;
+        .modal-animate { 
+            animation: modalIn 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        
+        @keyframes modalIn { 
+            from { opacity: 0; transform: translateY(20px) scale(0.95); } 
+            to { opacity: 1; transform: translateY(0) scale(1); } 
+        }
+        
+        /* Clamp text for small screens */
+        .line-clamp-custom {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Responsive Table */
+        @media (max-width: 640px) {
+            .table-cell-mobile {
+                min-width: 120px;
+            }
+            .title-cell-mobile {
+                min-width: 180px;
+            }
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-3 sm:p-6 md:p-8">
 
     <div class="max-w-6xl mx-auto">
         <!-- Header -->
-        <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
-                <i class="fas fa-cloud"></i> HỆ THỐNG CƠ SỞ DỮ LIỆU
+        <header class="flex flex-col sm:flex-row justify-between items-center mb-6 md:mb-8 gap-4">
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 text-center sm:text-left">
+                <i class="fas fa-cloud mr-2"></i>CƠ SỞ DỮ LIỆU
             </h1>
-            <div id="auth-status" class="flex items-center gap-3">
-                <!-- Status icon will appear here -->
+            <div id="auth-status">
             </div>
         </header>
 
         <!-- Stats Bar -->
-        <div class="flex flex-wrap items-center gap-4 mb-4 px-2">
-            <div class="flex items-center gap-2">
-                <span class="text-slate-400 text-sm">Tổng cộng:</span>
-                <span id="totalCount" class="stat-badge">0 tài liệu</span>
+        <div class="flex flex-wrap items-center gap-3 mb-4 px-1">
+            <div class="flex items-center gap-2 bg-slate-800/40 px-3 py-1.5 rounded-full border border-slate-700/50">
+                <span class="text-slate-400 text-[11px] sm:text-xs uppercase font-bold tracking-wider">Tổng:</span>
+                <span id="totalCount" class="text-indigo-400 text-xs sm:text-sm font-bold">0</span>
             </div>
-            <div id="filterResultContainer" class="hidden flex items-center gap-2">
-                <span class="text-slate-400 text-sm">Tìm thấy:</span>
-                <span id="filteredCount" class="stat-badge !text-emerald-400 !bg-emerald-400/10 !border-emerald-400/20">0</span>
+            <div id="filterResultContainer" class="hidden flex items-center gap-2 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/20">
+                <span class="text-emerald-500/70 text-[11px] sm:text-xs uppercase font-bold tracking-wider">Tìm thấy:</span>
+                <span id="filteredCount" class="text-emerald-400 text-xs sm:text-sm font-bold">0</span>
             </div>
         </div>
 
-        <!-- Filters -->
-        <div class="glass-card p-4 mb-6 grid grid-cols-1 md:grid-cols-12 gap-4">
-            <div class="md:col-span-4 relative">
+        <!-- Filters Grid -->
+        <div class="glass-card p-4 mb-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 md:gap-4">
+            <div class="lg:col-span-4 relative">
                 <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
                 <input type="text" id="searchInput" placeholder="Tìm kiếm nhanh..." 
-                    class="w-full pl-10 pr-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg outline-none focus:border-indigo-500 text-sm transition-all">
+                    class="w-full pl-10 pr-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg outline-none focus:border-indigo-500 text-sm transition-all focus:ring-2 focus:ring-indigo-500/20">
             </div>
-            <div class="md:col-span-3">
-                <select id="filterSubject" class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg outline-none focus:border-indigo-500 text-sm text-slate-300 cursor-pointer">
-                    <option value="">Môn học</option>
+            <div class="lg:col-span-3">
+                <select id="filterSubject" class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg outline-none focus:border-indigo-500 text-sm text-slate-300 cursor-pointer appearance-none">
+                    <option value="">Tất cả môn học</option>
                 </select>
             </div>
-            <div class="md:col-span-3">
-                <select id="filterTopic" class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg outline-none focus:border-indigo-500 text-sm text-slate-300 cursor-pointer">
-                    <option value="">Chủ đề</option>
+            <div class="lg:col-span-3">
+                <select id="filterTopic" class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg outline-none focus:border-indigo-500 text-sm text-slate-300 cursor-pointer appearance-none">
+                    <option value="">Tất cả chủ đề</option>
                 </select>
             </div>
-            <div class="md:col-span-2">
-                <button onclick="openModal()" class="w-full btn-gradient text-white py-2.5 rounded-lg font-bold text-sm flex items-center justify-center gap-2">
-                    <i class="fas fa-plus"></i> Thêm dữ liệu
+            <div class="lg:col-span-2">
+                <button onclick="openModal()" class="w-full btn-gradient text-white py-2.5 rounded-lg font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20">
+                    <i class="fas fa-plus"></i> <span>Thêm mới</span>
                 </button>
             </div>
         </div>
 
-        <!-- Table -->
+        <!-- Content Table -->
         <div class="glass-card overflow-hidden">
             <div class="overflow-x-auto custom-scrollbar">
-                <table class="w-full text-left text-sm">
+                <table class="w-full text-left text-sm border-collapse">
                     <thead>
                         <tr class="bg-slate-800/50 border-b border-slate-700">
-                            <th class="px-6 py-4 font-semibold text-slate-400">Môn học</th>
-                            <th class="px-6 py-4 font-semibold text-slate-400">Chủ đề</th>
-                            <th class="px-6 py-4 font-semibold text-slate-400">Nội dung</th>
-                            <th class="px-6 py-4 font-semibold text-slate-400 text-center">Link</th>
-                            <th class="px-6 py-4 font-semibold text-slate-400 text-right">Hành động</th>
+                            <th class="px-4 py-4 font-semibold text-slate-400 uppercase tracking-wider text-[11px] table-cell-mobile">Môn học</th>
+                            <th class="px-4 py-4 font-semibold text-slate-400 uppercase tracking-wider text-[11px] table-cell-mobile">Chủ đề</th>
+                            <th class="px-4 py-4 font-semibold text-slate-400 uppercase tracking-wider text-[11px] title-cell-mobile">Nội dung</th>
+                            <th class="px-4 py-4 font-semibold text-slate-400 uppercase tracking-wider text-[11px] text-center">Link</th>
+                            <th class="px-4 py-4 font-semibold text-slate-400 uppercase tracking-wider text-[11px] text-right">Hành động</th>
                         </tr>
                     </thead>
-                    <tbody id="dataTable" class="divide-y divide-slate-800">
-                        <!-- Rows -->
+                    <tbody id="dataTable" class="divide-y divide-slate-800/50">
+                        <!-- Dynamic Rows -->
                     </tbody>
                 </table>
             </div>
             
+            <!-- Loaders & Empty State -->
             <div id="mainLoader" class="py-20 text-center flex flex-col items-center gap-3">
                 <div class="loader !w-8 !h-8 !border-4"></div>
-                <span class="text-slate-500 animate-pulse">Hệ thống đang lấy dữ liệu...</span>
+                <span class="text-slate-500 text-xs animate-pulse font-medium">Đang đồng bộ dữ liệu...</span>
             </div>
             
-            <div id="emptyState" class="hidden py-20 text-center text-slate-500">
-                <i class="fas fa-inbox text-4xl mb-3 block"></i>
-                Hệ thống chưa có dữ liệu hoặc không tìm thấy kết quả
+            <div id="emptyState" class="hidden py-16 text-center text-slate-500">
+                <i class="fas fa-search text-3xl mb-3 opacity-20 block"></i>
+                <p class="text-sm">Không tìm thấy dữ liệu phù hợp</p>
             </div>
         </div>
+        
+        <footer class="mt-8 text-center text-slate-600 text-[10px] sm:text-xs uppercase tracking-[0.2em]">
+            &copy; 2024 Nguyên Mai Đan Trường • Database System
+        </footer>
     </div>
 
-    <!-- Modal -->
-    <div id="linkModal" class="fixed inset-0 bg-slate-950/90 hidden items-center justify-center z-50 p-4 backdrop-blur-sm">
-        <div class="bg-slate-900 w-full max-w-md rounded-xl border border-slate-800 modal-animate overflow-hidden shadow-2xl">
-            <div class="p-6 border-b border-slate-800 flex justify-between items-center">
-                <h3 id="modalTitle" class="font-bold text-lg">Thêm dữ liệu</h3>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times"></i></button>
+    <!-- Modal (Responsive Overlay) -->
+    <div id="linkModal" class="fixed inset-0 bg-slate-950/80 hidden items-end sm:items-center justify-center z-50 p-0 sm:p-4 backdrop-blur-md">
+        <div class="bg-slate-900 w-full max-w-md rounded-t-2xl sm:rounded-2xl border-t sm:border border-slate-700/50 modal-animate overflow-hidden shadow-2xl">
+            <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                <h3 id="modalTitle" class="font-bold text-base sm:text-lg text-indigo-400">Thêm dữ liệu</h3>
+                <button onclick="closeModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-800 text-slate-400 transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <form id="linkForm" class="p-6 space-y-4">
+            <form id="linkForm" class="p-5 space-y-4">
                 <input type="hidden" id="editId">
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="text-xs text-slate-500 font-bold mb-1 block">MÔN HỌC</label>
-                        <input type="text" id="subject" list="subjectList" required class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-lg outline-none focus:border-indigo-500">
+                        <label class="text-[10px] text-slate-500 font-black mb-1.5 block uppercase tracking-widest">Môn học</label>
+                        <input type="text" id="subject" list="subjectList" placeholder="VD: Toán" required class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl outline-none focus:border-indigo-500 text-sm">
                         <datalist id="subjectList"></datalist>
                     </div>
                     <div>
-                        <label class="text-xs text-slate-500 font-bold mb-1 block">CHỦ ĐỀ</label>
-                        <input type="text" id="topic" list="topicList" required class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-lg outline-none focus:border-indigo-500">
+                        <label class="text-[10px] text-slate-500 font-black mb-1.5 block uppercase tracking-widest">Chủ đề</label>
+                        <input type="text" id="topic" list="topicList" placeholder="VD: Đại số" required class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl outline-none focus:border-indigo-500 text-sm">
                         <datalist id="topicList"></datalist>
                     </div>
                 </div>
                 <div>
-                    <label class="text-xs text-slate-500 font-bold mb-1 block">TIÊU ĐỀ</label>
-                    <input type="text" id="title" required class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-lg outline-none focus:border-indigo-500">
+                    <label class="text-[10px] text-slate-500 font-black mb-1.5 block uppercase tracking-widest">Tiêu đề tài liệu</label>
+                    <input type="text" id="title" placeholder="Nhập tiêu đề ngắn gọn..." required class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl outline-none focus:border-indigo-500 text-sm">
                 </div>
                 <div>
-                    <label class="text-xs text-slate-500 font-bold mb-1 block">Liên kết</label>
-                    <input type="url" id="url" required class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-lg outline-none focus:border-indigo-500">
+                    <label class="text-[10px] text-slate-500 font-black mb-1.5 block uppercase tracking-widest">Đường dẫn (URL)</label>
+                    <input type="url" id="url" placeholder="https://..." required class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl outline-none focus:border-indigo-500 text-sm">
                 </div>
-                <div class="flex gap-3 pt-4">
-                    <button type="button" onclick="closeModal()" class="flex-1 py-2 bg-slate-800 rounded-lg font-bold">Hủy</button>
-                    <button type="submit" id="submitBtn" class="flex-1 btn-gradient py-2 rounded-lg font-bold">Lưu dữ liệu</button>
+                <div class="flex gap-3 pt-4 pb-2 sm:pb-0">
+                    <button type="button" onclick="closeModal()" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold text-sm transition-colors">Hủy</button>
+                    <button type="submit" id="submitBtn" class="flex-1 btn-gradient py-3 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-500/20">Lưu lại</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-lg bg-indigo-600 text-white font-bold shadow-xl opacity-0 translate-y-10 transition-all duration-300 z-[100] pointer-events-none"></div>
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 px-5 py-3 rounded-full bg-slate-800 border border-indigo-500/30 text-white text-xs font-bold shadow-2xl opacity-0 translate-y-10 transition-all duration-300 z-[100] pointer-events-none flex items-center gap-2">
+        <i class="fas fa-info-circle text-indigo-400"></i>
+        <span id="toastMsg">Thông báo</span>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
             authDomain: "dulieuweb-6541e.firebaseapp.com",
@@ -205,6 +228,7 @@
         let allLinks = [];
         let user = null;
 
+        // Auth
         const initAuth = async () => {
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -214,7 +238,6 @@
                 }
             } catch (err) {
                 console.error("Auth Fail:", err);
-                showToast("Lỗi kết nối Cloud: " + err.message);
             }
         };
 
@@ -222,10 +245,10 @@
             user = u;
             const statusEl = document.getElementById('auth-status');
             if (user) {
-                statusEl.innerHTML = `<span class="flex items-center gap-2 text-emerald-400 text-xs font-medium"><i class="fas fa-circle text-[8px] animate-pulse"></i> Đã kết nối Cloud</span>`;
+                statusEl.innerHTML = ``;
                 startSync();
             } else {
-                statusEl.innerHTML = `<span class="text-rose-400 text-xs font-medium italic">Đang ngoại tuyến...</span>`;
+                statusEl.innerHTML = ``;
             }
         });
 
@@ -245,13 +268,12 @@
                 document.getElementById('mainLoader').classList.add('hidden');
             }, (err) => {
                 console.error("Sync Error:", err);
-                showToast("Lỗi quyền truy cập Cloud.");
+                showToast("Lỗi đồng bộ dữ liệu");
             });
         }
 
         function updateStats() {
-            const total = allLinks.length;
-            document.getElementById('totalCount').textContent = `${total} tài liệu`;
+            document.getElementById('totalCount').textContent = allLinks.length;
         }
 
         function render() {
@@ -268,7 +290,6 @@
                 return matchesText && matchesSub && matchesTop;
             });
 
-            // Update filtered stats
             const filterStatContainer = document.getElementById('filterResultContainer');
             if (search || fSub || fTop) {
                 filterStatContainer.classList.remove('hidden');
@@ -285,25 +306,27 @@
 
             empty.classList.add('hidden');
             tbody.innerHTML = filtered.map(item => `
-                <tr class="hover:bg-slate-800/30 transition-colors">
-                    <td class="px-6 py-4">
-                        <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-tighter bg-indigo-500/10 px-2 py-1 rounded border border-indigo-500/20 shadow-sm">${item.subject || 'N/A'}</span>
+                <tr class="hover:bg-slate-800/30 transition-colors group">
+                    <td class="px-4 py-4 whitespace-nowrap">
+                        <span class="text-[10px] font-bold text-indigo-300 uppercase bg-indigo-500/10 px-2 py-1 rounded-md border border-indigo-500/20">${item.subject || 'N/A'}</span>
                     </td>
-                    <td class="px-6 py-4">
-                        <span class="text-[10px] font-bold text-purple-400 uppercase tracking-tighter bg-purple-500/10 px-2 py-1 rounded border border-purple-500/20 shadow-sm">${item.topic || 'N/A'}</span>
+                    <td class="px-4 py-4 whitespace-nowrap">
+                        <span class="text-[10px] font-bold text-purple-300 uppercase bg-purple-500/10 px-2 py-1 rounded-md border border-purple-500/20">${item.topic || 'N/A'}</span>
                     </td>
-                    <td class="px-6 py-4">
-                        <div class="font-bold text-slate-200 line-clamp-1">${item.title}</div>
-                        <div class="text-[10px] text-slate-600 truncate max-w-[200px]">${item.url}</div>
+                    <td class="px-4 py-4">
+                        <div class="font-semibold text-slate-200 line-clamp-custom text-xs sm:text-sm group-hover:text-indigo-400 transition-colors">${item.title}</div>
+                        <div class="text-[10px] text-slate-500 truncate max-w-[120px] sm:max-w-xs mt-0.5">${item.url}</div>
                     </td>
-                    <td class="px-6 py-4 text-center">
-                        <a href="${item.url}" target="_blank" class="w-8 h-8 inline-flex items-center justify-center bg-slate-800 rounded-lg hover:bg-indigo-600 transition-all border border-slate-700">
-                            <i class="fas fa-external-link-alt text-xs"></i>
+                    <td class="px-4 py-4 text-center">
+                        <a href="${item.url}" target="_blank" class="w-8 h-8 sm:w-9 sm:h-9 inline-flex items-center justify-center bg-slate-800 hover:bg-indigo-600 rounded-xl transition-all border border-slate-700 active:scale-90">
+                            <i class="fas fa-external-link-alt text-[10px] sm:text-xs"></i>
                         </a>
                     </td>
-                    <td class="px-6 py-4 text-right flex justify-end gap-1">
-                        <button onclick="window.editItem('${item.id}')" class="p-2 text-blue-400 hover:bg-blue-400/10 rounded-lg transition-colors"><i class="fas fa-edit"></i></button>
-                        <button onclick="window.deleteItem('${item.id}')" class="p-2 text-rose-400 hover:bg-rose-400/10 rounded-lg transition-colors"><i class="fas fa-trash"></i></button>
+                    <td class="px-4 py-4 text-right">
+                        <div class="flex justify-end gap-1">
+                            <button onclick="window.editItem('${item.id}')" class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center text-blue-400 hover:bg-blue-400/10 rounded-xl transition-colors active:scale-90"><i class="fas fa-edit text-xs"></i></button>
+                            <button onclick="window.deleteItem('${item.id}')" class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center text-rose-400 hover:bg-rose-400/10 rounded-xl transition-colors active:scale-90"><i class="fas fa-trash text-xs"></i></button>
+                        </div>
                     </td>
                 </tr>
             `).join('');
@@ -313,15 +336,15 @@
             const subjects = [...new Set(allLinks.map(i => i.subject).filter(Boolean))].sort();
             const topics = [...new Set(allLinks.map(i => i.topic).filter(Boolean))].sort();
 
-            const renderSelect = (id, data) => {
+            const renderSelect = (id, data, placeholder) => {
                 const el = document.getElementById(id);
                 const val = el.value;
-                el.innerHTML = `<option value="">Tất cả ${id === 'filterSubject' ? 'môn học' : 'chủ đề'}</option>` +
+                el.innerHTML = `<option value="">${placeholder}</option>` +
                     data.map(d => `<option value="${d}" ${d === val ? 'selected' : ''}>${d}</option>`).join('');
             };
 
-            renderSelect('filterSubject', subjects);
-            renderSelect('filterTopic', topics);
+            renderSelect('filterSubject', subjects, "Tất cả môn học");
+            renderSelect('filterTopic', topics, "Tất cả chủ đề");
             
             document.getElementById('subjectList').innerHTML = subjects.map(s => `<option value="${s}">`).join('');
             document.getElementById('topicList').innerHTML = topics.map(t => `<option value="${t}">`).join('');
@@ -329,8 +352,6 @@
 
         document.getElementById('linkForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!user) return showToast("Chưa kết nối Cloud!");
-
             const id = document.getElementById('editId').value;
             const btn = document.getElementById('submitBtn');
             const data = {
@@ -348,27 +369,26 @@
                 const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'links');
                 if (id) {
                     await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id), data);
-                    showToast("Cập nhật thành công!");
+                    showToast("Đã cập nhật");
                 } else {
                     await addDoc(colRef, data);
-                    showToast("Đã lưu dữ liệu!");
+                    showToast("Đã thêm mới");
                 }
                 closeModal();
             } catch (err) {
-                console.error("Save Error:", err);
-                showToast("Lỗi khi lưu dữ liệu.");
+                showToast("Lỗi thao tác");
             } finally {
                 btn.disabled = false;
-                btn.textContent = "Lưu dữ liệu";
+                btn.textContent = "Lưu lại";
             }
         });
 
         window.deleteItem = async (id) => {
-            if (confirm("Xóa dữ liệu này khỏi Cloud?")) {
+            if (confirm("Xóa tài liệu này?")) {
                 try {
                     await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id));
-                    showToast("Đã xóa dữ liệu.");
-                } catch (err) { showToast("Lỗi xóa dữ liệu."); }
+                    showToast("Đã xóa");
+                } catch (err) { showToast("Lỗi xóa"); }
             }
         };
 
@@ -380,7 +400,7 @@
             document.getElementById('topic').value = item.topic || '';
             document.getElementById('title').value = item.title || '';
             document.getElementById('url').value = item.url || '';
-            document.getElementById('modalTitle').textContent = "Sửa dữ liệu";
+            document.getElementById('modalTitle').textContent = "Cập nhật dữ liệu";
             openModal();
         };
 
@@ -395,20 +415,22 @@
             const m = document.getElementById('linkModal');
             m.classList.remove('hidden');
             m.classList.add('flex');
+            document.body.style.overflow = 'hidden';
         }
         function closeModal() {
             const m = document.getElementById('linkModal');
             m.classList.add('hidden');
             m.classList.remove('flex');
+            document.body.style.overflow = '';
             document.getElementById('linkForm').reset();
             document.getElementById('editId').value = '';
             document.getElementById('modalTitle').textContent = "Thêm dữ liệu";
         }
         function showToast(m) {
             const t = document.getElementById('toast');
-            t.textContent = m;
+            document.getElementById('toastMsg').textContent = m;
             t.classList.remove('opacity-0', 'translate-y-10');
-            setTimeout(() => t.classList.add('opacity-0', 'translate-y-10'), 3000);
+            setTimeout(() => t.classList.add('opacity-0', 'translate-y-10'), 2500);
         }
     </script>
 </body>
