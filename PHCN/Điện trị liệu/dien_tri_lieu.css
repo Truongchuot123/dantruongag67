@@ -1,3 +1,4 @@
+/* Reset & Base Styles */
         .noidung {
             margin: 0;
             padding: 0;
@@ -13,7 +14,7 @@
             margin-right: auto;
             margin-left: auto;
             padding: 1rem;
-            max-width: 56rem; /* Tương đương max-w-4xl */
+            max-width: 56rem;
         }
 
         @media (min-width: 640px) {
@@ -24,7 +25,6 @@
             .container { padding: 2rem; }
         }
 
-        /* Tiêu đề chính */
         header {
             margin-bottom: 3rem;
             text-align: center;
@@ -42,11 +42,6 @@
             background-clip: text;
         }
 
-        @media (min-width: 640px) {
-            .main-title { font-size: 3rem; }
-        }
-
-        /* Cảnh báo */
         .disclaimer-highlight {
             background-color: #fef3c7;
             color: #92400e;
@@ -59,7 +54,6 @@
             max-width: 42rem;
         }
 
-        /* Hình ảnh */
         .image-container {
             margin-bottom: 3rem;
             border-radius: 1rem;
@@ -74,11 +68,6 @@
         @media (min-width: 768px) { .image-container { width: 83.33%; } }
         @media (min-width: 1024px) { .image-container { width: 75%; } }
 
-        .image-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-        }
-
         .image-container img {
             width: 100%;
             height: auto;
@@ -86,7 +75,6 @@
             object-fit: cover;
         }
 
-        /* Các section */
         main {
             display: flex;
             flex-direction: column;
@@ -103,13 +91,12 @@
 
         section:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
 
         .section-header {
             display: flex;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             border-bottom: 2px solid #e0e7ff;
             padding-bottom: 0.5rem;
         }
@@ -121,27 +108,50 @@
             margin: 0;
         }
 
-        .section-icon {
-            width: 2rem;
-            height: 2rem;
-            color: #3b82f6;
+        /* Container cho icon được chèn bởi JS */
+        .icon-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
             margin-right: 0.75rem;
+            flex-shrink: 0;
         }
 
-        /* Danh sách nội dung */
+        .icon-box svg {
+            width: 2rem;
+            height: 2rem;
+        }
+
         ul {
-            list-style-type: disc;
-            padding-left: 1.5rem;
+            list-style-type: none;
+            padding-left: 0.5rem;
             font-size: 1.125rem;
             line-height: 1.6;
             margin: 0;
         }
 
         ul li {
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
+            position: relative;
+            padding-left: 1.5rem;
         }
 
-        /* Nút Quy Trình Kỹ Thuật */
+        ul li::before {
+            content: "•";
+            color: #3b82f6;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .sub-list-item b {
+            color: #1d4ed8;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
         .btn-wrapper {
             display: flex;
             flex-direction: column;
@@ -152,62 +162,23 @@
         .btn-quy-trinh {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
             padding: 1rem 2.5rem;
             background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
             color: white;
             font-weight: 700;
             border-radius: 1rem;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s;
             box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4);
             text-decoration: none;
             gap: 0.75rem;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-quy-trinh:hover {
-            transform: scale(1.05) translateY(-3px);
-            box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.5);
-            filter: brightness(1.1);
-        }
-
-        .btn-quy-trinh:active {
-            transform: scale(0.98);
-        }
-
-        .btn-icon-wrapper {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 0.5rem;
-            padding: 0.25rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-subtext {
-            font-size: 0.85rem;
-            color: #6b7280;
-            margin-top: 0.75rem;
-            font-style: italic;
-            font-weight: 500;
-        }
-
-        /* Hiệu ứng nhịp thở */
-        @keyframes pulse-soft {
-            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(37, 99, 235, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
         }
 
         .pulse-effect {
             animation: pulse-soft 2s infinite;
         }
 
-        footer {
-            margin-top: 4rem;
-            margin-bottom: 2rem;
-            text-align: center;
-            color: #9ca3af;
-            font-size: 0.875rem;
+        @keyframes pulse-soft {
+            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 99, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
         }
