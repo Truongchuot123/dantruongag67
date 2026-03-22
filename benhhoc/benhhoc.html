@@ -13,6 +13,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="/hinhanh/logo web.png" type="">
     <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/banner_trang_con.css">
     <link rel="stylesheet" href="/benhhoc/benhhoc.css">
  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -29,17 +30,19 @@
       
 <!-- giới thiệu khi đăng nhập -->
 
-<section class="banner_trangcon">
-    <div class="banner_trangcon_header">
-        <h1>BỆNH HỌC</h1>
-        <div class="banner_trangcon_header_underline"></div>
-        <p>
-        <a href="gopy.html">
-          <button class="banner_trangcon_btn btn">GÓP Ý</button>
-        </a>
-        </p>            
-    </div>
-</section>
+    <header class="main-banner_trang_con">
+            <div class="banner_trang_con-overlay"></div>
+            <div class="hbanner_trang_con-image-bg"></div>
+
+            <div class="hbanner_trang_con-content">
+                <h1 class="main-title">BỆNH HỌC <span class="icon-span"></span></h1>
+                <p class="sub-text">Bệnh học (trong tiếng Anh là Pathology) là danh từ chỉ lĩnh vực khoa học y sinh nghiên cứu về bản chất, nguyên nhân, cơ chế sinh bệnh, những thay đổi về cấu trúc tế bào, mô, cơ quan và những rối loạn chức năng do bệnh gây ra. Bệnh học tập trung vào việc mô tả, giải thích và phân loại các tổn thương bệnh lý, đồng thời xác định mối quan hệ giữa tổn thương cấu trúc và biểu hiện chức năng của cơ thể. Mục tiêu của bệnh học là cung cấp nền tảng khoa học để chẩn đoán chính xác, tiên lượng và phát triển các phương pháp điều trị hiệu quả.
+    </p>
+                <div class="hbanner_trang_con-tabs-wrap">
+                    <div id="category-tabs" class="category-scroll" aria-label="Danh mục bài viết"></div>
+                </div>
+            </div>
+        </header>
 <body class="text-gray-800">
      <!-- Card Container: JS will populate this -->
       <div id="card-container" class="max-w-6xl mx-auto px-4 grid gap-8 md:grid-cols-2 mb-12">

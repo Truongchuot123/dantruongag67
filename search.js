@@ -1,7 +1,7 @@
 // --- SEARCH FUNCTIONALITY ---
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // --- Configuration & State Management ---
+    // --- Cấu hình & Quản lý Trạng thái ---
     const config = {
         searchContainerId: 'search-container',
         searchFormId: 'search-form',
@@ -22,112 +22,148 @@ document.addEventListener('DOMContentLoaded', async () => {
         isLoggedIn: () => !!localStorage.getItem('loggedInUser')
     };
 
-    // --- DOM Element Selection ---
+    // --- Lựa chọn phần tử DOM ---
     const searchContainer = document.getElementById(config.searchContainerId);
     const searchForm = document.getElementById(config.searchFormId);
     const searchInput = document.getElementById(config.searchInputId);
     const closeSearchBtn = document.getElementById(config.closeSearchBtnId);
     const suggestionsOutput = document.getElementById(config.suggestionsOutputId);
 
-    // --- Searchable Data ---
-    let searchableContent = [{
-            title: 'Trang Chủ',
+    /**
+     * Hàm chuẩn hóa văn bản: Chuyển tất cả thành chữ thường, 
+     * sau đó viết hoa chữ cái đầu tiên của từ đầu tiên.
+     */
+    const normalizeText = (text) => {
+        if (!text) return '';
+        const lower = text.trim().toLowerCase();
+        return lower.charAt(0).toUpperCase() + lower.slice(1);
+    };
+
+    // --- Dữ liệu có thể tìm kiếm (Dữ liệu tĩnh) ---
+    // Đã áp dụng chuẩn hóa cho các tiêu đề tĩnh
+    let searchableContent = [
+        {
+            title: normalizeText('Trang Chủ'),
             description: 'Quay về trang chủ của website.',
             url: '/index.html',
             icon: 'fa-home'
         },
         {
-            title: 'Luyện tập',
+            title: normalizeText('Luyện tập'),
             description: 'Tạo câu hỏi ngắn và luyện tập.',
             url: '/luyentap.html',
             icon: 'fa-heartbeat'
         },
         {
-            title: 'Dữ liệu',
+            title: normalizeText('Dữ liệu'),
             description: 'Xem và quản lý dữ liệu trong hệ thống.',
             url: '/dulieu.html',
             icon: 'fa-database'
         },
         {
-            title: 'Liên Hệ Với Tôi',
+            title: normalizeText('Liên Hệ Với Tôi'),
             description: 'Tìm thông tin liên hệ: Facebook, Instagram. Gmail...',
             action: () => showContact(),
             icon: 'fa-phone'
         },
         {
-            title: 'Giới thiệu bản thân',
+            title: normalizeText('Giới thiệu bản thân'),
             description: 'Trang giới thiệu về Nguyễn Mai Đan Trường.',
             url: '/CV.html',
             icon: 'fa-envelope'
         },
         {
-            title: 'Góp Ý',
+            title: normalizeText('Góp Ý'),
             description: 'Đóng góp ý kiến để tôi cải thiện hơn.',
             url: '/gopy.html',
             icon: 'fa-envelope'
         },
         {
-            title: 'Quy trình rửa tay thường quy của bộ y tế',
-            description: 'Đo huyết áp là quá trình kiểm tra lực tác động của máu lên thành mạch máu khi tim co bóp và giãn ra',
+            title: normalizeText('Quy trình rửa tay thường quy của bộ y tế'),
+            description: 'Các bước vệ sinh tay theo tiêu chuẩn y tế.',
             url: '/đo_huyet_ap.html',
             icon: 'fa-heartbeat'
         },
         {
-            title: 'Hướng dẫn đo huyết áp đúng cách',
-            description: 'Đo huyết áp là quá trình kiểm tra lực tác động của máu lên thành mạch máu khi tim co bóp và giãn ra',
+            title: normalizeText('Hướng dẫn đo huyết áp đúng cách'),
+            description: 'Quy trình kiểm tra lực tác động của máu lên thành mạch.',
             url: '/đo_huyet_ap.html',
             icon: 'fa-heartbeat'
         },
         {
-            title: 'Bảng phiên âm quốc tế IPA',
-            description: 'Học và luyện tập tất cả các âm trong bảng ký hiệu ngữ âm quốc tế để cải thiện phát âm tiếng Anh của bạn một cách hiệu quả. ',
+            title: normalizeText('Bảng phiên âm quốc tế IPA'),
+            description: 'Học và luyện tập phát âm tiếng Anh hiệu quả.',
             url: '/tienganh/IPA.html',
             icon: 'fa-language'
         },
         {
-            title: 'Tạo câu hỏi trả lời ngắn',
-            description: 'Form nhập liệu cho cho câu hỏi trả lời ngắn. ',
+            title: normalizeText('Tạo câu hỏi trả lời ngắn'),
+            description: 'Form nhập liệu cho câu hỏi trả lời ngắn.',
             url: '/Form_question.html',
             icon: 'fa-language'
         },
         {
-            title: 'Giải phẩu cơ',
-            description: 'Học giải phẩu cơ qua hình ảnh và vidieo  ',
+            title: normalizeText('Giải phẫu cơ'),
+            description: 'Học giải phẫu cơ qua hình ảnh và video.',
             url: '/giai_phau/trang_chu_giai_phau.html',
             icon: 'fa-solid fa-person'
         },
         {
-            title: 'Điểm danh lâm sàng',
-            description: 'Hệ thống điểm danh lâm sàng  ',
+            title: normalizeText('Điểm danh lâm sàng'),
+            description: 'Hệ thống điểm danh lâm sàng.',
             url: '/diem_danh.html',
             icon: 'fa-solid fa-person'
         },
         {
-            title: 'Hệ thống tra cứu từ vựng tiếng anh',
-            description: 'Hơn 500 từ tiếng anh với các ví dụ, định nghĩa đa dạng. ',
+            title: normalizeText('Hệ thống tra cứu từ vựng tiếng anh'),
+            description: 'Hơn 500 từ tiếng Anh với ví dụ đa dạng.',
             url: '/tienganh/IPA.html',
             icon: 'fa-language'
         }
     ];
 
     // --- Dynamic Content Indexing ---
-    // ⭐ ĐÃ SỬA LỖI: Chuẩn hóa tất cả đường dẫn thành kiểu tương đối (không có dấu "/" ở đầu) và loại bỏ các mục lặp lại.
     const pagesToIndex = [
         // --- Bệnh học ---
-        '/benhhoc/tailieu/benh_alzhemer.html',
-        '/benhhoc/tailieu/dong_kinh.html',
-        '/benhhoc/tailieu/parkinson.html',
-        '/benhhoc/tailieu/dot_quy_nao.html',
-        '/benhhoc/tailieu/loet_da_day_ta_trang.html',
-        '/benhhoc/tailieu/HC_trao_nguoc_da_day_thuc_quan.html',
-        '/benhhoc/tailieu/thung_da_day.html',
-        '/benhhoc/tailieu/HC_tac_ruot.html',
-        '/benhhoc/tailieu/viem_ruot_thua_cap.html',
-        '/benhhoc/tailieu/soi_tui_mat.html',
-        '/benhhoc/tailieu/viem_gan_toi_cap.html',
-        '/benhhoc/tailieu/Golfer`s elbow.html', 
-        '/benhhoc/tailieu/Tennis elbow.html',
-        '/benhhoc/tailieu/suy_gian_tinh_mach_chi_duoi.html',  
+                    '/benhhoc/tailieu/benh_alzhemer.html',
+                    '/benhhoc/tailieu/Parkinson.html',
+                    '/benhhoc/tailieu/HC_duong_ham_co_tay.html',
+                    '/benhhoc/tailieu/liet_mat_ngoai_bien.html',
+                    '/benhhoc/tailieu/dau_day_than_kinh_tam_thoa.html',
+                    '/benhhoc/tailieu/loet_da_day_ta_trang.html', 
+                    '/benhhoc/tailieu/HC_trao_nguoc_da_day_thuc_quan.html', 
+                    '/benhhoc/tailieu/thung_da_day.html',
+                    '/benhhoc/tailieu/HC_tac_ruot.html',
+                    '/benhhoc/tailieu/viem_ruot_thua_cap.html',
+                    '/benhhoc/tailieu/soi_tui_mat.html',
+                    '/benhhoc/tailieu/viem_gan_toi_cap.html',
+                    '/benhhoc/tailieu/viem_phoi_cong_dong.html',
+                    '/benhhoc/tailieu/viem_VA.html',
+                    '/benhhoc/tailieu/tang_huyet_ap.html',
+                    '/benhhoc/tailieu/suy_gian_tinh_mach_chi_duoi.html',
+                    '/benhhoc/tailieu/benh_than_man.html',
+                    '/benhhoc/tailieu/dai_thao_duong.html', 
+                    '/benhhoc/tailieu/hoi_chung_cushing.html',
+                    '/benhhoc/tailieu/gout.html',
+                    '/benhhoc/tailieu/HC_ De_Quuervain.html',
+                    '/benhhoc/tailieu/HC_ngon_tay_lo_xo.html',
+                    '/benhhoc/tailieu/HC_duong_ham_co_tay.html',
+                    '/benhhoc/tailieu/Golfer`s elbow.html', 
+                    '/benhhoc/tailieu/Tennis elbow.html',
+                    '/benhhoc/tailieu/ton_thuong_day_chang_cheo.html',    
+                    '/benhhoc/tailieu/loang_xuong.html',
+                    '/benhhoc/tailieu/viem_gan_sieu_vi.html',
+                    '/benhhoc/tailieu/lao_phoi.html',
+                    '/benhhoc/tailieu/benh_uon_van.html',
+                    '/benhhoc/tailieu/nhiem_khuan_ho_hap_cap_tinh_tre_em.html',
+                    '/benhhoc/tailieu/lupus_ban_do_he_thong.html',
+                    '/benhhoc/tailieu/viem_ket_mac.html',
+                    '/benhhoc/tailieu/benh_thalasemia.html',
+                    '/benhhoc/tailieu/benh_bach_tang.html',
+                    '/benhhoc/tailieu/HC_down.html',
+                    '/benhhoc/tailieu/nhiem_doc_thai_nghen.html',
+
+
 
         // --- Giải phẫu Chi trên ---
         '/giai_phau/chi_tren/co_delta.html',
@@ -271,8 +307,66 @@ document.addEventListener('DOMContentLoaded', async () => {
          '/hoahoc/can_trong_am_dun_nuoc.html',
         // ---Phục hồi chức năng ---
         '/PHCN/phuc_hoi_chuc_nang.html',
+                // ---Phục hồi chức năng hô hấp ---
+                    "/PHCN/PHCN_ho_hap/phuc_hoi_chuc_nang_ho_hap.html",
+                            // ---Các kĩ thuật hô hấp ---
+                                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/AFE_chu_dong.html",
+                                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/dan_luu_tu_the.html",
+                                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/huong_dan_ho.html",
+                                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_co_hoanh.html",
+                                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_mim_moi.html",
+                                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_phoi_hop_van_dong_tay.html",
+                                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_ra_manh_FET.html",
+                                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_theo_ty_le_phan_so.html",
+                                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_tung_thuy.html",
+                                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/vo_rung.html",
+
+
+                // ---Phục hồi chức năng dựa vào cộng đồng ---
+                    "/PHCN/PHCN_dua_vao_cong_dong/PHCN_dua-Vao-cong_dong.html",
+                    "/PHCN/PHCN_dua_vao_cong_dong/cham_soc_mom_cut.html",
+                    "/PHCN/PHCN_dua_vao_cong_dong/dong_kinh_tre_em.html",
+                    "/PHCN/PHCN_dua_vao_cong_dong/giao_tiep_voi_tre_giam_thinh_luc.html",
+                    "/PHCN/PHCN_dua_vao_cong_dong/PHCN_benh_phoi_man_tinh.html",
+                    "/PHCN/PHCN_dua_vao_cong_dong/PHCN_ban_chan_khoeo_bam_sinh.html",
+                    "/PHCN/PHCN_dua_vao_cong_dong/PHCN_nguoi_khuyet_tat_giam_chuc_nang_nhin.html",
+                    "/PHCN/PHCN_dua_vao_cong_dong/PHCN_benh_tam_than.html",
+                    "/PHCN/PHCN_dua_vao_cong_dong/PHCN_noi_lap_ngong_that_ngon.html",
+                    "/PHCN/PHCN_dua_vao_cong_dong/PHCN_sau_bong.html",
+                    "/PHCN/PHCN_dua_vao_cong_dong/PHCN_sau_TBMMN.html",
+                    "/PHCN/PHCN_dua_vao_cong_dong/PHCN_ton_thuong_tuy_song.html",
+                    "/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_bai_nao.html",
+                    "/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_cham_phat_trien_tri_tue.html",
+                    "/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_cong_veo_cot_song.html",
+                    "/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_trat_khop_hang_bam_sinh.html",
+                    "/PHCN/PHCN_dua_vao_cong_dong/PHCN_viem_khop_dang_thap.html",
+                    "/PHCN/PHCN_dua_vao_cong_dong/phong_ngua_thuong_tat_thu_phat.html",
+                    "/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_tu_ky.html",
+            // ---Vận động trị liệu ---
+                    // ---Di động khớp ---
+                    "/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop.html",
+                    "/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop_vai.html", 
+                    "/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop_khuyu.html",
+                    "/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop_co_tay.html",
+                    "/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop_ban_ngon_tay.html",
+                    "/PHCN/Van_dong_tri_lieu/di_dong_khop/do_dong_khop_goi.html",    
+            
             // ---Các PP VLTL ---
-        '/PHCN/Điện trị liệu/dien_tri_lieu.css/Hongngoai.html', 
+                    '/PHCN/Điện trị liệu/Hongngoai.html',
+                    '/PHCN/Điện trị liệu/Parafin.html',
+                    '/PHCN/Điện trị liệu/sieu_am.html',
+                    '/PHCN/Điện trị liệu/kich_thich_lien_xuong.html',
+                    '/PHCN/Điện trị liệu/Song_ngan.html',
+                    '/PHCN/Điện trị liệu/laser_cong-suat_thap.html',
+                    '/PHCN/Điện trị liệu/laser_noi_mach.html',
+                    '/PHCN/Điện trị liệu/laser_cong_suat_cao.html',
+                    '/PHCN/Điện trị liệu/dien_xung.html',
+                    '/PHCN/Điện trị liệu/may_keo_cot_song.html',
+                    '/PHCN/Điện trị liệu/nen_ep.html',
+                    '/PHCN/Điện trị liệu/dien_truong_cao_ap.html',
+                    '/PHCN/Điện trị liệu/xung_kich.html',
+                    '/PHCN/Điện trị liệu/tu_truong.html',
+                    '/PHCN/Điện trị liệu/oxy_cao_ap.html',
     ];
 
 
@@ -280,58 +374,60 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const response = await fetch(url);
             if (!response.ok) {
-                console.error(`❌ Lỗi Fetch: Không thể tải tệp '${url}'. Trạng thái: ${response.status}`);
+                console.error(`❌ Lỗi Fetch: Không thể tải tệp '${url}'.`);
                 return null;
             }
             const htmlText = await response.text();
             const parser = new DOMParser();
             const doc = parser.parseFromString(htmlText, 'text/html');
-            let titleElement = null;
             let titleText = '';
 
             // 1. Tìm tiêu đề từ cấu trúc anatomy-card (h2)
-            titleElement = doc.querySelector('article.noidung_anatomy-card h2.anatomy-title');
-            if (titleElement) {
-                titleText = titleElement.textContent.replace(/\(.*?\)/g, '').trim();
+            const anatomyTitle = doc.querySelector('article.noidung_anatomy-card h2.anatomy-title');
+            if (anatomyTitle) {
+                titleText = anatomyTitle.textContent.replace(/\(.*?\)/g, '').trim();
             }
 
-            // 2. Nếu không tìm thấy, tìm tiêu đề từ cấu trúc bài viết (h1)
+            // 2. Nếu không tìm thấy, tìm tiêu đề từ h1
             if (!titleText) {
-                titleElement = doc.querySelector('div.text-center.py-8.md\\:py-12 h1');
-                if (titleElement) {
-                    titleText = titleElement.textContent.trim();
+                const h1 = doc.querySelector('h1');
+                if (h1) {
+                    titleText = h1.textContent.trim();
                 }
             }
 
             if (titleText) {
-                console.log(`✅ Lập chỉ mục thành công: "${titleText}" từ tệp '${url}'`);
+                // ⭐ ÁP DỤNG CHUẨN HÓA: Chỉ viết hoa chữ cái đầu tiên
+                const normalizedTitle = normalizeText(titleText);
+                console.log(`✅ Lập chỉ mục thành công: "${normalizedTitle}" từ tệp '${url}'`);
+                
                 return {
-                    title: titleText,
-                    description: `Xem chi tiết về "${titleText}".`,
+                    title: normalizedTitle,
+                    description: `Xem chi tiết về "${normalizedTitle}".`,
                     url: url,
-                    icon: 'fa fa-file' 
+                    icon: 'fa fa-file'
                 };
             } else {
-                console.warn(`⚠️ Cảnh báo: Không tìm thấy cấu trúc tiêu đề phù hợp trong tệp '${url}'.`);
+                console.warn(`⚠️ Cảnh báo: Không tìm thấy tiêu đề trong '${url}'.`);
                 return null;
             }
         } catch (error) {
-            console.error(`❌ Lỗi nghiêm trọng khi xử lý tệp '${url}':`, error);
+            console.error(`❌ Lỗi khi xử lý tệp '${url}':`, error);
             return null;
         }
     };
 
     const buildFullSearchIndex = async () => {
-        console.log("Bắt đầu xây dựng chỉ mục tìm kiếm động...");
-        const uniquePages = [...new Set(pagesToIndex)]; // Lọc các đường dẫn trùng lặp
+        console.log("Bắt đầu xây dựng chỉ mục tìm kiếm...");
+        const uniquePages = [...new Set(pagesToIndex)];
         const dynamicContentPromises = uniquePages.map(indexPage);
         const dynamicContent = await Promise.all(dynamicContentPromises);
-        const finalSearchableContent = [
+        
+        searchableContent = [
             ...searchableContent,
             ...dynamicContent.filter(item => item !== null)
         ];
-        searchableContent = finalSearchableContent;
-        console.log("🚀 Xây dựng chỉ mục tìm kiếm hoàn tất! Tổng số mục:", searchableContent.length);
+        console.log("🚀 Hoàn tất! Tổng số mục:", searchableContent.length);
     };
 
     const openSearch = () => {
@@ -405,6 +501,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
         await buildFullSearchIndex();
     } else {
-        console.error("Không tìm thấy các thành phần UI tìm kiếm. Vui lòng kiểm tra lại cấu trúc HTML và ID.");
+        console.error("Không tìm thấy các thành phần UI tìm kiếm.");
     }
 });

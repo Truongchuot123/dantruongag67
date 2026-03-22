@@ -353,11 +353,7 @@
 
     // Fetch questions from Google Sheet
     async function fetchQuestions() {
-<<<<<<< HEAD
         elements.question.textContent = "Đang tải câu hỏi.";
-=======
-        elements.question.textContent = "Đang tải câu hỏi...";
->>>>>>> af8986cc9beca7c18e8e100d418ec470a0be7ad9
         elements.question.classList.add('animate-pulse');
         try {
             const response = await fetch(SCRIPT_URL + '?action=get_speaking_questions');
