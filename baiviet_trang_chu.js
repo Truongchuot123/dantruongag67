@@ -36,7 +36,7 @@ const observer = new IntersectionObserver((entries, observer) => {
  */
 async function fetchAndParse(url) {
     // Placeholder cho ảnh mặc định
-    const defaultImage = "/hinhanh/logo web.png";
+    const defaultImage = "/hinhanh/logo_web.png";
 
     try {
         const fullUrl = url.startsWith('/') ? window.location.origin + url : url;
@@ -64,7 +64,7 @@ async function fetchAndParse(url) {
         console.error("Lỗi khi tải HTML:", url, error);
         return {
             title: `[Xin lỗi] Bài viết hiện tại không có:`,
-            imageUrl: "/hinhanh/logo web.png",
+            imageUrl: "/hinhanh/logo_web.png",
         };
     }
 }
@@ -115,7 +115,7 @@ async function createArticleBox(targetUrl, container, index) {
     img.alt = `Ảnh minh họa cho:`;
     img.className = "w-full h-full object-cover transform transition duration-300 group-hover:scale-105";
     img.onerror = () => {
-        img.src = "/hinhanh/logo web.png"; 
+        img.src = "/hinhanh/logo_web.png"; 
     };
 
     imageWrapper.appendChild(img);
