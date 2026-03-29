@@ -57,9 +57,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             icon: 'fa-home'
         },
         {
-            title: normalizeText('Gop Ý Câu Hỏi'),
-            description: 'Tạo câu hỏi ngắn và luyện tập.',
-            url: '/luyentap.html',
+            title: normalizeText('Cơ sở dữ liệu '),
+            description: 'Nhập góp ý của bạn tại đây',
+            url: '/formnhapcauhoi.html',
+            icon: 'fa-pen-to-square'
+        }
+        {
+            title: normalizeText('Gop Ý'),
+            description: 'Nhập góp ý của bạn tại đây',
+            url: '/gopy.html',
             icon: 'fa-pen-to-square'
         }
     ];
