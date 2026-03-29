@@ -59,9 +59,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         {
             title: normalizeText('Cơ sở dữ liệu '),
             description: 'Nhập góp ý của bạn tại đây',
+            url: '/dulieu.html',
+            icon: 'fa-pen-to-square'
+        },
+        {
+            title: normalizeText('Hệ thống tạo câu hỏi '),
+            description: 'Nhập góp ý của bạn tại đây',
             url: '/formnhapcauhoi.html',
             icon: 'fa-pen-to-square'
-        }
+        },
         {
             title: normalizeText('Gop Ý'),
             description: 'Nhập góp ý của bạn tại đây',

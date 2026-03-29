@@ -72,7 +72,7 @@ const initQuizUI = () => {
     startBtnContainer.id = "start-container";
     startBtnContainer.innerHTML = `
         <button id="start-quiz-btn" class="flex items-center gap-3 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold shadow-lg shadow-indigo-500/20 transition-all transform hover:scale-105 active:scale-95">
-            <i class="fas fa-play-circle"></i> BẮT ĐẦU LUYỆN TẬP
+            <i class="fas fa-play-circle"></i> LUYỆN TẬP NGAY
         </button>
     `;
 
