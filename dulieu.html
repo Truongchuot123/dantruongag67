@@ -64,17 +64,40 @@
             font-weight: 600;
         }
 
-        /* Mở rộng cột nội dung linh hoạt */
         .content-cell {
             width: 100%;
             word-wrap: break-word;
             white-space: normal;
         }
         
-        /* Cột môn học và chủ đề thu gọn hơn để nhường chỗ */
         .meta-col {
             min-width: 100px;
             width: 15%;
+        }
+
+        /* Checkbox styling */
+        .custom-checkbox {
+            appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid #475569;
+            border-radius: 4px;
+            background-color: transparent;
+            display: inline-grid;
+            place-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .custom-checkbox:checked {
+            background-color: #6366f1;
+            border-color: #6366f1;
+        }
+        .custom-checkbox:checked::before {
+            content: "\f00c";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: white;
+            font-size: 0.75rem;
         }
 
         @media (max-width: 640px) {
@@ -96,7 +119,7 @@
                 <div id="stats-summary" class="flex flex-wrap gap-2 mt-2 justify-center sm:justify-start">
                     <span class="stat-badge text-slate-400"><i class="fas fa-layer-group mr-1 text-indigo-400"></i>Tổng: <span id="total-count">0</span></span>
                     <span class="stat-badge text-slate-400"><i class="fas fa-check-circle mr-1 text-emerald-400"></i>Đã soạn: <span id="done-count">0</span></span>
-                    <span class="stat-badge text-slate-400"><i class="fas fa-clock mr-1 text-rose-400"></i>Chưa soạn: <span id="pending-count">0</span></span>
+                    <span class="stat-badge text-slate-400"><i class="fas fa-tasks mr-1 text-amber-400"></i>Trắc nghiệm: <span id="quiz-count">0</span></span>
                 </div>
             </div>
             <div id="auth-status" class="text-xs text-slate-500 font-mono hidden sm:block"></div>
@@ -150,8 +173,8 @@
                         <tr class="bg-slate-800/50 border-b border-slate-700">
                             <th class="px-4 py-4 font-semibold text-slate-400 uppercase tracking-wider text-[11px] meta-col">Môn</th>
                             <th class="px-4 py-4 font-semibold text-slate-400 uppercase tracking-wider text-[11px] meta-col">Chủ đề</th>
-                            <!-- Cột Nội dung được mở rộng tối đa -->
                             <th class="px-4 py-4 font-semibold text-slate-400 uppercase tracking-wider text-[11px] content-cell">Nội dung chi tiết tài liệu</th>
+                            <th class="px-2 py-4 font-semibold text-slate-400 uppercase tracking-wider text-[11px] text-center w-12">TN</th>
                             <th id="th-link" class="px-2 py-4 font-semibold text-slate-400 uppercase tracking-wider text-[11px] text-center w-12">Link</th>
                             <th class="px-4 py-4 font-semibold text-slate-400 uppercase tracking-wider text-[11px] text-right w-20">Xử lý</th>
                         </tr>
@@ -197,6 +220,12 @@
                     <label class="text-[10px] text-slate-500 font-black mb-1.5 block uppercase text-indigo-400">Đường dẫn tài liệu</label>
                     <input type="url" id="url" placeholder="https://..." class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl outline-none focus:border-indigo-500 text-sm">
                 </div>
+                <!-- Ô đánh dấu trắc nghiệm -->
+                <div class="flex items-center gap-3 p-3 bg-slate-950/50 rounded-xl border border-slate-700/50">
+                    <input type="checkbox" id="isQuizDone" class="custom-checkbox">
+                    <label for="isQuizDone" class="text-sm font-medium text-slate-300 cursor-pointer select-none">Đã soạn trắc nghiệm</label>
+                </div>
+
                 <div class="flex gap-3 pt-2">
                     <button type="button" onclick="closeModal()" class="flex-1 py-3 bg-slate-800 text-white rounded-xl font-bold text-sm">Hủy</button>
                     <button type="submit" id="submitBtn" class="flex-1 btn-gradient py-3 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-500/20">Lưu</button>
@@ -264,10 +293,11 @@
         function updateBadgeAndStats() {
             const pendingCount = allLinks.filter(l => !l.url || l.url.trim() === '').length;
             const doneCount = allLinks.length - pendingCount;
+            const quizCount = allLinks.filter(l => l.isQuizDone === true).length;
             
             document.getElementById('total-count').textContent = allLinks.length;
             document.getElementById('done-count').textContent = doneCount;
-            document.getElementById('pending-count').textContent = pendingCount;
+            document.getElementById('quiz-count').textContent = quizCount;
 
             const badge = document.getElementById('draftCountBadge');
             if (pendingCount > 0) {
@@ -326,6 +356,12 @@
                         </div>
                         ${item.url ? `<div class="text-[9px] text-slate-500 truncate mt-1 opacity-60">${item.url}</div>` : `<div class="text-[9px] text-rose-500/70 italic mt-1 font-medium"><i class="fas fa-clock mr-1"></i>Đang chờ soạn thảo...</div>`}
                     </td>
+                    <td class="px-2 py-4 text-center align-top w-12">
+                        ${item.isQuizDone ? 
+                            '<i class="fas fa-check-circle text-emerald-500 text-sm shadow-sm" title="Đã soạn trắc nghiệm"></i>' : 
+                            '<i class="far fa-circle text-slate-700 text-xs" title="Chưa soạn trắc nghiệm"></i>'
+                        }
+                    </td>
                     ${currentTab === 'all' ? `
                     <td class="px-2 py-4 text-center align-top w-12">
                         <a href="${item.url}" target="_blank" class="w-8 h-8 inline-flex items-center justify-center bg-slate-800 hover:bg-indigo-600 rounded-lg transition-all border border-slate-700 active:scale-90">
@@ -357,6 +393,7 @@
             document.getElementById('topic').value = item.topic;
             document.getElementById('title').value = item.title;
             document.getElementById('url').value = item.url || '';
+            document.getElementById('isQuizDone').checked = item.isQuizDone || false;
             document.getElementById('modalTitle').textContent = "Cập nhật dữ liệu";
             openModal();
         };
@@ -397,6 +434,7 @@
                 topic: document.getElementById('topic').value.trim(),
                 title: document.getElementById('title').value.trim(),
                 url: document.getElementById('url').value.trim(),
+                isQuizDone: document.getElementById('isQuizDone').checked,
                 updatedAt: serverTimestamp()
             };
             
@@ -425,10 +463,7 @@
         document.getElementById('searchInput').addEventListener('input', render);
         document.getElementById('filterSubject').addEventListener('change', render);
         document.getElementById('filterTopic').addEventListener('change', render);
-
-    </script>
-
-    <script>
+        
         function openModal() {
             document.getElementById('linkModal').classList.remove('hidden');
             document.getElementById('linkModal').classList.add('flex');
@@ -448,6 +483,9 @@
             t.classList.remove('opacity-0', 'translate-y-10');
             setTimeout(() => t.classList.add('opacity-0', 'translate-y-10'), 2500);
         }
+
+        window.openModal = openModal;
+        window.closeModal = closeModal;
     </script>
 </body>
 </html>

@@ -202,7 +202,7 @@ function setupCardPaginator(cardElement, config) {
                 title: 'HÔ HẤP',
                 iconSvg: `<div class="icon text-red-600 text-4xl"><i class="fas fa-lungs"></i></div>`,
                 links: [
-                    
+                    '/benhhoc/tailieu/hen_phe_quan.html',
                     '/benhhoc/tailieu/viem_phoi_cong_dong.html'
                 ],
                 countUnit: 'tài liệu'

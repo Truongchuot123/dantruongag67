@@ -1,4 +1,4 @@
- import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, serverTimestamp, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
@@ -251,7 +251,7 @@
                     await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'questions'), formData);
                     showToast("Thêm mới thành công! ✨");
                 }
-                resetForm();
+                resetForm(); // <--- Đảm bảo gọi như thế này để giữ lại Môn học/Chủ đề
             } catch (err) {
                 showToast("Lỗi thao tác dữ liệu");
             } finally {
@@ -295,12 +295,38 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        window.resetForm = function() {
-            document.getElementById('questionForm').reset();
-            document.getElementById('editId').value = "";
-            document.getElementById('edit-indicator').classList.add('hidden');
-            document.getElementById('mcqOptions').classList.remove('hidden');
-            document.getElementById('shortAnswerSection').classList.add('hidden');
+        window.resetForm = function(isFullReset = false) {
+            // Nếu là Full Reset (nhấn nút làm mới hoặc load lại)
+            if (isFullReset) {
+                document.getElementById('questionForm').reset();
+                document.getElementById('editId').value = "";
+                document.getElementById('edit-indicator').classList.add('hidden');
+            } else {
+                // Chỉ xóa nội dung câu hỏi, giữ lại Môn, Chủ đề, Tên bài
+                document.getElementById('editId').value = "";
+                document.getElementById('edit-indicator').classList.add('hidden');
+                document.getElementById('content').value = "";
+                document.getElementById('explanation').value = "";
+                
+                // Xóa các ô trắc nghiệm
+                document.getElementById('opt_A').value = "";
+                document.getElementById('opt_B').value = "";
+                document.getElementById('opt_C').value = "";
+                document.getElementById('opt_D').value = "";
+                
+                // Xóa ô trả lời ngắn
+                document.getElementById('correct_answer_short').value = "";
+            }
+
+            // Luôn đảm bảo hiển thị đúng section theo loại câu hỏi hiện tại
+            const type = document.getElementById('type').value;
+            if (type === 'multiple_choice') {
+                document.getElementById('mcqOptions').classList.remove('hidden');
+                document.getElementById('shortAnswerSection').classList.add('hidden');
+            } else {
+                document.getElementById('mcqOptions').classList.add('hidden');
+                document.getElementById('shortAnswerSection').classList.remove('hidden');
+            }
         };
 
         // 5. Delete Logic

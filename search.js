@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     '/benhhoc/tailieu/soi_tui_mat.html',
                     '/benhhoc/tailieu/viem_gan_toi_cap.html',
                     '/benhhoc/tailieu/viem_phoi_cong_dong.html',
+                    '/benhhoc/tailieu/hen_phe_quan.html',
                     '/benhhoc/tailieu/viem_VA.html',
                     '/benhhoc/tailieu/tang_huyet_ap.html',
                     '/benhhoc/tailieu/suy_gian_tinh_mach_chi_duoi.html',
