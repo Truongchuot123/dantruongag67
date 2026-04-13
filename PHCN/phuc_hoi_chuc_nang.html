@@ -21,296 +21,241 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
 
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-    :root {
-        --primary-color: #0c7ec4; /* Blue */
-    }
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary-color: #0c7ec4;
+            --bg-body: #f7f9fc;
+        }
 
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f7f9fc;
-        min-height: 100vh;
-    }
-    .main-container {
-        max-width: 1280px;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 1rem;
-    }
-    @media (min-width: 640px) {
-        .main-container {
-            padding: 2rem;
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            margin: 0;
+            padding: 0;
         }
-    }
-    @media (min-width: 1024px) {
+
         .main-container {
-            padding: 3rem;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
         }
-    }
-    
-    /* === GENERAL SECTION TITLES (Previously Tailwind Utilities) === */
-    .section-title, .article-section-title {
-        font-size: 1.875rem; /* text-3xl */
-        font-weight: 800; /* font-extrabold */
-        color: #ffffff; /* text-gray-800 */
-        text-align: center;
-        margin-bottom: 2.5rem; /* mb-10 */
-        border-bottom: 4px solid #3b82f6; /* border-b-4 border-blue-500 */
-        padding-bottom: 0.5rem; /* pb-2 */
-    }
-    @media (min-width: 640px) {
+
+        /* === SECTION TITLES === */
         .section-title, .article-section-title {
-            font-size: 2.25rem; /* sm:text-4xl */
+            font-size: 1.875rem;
+            font-weight: 800;
+            color: #f4f4f4;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            padding-bottom: 1rem;
         }
-    }
-    .services-section {
-        margin-bottom: 4rem; /* mb-16 */
-    }
 
-    /* === SERVICE GRID STYLES === */
-    .services-grid {
-        display: grid;
-        grid-template-columns: repeat(1, minmax(0, 1fr)); 
-        gap: 1.5rem;
-    }
-    @media (min-width: 768px) {
+        .section-title::after, .article-section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, #3b82f6, #10b981);
+            border-radius: 2px;
+        }
+
+        /* === SERVICE GRID STYLES (Giữ nguyên logic cũ) === */
         .services-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 2rem;
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr)); 
+            gap: 1.5rem;
+            margin-bottom: 5rem;
         }
-    }
-    @media (min-width: 1024px) {
-        .services-grid {
-            grid-template-columns: repeat(4, minmax(0, 1fr)); 
-            gap: 2rem;
+        @media (min-width: 768px) { .services-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (min-width: 1024px) { .services-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+        .service-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.5rem;
+            background: #fff;
+            border-radius: 1.25rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid #f1f5f9;
         }
-    }
-    
-    /* Service Card Styles (3D Tilt Effect) */
-    .service-card {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 1.5rem;
-        background-color: #ffffff;
-        border-radius: 1rem; /* Stronger rounding */
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); /* shadow-xl */
-        border: 2px solid transparent;
-        text-decoration: none;
-        transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-        position: relative;
-        overflow: hidden;
-        transform-style: preserve-3d;
-        perspective: 1000px;
-    }
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+        .card-1 { --card-color: #3b82f6; --card-light: #eff6ff; }
+        .card-2 { --card-color: #10b981; --card-light: #ecfdf5; }
+        .card-3 { --card-color: #8b5cf6; --card-light: #f5f3ff; }
+        .card-4 { --card-color: #f97316; --card-light: #fff7ed; }
+        .card-5 { --card-color: #3b82f6; --card-light: #eff6ff; }
+        .card-6 { --card-color: #10b981; --card-light: #ecfdf5; }
+        .card-7 { --card-color: #8b5cf6; --card-light: #f5f3ff; }
+        .card-8 { --card-color: #f97316; --card-light: #fff7ed; }
 
-    /* Bottom accent bar and glow effect */
-    .service-card:after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 4px; 
-        background-color: var(--card-border-color);
-        transition: all 0.4s ease;
-        transform: scaleX(0); 
-        transform-origin: bottom center;
-        border-radius: 0 0 8px 8px; 
-    }
-    
-    .service-card:hover {
-        transform: translateY(-4px) rotateX(2deg) scale(1.01); 
-        box-shadow: 0 25px 40px rgba(0, 0, 0, 0.2); 
-        border-color: var(--card-border-color); 
-    }
+        .icon-container {
+            width: 4rem; height: 4rem; margin: 0 auto 1.5rem;
+            border-radius: 1rem; display: flex; align-items: center; justify-content: center;
+            background-color: var(--card-light); border: 2px solid var(--card-color);
+        }
+        .icon-container img { width: 60%; height: 60%; object-fit: contain; }
+        .card-title { font-size: 1.1rem; font-weight: 700; color: #1e293b; text-align: center; }
+        .cta-button {
+            background: var(--card-color); color: white; border: none; padding: 0.8rem;
+            border-radius: 0.75rem; font-weight: 600; margin-top: 1.5rem; cursor: pointer;
+        }
 
-    .service-card:hover:after {
-        transform: scaleX(1); 
-        height: 8px; 
-        box-shadow: 0 0 20px 5px var(--card-border-color); 
-    }
-
-    /* --- Card Color Definitions --- */
-    .card-1 { --card-color: #3b82f6; --card-light: #eff6ff; --card-border-color: #2563eb; } /* Blue */
-    .card-2 { --card-color: #10b981; --card-light: #ecfdf5; --card-border-color: #059669; } /* Emerald */
-    .card-3 { --card-color: #8b5cf6; --card-light: #f5f3ff; --card-border-color: #7c3aed; } /* Violet */
-    .card-4 { --card-color: #f97316; --card-light: #fff7ed; --card-border-color: #ea580c; } /* Orange */
-    
-    .card-5 { --card-color: #3b82f6; --card-light: #eff6ff; --card-border-color: #2563eb; }
-    .card-6 { --card-color: #10b981; --card-light: #ecfdf5; --card-border-color: #059669; }
-    .card-7 { --card-color: #8b5cf6; --card-light: #f5f3ff; --card-border-color: #7c3aed; }
-    .card-8 { --card-color: #f97316; --card-light: #fff7ed; --card-border-color: #ea580c; }
-
-
-    .icon-container {
-        width: 4rem;
-        height: 4rem;
-        margin-left: auto;
-        margin-right: auto;
-        margin-bottom: 1rem;
-        border-radius: 9999px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: var(--card-light);
-        padding: 0.5rem; /* Padding adjusted slightly for image */
-        transition: all 0.3s ease;
-        border: 2px solid var(--card-color);
-    }
-    .service-card:hover .icon-container {
-        background-color: var(--card-color);
-        box-shadow: 0 0 15px var(--card-border-color);
-    }
-    
-    /* Styling for placeholder images */
-    .icon-container img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        border-radius: 9999px;
-    }
-
-    .card-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #1f2937;
-        text-align: center;
-        margin-bottom: 0.5rem;
-    }
-
-    /* CTA Button Styling */
-    .cta-button {
-        display: block;
-        width: 100%;
-        padding: 0.75rem 1.5rem;
-        margin-top: 1rem;
-        border-radius: 0.5rem;
-        font-size: 0.95rem;
-        font-weight: 600;
-        text-align: center;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        background-color: var(--card-color);
-        color: #ffffff;
-        transition: all 0.3s ease;
-        border: 2px solid transparent;
-        cursor: pointer;
-    }
-
-    .service-card:hover .cta-button {
-        background-color: var(--card-border-color);
-        transform: scale(1.02);
-        box-shadow: 0 4px 10px var(--card-border-color);
-    }
-    
-    
-    /* === ARTICLE GRID STYLES === */
-    .article-grid {
-        display: grid;
-        grid-template-columns: repeat(1, minmax(0, 1fr)); 
-        gap: 2rem;
-    }
-    @media (min-width: 1024px) {
+        /* === NÂNG CẤP BÀI VIẾT (ARTICLE GRID) === */
         .article-grid {
-            grid-template-columns: repeat(3, minmax(0, 1fr)); 
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr)); 
+            gap: 2.5rem;
         }
-    }
+        @media (min-width: 768px) { .article-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (min-width: 1024px) { .article-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
-    /* Article Card Styles (Simple Lift & Shadow Effect) */
-    .article-card {
-        display: flex;
-        flex-direction: column;
-        background-color: #ffffff;
-        border-radius: 0.75rem; 
-        overflow: hidden;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
-        transition: all 0.3s ease;
-        text-decoration: none;
-    }
-    .article-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-    }
+        .article-card {
+            display: flex;
+            flex-direction: column;
+            background-color: #ffffff;
+            border-radius: 1.5rem; 
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+            text-decoration: none;
+            border: 1px solid #edf2f7;
+            position: relative;
+        }
 
-    .article-image {
-        width: 100%;
-        height: 150px;
-        object-fit: cover;
-    }
+        .article-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
 
-    .article-content {
-        padding: 1.25rem;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
+        .article-image-wrapper {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
 
-    .article-title {
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 0.5rem;
-        line-height: 1.4;
-    }
+        .article-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
 
-    /* Article Description */
-    .article-description {
-        color: #6b7280; /* text-gray-500 */
-        font-size: 0.875rem; /* text-sm */
-        /* Replicating line-clamp-3 functionality */
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
+        .article-card:hover .article-image {
+            transform: scale(1.1);
+        }
 
-    .article-meta {
-        font-size: 0.75rem;
-        color: #6b7280;
-        margin-top: 1rem;
-        border-top: 1px solid #e5e7eb;
-        padding-top: 0.75rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center; /* Đảm bảo căn giữa theo chiều dọc */
-    }
-    .article-meta span {
-        display: flex; /* Đảm bảo icon và text nằm cùng hàng */
-        align-items: center;
-        line-height: 1; /* Cải thiện căn chỉnh */
-    }
-    .article-read-more {
-        color: var(--article-color);
-        font-weight: 600;
-        transition: color 0.3s ease;
-    }
-    .article-card:hover .article-read-more {
-        color: var(--article-border-color);
-    }
-    /* Icon Sizing and Spacing within Article Meta */
-    .article-meta i {
-        width: 1rem; /* w-4 */
-        height: 1rem; /* h-4 */
-        /* Changed to flex for better vertical alignment with text */
-    }
-    .article-meta span:first-child i {
-        margin-right: 0.25rem; /* mr-1 */
-    }
-    .article-read-more i {
-        margin-left: 0.25rem; /* ml-1 */
-    }
+        /* Nhãn chuyên mục nổi bật */
+        .article-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: white;
+            background: var(--article-color);
+            z-index: 10;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+        }
 
-    /* Article Colors - Reusing Service colors */
-    .article-1 { --article-color: #3b82f6; --article-border-color: #2563eb; }
-    .article-2 { --article-color: #10b981; --article-border-color: #059669; }
-    .article-3 { --article-color: #8b5cf6; --article-border-color: #7c3aed; }
-    .article-4 { --article-color: #f97316; --article-border-color: #ea580c; }
+        .article-content {
+            padding: 1.75rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
 
+        .article-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #1a202c;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+            transition: color 0.3s ease;
+        }
 
-</style>
+        .article-card:hover .article-title {
+            color: var(--article-color);
+        }
+
+        .article-description {
+            color: #4a5568;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .article-footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.25rem;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .article-date {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #718096;
+            font-size: 0.85rem;
+        }
+
+        .article-link {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--article-color);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .article-link i {
+            transition: transform 0.3s ease;
+        }
+
+        .article-card:hover .article-link i {
+            transform: translateX(5px);
+        }
+
+        /* Định nghĩa màu sắc cho từng loại bài viết */
+        .article-1 { --article-color: #3b82f6; }
+        .article-2 { --article-color: #10b981; }
+        .article-3 { --article-color: #8b5cf6; }
+        .article-4 { --article-color: #f97316; }
+
+        /* Banner styles (giữ nguyên yêu cầu) */
+        .main-banner_trang_con {
+            background: linear-gradient(135deg, #0c7ec4 0%, #064e77 100%);
+            padding: 4rem 1rem;
+            color: white;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .main-title { font-size: 2.5rem; margin-bottom: 1rem; }
+        .sub-text { max-width: 800px; margin: 0 auto; opacity: 0.9; line-height: 1.6; }
+    </style>
 </head>
      <body class="bg-gray-900">
     <div id="header-placeholder"></div>
@@ -424,76 +369,72 @@
         </div>
 
 
-        <h2 class="article-section-title">
-            BÀI VIẾT
-        </h2>
+        <h2 class="article-section-title">BÀI VIẾT NỔI BẬT</h2>
 
         <div class="article-grid">
 
-            <a href="bai_viet_1.html" class="article-card article-1">
-                <img src="https://placehold.co/600x400/3b82f6/ffffff?text=Cơ+Xương+Khớp" class="article-image" alt="Hình ảnh minh họa cho bài viết Cơ Xương Khớp">
+            <!-- Bài viết 1 -->
+            <a href="/PHCN/HĐTL/dung_cu_vltl.html" class="article-card article-1">
+                <span class="article-badge">Hoạt động trị liệu</span>
+                <div class="article-image-wrapper">
+                    <img src="/PHCN/hinhanh/dung_cu_vltl/dung_cu_vat_ly_tri_lieu.jpg" class="article-image" alt="">
+                </div>
                 <div class="article-content">
-                    <div>
-                        <h3 class="article-title">Cách di chuyển người bị liệt nửa người từ giường ra xe lăn và ngược lại</h3>
-                        <p class="article-description">Việc hỗ trợ người cao tuổi liệt nửa người di chuyển từ giường sang xe lăn và ngược lại là một kỹ thuật quan trọng cần nắm được đối với người chăm sóc. Video này sẽ hướng dẫn các bước để người chăm sóc có thể thực hiện kỹ thuật này một cách hiệu quả và đảm bảo an toàn cho người cao tuổi..</p>
-                    </div>
-                    <div class="article-meta">
-                        <span><i data-lucide="calendar"></i> 12/12/2026</span>
-                        <span class="article-read-more">Xem thêm <i data-lucide="arrow-right"></i></span>
+                    <h3 class="article-title">Dụng cụ vật lý trị liệu phổ biến hiện nay</h3>
+                    <p class="article-description">Khám phá danh sách các trang thiết bị hiện đại hỗ trợ tối ưu quá trình hồi phục tại nhà và tại phòng khám.</p>
+                    <div class="article-footer">
+                        <div class="article-date">
+                            <i data-lucide="calendar" size="16"></i> 13/04/2026
+                        </div>
+                        <div class="article-link">
+                            Đọc tiếp <i data-lucide="chevron-right" size="18"></i>
+                        </div>
                     </div>
                 </div>
             </a>
 
-            <a href="bai_viet_2.html" class="article-card article-2">
-                <img src="https://placehold.co/600x400/10b981/ffffff?text=Thần+Kinh+Cơ" class="article-image" alt="Hình ảnh minh họa cho bài viết Thần Kinh Cơ">
+            <!-- Bài viết 2 -->
+            <a href="#" class="article-card article-2">
+                <span class="article-badge">Người cao tuổi</span>
+                <div class="article-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1581579438747-104c53d7fbc4?q=80&w=600" class="article-image" alt="Người già">
+                </div>
                 <div class="article-content">
-                    <div>
-                        <h3 class="article-title">Một số bài tập giúp phòng tránh ngã cho người cao tuổi</h3>
-                        <p class="article-description">Đối với người cao tuổi, việc ngã có thể gây ra những chấn thương nguy hiểm, thậm chí đe dọa tới tính mạng. Video này sẽ cung cấp thông tin về các yếu tố nguy cơ cũng như một số biện pháp phòng tránh ngã dành cho người cao tuổi.</p>
-                    </div>
-                    <div class="article-meta">
-                        <span><i data-lucide="calendar"></i> 05/12/2026</span>
-                        <span class="article-read-more">Xem thêm <i data-lucide="arrow-right"></i></span>
+                    <h3 class="article-title">Phòng tránh té ngã cho người cao tuổi</h3>
+                    <p class="article-description">Tổng hợp các bài tập thăng bằng và cách sắp xếp nhà cửa giúp giảm thiểu nguy cơ chấn thương cho người già.</p>
+                    <div class="article-footer">
+                        <div class="article-date">
+                            <i data-lucide="calendar" size="16"></i> 05/12/2026
+                        </div>
+                        <div class="article-link">
+                            Đọc tiếp <i data-lucide="chevron-right" size="18"></i>
+                        </div>
                     </div>
                 </div>
             </a>
 
-            <a href="bai_viet_3.html" class="article-card article-3">
-                <img src="https://placehold.co/600x400/8b5cf6/ffffff?text=Hô+Hấp" class="article-image" alt="Hình ảnh minh họa cho bài viết Hô Hấp">
-                <div class="article-content">
-                    <div>
-                        <h3 class="article-title">Kỹ Thuật Hít Thở Đúng Cách Cải Thiện Bệnh Phổi Tắc Nghẽn Mạn Tính (COPD)</h3>
-                        <p class="article-description">Giới thiệu các kỹ thuật thở hiệu quả như thở chúm môi và thở hoành, giúp tăng cường dung tích phổi và giảm khó thở.</p>
-                    </div>
-                    <div class="article-meta">
-                        <span><i data-lucide="calendar"></i> 01/12/2026</span>
-                        <span class="article-read-more">Xem thêm <i data-lucide="arrow-right"></i></span>
-                    </div>
+            <!-- Bài viết 3 -->
+            <a href="#" class="article-card article-3">
+                <span class="article-badge">Hô hấp</span>
+                <div class="article-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?q=80&w=600" class="article-image" alt="Phổi">
                 </div>
-            </a>
-
-
-            <a href="bai_viet_4.html" class="article-card article-4">
-                <img src="https://placehold.co/600x400/f97316/ffffff?text=Trẻ+Em" class="article-image" alt="Hình ảnh minh họa cho bài viết Nhi Khoa">
                 <div class="article-content">
-                    <div>
-                        <h3 class="article-title">Can Thiệp Sớm Trong Phục Hồi Chức Năng Trẻ Bại Não</h3>
-                        <p class="article-description">Tầm quan trọng của việc phát hiện và can thiệp vật lý trị liệu sớm để tối ưu hóa khả năng vận động và phát triển của trẻ.</p>
-                    </div>
-                    <div class="article-meta">
-                        <span><i data-lucide="calendar"></i> 25/11/2026</span>
-                        <span class="article-read-more">Xem thêm <i data-lucide="arrow-right"></i></span>
+                    <h3 class="article-title">Kỹ thuật hít thở cho bệnh nhân COPD</h3>
+                    <p class="article-description">Hướng dẫn chi tiết kỹ thuật thở chúm môi và thở cơ hoành giúp cải thiện đáng kể dung tích phổi.</p>
+                    <div class="article-footer">
+                        <div class="article-date">
+                            <i data-lucide="calendar" size="16"></i> 01/12/2026
+                        </div>
+                        <div class="article-link">
+                            Đọc tiếp <i data-lucide="chevron-right" size="18"></i>
+                        </div>
                     </div>
                 </div>
             </a>
 
         </div>
-
     </div>
-
-    <script>
-        lucide.createIcons();
-    </script>
     
     <div id="footer-placeholder"></div>
 

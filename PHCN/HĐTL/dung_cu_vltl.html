@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dụng cụ vật lý trị liệu - Nguyễn Mai Đan Trường</title>
+     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:title" content=" Nguyễn Mai Đan Trường">
+    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:image" content="/hinhanh/logo_web.png">
+    <meta property="og:url" content="https://dantruongag.id.vn">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/hinhanh/logo_web.png" type="">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/banner_trang_con.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Thư viện hiệu ứng cuộn AOS -->
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #1e40af;
+            --secondary: #3b82f6;
+            --accent: #60a5fa;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        /* Card Effects */
+        .tool-card {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        .tool-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(30, 64, 175, 0.25);
+        }
+
+        .img-container {
+            position: relative;
+            height: 256px;
+            width: 100%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-bottom: 1px solid white;
+        }
+
+        .img-container img {
+            max-width: 96%;
+            max-height: 96%;
+            object-fit: contain;
+            transition: transform 0.7s ease;
+        }
+
+        .tool-card:hover .img-container img {
+            transform: scale(1.1);
+        }
+
+        /* 3D Button Effect */
+        .btn-detail {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .btn-detail::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .btn-detail:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Filter Chips */
+        .filter-chip {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .filter-chip.active {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .swal2-popup {
+            border-radius: 24px !important;
+            padding: 1.5rem !important;
+        }
+
+        .custom-swal-content h4 {
+            color: #1e40af;
+            font-weight: 700;
+            border-left: 4px solid #1e40af;
+            padding-left: 10px;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+        
+        /* Banner Styles Placeholder */
+        .main-banner_trang_con {
+            padding: 80px 20px;
+            background: linear-gradient(rgba(30, 64, 175, 0.9), rgba(30, 64, 175, 0.7)), url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80') center/cover;
+            text-align: center;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-900">
+    <div id="header-placeholder"></div>
+    <div id="search-placeholder"></div>
+
+    <header class="main-banner_trang_con">
+        <div class="banner_trang_con-overlay"></div>
+        <div class="hbanner_trang_con-image-bg"></div>
+
+        <div class="hbanner_trang_con-content">
+            <h1 class="main-title">DỤNG CỤ VẬT LÝ TRỊ LIỆU</h1>
+            <p class="sub-text">Phục hồi chức năng là biện pháp giảm tối đa tác động của giảm chức năng và tàn tật, từ đó, giúp người bệnh hội nhập hoặc tái hội nhập với xã hội. Những chức năng này có thể thuộc về chức năng thể chất hoặc tâm thần (khả năng nhận thức, tư duy,…)</p>
+            <div class="hbanner_trang_con-tabs-wrap">
+                <div id="category-tabs" class="category-scroll" aria-label="Danh mục bài viết"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-16">
+        <div id="filter-container" class="flex flex-wrap justify-center gap-3 mb-12" data-aos="fade-up">
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" id="tools-container">
+        </div>
+    </main>
+
+    <script>
+        const tools = [
+            {
+                id: 1,
+                name: "Bộ Cọc và Vòng Xỏ Tay",
+                category: "Tập chức năng bàn tay",
+                image: "/PHCN/hinhanh/dung_cu_vltl/Bo_coc_va_vong_xo_tay.png",
+                exercise: "Bài tập tác vụ cụ thể mô phỏng lại các kỹ năng cầm nắm trong sinh hoạt hàng ngày.",
+                features: [
+                    "Kết hợp cử động với tay và kỹ năng cầm nắm để di chuyển các vòng gỗ giữa các vị trí khác nhau.",
+                    "Tăng sự khéo léo và tính linh hoạt của các khớp ngón tay.",
+                    "Tập luyện kỹ năng mở xòe bàn tay để chống co rút.",
+                    "Cải thiện sự phối hợp đa giác quan (mắt - tay) và khả năng nhận thức không gian."
+                ],
+                target: "Người bệnh sau tai biến bị liệt nửa người, mất cảm giác không gian, gặp khó khăn khi cầm nắm đồ vật sinh hoạt hàng ngày, trẻ em bại não hoặc chậm phát triển vận động.",
+                instruction: `
+                    <ol class="list-decimal ml-4 space-y-2 text-gray-600">
+                        Người tập ngồi vững chãi trên ghế có tựa, đặt bộ dụng cụ trên bàn ngang tầm bụng.
+                        <li><b>Cầm nắm:</b> người bệnh xòe rộng các ngón tay để nhặt một vòng gỗ đang nằm ở cọc số 1 (nếu tay liệt quá yếu, dùng tay lành cầm tay yếu để hỗ trợ)..</li>
+                        <li><b>Di chuyển:</b> Nâng vòng lên và đưa tay di chuyển vòng sang hướng của cọc số 2. Cố gắng giữ khớp vai ổn định, chỉ di chuyển cánh tay thay vì xoay cả thân mình.</li>
+                        <li><b>Xỏ vòng:</b> Khéo léo lồng vòng qua đầu cọc số 2, mở rộng tối đa các ngón tay để vòng rơi xuống.</li>
+                        <li><b>Luân chuyển:</b> Tiếp tục nhặt các vòng còn lại từ cọc này chuyển hết sang cọc kia và ngược lại để rèn luyện sự linh hoạt đổi chiều.</li>
+                    </ol>
+                    `,
+                warning: "Đặt bộ cọc quá xa tầm với, khiến người bệnh phải rướn thân người, dễ dẫn đến mất thăng bằng và té ngã khỏi ghế. <br> Lỗi kéo giãn cổ tay và ngón tay trước khi tập đối với những người bệnh đang bị co cứng cơ nặng.",
+                stopSign: "Khi người bệnh có biểu hiện quá mệt mỏi về mặt thần kinh (mất tập trung, bực bội) hoặc mất kiểm soát tư thế ngồi, hoặc có biểu hiện sưng nề ở bàn tay khi cố rướn tập.",
+                recommendation: "3-5 buổi/tuần; 20-30 phút/buổi. Tăng độ khó bằng cách đặt lệch cọc về phía tay liệt.",
+                contraindication: "Dụng cụ này cơ bản là an toàn, nhưng cần thận trọng tối đa (không để người bệnh tự tập một mình) đối với những người có rối loạn nhận thức thần kinh nặng, mất kiểm soát hành vi để tránh tai nạn với các chi tiết bằng gỗ."
+            },
+            {
+                id: 2,
+                name: "Cây treo vòng tập chi trên",
+                category: "Tăng tầm vận động khớp",
+                image: "/PHCN/hinhanh/dung_cu_vltl/cay_treo_vong_tap_chi_tren.png",
+                exercise: "Bài tập vận động chủ động hoặc có trợ giúp (tùy vào sức cơ của người tập).",
+                features: [
+                    "Dùng để tập tầm vận động khớp vai và cánh tay thông qua việc lấy và treo các vòng lên các nhánh của cây, giúp duy trì tầm vận động khớp vai, ngăn ngừa tình trạng cứng khớp, thúc đẩy tuần hoàn máu."
+                ],
+                target: "Người bệnh suy giảm chức năng chi trên do liệt nửa người sau tai biến, người phải nằm lâu ngày.<br>Người cao tuổi muốn duy trì sự linh hoạt của khớp vai và cánh tay.<br> Người cần tập vận động khớp vùng chi trên trong giai đoạn phục hồi sau chấn thương.<br<Người cần tập vận động khớp vai và tập các chức năng sinh hoạt hằng ngày như treo đồ, lấy đồ vật.",
+                instruction: `
+                    <ol class="list-decimal ml-4 space-y-2 text-gray-600">
+                        <li><b>Chuẩn bị:</b> Đứng hoặc ngồi vững chãi đối diện với cây tập. Lưng thẳng, vai thả lỏng.</li>
+                        <li><b>Lấy vòng:</b> Dùng tay cần tập (hoặc tay yếu được tay khỏe hỗ trợ) từ từ đưa lên lấy một chiếc vòng từ nhánh thấp nhất.</li>
+                        <li><b>Di chuyển:</b> Đưa vòng lên cao và treo vào một nhánh ở vị trí cao hơn hoặc ở hướng khác.</li>
+                        <li><b>Lập lại:</b> Tiếp tục thực hiện với các nhánh ở độ cao tăng dần để mở rộng tầm với. Sau đó thực hiện ngược lại (lấy từ trên cao treo xuống thấp).</li>
+                    </ol>`,
+                warning: "Tránh nhún vai hoặc nghiêng người để cố đưa tay lên cao; thay vào đó hãy giữ thân mình cố định và chỉ cử động khớp vai.",
+                stopSign: "Nếu cảm thấy đau nhói dữ dội, chóng mặt hoặc khó thở, cần dừng lại ngay và tham khảo ý kiến của người có chuyên môn.",
+                recommendation: "2 - 3 lần/ngày. Tập đến ngưỡng cảm thấy căng nhẹ ở khớp vai, không tập khi thấy đau chói. Mỗi lần tập từ 15 - 20 phút.",
+                contraindication: "Không tập khi đang có tình trạng trật khớp vai cấp tính, gãy xương chưa liền hoặc đang có viêm cấp sưng nóng đỏ đau."
+            },
+            {
+                id: 3,
+                name: "Dụng cụ tập trợ giúp cử động tay chân",
+                category: "Tăng tầm vận động khớp",
+                image: "/PHCN/hinhanh/dung_cu_vltl/dung_cu_tap_tro_giup_cu_dong_tay_chan.jpg",
+                exercise: "Bài tập vận động thụ động hoặc có trợ giúp (tùy vào sức cơ của người tập).",
+                features: [
+                    "Hỗ trợ các bài tập cử động thụ động và chủ động cho người bệnh bị suy giảm chức năng tay và chân."
+                ],
+                target: "Người bệnh sau tai biến, chấn thương, hoặc người cao tuổi cần cải thiện khả năng vận động.",
+                instruction: `
+                    <ol class="list-decimal ml-4 space-y-2 text-gray-600">
+                        Người bệnh cố định tay/chân vào bề mặt dụng cụ bằng đai sẵn có. Thực hiện các cử động được hỗ trợ bằng cách trượt dụng cụ trên các mặt phẳng.
+                        <li><b>Gập duỗi gối:</b> Người tập ngồi trên ghế, 1 chân đặt trên sàn và 1 chân được cố định vào dụng cụ. Từ từ đưa chân được hỗ trợ ra phía sau làm động tác gập gối và đưa ra trước làm động tác duỗi gối, lặp lại.</li>
+                        <li><b>Gập duỗi vai:</b> Người tập ngồi trên ghế, tay cố định vào dụng cụ và đặt trên bàn. Từ từ đưa tay được hỗ trợ trượt về phía trước làm động tác gập vai và đưa ra phía sau làm động tác duỗi vai, lặp lại.</li>
+                    </ol>`,
+                warning: "Ở bài tập gập duỗi vai, tay được hỗ trợ phải đặt cạnh thân người trong lúc tập.",
+                stopSign: "Nếu cảm thấy đau nhói dữ dội, chóng mặt hoặc khó thở, cần dừng lại ngay và tham khảo ý kiến của người có chuyên môn.",
+                recommendation: "10-20 phút/lần, 2-3 lần/ngày, cường đồ nhẹ đến trung bình vừa sức người bệnh ",
+                contraindication: "Viêm khớp cấp tính, sưng nóng đỏ đau nhiều.<br>Vết thương hở, loét da tại vị trí cố định dây đai.<br>Rối loạn nhận thức nặng, không hiểu lệnh hoặc không phối hợp được.<br>Đau tăng rõ rệt khi cử động."
+            },
+            {
+                id: 4,
+                name: "Banh nhựa dẻo",
+                category: "Tập chức năng bàn tay",
+                image: "/PHCN/hinhanh/dung_cu_vltl//banh_nhua_deo.jpg",
+                exercise: "Bài tập kích thích cảm giác và sự khéo léo của các ngón tay.",
+                features: ["Giúp duy trì tư thế ngón tay mở, ngăn ngừa tình trạng co rút các ngón tay tạo thành tư thế nắm đấm co cứng. Ngoài ra còn giúp kích thích cảm giác lòng bàn tay và rèn luyện vận động tinh (tập nhóm cơ bàn tay)."],
+                target: "Người bệnh tai biến có nguy cơ hoặc đang bị co cứng bàn tay, người lớn tuổi yếu cơ nặng, người cần phục hồi cảm giác và khả năng vận động chức năng bàn tay.",
+                instruction: `
+                        <li>Đặt trọn quả bóng vào lòng bàn tay.</li>
+                        <li>Nắm bóp quả bóng mạnh hết mức có thể.</li>
+                        <li>Giữ lực bóp trong 5 giây, sau đó thả lỏng để máu lưu thông trở lại.</li>
+                        <li>Ngoài ra có thể tập kẹp bóng giữa 2 ngón tay, hoặc dùng ngón cái lăn bóng.</li>
+                    `,
+                warning: "Thực hiện các động tác bóp/nhả quá nhanh và giật cục. Đặc biệt, người tập thường mắc lỗi để ngón tay bị căng cơ quá mức khi thực hiện các bài tập duỗi, dễ gây tổn thương gân cơ nhỏ ở bàn tay.",
+                stopSign: "Nếu xuất hiện triệu chứng đau nhức tăng lên ở các khớp ngón tay hoặc có cảm giác tê buốt ở các đầu ngón tay thì cần dừng tập ngay và tham khảo ý kiến của người có chuyên môn.",
+                recommendation: "<b>Tần suất:</b> Có thể tập luyện hàng ngày (nên nghỉ ngơi nếu xuất hiện tình trạng đau nhức các khớp ngón tay).<br><b>Cường độ:</b> Thực hiện 10 - 15 lần/hiệp. Lặp lại 3 - 4 hiệp cho mỗi bài tập. Nghỉ giữa các hiệp từ 30 - 60 giây.<br><b>Thời gian:</b> Mỗi buổi tập từ 15 - 20 phút. Có thể chia thành nhiều đợt tập ngắn trong ngày để tránh gây quá tải gân cơ.",
+                contraindication: "Không có chống chỉ định tuyệt đối, nhưng những người có tiền sử dị ứng nặng với cao su hoặc nhựa tổng hợp cần thận trọng (có thể khắc phục bằng cách bọc một lớp vải mỏng bên ngoài quả bóng)."
+            },
+            {
+                id: 5,
+                name: "Banh",
+                category: "Kiểm soát tư thế và thăng bằng",
+                image: "/PHCN/hinhanh/dung_cu_vltl/banh.jpg",
+                exercise: "Bài tập thăng bằng và ổn định thân mình.",
+                features: [
+                    "Tăng cường sức mạnh các nhóm cơ thân mình: cơ bụng, cơ lưng, cơ sàn chậu và cơ cạnh sống.",
+                    "Cải thiện khả năng kiểm soát tư thế, phối hợp vận động và phản xạ thăng bằng.",
+                    "Tăng tầm vận động khớp, kéo giãn cơ và giảm đau lưng cơ năng.",
+                    "Kích thích cảm giác sâu và hệ tiền đình, góp phần giảm nguy cơ té ngã."
+                ], 
+                target: "Người có vấn đề về thăng bằng, yếu cơ vùng thân mình hoặc đau lưng cơ năng.<br> Người bệnh sau tai biến cần tập kiểm soát tư thế ngồi và điều hợp tay chân.<br> Trẻ em chậm phát triển vận động hoặc người cần tập luyện duy trì sức khỏe tại nhà.",
+                instruction: `
+                        <li><b>Chọn kích thước banh:</b> Rất quan trọng. Khi ngồi trên banh, hông và đầu gối phải gập một góc khoảng 90 độ. Nếu banh quá nhỏ hoặc quá lớn sẽ gây sai tư thế và dễ ngã.</li>
+                        <li><b>Tư thế ngồi::</b> Ngồi thẳng trên tâm bóng, hai chân mở rộng bằng vai, bàn chân đặt sát mặt đất để giữ vững.</li>
+                        <li style="color: red;">
+                            <b><u>Các bài tập gợi ý (tham khảo):</u></b>
+                        </li>
+                        <li style="color: green; font-weight: bold;">
+                            <b><i>Bài tập nghiêng chậu trước – sau</i></b> 
+                        </li>
+                        <li><b>Hướng dẫn:</b>Ngồi giữa bóng, hai chân mở rộng bằng vai làm trụ. Thực hiện nhún nhẹ hoặc nhấc luân phiên từng bàn chân khỏi mặt đất (tương tự tư thế đi bộ khi ngồi). Đồng thời, tập đẩy hông ra trước và cuộn hông ra sau. </li>
+                        <li><b>Tác dụng: </b> Giúp cơ thể giữ thăng bằng tốt hơn và giảm sức ép lên lưng khi đi lại, làm việc. </li>
+                        <li style="color: green; font-weight: bold;">
+                            <b><i>Bài tập nhấc chân giữ thăng bằng</i></b> 
+                        </li>
+                        <li><b>Hướng dẫn: </b> Ngồi giữa bóng, hai chân mở rộng bằng vai làm trụ. Thực hiện nhún nhẹ hoặc nhấc luân phiên từng bàn chân khỏi mặt đất (tương tự tư thế đi bộ khi ngồi). </li>
+                        <li><b>Tác dụng: </b> Giúp cơ thể giữ thăng bằng tốt hơn và tăng cường sức mạnh cơ vùng bụng và lưng. </li>
+                        <li style="color: green; font-weight: bold;">
+                            <b><i>Bài tập xoay hông</i></b> 
+                        </li>
+                        <li><b>Hướng dẫn:</b>Giữ thẳng lưng và vai. Dùng lực vùng hông lăn bóng nhẹ nhàng theo hình tròn hoặc lắc sang hai bên trái - phải. </li>
+                        <li><b>Tác dụng: </b>Giúp vùng thắt lưng và khớp hông linh hoạt, bớt cứng cơ và đau mỏi. </li>
+                        <li style="color: red;"><b>Lưu ý</b> </li>
+                        <li>Giữ vai đứng yên: Chỉ di chuyển vùng hông, không lắc lư cả người theo bóng. </li>
+                        <li>Hít thở đều </li>
+                        <li>Kiểm soát môi trường: Tập trên bề mặt bằng phẳng, không trơn trượt. Đảm bảo xung quanh không có vật sắc nhọn hoặc đồ đạc dễ va chạm. </li>
+                        <li>Hỗ trợ thăng bằng: Người già hoặc người thăng bằng kém tuyệt đối không tập một mình. Nên đặt banh sát tường hoặc có người hỗ trợ giữ banh phía sau. </li>
+                        
+                    `,
+                warning: "Lưng cong quá mức<br>Cổ ngửa hoặc cúi quá nhiều<br>Vai bị nhô lên….",
+                stopSign: "Đau bắt thường<br>Chóng mặt, buồn nôn<br>Mất kiểm soát tư thế<br> Khó thở, tim đập nhanh bất thường",
+                recommendation: "<b>Tần suất: </b>1-2 lần mỗi ngày.<br><b> Cường độ: </b> Tập trung vào việc giữ thăng bằng ổn định, không cần thực hiện quá nhanh.<br><b>Thời gian: </b> 10-20 phút cho mỗi buổi tập.",
+                contraindication: "Đang có các cơn đau cột sống cấp tính hoặc các vấn đề về tiền đình gây chóng mặt nặng. "
+            },
+            {
+                id: 6,
+                name: "Bập bênh chữ nhật",
+                category: "Kiểm soát tư thế và thăng bằng",
+                image: "/PHCN/hinhanh/dung_cu_vltl/bap_benh_chu_nhat.png",
+                exercise: "Tập thăng bằng động và cảm thụ bản thể.",
+                features: [
+                    "Cải thiện thăng bằng",
+                    "Tăng cảm thụ bản thể.",
+                    "Giảm nguy cơ té ngã.",
+                    "Phục hồi khả năng phối hợp vận động."
+                ],
+                target: "Người bệnh sau đột quỵ (liệt nửa người) có rối loạn thăng bằng hoặc dáng đi không ổn định.<br>Người bệnh Parkinson, tổn thương tiểu não hoặc các rối loạn phối hợp vận động.<br>Người cao tuổi có nguy cơ té ngã cao cần tập luyện dự phòng.<br>Người sau chấn thương chi dưới (bong gân cổ chân, tái tạo dây chằng).",
+                instruction: `
+                        <li><b>Chuẩn bị:</b> Đặt dụng cụ trên bề mặt phẳng, không trơn trượt. Vị trí tập nên gần thanh song song hoặc tường để người tập có điểm tựa khi cần.</li>
+                        <li><b>Tư thế:</b> Người tập đứng hai chân rộng bằng vai trên mặt bập bênh. Mắt nhìn thẳng về phía trước để hỗ trợ kiểm soát thăng bằng qua thị giác.</li>
+                        <li><b>Thực hiện:</b> Giữ thăng bằng ở vị trí trung tâm (mặt bập bênh song song với sàn) trong khoảng 15 – 30 giây. Người hỗ trợ luôn đứng ở phía bên yếu hoặc phía sau để đảm bảo an toàn.</li>
+                        <li style="color: green; font-weight: bold;"><b>Kỹ thuật nâng cao:</b> </li>
+                            <li> Thực hiện chuyển trọng tâm sang trái – phải hoặc trước – sau một cách có kiểm soát.</li>
+                            <li>Phối hợp thực hiện động tác xuống tấn (squat) nhẹ nhàng hoặc kết hợp tung hứng bóng để tăng độ khó cho hệ thần kinh.</li>
+                        <li style="color: red;"><b>Lưu ý:</b> </li>
+                            <li> Khi tập phải luôn có người hỗ trợ (nhà điều trị hoặc người nhà) để tránh té ngã. </li>
+                            <li>Môi trường: Không tập trên mặt sàn ướt hoặc có nhiều vật cản xung quanh. </li>
+                    `,
+                warning: "Tư thế sai (Đứng lệch tâm bập bênh, gối khóa cứng, cúi người quá nhiều hoặc ưỡn lưng)<br>Trong tâm lệch sang một bên",
+                stopSign: "Đau bất thường ở cổ chân, gối, hông<br>Không giữ được thăng bằng<br>Sưng trong khi tập",
+                recommendation: "<b>Tần suất: </b>3-5 ngày/tuần để duy trì phản xạ thần kinh cơ.<br><b>Cường độ: </b> Mức độ khó tăng dần<br>Đứng 2 chân, tay bám chắc vào thanh vịn.<br>Đứng 2 chân, chỉ chạm nhẹ ngón tay vào điểm tựa.<br> Đứng 2 chân không hỗ trợ tay.<br>Đứng 1 chân (chân yếu) có hỗ trợ tay.<br>Đứng 1 chân tự do.<br><b>Thời gian: </b>15-20 phút cho toàn bộ buổi tập; mỗi hiệp giữ thăng bằng kéo dài 30-60 giây.",
+                contraindication: "Không dùng cho người đang có cơn chóng mặt, rối loạn tiền đình chưa kiểm soát hoặc loãng xương nặng. "
+            },        
+            {
+                id: 7,
+                name: "Bập bênh tròn",
+                category: "Kiểm soát tư thế và thăng bằng",
+                image: "/PHCN/hinhanh/dung_cu_vltl/bap_benh_tron_nho.png",
+                exercise: "Tập thăng bằng động và cảm thụ bản thể.",
+                features: [
+                    "<b>Đặc điểm:</b>Bề mặt hình đĩa tròn, mặt trên phẳng rộng, mặt dưới có phần lỗi hình bán cầu giúp tạo độ nghiêng khi di chuyển trọng tâm",
+                    "<b>Công dụng:</b> Tăng sức mạnh cơ lõi. Cải thiện phản xạ thăng bằng đa hướng."
+                ],
+                target: "Người bệnh ở giai đoạn hồi phục tiến triển (đã đứng vững và hoàn thành tốt các bài tập trên bập bênh chữ nhật).<br>Người bệnh sau tai biến, Parkinson cần nâng cao khả năng điều hợp đa hướng.<br>Người sau chấn thương hoặc phẫu thuật chi dưới (cổ chân, gối) cần tập luyện sức mạnh và sự ổn định khớp ở mức độ cao.<br>Người có tình trạng yếu cơ lõi hoặc rối loạn thăng bằng mức độ nhẹ.",
+                instruction: `
+                        <li><b>Chuẩn bị: </b> Đặt dụng cụ trên sàn phẳng, không trơn trượt. Giai đoạn đầu nên đặt dụng cụ gần thanh vịn hoặc góc tường. </li>
+                        <li><b>Tư thế: </b>Người tập đứng hai chân rộng bằng vai trên mặt đĩa. Giữ cột sống thẳng, mắt nhìn thẳng. </li>
+                        <li><b>Thực hiện: </b>Tìm điểm thăng bằng sao cho các mép đĩa không chạm sàn và giữ ổn định trong 15 – 30 giây. Người hỗ trợ luôn đứng sát bên yếu của người bệnh. </li>
+                        <li style="color: green; font-weight: bold;"><b>Kỹ thuật nâng cao:</b> </li>
+                            <li>Thực hiện chuyển trọng tâm xoay tròn 360 độ sao cho mép đĩa chạm sàn theo một vòng tròn liên tục.</li>
+                            <li>Tăng độ khó bằng cách nhắm mắt (loại bỏ hệ thị giác để ép hệ cảm thụ bản thể làm việc) hoặc phối hợp cầm tạ nhẹ, bóng tập.</li>
+                        <li style="color: red;"><b>Lưu ý:</b> </li>
+                            <li>Nguy cơ té ngã: Dụng cụ này có độ mất vững cao hơn loại chữ nhật, do đó yêu cầu sự giám sát chặt chẽ của nhà điều trị hoặc người nhà trong suốt quá trình tập.</li>
+                            <li> Thứ tự ưu tiên: Chỉ sử dụng sau khi người tập đã đạt được sự ổn định trên các bề mặt mất vững đơn hướng (như bập bênh chữ nhật).</li>
+                    `,
+                warning: "Đứng lệch tâm bập bênh, <br>Khoảng cách 2 chân quá rộng hoặc quá hẹp <br>Khớp gối khóa cứng<br>Cúi người quá nhiều hoặc ưỡn lưng, <br>Mắt nhìn xuống",
+                stopSign: "Đau bất thường ở cổ chân, bàn chân, gối<br>Run cơ quá mức <br>Chóng mặt<br>Không giữ được thăng bằng<br>Sưng trong khi tập",
+                recommendation: "<b>Tần suất: </b> 3-5 ngày/tuần.<br><b>Cường độ: </b>Mức độ khó tăng dần<br>Đứng 2 chân, tay bám chắc vào thanh vịn.<br>Đứng 2 chân, chỉ chạm nhẹ ngón tay vào điểm tựa.<br>Đứng 2 chân không hỗ trợ tay.<br>Đứng 1 chân (chân yếu) có hỗ trợ tay.<br>Đứng 1 chân tự do.<br><b>Thời gian: </b>15-20 phút cho toàn bộ buổi tập; mỗi hiệp giữ thăng bằng kéo dài 30-60 giây.",
+                contraindication: "Không dùng cho người đang có cơn chóng mặt, rối loạn tiền đình chưa kiểm soát hoặc loãng xương nặng."
+            },
+            {
+                id: 8,
+                name: "Bộ quay tập khớp vai và cơ ngực",
+                category: "Tập mạnh cơ",
+                image: "/PHCN/hinhanh/dung_cu_vltl/bo_quay_tap_khop_vai_co_nguc.png",
+                exercise: "Bài tập vận động chủ động có trợ giúp, vận động chủ động",
+                features: [
+                    "Tập mạnh nhóm cơ vùng vai, tay, ngực.",
+                    "Cải thiện khả năng điều hợp hai tay."
+                ],
+                target: "Người bị giới hạn vận động vai do bất động lâu, chấn thương vai.<br>Các bệnh lý, vấn đề ảnh hưởng tầm vận động khớp vai, suy giảm sức cơ chi trên, vùng ngực, lưng.",
+                instruction: `
+                        <li style="color: green; font-weight: bold;">
+                            <b> Đứng đối diện với dụng cụ</b>
+                        </li>
+                        <li><b> Thực hiện: </b> Hai tay cầm 2 tay nắm hoặc tập một tay thì cầm 1 tay nắm, quay theo chiều kim đồng hồ và ngược lại. </li>
+                        <li> <b> Tác dụng: </b> tập cơ ngực, cơ gian sườn, cử động dang – khép khớp vai và các cơ vùng vai.</li>
+                        <li style="color: green; font-weight: bold;">
+                            <b> Đứng song song với dụng cụ: </b>
+                        </li>
+                        <li><b> Thực hiện: </b> dùng 1 Bàn tay nắm vào tay nắm của dụng cụ quay theo vòng tròn từ trên xuống hoặc ngược lại. </li>
+                        <li><b> Tác dụng: </b> Tập cử động gập – duỗi khớp vai. </li>
+                    `,
+                warning: "Nín thở khi gắng sức quay đối xứng hai tay.<br>Vặn vẹo cột sống quá mức thay vì cử động tại khớp vai.",
+                stopSign: "Tức ngực, khó thở, đau nhói vùng cơ ngực hoặc khớp vai.",
+                recommendation: "<b>Tần suất:</b> 2 lần/ngày<br><b> Cường độ: </b> <br> Tập theo sức chịu đựng, không để xảy ra tình trạng nín thở khi gắng sức.<br>Ngưỡng căng cơ vừa phải, không gây đau khớp.<br><b>Thời gian: </b>  10 - 20 lần quay cho mỗi hiệp. Thực hiện 3 - 5 hiệp mỗi lần tập.",
+                contraindication: "Người bị mất vững khớp vai tái hồi, người có bệnh lý tim mạch/huyết áp chưa kiểm soát tốt."
+            },
+            {
+                id: 9,
+                name: "Bơi thuyền",
+                category: "Tập mạnh cơ",
+                image: "/PHCN/hinhanh/dung_cu_vltl/boi_thuyen.png",
+                exercise: "Tập tăng sức cơ và phối hợp tay – chân có kháng lực.",
+                features: [
+                    "Tập các cơ toàn thân, tập cử động điều hợp tay chân một cách nhịp nhàng: tay, chân, ngực, lưng, bụng...",
+                    "Hỗ trợ tốt đối với khớp gối bị giới hạn tầm hoạt động gập. Có thể tập gập khớp hông, gập gối và khớp cổ chân dễ dàng"
+                ],
+                target: "Nhóm các bệnh để lại di chứng yếu cơ 2 chân và các tổn thương làm giới hạn tầm hoạt động các khớp. Như các bệnh liệt nửa người, các bệnh về xương khớp gây giới hạn tầm vận động.<br>Tập được các cơ khớp toàn thân: cơ lưng, cơ bụng, cơ ngực, cơ liên sườn, cơ giang sườn, các cơ vùng vai... khớp hông, khớp gối, khớp cổ chân..... <br>Người cao tuổi tập luyện hằng ngày để duy trì vận động tránh teo cơ cứng khớp.",
+                instruction: `
+                        <li>Người bệnh ngồi lên ghế, 2 bàn chân buộc chặt vào chỗ để bàn chân, Nếu buộc chặt thì trong quá trình gập duỗi gối giúp tập khớp cổ chân và kéo giãn gân gót. </li>
+                        <li>Dùng 2 tay cầm vào 2 tay chèo, làm động tác giống như chèo thuyền. </li>
+                        <li>Dùng lực chân đẩy người lên thẳng gối, 2 tay dang ngang (kết hợp động tác hít vào), sau đó từ từ gập gối đồng thời khép 2 cánh tay lại (kết hợp động tác thở ra) và cứ tiếp tục như thế ... </li>
+                        <li style="color: red;"><b>Lưu ý:</b> </li>
+                        <li>Duy trì tư thế cột sống trung lập và thực hiện đúng trình tự động tác nhằm tránh quá tải lên cột sống và khớp.  </li>
+                    `,
+                warning: " Cong lưng, gù lưng hoặc ưỡn quá mức <br>Nín thở khi kéo/đạp",
+                stopSign: "Đau nhói ở lưng, vai, gối…<br>Chóng mặt",
+                recommendation: "<b>Tần suất:</b> 2–3 lần/ngày<br><b>Cường độ: </b>  Nhẹ – trung bình (vừa sức người bệnh).<br><b>Thời gian: </b>  10–20 phút/lần, tùy theo sức khỏe.",
+                contraindication: "Đau thắt lưng cấp, thoát vị đĩa đệm tiến triển<br>Chấn thương hoặc viêm khớp cấp<br>Các trường hợp bệnh tim mạch và tăng huyết áp chưa được kiểm soát.<br>Cần thận trọng đối với những trường hợp đau lưng mạn tính hoặc thoái hóa khớp gối nhẹ. "
+            },
+            {
+                id: 10,
+                name: "Bóng tập thăng bằng",
+                category: "Kiểm soát tư thế và thăng bằng",
+                image: "/PHCN/hinhanh/dung_cu_vltl/bong_tap_thang_bang.webp",
+                exercise: "Thăng bằng tĩnh – động, kết hợp ổn định thân và chi dưới.",
+                features: [
+                    "<b>Đặc điểm: </b> Thiết kế đặc biệt này cho phép sử dụng linh hoạt ở cả hai mặt:<br> <b><i>Mặt vòm:</i></b> Tạo bề mặt không ổn định, dùng để tập luyện đứng, ngồi hoặc nằm.<br><b><i>Mặt phẳng: </i></b>  Khi lật ngược, tạo mức độ chao đảo lớn hơn, phù hợp cho các bài tập thăng bằng nâng cao.",
+                    "<b>Công dụng: </b> <br> - Nhằm tăng cường sức mạnh cơ, kéo giãn cơ<br> - Tăng cường tầm hoạt động của các khớp<br> - Tăng cường khả năng điều hợp và thăng bằng.<br>- Tập phản xạ tay- mắt, kích thích thị trường bên liệt Tác dụng; giúp kích thích phối hợp hoạt động tay và mắt, kích thích thị trường bên liệt<br> - Tập luyện cho người bệnh sau tai biến mạch máu não<br> - Điều trị người bệnh khuyết tật vận động đi kèm tình trạng sa sút trí tuệ, giảm chú ý kém tập trung hoặc rối loạn chức năng thần kinh cơ gây khiếm khuyết nhiều mẫu cử động.<br> - Tập kiểm soát đầu cổ, thăng bằng tư thế nằm sấp, nằm ngữa, lẫy, tập đứng, bò, thăng bằng cho trẻ khuyết tật."
+                ],
+                target: "Người bệnh thần kinh: Sau tai biến mạch máu não, Parkinson, xơ cứng rải rác.<br>Người bệnh chấn thương chỉnh hình: Yếu cơ chi dưới, mất vững khớp cổ chân kinh niên, phục hồi sau phẫu thuật dây chằng.<br>Người cao tuổi tại cộng đồng: Phòng ngừa té ngã bằng cách cải thiện phản xạ thăng bằng và ổn định tư thế.<br>Đối tượng đặc biệt: Người khuyết tật vận động kèm sa sút trí tuệ hoặc giảm chú ý, giúp tăng cường sự tập trung vào nhiệm vụ vận động.",
+                instruction: `
+                        <li style="color: green; font-weight: bold;">
+                            <b>Tập trên mặt phẳng</b>  <i>(phù hợp giai đoạn đầu)</i> 
+                        </li>
+                        <li> <b>Tư thế đứng: </b> Đứng hai chân rộng bằng vai lên mặt phẳng của bóng. Giữ thăng bằng, giữ tư thế 10–30 giây.</li>
+                        <li><b>Tư thế ngồi: </b>  Ngồi lên mặt phẳng, hai chân chạm đất hoặc nâng chân lên để tăng độ khó. </li>
+                        <li><b>Tư thế squat (ngồi xổm): </b>  Từ từ ngồi xổm trên bóng, giữ lưng thẳng. </li>
+                        <li style="color: green; font-weight: bold;">
+                            <b>Tập trên mặt cong</b> <i>(Khó hơn, dùng khi đã quen) </i>
+                        </li>
+                        <li> Đặt mặt cong xuống sàn, đứng hoặc ngồi lên mặt phẳng trên cùng.</li>
+                        <li>Có thể tập một chân, chuyển trọng tâm trái-phải, hoặc kết hợp với bài squat nhẹ. </li>
+                        <li style="color: red;"><b>Lưu ý:</b></li>
+                        <li><b>Điểm tựa hỗ trợ: </b> Khi mới tập đứng trên bóng, người bệnh nên được đặt gần thanh song song hoặc có tay vịn chắc chắn. </li>
+                        <li> <b>Kiểm soát áp suất hơi: </b>  Không bơm bóng quá căng (gây trượt) hoặc quá xẹp (mất tác dụng thăng bằng).</li>
+                        <li><b>Sự giám sát:</b> Nhà điều trị hoặc người nhà được huấn luyện phải đứng ở vị trí bảo vệ (thường là phía sau hoặc bên yếu của người bệnh). </li>
+
+                    `,
+                warning: "Đặt chân sai vị trí<br>Gồng cứng toàn thân<br>Cong lưng, ưỡn lưng quá mức<br>Chọn bài tập quá khó",
+                stopSign: "Đau tăng lên rõ rệt<br>Chóng mặt, tim đập nhanh, khó thở<br> Mất thăng bằng liên tục",
+                recommendation: "<b>Tần suất: </b>  3–5 buổi/tuần (có thể 1–2 lần/ngày nếu tập nhẹ).<br><b>Cường độ: </b>  Bắt đầu ở mức dễ kiểm soát (không gây mất thăng bằng quá mức), tiến triển bằng cách giảm hỗ trợ, nhắm mắt, hoặc tăng thời gian giữ.<br><b>Thời gian:</b> 10–20 phút mỗi buổi (5–8 bài tập, mỗi bài 8–15 lần hoặc giữ 20–60 giây).",
+                contraindication: "Đau cấp tính (gối, cột sống, cổ chân)<br>Sau phẩu thuật khớp và dây chằng chưa được phép chịu lực<br>Chóng mặt, tiền đình<br>Bệnh tim mạch nặng, tăng huyết áp không kiểm soát <br>Người già yếu, nguy cơ té ngã cao nếu khong có hỗ trợ"
+            },
+            {
+                id: 11,
+                name: "Bóp tay lò xo",
+                category: "Tập mạnh cơ",
+                image: "/PHCN/hinhanh/dung_cu_vltl/bop_tay_lo_xo.png",
+                exercise: "Bài tập kháng lực nén cho các nhóm cơ nhỏ bàn tay và cẳng tay.",
+                features: [
+                    "Sử dụng lực cản của lò xo thép để tạo kháng lực cho các cơ gấp ngón tay và các cơ nội tại của bàn tay.",
+                    "Tập mạnh nhóm cơ cẳng tay, bàn tay giúp phục hồi lực cầm nắm, cải thiện độ linh hoạt khớp ngón tay."
+                ],
+                target: "Người bệnh cần phục hồi chức năng sau tai biến (yếu tay, run tay, giảm lực nắm tay)<br>Người sau chấn thương và phẫu thuật chi trên.<br>Người cao tuổi: duy trì lực nắm tay, phòng ngừa tình trạng teo cơ bàn tay và cứng các khớp ngón tay.",
+                instruction: `
+                        <li>Đặt dụng cụ trong lòng bàn tay, siết mạnh tay vào lò xo đến điểm vừa sức. </li>
+                        <li>Đặt dụng cụ lọt thỏm trong lòng bàn tay: một cán gỗ tựa vào gốc ngón cái, cán còn lại áp vào 4 ngón còn lại. </li>
+                        <li>Dùng sức bóp mạnh dụng cụ để 4 ngón tay ép sát về phía ngón cái.. Bóp chặt và giữ nguyên trong 1-2 giây, sau đó nhả ra thật chậm. </li>
+                    `,
+                warning: "Bóp nhả quá nhanh và liên tục<br>Tập luyện quá mức (quá nhiều lần trong ngày)<br>Không được sử dụng khi cán gỗ có dấu hiệu nứt vỡ do va đập, và phải lau khô tay trước khi tập để tránh trơn trượt.",
+                stopSign: "Nếu thấy tình trạng đau nhức tại các khớp ngón tay gia tăng, hoặc cảm thấy đau cơ, mỏi vùng cẳng tay một cách bất thường.",
+                recommendation: "<b>Tần suất: </b> Có thể tập luyện hàng ngày (nên nghỉ ngơi nếu xuất hiện tình trạng đau nhức các khớp ngón tay).<br><b>Cường độ: </b><br>Thực hiện 10 - 15 lần/hiệp.<br> Lặp lại 3 - 4 hiệp cho mỗi bài tập.<br>Nghỉ giữa các hiệp từ 30 - 60 giây.<br><b>Thời gian: </b><br> Mỗi buổi tập từ 15 - 20 phút.<br> Có thể chia thành nhiều đợt tập ngắn trong ngày để tránh gây quá tải gân cơ.",
+                contraindication: "Hội chứng ngón tay lò xo (ngón tay cò súng) ở độ III, IV khi ngón tay đã bị khóa cứng. <br>Viêm khớp cấp<br>Gãy xương chưa liền hoặc có triệu chứng sưng - nóng – đỏ đau."
+            },
+            {
+                id: 12,
+                name: "Bục gỗ tập kéo giãn gân gót",
+                category: "Kéo giãn",
+                image: "/PHCN/hinhanh/dung_cu_vltl/buc_go_tap_keo_gian_gan_got.png",
+                exercise: "Bài tập kéo giãn tĩnh nhóm cơ mặt sau cẳng chân.",
+                features: [
+                    "Dụng cụ sử dụng độ nghiêng để kéo giãn nhóm cơ mặt sau cẳng chân (cơ tam đầu) và gân Achilles thông qua việc gập mặt lưng cổ chân thụ động dưới sức nặng cơ thể."
+                ],
+                target: "Người bệnh tai biến mạch máu não, đặc biệt ở những người bị co ngắn cơ tam đầu cẳng chân.<br>Người sau chấn thương chi dưới (do gãy xương, tai nạn), co rút gân gót trong giai đoạn hồi phục dẫn đến đi lại khó khăn.",
+                instruction: `
+                        <li><b>Chuẩn bị:</b> Đặt bục trên sàn phẳng, không trơn. Nên điều chỉnh độ cao thấp nhất (10cm) cho người mới bắt đầu và tăng dần khi quen. </li>
+                        <li sttyle="color: green;"><b>Bài tập 1: Kéo giãn chủ động với thanh vịn</b> </li>
+                        </li>
+                        <li><b>Tư thế: </b>Đứng thẳng đối diện bục gỗ. Đặt bàn chân cần kéo lên mặt nghiêng của bục, chân còn lại đặt trên sàn phẳng. Hai tay vịn chắc vào thanh ngang để giữ thăng bằng. </li>
+                        <li><b>Thực hiện: </b>Từ từ dồn trọng lượng cơ thể về phía trước sao cho khớp gối chân tập giữ thẳng. Người tập cảm nhận độ căng ở vùng bắp chân </li>
+                        <li><b>Thời gian: </b>Duy trì tư thế từ 20 – 30 giây, thả lỏng và lặp lại 3 – 5 lần mỗi bên. </li>
+                        <li sttyle="color: green;"><b>Bài tập 2: Kéo giãn với điểm tựa tường</b> </li>
+                        </li>
+                        <li><b>Tư thế: </b>Đặt bục gỗ sát tường. Chân cần tập đặt lên mặt nghiêng bục, chân còn lại bước một bước dài ra phía sau trên sàn phẳng. </li>
+                        <li><b>Thực hiện: </b> Hai tay chống vào tường ngang mức vai. Nghiêng toàn bộ thân mình về phía trước, giữ cho gót chân trên bục không bị nhấc lên và đầu gối thẳng tuyệt đối. Tư thế này cho phép tăng lực kéo giãn lên nhóm cơ bụng chân. </li>
+                        <li><b>Thời gian: </b> Duy trì tư thế từ 20 – 30 giây, thả lỏng và lặp lại 3 – 5 lần mỗi bên. </li>
+                    `,
+                warning: "Tránh tập quá mạnh để ngăn ngừa viêm gân hoặc rách gân cơ.<br>Nên bắt đầu chậm, tăng dần cường độ khi quen.",
+                stopSign: "Nếu đau tăng, tê, nhói, mất cảm giác ở bàn chân.",
+                recommendation: "<b>Tần suất: </b> 2 - 3 lần/ngày.<br><b>Cường độ: </b> <br>Bắt đầu từ nấc thấp nhất (độ nghiêng khoảng 10 độ hoặc độ cao 10 cm) để cơ thể thích nghi với lực kéo.<br>Tăng dần độ nghiêng (lên các nấc tiếp theo) khi tầm vận động gập mặt lưng cổ chân được cải thiện và người tập không còn cảm thấy căng ở mức cũ.<br>Lực kéo giãn được duy trì ở ngưỡng căng tức nhưng không gây đau nhói.<br><b>Thời gian: </b> <br>Giữ mỗi lần kéo giãn từ 20 – 30 giây.<br>Lặp lại từ 3 – 5 lần cho mỗi bên chân.",
+                contraindication: "Gãy xương chưa lành, nhiễm trùng hoặc khối u gần khớp, tụ máu hoặc có các chấn thương mô mềm ở chi dưới."
+            },
+            {
+                id: 13,
+                name: "Cầu thang tập đi",
+                category: "Kiểm soát tư thế và thăng bằng",
+                image: "/PHCN/hinhanh/dung_cu_vltl/cau_thang_tap_di.png",
+                exercise: "Bài tập chức năng nâng cao và thăng bằng động.",
+                features: [
+                    "Giúp tập bước qua vật cản, tập thăng bằng và chuẩn bị cho việc đi lại trên các bậc thềm không có tay vịn tại nhà."
+                ],
+                target: "Người bệnh ở giai đoạn hồi phục khá, đã đứng vững và đi lại được trong khung hoặc thanh song song.<br>Người cần tập luyện thêm khả năng thăng bằng và tăng khả năng chịu sức lên 2 chân.",
+                instruction: `
+                        <li><b>Tư thế:</b> Giữ lưng thẳng, nhìn về phía trước, bước chậm và chắc chắn. </li>
+                        <li><b>Nguyên tắc </b> "Lên lành - Xuống đau": Khi đi lên dùng chân khỏe trước, khi đi xuống dùng chân yếu trước.</b> </li>
+                        <li>Lên cầu thang: Bám chắc tay vịn, bước chân khỏe lên trước, sau đó đưa chân yếu lên cùng bậc, sau đó đưa gậy/nạng lên cùng bậc. </li>
+                        <li>Xuống cầu thang: Bám chắc tay vịn, đưa chân yếu xuống trước, sau đó bước chân khỏe xuống sau. </li>
+                        <li style="color: red;"><b>Lưu ý:</b>
+                        </li>
+                        <li><b>Vị trí người hỗ trợ: </b>Người nhà đứng phía sau khi người bệnh đi lên và đứng phía trước khi người bệnh đi xuống. </li>
+                        <li><b>Giày dép:</b> Mang giày bám sàn tốt, tuyệt đối không đi tất (vớ) trơn hoặc dép lê dễ sút. </li>
+                    `,
+                warning: "Người nhà hoặc người điều trị đứng quá xa hoặc đứng phía trên bệnh nhân khi họ đang đi xuống.<br>Bệnh nhân quá phụ thuộc, tì đè toàn bộ trọng lượng lên tay vịn<br>Sử dụng dép lê hoặc giày không có độ bám, quần quá dài gây vướng víu<br>Bệnh nhân quá chú tâm nhìn xuống chân mà không nhìn về phía trước",
+                stopSign: "Ngừng ngay lập tức nếu thấy đau khớp, đau cơ nhiều, chóng mặt, khó thở hoặc mệt bất thường.",
+                recommendation: "<b>Tần suất: </b> Tập luyện 1 - 2 lần mỗi ngày.<br><b>Cường độ: </b>Tập từ bậc thấp đến bậc cao. Ngưng tập khi thấy mỏi cơ mức độ vừa hoặc bắt đầu run chân.<br><b>Thời gian: </b> <br> Khoảng 10 - 15 phút cho mỗi buổi tập (bao gồm cả thời gian nghỉ giữa các lượt lên xuống).",
+                contraindication: "Mất thăng bằng nghiêm trọng<br>Bệnh lý tim mạch cấp tính: (bệnh nhân đang tâng huyết áp, suy tim chưa kiểm soát hoặc khó thở khi gắng sức nhẹ)<br>Gãy xương chưa liền, viêm khớp cấp"
+            },
+            {
+                id: 14,
+                name: "Cầu thang xếp",
+                category: "Kiểm soát tư thế và thăng bằng",
+                image: "/PHCN/hinhanh/dung_cu_vltl/cau_thang_xep.webp",
+                exercise: "Bài tập thăng bằng động và chức năng sinh hoạt.",
+                features: [
+                    "Giúp tập bước qua vật cản, tập thăng bằng và chuẩn bị cho việc đi lại trên các bậc thềm không có tay vịn tại nhà."
+                ],
+                target: "Người bệnh ở giai đoạn hồi phục khá, đã đứng vững và đi lại được trong khung hoặc thanh song song.<br>Người cần tập luyện thêm khả năng thăng bằng và tăng khả năng chịu sức lên 2 chân.",
+                instruction: `
+                        <li style="color: green; font-weight: bold;">
+                            <b>Tập bước lên/xuống:</b> (Đặt bục sát tường.)
+                        </li>
+                        <li>Bước chân khỏe lên trước, sau đó đưa chân yếu lên cùng bậc. </li>
+                        <li>Khi xuống, đưa chân yếu xuống trước. </li>
+                        <li style="color: green; font-weight: bold;">
+                            <b>Tập bước bục ngang: </b> 
+                        </li>
+                        <li>b>Đưa 1 chân lên bục </b>. Nhấc chân gần bục lên, đưa sang ngang và hướng về phía trước một chút để đặt trọn bàn chân bằng phẳng trên mặt bục. </li>
+                        <li><b>Giai đoạn chuyển trọng tâm</b>Dồn trọng tâm lên chân đang đặt trên bục. Kích hoạt cơ tứ đầu đùi và cơ mông để nâng toàn bộ cơ thể lên trên bục cho đến khi hai bên hông cân bằng. </li>
+                        <li><b>Kết thúc và kiểm soát tư thế</b>.Có thể kết thúc bài tập bằng cách giữ chân còn lại lơ lửng, gập khớp háng và khớp gối một góc 90°. Điều này giúp tăng cường khả năng thăng bằng động và kiểm soát khối cơ trung tâm. </li>
+                        <li style="color: red;"><b>Lưu ý:</b>
+                        </li>
+                        <li><b>Điểm tựa:</b> Vì bục không có tay vịn, phải đặt bục sát tường hoặc cạnh bàn chắc chắn để người tập có chỗ vịn khi cần. </li>
+                        <li><b>Độ vững: </b>  Kiểm tra bục không bị bấp bênh. Nên lót miếng cao su dưới đáy bục để tránh bị trượt trên sàn nhà. </li>
+                        <li><b>Người hỗ trợ: </b> Luôn có người nhà đứng cạnh hỗ trợ, đặc biệt khi tập các bài bước qua hoặc đứng một chân. </li>
+                    `,
+                warning: "Người nhà hoặc người điều trị đứng quá xa hoặc đứng phía trên bệnh nhân khi họ đang đi lên hoặc đi xuống.<br>Chịu lực: Đi lên bước chân đau lên trước và Đi xuống bước chân lành xuống trước",
+                stopSign: " Ngừng ngay lập tức nếu thấy đau khớp, đau cơ nhiều, chóng mặt, khó thở hoặc mệt bất thường",
+                recommendation: "<b>Tần suất: </b> Tập 1 - 2 lần mỗi ngày.<br><b>Cường độ: </b>Bắt đầu với bục thấp nhất. Tăng dần độ cao khi cảm thấy tự tin và không còn run chân.<br><b>Thời gian: </b> <br>Giữ 10 - 15 phút mỗi buổi. Nghỉ giữa các lượt tập để tránh mỏi cơ.",
+                contraindication: "Người chưa tập vững cầu thang cố định<br>Mất cảm giác bản thể (không kiểm soát được vị trí chân)<br>Bênh nhân suy tim, khó thở khi gắng sức"
+            },
+            {
+                id: 15,
+                name: "DẤU CHÂN TẬP ĐI",
+                category: "Kiểm soát tư thế và thăng bằng",
+                image: "/PHCN/hinhanh/dung_cu_vltl/dau_chan_tap_di.jpg",
+                exercise: "Bài tập huấn luyện dáng đi và thăng bằng động.",
+                features: [
+                    "Hỗ trợ huấn luyện dáng đi, điều chỉnh độ dài bước chân và gia tăng sự thăng bằng."
+                ],
+                target: " Người bệnh sau tai biến mạch máu não, chấn thương sọ não hoặc tổn thương tủy sống.<br>Người sau phẫu thuật chỉnh hình chi dưới (thay khớp, kết hợp xương) hoặc mới sử dụng chân giả.<br>Người già yếu hoặc người bệnh nằm lâu ngày bị suy giảm khả năng thăng bằng và di chuyển.",
+                instruction: `
+                        <li>Người bệnh bước theo đúng vị trí các bàn chân đã đánh dấu, kết hợp với thanh song song hoặc gậy chống nếu cần thiết. </li>
+                    `,
+                warning: "<b>Dấu hiệu bù trừ:</b> Cảnh báo người bệnh không được cố bước quá dài dẫn đến mất ổn định vùng hông hoặc nhón gót chân lành để bù trừ cho chân yếu.<br><b>Giám sát:</b> Người bệnh có vấn đề thăng bằng nặng (như Parkinson giai đoạn tiến triển) bắt buộc phải có thanh song song hoặc người nhà đi kèm.",
+                stopSign: "Nếu người bệnh cảm thấy chóng mặt, hoa mắt hoặc có dấu hiệu hạ huyết áp tư thế.",
+                recommendation: "<b>Tần suất: </b>Tập luyện đều đặn 2-3 lần mỗi ngày.<br><b>Cường độ:</b> Bắt đầu với số lượng bước nhỏ, tăng dần quãng đường khi cơ thể thích nghi tốt.<br><b>Thời gian:</b> Khoảng 10–20 phút cho mỗi buổi tập tùy vào sức bền.",
+                contraindication: "Mất thăng bằng động<br>Thị lực kém<br>Đau khớp cấp"
+            },
+            {
+                id: 16,
+                name: "DÂY KHÁNG LỰC THERABAND",
+                category: "Tập mạnh cơ",
+                image: "/PHCN/hinhanh/dung_cu_vltl/day_khang_luc.jpg",
+                exercise: "Bài tập sức mạnh có kháng lực",
+                features: [
+                    "Tập mạnh cơ tùy vào mục đích",
+                    "Cải thiện sự thăng bằng, điều hợp vận động và tăng sức bền."
+                ],
+                target: "Người cao tuổi<br>Người bệnh sau phẫu thuật, người bất động lâu ngày làm hạn chế vận động chi dưới<br>Người có vấn đề yếu cơ chi dưới ảnh hưởng khả năng di chuyển, chức năng sinh hoạt hằng ngày<br>Người muốn tập mạnh cơ.",
+                instruction: `
+                        <li style="color: red;font-weight: bold;">
+                            Nhóm bài tập chi trên
+                        </li>
+                        <li style="color: green;font-weight: bold;font-style: italic;">Đẩy vai qua đầu:
+                        </li>
+                        <li><b>Tư thế:</b> Đứng thẳng, hai chân dẫm lên giữa dây. Hai tay cầm hai đầu dây ngang vai, lòng bàn tay hướng ra trước.<br><b>Thực hiện:</b> Đẩy thẳng hai tay lên cao qua đầu cho đến khi khuỷu tay gần thẳng, sau đó hạ chậm về ngang vai.<br><b>Mục đích: </b>  Tập mạnh cơ delta, cơ tam đầu </li>
+                        <li style="color: green;font-weight: bold;font-style: italic;">Xoay ngoài vai:
+                        </li>
+                        <li><b>Tư thế:</b> Đứng hoặc ngồi, hai tay cầm dây. Khuỷu tay gập 90 độ và áp sát vào hông.<br><b>Thực hiện:</b> Giữ khuỷu tay cố định tại hông, dùng lực vai xoay hai cẳng tay ra hai bên xa thân người.<br><b>Mục đích: </b> Tập trung vào nhóm cơ chóp xoay </li>
+                        <li style="color: green;font-weight: bold;font-style: italic;">Gập duỗi cổ tay:
+                        </li>
+                        <li><b>Tư thế:</b> Ngồi trên ghế, đặt cẳng tay lên đùi hoặc mặt bàn làm điểm tựa.<br><b>Thực hiện:</b> Dùng lòng bàn tay (gập) hoặc mu bàn tay (duỗi) kéo căng dây hướng về phía thân mình.<br><b>Mục đích: </b> Tập mạnh nhóm cơ vùng cẳng tay </li>
+                        <li style="color: red;font-weight: bold;">
+                            Nhóm bài tập chi dưới
+                        </li>
+                        <li style="color: green;font-weight: bold;font-style: italic;">Xuống tấn:
+                        </li>
+                        <li><b>Tư thế:</b> Đứng hai chân dẫm lên dây rộng bằng vai, hai tay cầm đầu dây giữ ngang tầm vai.<br><b>Thực hiện:</b> Hạ thấp hông như đang chuẩn bị ngồi xuống ghế, giữ lưng thẳng và không để đầu gối vượt quá mũi chân, sau đó đứng thẳng dậy.<br><b>Mục đích: </b> Tập mạnh cơ tứ đầu, cơ mông lớn </li>
+                        <li style="color: green;font-weight: bold;font-style: italic;">Tập mạnh nhóm cơ gập hông:
+                        </li>
+                        <li><b>Tư thế:</b> Nằm ngửa, chân khỏe co gối (60 - 90 độ) làm điểm tựa. Dây cố định vào chân khỏe và cổ chân bên tập.<br><b>Thực hiện:</b> Nâng chân tập lên cao (giữ thẳng gối) cho đến khi ngang mức đầu gối chân khỏe.<br><b>Mục đích: </b> Tăng lực nâng chân khi bước đi hoặc leo cầu thang. </li>
+                        <li style="color: green;font-weight: bold;font-style: italic;">Tập mạnh nhóm cơ dang hông:
+                        </li>
+                        <li><b>Tư thế:</b> Nằm ngửa, chân khỏe co gối. Dây cố định giữa hai chân (trên gối hoặc cổ chân).<br><b>Thực hiện:</b> Đưa chân tập sang ngang ra xa cơ thể, giữ mũi chân luôn hướng thẳng lên trần nhà. <br><b>Mục đích: </b> Tập mạnh cơ mông nhỡ, giúp ổn định khung chậu khi đi bộ. </li>
+                    `,
+                warning: "<b>Kiểm tra dây: </b>  Luôn quan sát xem dây có vết nứt, rách hoặc lỗ thủng nhỏ không trước khi tập; thay dây mới ngay nếu có dấu hiệu hư hỏng.<br> <b>Giới hạn kéo giãn: </b>  Không kéo giãn dây quá 3 lần chiều dài ban đầu (ví dụ: đoạn dây 30cm không kéo quá 90cm).<br> <b>Cố định dây: </b>  Đảm bảo dây được buộc hoặc móc chắc chắn vào các vật dụng vững chãi (như chân bàn nặng, tay nắm cửa cố định) trước khi kéo.<br> <b>Kiểm soát nhịp độ:</b> Thực hiện động tác chậm rãi, đặc biệt là khi thả dây về vị trí cũ để cơ được rèn luyện tối đa và tránh dây bật lại gây chấn thương.",
+                stopSign: "Nếu xuất hiện các triệu chứng: đau nhói, khó thở, chóng mặt hoặc choáng váng.<br>Nếu tình trạng đau mỏi cơ kéo dài quá 3 đến 4 ngày sau khi tập, người tập cần tham vấn ý kiến của nhà chuyên môn.",
+                recommendation: "<b>Tần suất: </b>3-4 buổi/tuần, tập cách ngày<br><b>Cường độ:</b><br>Thực hiện từ 10 - 15 lần mỗi hiệp tùy theo khả năng và màu sắc của dây kháng lực.<br>Nghỉ ngơi từ 2 - 3 phút giữa các hiệp.<br> Thực hiện tổng cộng từ 3 - 4 hiệp cho mỗi bài tập.<br><b>Thời gian:</b> 15-20 phút/ buổi tập",
+                contraindication: "Không thực hiện bài tập khi đang có cảm giác đau chói hoặc tình trạng viêm khớp đang sưng nóng."
+            },
+            {
+                id: 17,
+                name: "Dụng cụ tập khớp cổ chân và kéo giãn gân gót",
+                category: "Tập mạnh cơ",
+                image: "/PHCN/hinhanh/dung_cu_vltl/dung_cu_tap_co_chan_keo_gian_gan_got.webp",
+                exercise: "Bài tập tăng cường sức mạnh cơ cẳng chân và kéo giãn nhóm cơ mặt sau cẳng chân và gân gót",
+                features: [
+                    "Sử dụng lực nén của lò xo để tạo kháng lực khi gập duỗi cổ chân và tận dụng độ dốc để kéo giãn gân gót.",
+                    "Cải thiện tầm vận động gập mặt lòng và gập mặt lưng của cổ chân.",
+                    "Kéo giãn gân gót trong các trường hợp co rút hoặc viêm cân gan chân.",
+                    "Tập mạnh các nhóm cơ quanh cổ chân, giúp tăng độ vững khi đứng và đi."
+                ],
+                target: "Người bệnh sau chấn thương hoặc phẫu thuật vùng cổ chân (sau giai đoạn bất động) bị cứng khớp, hạn chế tầm vận động (ROM) gập mặt lưng.<br>Người bệnh liệt nửa người có mẫu co cứng chi dưới gây co rút gân gót.<br>Người cao tuổi bị suy giảm sức mạnh các nhóm cơ vùng cẳng chân, ảnh hưởng đến thăng bằng và dáng đi.",
+                instruction: `
+                        <li><b>Tư thế chuẩn bị: </b>Người bệnh có thể ngồi trên ghế hoặc đứng (nếu thăng bằng tốt). Đặt bàn chân vào dụng cụ và dùng quai cố định chắc chắn vùng mu bàn chân để đảm bảo trục cổ chân luôn thẳng với dụng cụ. </li>
+                        <li style="color: green;font-weight: bold;">
+                            Tăng cường sức mạnh cơ vùng cẳng chân (cơ chày trước và cơ tam đầu)
+                        </li>
+                        <li><b>Gập mặt lòng:</b> Dùng lực của phần trước bàn chân (vùng tiếp khớp với các ngón chân) ấn mạnh xuống lò xo phía trước. Động tác này giúp kích hoạt tối đa cơ tam đầu cẳng chân.<br><b>Gập mặt lưng:</b> Ấn mạnh gót chân xuống phía sau để nâng mũi chân lên cao tối đa. Động tác này giúp kích hoạt và làm mạnh cơ chày trước.<br><b>Thực hiện:</b> Chuyển động nhịp nhàng, chậm rãi và có kiểm soát. Tránh dùng lực giật mạnh. </li>
+                        <li style="color: green;font-weight: bold;">
+                            Kéo giãn gân gót và nhóm cơ mặt sau cẳng chân
+                        </li>
+                        <li>Người tập đặt bàn chân vào vị trí cố định trên dụng cụ.<br>Thực hiện lực ấn gót chân xuống phía dưới, đồng thời phần trước bàn chân được đẩy hướng lên trên về phía ống chân (gập mặt lưng cổ chân).<br>Giữ khớp gối ở tư thế duỗi thẳng trong quá trình thực hiện để tác động lên nhóm cơ đa khớp.<br><b>Cảm giác mục tiêu:</b> Người tập ghi nhận cảm giác căng tức tại vùng cơ tam đầu cẳng chân (vùng bắp chân) và vùng gân gót.<br><b>Kéo giãn tĩnh:</b> Duy trì tư thế căng trong khoảng 15 - 30 giây. Hạn chế các cử động nhấp nhô hoặc thay đổi lực đột ngột để tránh kích thích phản xạ co cơ hoặc gây tổn thương thêm cho các cấu trúc gân.<br> Từ từ đưa bàn chân trở lại vị trí trung tính (vị trí nghỉ).<br>Lặp lại động tác từ 3 - 5 lần trong mỗi buổi tập. </li>
+                        <li style="color: red;font-weight: bold;">Lưu ý</li>
+                        <li>Đánh giá ban đầu: Chức năng khớp cổ chân và tình trạng cảm giác bàn chân cần được kiểm tra trước khi thực hiện chương trình tập luyện. </li>
+                    `,
+                warning: "Thực hiện các cử động khởi động nhẹ nhàng cho cổ chân từ 5 – 10 phút trước khi vào bài tập chính.<br>Quá trình gập hoặc duỗi cổ chân cần thực hiện chậm, kiểm soát, tránh các tác động lực mạnh hoặc đột ngột.<br>Cường độ tập luyện được điều chỉnh tăng dần từ mức nhẹ đến trung bình tùy theo khả năng thích nghi của người tập.",
+                stopSign: "Xuất hiện tình trạng đau tăng, cảm giác tê, nhói hoặc thay đổi cảm giác tại bàn chân trong và sau khi tập.",
+                recommendation: "<b>Bài tập tăng cường sức mạnh nhóm cơ vùng cẳng chân:</b><br>Thực hiện 10 – 15 lần cho mỗi hiệp, 2 – 3 hiệp trong mỗi buổi tập.<br>Thực hiện với tốc độ chậm, tập trung vào việc kiểm soát hướng chuyển động của cổ chân.<br><b>Bài tập kéo giãn nhóm cơ mặt sau cẳng chân và gân gót: </b><br>Thời gian duy trì: Giữ tư thế kéo giãn trong khoảng 20 – 30 giây cho mỗi lần.<br>Số lần lặp lại: 3 – 5 lần/buổi.<br>Ngưỡng kéo giãn: Lực kéo giãn được duy trì ở mức ghi nhận cảm giác căng tức vừa phải, không gây đau nhói tại vùng gân gót.",
+                contraindication: "Tình trạng đau cấp tính, sưng viêm rõ rệt tại vùng cổ chân.<br>Gãy xương vùng cổ chân hoặc bàn chân chưa liền (chưa có chỉ định chịu lực).<br> Các tổn thương mô mềm hoặc vết thương hở chưa ổn định."
+            },
+            {
+                id: 18,
+                name: "Dụng cụ tập cổ chân và nhóm cơ cẳng chân",
+                category: "Tập mạnh cơ",
+                image: "/PHCN/hinhanh/dung_cu_vltl/dung_cu_tap_khop_co_chan_va_nhom_co_cang_chan.webp",
+                exercise: "Vận động chủ động có trợ giúp hoặc vận động chủ động.",
+                features: [
+                    "Hỗ trợ thực hiện các cử động gập mặt lòng và gập mặt lưng cổ chân.",
+                    "Gia tăng tầm vận động (ROM) khớp cổ chân và cải thiện sức mạnh nhóm cơ cẳng chân trước, sau."
+                ],
+                target: "Người bệnh sau tai biến mạch máu não có yếu liệt chi dưới.<br>Người bệnh sau chấn thương hoặc phẫu thuật vùng cổ chân đã qua giai đoạn bất động, cần phục hồi tầm vận động.<br>Người bệnh hạn chế tầm vận động khớp cổ chân.<br>Người cao tuổi cần duy trì và cải thiện chức năng vận động cổ chân.",
+                instruction: `
+                        <li><b>Tư thế:</b> Người tập ngồi trên ghế có chiều cao phù hợp, đặt bàn chân vào guốc gỗ và cố định chắc chắn bằng dây đai để đảm bảo trục cổ chân thẳng với dụng cụ. </li>
+                        <li style="color: green;font-weight: bold;">Vận động chủ động có trợ giúp:
+                        </li>
+                        <li>Trong trường hợp lực cơ cổ chân còn yếu (bậc 1, 2), người tập hoặc người hỗ trợ sử dụng tay quay để trợ giúp bàn chân thực hiện hết tầm vận động gập mặt lưng và gập mặt lòng. </li>
+                        <li style="color: green;font-weight: bold;">Vận động chủ động:
+                        </li>
+                        <li><b>Thực hiện:</b> Nhấc mũi chân lên (gập mặt lưng) và hạ mũi chân xuống (gập mặt lòng) một cách nhịp nhàng. </li>
+                        <li style="color: red;font-weight: bold;">Lưu ý:
+                        </li>
+                        <li>Đánh giá ban đầu: Tầm vận động, sức cơ, chức năng khớp cổ chân và tình trạng cảm giác bàn chân cần được kiểm tra trước khi thực hiện chương trình tập luyện. </li>
+                    `,
+                warning: "Cố định bàn chân chắc chắn vào guốc gỗ, tránh trượt hoặc lệch trục.<br>Bắt đầu với lực nhẹ, tăng dần theo khả năng chịu đựng.<br>Thực hiện động tác chậm, có kiểm soát, không giật mạnh.",
+                stopSign: "Đau tăng, chuột rút cơ bắp chân, chóng mặt hoặc mệt bất thường.",
+                recommendation: "<b>Tần suất: </b>1 - 2 lần/ngày.<br><b>Cường độ:</b> Bắt đầu với biên độ nhỏ, tăng dần tầm vận động theo khả năng thích nghi. Thực hiện 10 – 15 lần/hiệp, lặp lại 3 – 4 hiệp.<br><b>Thời gian:</b> Mỗi buổi tập kéo dài khoảng 15 – 20 phút.",
+                contraindication: "Tình trạng đau cấp tính, sưng viêm rõ rệt tại vùng cổ chân.<br>Gãy xương vùng cổ chân hoặc bàn chân chưa liền (chưa có chỉ định chịu lực).<br>Các tổn thương mô mềm hoặc vết thương hở chưa ổn định."
+            },
+            {
+                id: 19,
+                name: "Dụng cụ tập khớp gối",
+                category: "Tập mạnh cơ",
+                image: "/PHCN/hinhanh/dung_cu_vltl/dung_cu_tap_khop_goi.webp",
+                exercise: "Bài tập vận động chủ động có kháng lực.",
+                features: [
+                    "Có thể tăng giảm độ nghiêng của ghế để gia tăng lực khi trượt và độ nghiêng của bệ để chân, rất có hiệu quả đối với khớp gối bị giới hạn tầm hoạt động gập. Vì có độ dốc được tăng giảm nên người bệnh có thể tập gập khớp hông, gập gối và khớp cổ chân dễ dàng, nhất là làm kéo giãn gân gót và làm mạnh cơ toàn chi."
+                ],
+                target: "Người bệnh liệt nửa người do tai biến mạch máu não, các bệnh về xương khớp, các bệnh bị giới hạn tầm vận động sau khi bất động do chấn thương, gãy xương...",
+                instruction: `
+                        <li><b>Chuẩn bị:</b> Đặt xe trượt ở nơi bằng phẳng. Điều chỉnh độ dốc của ghế và bệ để chân phù hợp với sức cơ. </li>
+                        <li><b>Vị trí: </b>  Người bệnh ngồi lên ghế, hai bàn chân đặt vào bệ và buộc dây đai cố định. Hai tay nắm chắc tay vịn hai bên ghế. </li>
+                        <li style="color: green; font-weight: bold;">
+                            Thực hiện cử động duỗi (giai đoạn gắng sức): 
+                        </li>
+                        <li>Dùng lực của hai chân đẩy mạnh để ghế trượt lên trên cho đến khi gối thẳng hoàn toàn. Thở ra khi thực hiện bước này. </li>
+                        <li style="color: green; font-weight: bold;">
+                            Thực hiện cử động gập (giai đoạn kiểm soát): 
+                        </li>
+                        <li>Từ từ gập gối để ghế trượt xuống vị trí ban đầu. Lưu ý thực hiện chậm để kiểm soát lực, không để ghế trôi tự do quá nhanh. Hít vào khi thực hiện bước này. </li>
+                    `,
+                warning: " Để gối bị vẹo vào trong hoặc ra ngoài khi đẩy trượt; cần giữ trục hông - gối - cổ chân thẳng hàng.<br>Đột ngột buông chân khi ghế đang ở vị trí cao nhất, gây va đập mạnh cho khớp gối.<br> Để độ dốc quá cao ngay từ đầu khi sức cơ chưa đủ, dễ gây căng cơ đột ngột.",
+                stopSign: "Nếu cảm thấy đau nhói dữ dội tại khớp gối, tức ngực, khó thở hoặc hoa mắt chóng mặt.",
+                recommendation: "<b>Tần suất: </b> 2-3 lần/ngày.<br><b>Cường độ:</b> Bắt đầu với độ dốc thấp nhất. Thực hiện 10 - 20 lần mỗi hiệp tùy theo tình trạng mỗi người. Nghỉ giữa các hiệp 2 - 3 phút.<br><b>Thời gian:</b>mỗi lần từ 10-20 phút tùy theo sức khỏe người tập.",
+                contraindication: "Các trường hợp gãy xương chi dưới chưa liền hoặc mới phẫu thuật chưa được phép chịu lực.<br>Thận trọng tối đa (cần người giám sát và theo dõi huyết áp) khi tập cho người bệnh có tăng huyết áp và suy tim, tránh tập gắng sức quá."
+            },
+            {
+                id: 20,
+                name: "Dụng cụ tập khớp hông",
+                category: "Tăng tầm vận động khớp",
+                image: "/PHCN/hinhanh/dung_cu_vltl/dung_cu_tap_khop_hong.webp",
+                exercise: "Bài tập vận động chủ động có trợ giúp, vận động chủ động.",
+                features: [
+                    "Gia tăng tầm vận động (ROM) của khớp hông ở các mặt phẳng: gập - duỗi, dang - áp và xoay trong - xoay ngoài.",
+                    "Cải thiện sự điều hợp giữa các nhóm cơ vùng chậu và đùi."
+                ],
+                target: "Người bị cứng khớp hông sau chấn thương hoặc bất động lâu ngày.<br>Người cao tuổi cần duy trì tầm vận động hông để cải thiện dáng đi và khả năng thăng bằng.<br>Người bệnh yếu liệt chi dưới cần bài tập điều hợp để hỗ trợ chức năng di chuyển.",
+                instruction: `
+                        <li><b>Chuẩn bị: </b>đặt dụng cụ ở nơi bằng phẳng, kiểm tra độ chắc chắn, ngồi hoặc nằm tùy thiết kế, chân được cố định bằng dây đai. </li>
+                        <li style="color: black;">
+                            Thực hiện bài tập
+                        </li>
+                        <li>Xoay khớp hông: đưa chân xoay ra ngoài – vào trong. </li>
+                        <li>Gập – duỗi khớp hông: nâng và hạ chân theo nhịp. </li>
+                        <li>Cử động toàn chi dưới: kết hợp gập gối, xoay hông, duỗi chân. </li>
+                    `,
+                warning: "Cố định khung chậu: Tránh việc người tập xoay cả thân mình hoặc nghiêng xương chậu để bù trừ cho biên độ của khớp hông.<br>Kiểm soát biên độ: Thực hiện trong giới hạn tầm vận động không đau. Tránh việc ép biên độ quá mức gây tổn thương sụn viền hoặc bao khớp.",
+                stopSign: "Nếu xuất hiện đau nhiều, chóng mặt hoặc khó thở.",
+                recommendation: "<b>Tần suất: </b> 3-4 buổi/tuần, tập cách ngày.<br><b>Cường độ:</b> 10-15 cái dựa vào khả năng, nghỉ 2-3 phút mỗi hiệp, tập 3-4 hiệp.<br><b>Thời gian:</b>15-20 phút/ buổi tập.",
+                contraindication: "Tình trạng bán trật khớp hông hoặc trật khớp hông chưa được nắn chỉnh.<br>Người bệnh vừa phẫu thuật thay khớp hông (trong giai đoạn cần hạn chế các góc gập/xoay quá mức để tránh trật khớp nhân tạo)."
+            },
+            {
+                id: 21,
+                name: "Gậy chống 4 chân",
+                category: "Dụng cụ trợ giúp di chuyển",
+                image: "/PHCN/hinhanh/dung_cu_vltl/gay_chong_4_chan.png",
+                exercise: "Tập chức năng đi và hỗ trợ di chuyển",
+                features: [
+                    "Giảm nguy cơ té ngã.",
+                    "Hỗ trợ thăng bằng cao nhất trong nhóm gậy.",
+                    "Hỗ trợ tập đứng độc lập.",
+                    "Hỗ trợ người bệnh trong quá trình di chuyển. Sử dụng trong quá trình chờ phục hồi hoặc là cần vận động đi lại sớm hỗ trợ cho quá trình phục hồi.",
+                    "Là công cụ hỗ trợ cho người khuyết tật chi dưới."
+                ],
+                target: "Phù hợp người đang trong giai đoạn đầu tập đi sau đột quỵ.<br>Yếu cơ mức trung bình<br>Người cao tuổi nguy cơ té ngã cao.",
+                instruction: `
+                        <li style="color: black; font-weight: bold;">Chuẩn bị</li>
+                        <li>Đầu trên của gậy phải ngang nếp gấp cổ tay sao cho khuỷu tay của có thể gấp được nhẹ khi cầm vào đầu trên của gậy. </li>
+                        <li>Cầm gậy ở bên đối diện với bên chân yếu.  </li>
+                        <li style="color: green; font-weight: bold;">Đi với gậy:</li>
+                        <li>Đưa gậy ra trước khoảng chiều dài một bước chân rồi bước lên bằng chân yếu, sau đó tiếp tục bước chân mạnh lên phía trước. </li>
+                        <li style="color: green; font-weight: bold;">Lên xuống cầu thang với gậy: :</li>
+                        <li><b><i>Để bước lên cầu thang</i> </b> Cầm gậy trong tay phía bên chân lành, tay phía bên chân yếu nắm lấy tay vịn cầu thang, sau đó bước chân lành lên trước – chân đau – cuối cùng là gậy.  </li>
+                        <li><b><i>Để đi xuống cầu thang </i> </b> cần đưa gậy xuống trước – bước chân yếu xuống – cuối cùng là chân lành. </li>
+                        <li style="color: red; font-weight: bold;">Lưu ý :</li>
+                            <li>Đặt đủ 4 chân chạm đất trước khi bước. </li>
+                            <li>Không nhấc kéo lê. </li>
+                            <li>Giữ lưng thẳng, mắt nhìn trước, không cúi người. </li>
+                            <li>Không tì toàn bộ trọng lượng lên tay gây đau cổ tay/khuỷu. </li>
+                            <li>Không đưa gậy quá xa về phía trước. </li>
+                            <li>Không nghiêng gậy khi đặt xuống. </li>
+                            <li>Cẩn thận khi xoay người. </li>
+                            <li>Cần có người giám sát kèm theo đai an toàn. Nếu người bệnh tiến bộ hơn có thể chuyển sang gậy 3 chân </li>
+                    `,
+                warning: "Cầm gậy sai bên: Người bệnh cần cầm gậy bên lành<br>Đặt gậy quá xa hoặc quá gần<br>Chiều cao gậy không phù hợp<br>Đi sai cách",
+                stopSign: "Đau tăng, <br>Chóng mặt<br>Tê tay<br>Mất thăng bằng.",
+                recommendation: " <b>Tần suất: </b> Tập đi nhiều lần trong ngày (3-5 lần mỗi ngày). Có thể sử dụng hằng ngày khi đi lại trong sinh hoạt. <br><b>Cường độ:</b> Bắt đầu đi với tốc độ vừa phải ở quãng ngắn trước, khi cảm thấy đứng và đi vững hơn có thể tăng dần thời gian và quãng đường đi.<br><b>Thời gian:</b>5–15 phút ở giai đoạn đầu. Sau tiến tới mỗi lần tập 10-20 phút tùy vào sức bền.",
+                contraindication: "Rối loạn thăng bằng<br>Rối loạn nặng thức nặng<br>Đau cấp tính"
+            },
+            {
+                id: 22,
+                name: "Gậy chống 3 chân",
+                category: "Dụng cụ trợ giúp di chuyển",
+                image: "/PHCN/hinhanh/dung_cu_vltl/gay_chong_3_chan.jpg",
+                exercise: "Tập chức năng đi và hỗ trợ di chuyển",
+                features: [
+                    "Cải thiện thăng bằng",
+                    "Giảm nguy cơ té ngã.",
+                    "Hỗ trợ người bệnh trong quá trình di chuyển. Sử dụng trong quá trình chờ phục hồi hoặc là cần vận động đi lại sớm hỗ trợ cho quá trình phục hồi.",
+                    "Là công cụ hỗ trợ cho người khuyết tật chi dưới."
+                ],
+                target: "Người lớn tuổi.<br>Người mất thăng bằng cơ thể, đi đứng không vững hoặc chấn thương gây đau hay yếu ở chân.<br>Người bệnh sau tai biến mạch máu não",
+                instruction: `
+                        <li style="color: black; font-weight: bold;">Chuẩn bị</li>
+                        <li>Đầu trên của gậy phải ngang nếp gấp cổ tay sao cho khuỷu tay của có thể gấp được nhẹ khi cầm vào đầu trên của gậy. </li>
+                        <li>Cầm gậy ở bên đối diện với bên chân yếu.  </li>
+                        <li style="color: green; font-weight: bold;">Đi với gậy:</li>
+                        <li>Đưa gậy ra trước khoảng chiều dài một bước chân rồi bước lên bằng chân yếu, sau đó tiếp tục bước chân mạnh lên phía trước. </li>
+                        <li style="color: green; font-weight: bold;">Lên xuống cầu thang với gậy: :</li>
+                        <li><b><i>Để bước lên cầu thang</i> </b> Cầm gậy trong tay phía bên chân lành, tay phía bên chân yếu nắm lấy tay vịn cầu thang, sau đó bước chân lành lên trước – chân đau – cuối cùng là gậy.  </li>
+                        <li><b><i>Để đi xuống cầu thang </i> </b> cần đưa gậy xuống trước – bước chân yếu xuống – cuối cùng là chân lành. </li>
+                        <li style="color: red; font-weight: bold;">Lưu ý :</li>
+                            <li>Đặt đủ 4 chân chạm đất trước khi bước. </li>
+                            <li>Không nhấc kéo lê. </li>
+                            <li>Giữ lưng thẳng, mắt nhìn trước, không cúi người. </li>
+                            <li>Không tì toàn bộ trọng lượng lên tay gây đau cổ tay/khuỷu. </li>
+                            <li>Không đưa gậy quá xa về phía trước. </li>
+                            <li>Không nghiêng gậy khi đặt xuống. </li>
+                            <li>Cẩn thận khi xoay người. </li>
+                            <li>Cần có người giám sát kèm theo đai an toàn. Nếu người bệnh tiến bộ hơn có thể chuyển sang gậy 3 chân </li>
+                    `,
+                warning: "Cầm gậy sai bên: Người bệnh cần cầm gậy bên lành<br>Đặt gậy quá xa hoặc quá gần<br>Chiều cao gậy không phù hợp<br>Đi sai cách",
+                stopSign: "Đau tăng, <br>Chóng mặt<br>Tê tay<br>Mất thăng bằng.",
+                recommendation: " <b>Tần suất: </b> Tập đi nhiều lần trong ngày (3-5 lần mỗi ngày). Có thể sử dụng hằng ngày khi đi lại trong sinh hoạt. <br><b>Cường độ:</b> Bắt đầu đi với tốc độ vừa phải ở quãng ngắn trước, khi cảm thấy đứng và đi vững hơn có thể tăng dần thời gian và quãng đường đi.<br><b>Thời gian:</b>5–15 phút ở giai đoạn đầu. Sau tiến tới mỗi lần tập 10-20 phút tùy vào sức bền.",
+                contraindication: "Rối loạn thăng bằng<br>Rối loạn nặng thức nặng<br>Đau cấp tính"
+            },
+            {
+                id: 23,
+                name: "Gậy chống tựa khuỷu",
+                category: "Dụng cụ trợ giúp di chuyển",
+                image: "/PHCN/hinhanh/dung_cu_vltl/gay_chong_tua_khuyu.png",
+                exercise: "Tập chức năng đi và hỗ trợ di chuyển.",
+                features: [
+                    "Giảm tải trọng lên chi dưới.",
+                    "Tăng thăng bằng khi đi.",
+                    "Phù hợp tập đi lâu dài vì ít gây chèn ép thần kinh nách hơn nạng nách.",
+                    "Giúp duy trì tư thế sinh lý của vai – khuỷu – cổ tay."
+                ],
+                target: "Người cao tuổi.<br>Người cần hỗ trợ thăng bằng tốt, hoặc nhóm người bệnh yếu cơ chi dưới, cần giảm tải trọng lớn. <br>Dùng khi người bệnh có lực cầm nắm yếu, sức mạnh cơ chi trên yếu (chắc chắn hơn gậy chống).",
+                instruction: `
+                        <li style="color: black; font-weight: bold;">Chuẩn bị: </li>
+                        <li>Cần đo chiều cao gậy trước khi sử dụng cho phù hợp với người bệnh:  </li>
+                        <li>Tay cầm nên ngang mức cổ tay khi đứng thẳng, khuỷu tay gập khoảng 20 - 30 độ, phần tựa khuỷu ôm sát cẳng tay (không quá chặt để tránh chèn ép)  </li>
+                        <li style="color: black; font-weight: bold;">Cách cầm và đi đúng:/li>
+                        <li>Đặt cánh tay vào phần tựa khuỷu, cầm gậy bên tay đối diện với chân yếu ( VD: chân trái yếu => cầm gậy tay phải)  </li>
+                        <li style="color: black; font-weight: bold;">Cách đi:</li>
+                        <li>Đầu trên của gậy phải ngang nếp gấp cổ tay sao cho khuỷu tay của có thể gấp được nhẹ khi cầm vào đầu trên của gậy. </li>
+                        <li>Cầm gậy ở bên đối diện với bên chân yếu.  </li>
+                        <li style="color: green; font-weight: bold;">Đi với gậy:</li>
+                        <li>Đưa gậy ra trước khoảng 1 bước ngắn. </li>
+                        <li>Bước chân yếu lên ngang mức gậy. </li>
+                        <li>Bước chân lành vượt qua.</li>
+                        <li>Lặp lại </li>
+                        <li style="color: red; font-weight: bold;">Lưu ý:</li>
+                        <li>Giữ lưng thẳng, mắt nhìn trước, không cúi người. </li>
+                        <li>Không tì toàn bộ trọng lượng lên tay gây đau cổ tay/khuỷu. </li>
+                        <li>Không đặt gậy quá xa phía trước. </li>
+                    `,
+                warning: "Giữ lưng thẳng, mắt nhìn trước, không cúi người.<br>Không tì toàn bộ trọng lượng lên tay gây đau cổ tay/khuỷu.<br>Không đặt gậy quá xa phía trước.",
+                stopSign: "Dừng tập ngay nếu có: đau tăng, chóng mặt, tê tay, mất thăng bằng.",
+                recommendation: " <b>Tần suất: </b> Mỗi ngày tập 1-2 lần.<br><b>Cường độ:</b> Chỉ chịu lực lên chân theo mức bác sĩ hoặc nhà điều trị hướng dẫn. <br><b>Thời gian:</b>Mỗi lần đi khoảng 10–20 phút tùy sức. Tăng thời gian đi dần khi thấy vững và không cảm thấy đau tăng.",
+                contraindication: "Rối loạn thăng bằng nặng. <br>Tình trạng nhận thức kém. <br>Sức mạnh cơ chi trên yếu. <br>Rối loạn cảm giác bàn tay"
+            },
+            {
+                id: 24,
+                name: "Gậy chống",
+                category: "Dụng cụ trợ giúp di chuyển",
+                image: "/PHCN/hinhanh/dung_cu_vltl/gay_chong.png",
+                exercise: "Tập chức năng đi.",
+                features: [
+                    "Hỗ trợ di chuyển.",
+                    "Giảm tải trọng lên chân yếu.",
+                    "Giảm nguy cơ té ngã."
+                ],
+                target: "Người cao tuổi.<br>Người suy giảm chức năng vận động sau một thời gian nằm lâu.<br>Những người tập đi lại trong giai đoạn đầu sau chấn thương (cần hỗ trợ một bên, giảm tải trọng lên chân yếu). ",
+                instruction: `
+                        <li style="color: black; font-weight: bold;">Chuẩn bị:</li>
+                        <li>Cần đo chiều cao gậy trước khi sử dụng cho phù hợp với người bệnh: Tay cầm nên ngang mức cổ tay khi đứng thẳng, khuỷu tay gập khoảng 20 - 30 độ ( khi sử dụng gậy quá dài hoặc quá ngắn sẽ gây mất thăng bằng) </li>
+                        <li style="color: black; font-weight: bold;">Cách cầm và đi đúng:</li>
+                        <li>Cầm gậy bên tay đối diện với chân yếu  </li>
+                        <li>Đứng thẳng người, gậy chạm đất trước </li>
+                        <li>Nghiêng nhẹ về phía trước, đi theo chu kỳ ba điểm tiếp xúc: đặt gậy xuống đất (hơi hướng ra trước) → bước chân yếu lên ngang gậy → bước chân lành lên phía trước.  </li>
+                        <li style="color: black; font-weight: bold;">Các bài tập phổ biến:</li>
+                        <li>Tập chuyển trọng tâm. </li>
+                        <li>Tập đi thẳng trên mặt phẳng. </li>
+                        <li>Tập lên/xuống cầu thang.</li>
+                        <li style="color: red; font-weight: bold;">Lưu ý:</li>
+                        <li>Giữ trọng tâm cơ thể</li>
+                        <li>Không nghiêng người về gậy tránh té ngã </li>
+                        <li>Không dùng gậy để kéo người sẽ dễ té.</li>
+                    `,
+                warning: "Đặt gậy quá xa thân người<br>Cầm gậy sai bên: Người bệnh cần cầm gậy bên lành<br>Độ cao gậy không phù hợp (gậy quá cao hoặc quá thấp)",
+                stopSign: "Dừng tập ngay nếu có: đau tăng, chóng mặt, tê tay, mất thăng bằng.",
+                recommendation: "<b>Tần suất: </b> Sử dụng thường xuyên trong sinh hoạt hàng ngày, kết hợp ít nhất 2 phiên tập đi bộ mỗi ngày.<br><b> Cường độ:</b> Bắt đầu tập trên mặt sàn phẳng nhẵn, sau đó tiến tới bề mặt gồ ghề hoặc có dốc nhẹ.<br><b> Thời gian:</b> Khởi đầu 5-10 phút, mục tiêu đi liên tục 20-30 phút không bị mỏi hay đau nhức. ",
+                contraindication: "Chấn thương cấp tính, <br>Yếu tay/ cánh tay (không cầm được gậy)<br>Rối loạn thăng bằng nặng."
+            },
+            {
+                id: 25,
+                name: "Ghế tập mạnh hai chân",
+                category: "Tập mạnh cơ",
+                image: "/PHCN/hinhanh/dung_cu_vltl/ghe_tap_manh_2_chan.webp",
+                exercise: "Bài tập tăng sức mạnh cơ và điều hợp chi dưới.",
+                features: [
+                    "Tập mạnh cơ 2 chân, tập cử động khớp hông, khớp gối, nhất là tập cử động điều hợp 2 chân."
+                ],
+                target: "Người khỏe mạnh cần tăng cường sức mạnh cơ chi dưới (cơ đùi trước, đùi sau).<br>Người yếu cơ chi dưới do ít vận động hoặc sau thời gian bất động.<br>Người thoái hóa khớp gối mức độ nhẹ–trung bình, đã kiểm soát đau.<br>Người sau chấn thương hoặc phẫu thuật chi dưới ở giai đoạn phục hồi chức năng (theo chỉ định).<br>Người cao tuổi cần duy trì sức mạnh cơ chân để phòng ngừa té ngã.",
+                instruction: `
+                        <li>Bật tựa tay ra phía sau để dễ đưa người tập ngồi vào ghế."</li>
+                        <li>Hạ tựa tay xuống để người bệnh tựa 2 tay cho thoải mái.</li>
+                        <li>Cho 2 chân vào 2 chiếc guốc và dán dây cho vừa với chân. </li>
+                        <li>Điều chỉnh 2 chiếc guốc sao cho đạp gập hông, gập gối nhịp nhàng, thoải mái.</li>
+                        <li>Lần lượt cho tạ vào ngăn để tạ phía sau ghế đến khi trọng lượng phù hợp với sức cơ người tập.</li>
+                        <li>Cách tập: một chân đạp xuống và chân kia đưa lên, lần lượt chân này đến chân kia </li>
+                    `,
+                warning: "Cần điều chỉnh tư thế ghế và mức tạ phù hợp, tránh duỗi gối quá mức gây khóa khớp. Việc tăng tải trọng phải thực hiện từ từ và có kiểm soát, đặc biệt ở người có tiền sử đau gối hoặc thoái hóa khớp gối giai đoạn sớm.",
+                stopSign: "Nếu cảm thấy đau nhói dữ dội tại khớp gối, tức ngực, khó thở hoặc hoa mắt chóng mặt.",
+                recommendation: "<b>Tần suất: </b> 3-4 buổi/tuần.<br><b> Cường độ:</b> Thực hiện cho đến khi thấy mỏi nhẹ ở đùi. Nên vừa tập, vừa nghỉ tại chỗ để đảm bảo sức khỏe tập lâu dài và không xảy ra mệt mỏi khi tập.<br><b> Thời gian:</b> 10-20 phút/1 lần tập.",
+                contraindication: "Trường hợp viêm hoặc tràn dịch khớp gối cấp<br>Chấn thương chi dưới<br>Sau phẫu thuật chưa hồi phục đầy đủ hoặc khi khớp gối mất vững chưa được kiểm soát."
+            },
+            {
+                id: 26,
+                name: "Ghế tập cơ đùi",
+                category: "Tập mạnh cơ",
+                image: "/PHCN/hinhanh/dung_cu_vltl/ghe_tap_co_dui.webp",
+                exercise: "Bài tập vận động chủ động có kháng lực.",
+                features: [
+                    "Tập mạnh các nhóm cơ: mặt trước và sau đùi: cơ tứ đầu đùi, cơ tam đầu đùi",
+                    "Tập mạnh các nhóm cơ: vùng cánh tay: cơ nhị đầu cánh tay, cơ delta, cơ tam đầu cánh tay, cơ lưng rộng, các cơ tròn.. (khi di chuyển thanh đá lên phía trên)"
+                ],
+                target: "Người bệnh yếu cơ sau gãy xương, phẫu thuật kết hợp xương, phẫu thuật tái tạo dây chằng khớp gối, thay khớp hông/gối, tái tạo sụn chêm khớp gối, sau phẫu thuật cột sống.<br>Người bệnh tổn thương thần kinh trung ương như tai biến, Parkinson, chấn thương tuỷ sống hoặc thần kinh ngoại biên.<br>Người bệnh viêm đa rễ dây thần kinh, có bệnh lý về cơ làm giảm vận động: teo cơ, loạn dưỡng cơ, nhược cơ.",
+                instruction: `
+                        <li style="color: black; font-weight: bold;">Chuẩn bị </li>
+                        <li>Người tập ngồi thẳng, gập hông, gập gối 90 độ, nhượng chân sát với thành của ghế để tránh cử động thay thế. </li>
+                        <li>Trước tiên cho tạ vào chỗ để tạ, sau đó tăng hoặc giảm trọng lượng tạ cho phù hợp theo người đang tập tùy theo sức cơ và sự tiến triển của người bệnh bằng cách cho phù hợp. </li>
+                        <li>Chỗ đá chân có thể tăng cao – thấp theo chiều dài chi từng người tập. </li>
+                        <li> Điều thanh đá để tăng – giảm độ gập gối cũng như tập tập cho nhóm cơ đùi trước (Cơ tứ đầu đùi) hay đùi sau (cơ tam đầu đùi). </li>
+                        <li style="color: green; font-weight: bold;">Đối với Tập mạnh nhóm cơ đùi trước (cơ tứ đầu đùi) </li>
+                        <li>Chỉnh trục đá vừa với cổ chân người tập, khuyên người tập từ từ nâng chân lên thẳng gối (lưu ý là chỉ cử động từ khớp gối trở xuống), giữ tư thế này trong vài giây rồi hạ chân xuống ... sau đó tăng dần giữ trong 20 giây, 30 giây ... </li>
+                        <li style="color: green; font-weight: bold;">Đối với Tập mạnh nhóm cơ đùi sau (cơ tam đầu đùi) </li>
+                        <li> </li>
+                    `,
+                warning: "Cần đặt thanh đá đúng vị trí và cân nặng của tạ phải phù hợp với mục đích và thể trạng từng người. <br>Không làm thêm những cử động thay thế như nhấc mông và gập hông để cố đưa chân nâng tạ lên.",
+                stopSign: "Nếu cảm thấy đau nhói dữ dội tại khớp gối, tức ngực, khó thở hoặc hoa mắt chóng mặt.",
+                recommendation: "<b>Tần suất: </b> 2-3 lần/ngày.<br><b> Cường độ:</b><br> Bắt đầu với trọng lượng tạ nhẹ hoặc mức độ dốc thấp nhất tùy theo sức cơ hiện tại của người bệnh.<br>Thực hiện động tác từ 10 – 15 lần cho mỗi hiệp dựa vào khả năng, nghỉ 2-3 phút mỗi hiệp, tập 3-4 hiệp.<br> Tăng dần trọng lượng tạ hoặc thời gian giữ (từ vài giây lên 20 giây, 30 giây) tùy theo sự tiến triển và sức khỏe của người tập.<br>Ngưỡng tập luyện: Tập đến khi cảm thấy mỏi cơ nhưng không được gây đau nhói dữ dội tại khớp gối.<br><b> Thời gian:</b> Mỗi buổi tập kéo dài khoảng từ 15 - 20 phút.",
+                contraindication: "Người bệnh đang trong giai đoạn viêm khớp cấp tính, sưng nóng đỏ đau."
+            },
+            {
+                id: 27,
+                name: "Ghế tập đa năng",
+                category: "Tập mạnh cơ",
+                image: "/PHCN/hinhanh/dung_cu_vltl/ghe_tap_da_nang.webp",
+                exercise: "Tập mạnh cơ và sức bền chi trên, chi dưới, cơ bụng và cơ lưng ",
+                features: [
+                    "Bộ phận đạp xe để tập mạnh cơ 2 chân, luyện tập cơ lưng, bụng.",
+                    "Có dây kéo tay lò xo giúp luyện cơ tay, bả vai, cơ ngực và tập sức bền."
+                ],
+                target: "Đau lưng do thoái hóa cột sống<br>Yếu tay chân do di chứng tai biến mạch máu não<br>Các bệnh có liên quan về xương khớp làm yếu cơ tay chân, nhóm cơ lưng, cơ bụng.",
+                instruction: `
+                        <li style="color: black; font-weight: bold;">Chuẩn bị trước khi tập: </li>
+                        <li>Đặt ghế trên mặt sàn phẳng và chắc chắn. Điều chỉnh góc nghiêng của ghế phù hợp với sức của người bệnh (5–30 độ). </li>
+                        <li>Ngồi hoặc nằm sấp lên ghế sao cho hông nằm ngay vị trí bản lề (điểm gập của ghế). </li>
+                        <li>Hai chân kẹp chặt vào đệm đỡ chân (ankle pad), điều chỉnh cho vừa vặn và chắc chắn. </li>
+                        <li>Hai tay nắm chắc tay cầm phía trên đầu hoặc để sau gáy (tùy bài tập). </li>
+                        <li style="color: black; font-weight: bold;">Các bài tập cơ bản: </li>
+                        <li style="color: green; font-weight: bold;">Tư thế nằm sấp:</li>
+                        <li>Nằm sấp trên ghế, thân trên thả lỏng xuống dưới. Dùng sức cơ lưng dưới từ từ nâng thân trên lên cao (ngực rời khỏi ghế), giữ 2–3 giây rồi từ từ hạ xuống. </li>
+                        <li>Lặp lại động tác với biên độ chậm và có kiểm soát. </li>
+                        <li style="color: green; font-weight: bold;">Tư thế tập cơ bụng:</li>
+                        <li> </li>
+                        <li style="color: green; font-weight: bold;">Tư thế nằm sấp:</li>
+                        <li>Nằm ngửa trên ghế, hai chân cố định, từ từ nâng thân trên lên (động tác gập bụng), giữ một lúc rồi hạ xuống chậm rãi. </li>
+                        <li style="color: green; font-weight: bold;">Nâng lưng dưới:</li>
+                        <li>Nằm sấp trên ghế, thân trên thả lỏng xuống dưới. </li>
+                        <li>Hai tay đặt sau gáy hoặc chắp trước ngực. </li>
+                        <li>Từ từ dùng sức cơ lưng dưới nâng thân trên lên cao (ngực rời khỏi ghế), giữ tư thế 2–3 giây. </li>
+                        <li>Từ từ hạ thân xuống vị trí ban đầu.</li>
+                        <li>Lặp lại 8–12 lần × 2–3 hiệp. </li>
+                        <li style="color: red; font-weight: bold;">Lưu ý:</li>
+                        <li>Luôn thực hiện động tác chậm và có kiểm soát. </li>
+                        <li>Kết hợp kiểm soát hơi thở: hít vào khi hạ thân, thở ra khi nâng thân. </li>
+                    `,
+                warning: "Ngồi sai tư thế<br>Tốc độ tập quá nhanh",
+                stopSign: "Ngừng lại nếu đau lưng, cổ hoặc cảm thấy chóng mặt",
+                recommendation: "<b><u> Giai đoạn đầu (mới bắt đầu hoặc còn yếu)</u></b><br>Người bệnh ngồi ghế<br><b> Thời gian:</b> 5 - 10p/ lần<br><b>Tần suất: </b> 2 lần/ngày <br>Kháng lực: để ở mức nhẹ nhất. Tập trung dùng chân khỏe dẫn nhịp, chân yếu theo sau.<br><b><u> Giai đoạn giữa (đã quen sau 1 - 2 tuần) </u></b><br>Người bệnh ngồi ghế<br><b> Thời gian:</b> 10 - 15 phút/lần.<br><b>Tần suất: </b> 2 - 3 lần/ngày<br>Nếu tiến bộ, có thể tập thêm ở tư thế nằm trên giường (nếu bác sĩ cho phép tập thêm).<br><b><u> Giai đoạn tiến bộ (sau 3 - 4 tuần) </u></b><br>Kết hợp tập cả 2 tư thế: ngồi ghế và nằm giường <br><b> Thời gian:</b> 15 - 20p/lần<br><b>Tần suất: </b> 2 - 3 lần/ngày, đều đặn mỗi ngày <br>Tăng dần mức kháng lực khi chân khỏe hơn. <br><b><u> Lưu ý: </u></b>Bắt đầu bằng tư thế ngồi ghế vì dễ kiểm soát và an toàn hơn, sau tiến độ chuyển sang tư thế nằm và có người hỗ trợ",
+                contraindication: "Đau cấp, viêm cấp<br>Gãy xương chưa lành"
+            },
+            {
+                id: 28,
+                name: "Giường xiên quay tập đứng",
+                category: "Kiểm soát tư thế và thăng bằng",
+                image: "/PHCN/hinhanh/dung_cu_vltl/giuong_xien_quay_tap_dung.jpg",
+                exercise: "Hỗ trợ tập đứng trước khi chuẩn bị tập với thanh song song sau thời gian nằm lâu",
+                features: [
+                    "Giúp người bệnh tập thích nghi dần với tư thế đứng sau thời gian nằm lâu.",
+                    "Hỗ trợ điều hòa huyết áp tư thế, hạn chế tụt huyết áp khi đứng.",
+                    "Chuẩn bị cho giai đoạn tập đi (trước khi tập với thanh song song)."
+                ],
+                target: "Người bị liệt hai chân hoặc tứ chi do tổn thương tủy sống.<br>Người sau đột quỵ nằm lâu ngày.<br>Người yếu cơ nặng, chưa thể tự đứng.<br>Người bị co rút khớp do bất động kéo dài.",
+                instruction: `
+                        <li style="color: green; font-weight: bold;">Chuẩn bị:</li>
+                        <li>Đảm bảo giường được đặt trên một mặt phẳng cố định và không bị nghiêng, khoá cố định các bánh xe, tránh việc giường tự dịch chuyển và mất ổn định trong suốt quá trình vận hành. </li>
+                        <li>Kiểm tra huyết áp, nhịp tim người bệnh trước khi tập. </li>
+                        <li>Chuyển người bệnh sang giường, đảm bảo gót chân chạm sát tấm để chân. </li>
+                        <li>Dùng đai cố định ở khớp gối, hông và thân mình của người bệnh vào giường cẩn thận (đảm bảo đủ chặt nhưng không gây khó thở), đảm bảo tuyệt đối điều kiện an toàn của người bệnh. </li>
+                        <li>Kiểm tra dây điện và dây điều khiển, đảm bảo rằng không bị vướng khi vận hành. </li>
+                        <li>Cắm phích cắm điện vào nguồn điện 220V. </li>
+                        <li style="color: green; font-weight: bold;">Thực hiện:</li>
+                        <li>Bắt đầu điều chỉnh góc nghiêng của mặt giường bằng remote. Nhấn và giữ nút nhấn ứng với chiều nâng trên remote. Để giường được nâng một cách đều đặn, tạo cảm giác dễ chịu cho người bệnh - cần giữ chặt nút nhấn.</li>
+                        <li>Bắt đầu ở góc nghiêng 15–30°. Theo dõi phản ứng: chóng mặt, buồn nôn, tụt huyết áp. </li>
+                        <li>Tăng dần lên 45–60° nếu dung nạp tốt. </li>
+                        <li>Giai đoạn tiến triển: 70–80°. </li>
+                        <li>Tối đa: 80–90° khi người bệnh ổn định.</li>
+                        <li>Giữ nguyên trạng thái nghiêng của giường trong khoảng thời gian mong muốn. </li>
+                        <li>Sau khoảng thời gian cần thiết cho quá trình điều trị, tiến hành hạ góc nghiêng của mặt giường về 0 độ, đưa người bệnh trở lại trạng thái nằm ngửa. Nhấn và giữ nút nhấn ứng với chiều hạ trên remote. </li>
+                        <li>Rút phích cắm điện, thu gọn dây điện. Tháo các dây đai cố định người bệnh. </li>
+                    `,
+                warning: "Lỗi cố địn bệnh (đai quá lỏng, quá chặt)<br>Đặt đai sai qui định (cần định ít nhất 3 điểm cố định: ngang nực, ngang hông và ngay trên khớp gối)<br>Năng góc độ quá nhanh ",
+                stopSign: "Chóng mặt<br>Buồn nôn<br>Vã mồ hôi<br>Tuột huyết áp.",
+                recommendation: "<b>Góc xiên:</b><br>Khởi đầu: 15–30°<br>Trung bình: 45–60°<br>Tiến triển: 70–80°<br>Tối đa thường dùng: 80–90°<br><b> Thời gian:</b> <br> Ban đầu: 5–10 phút<br>Tiến triển: 15–30 phút<br>Tối đa: 30–45 phút/buổi<br><b>Tần suất: </b> 1 lần/ngày, 3–5 buổi/tuần<br><b> Cường độ:</b> Tăng dần khi có sự tiến bộ",
+                contraindication: "Huyết áp, tim mạch không ổn định <br>Rối loạn nhận thức nặng<br>Gãy xương chưa lành<br>Chấn thương cột sống chưa ổn định<br>Vết thương hở<br>Loét tỳ đè"
+            },
+            {
+                id: 29,
+                name: "Khung quay tập khớp vai",
+                category: "Tập mạnh cơ",
+                image: "/PHCN/hinhanh/dung_cu_vltl/khung_quay.jpg",
+                exercise: "Bài tập vận động chủ động có trợ giúp, vận động chủ động, vận động có kháng lực.",
+                features: [
+                    "Tập gia tăng tầm hoạt động khớp vai, mạnh các cơ vùng vai - cánh tay, cổ tay và nhóm mu bàn tay, tập khớp cổ tay và cơ sấp – ngửa cẳng tay"
+                ],
+                target: "Người bệnh tai biến mạch máu não để lại di chứng yếu liệt nửa người.<br>Các bệnh có liên quan về xương khớp gây hạn chế vận động chi trên, khớp vai đau, hạn chế vận động khớp vai.",
+                instruction: `
+                        <li style="color: black; font-weight: bold;">Chuẩn bị:</li>
+                        <li>Phần ụ xoay có thể tăng cao – thấp và điều chỉnh lực nặng – nhẹ nên phù hợp với tình trạng lực cơ của từng người tập. </li>
+                        <li>Điều chỉnh khớp vai người tập ngang bằng với ụ xoay ở tư thế đứng. </li>
+                        <li style="color: green; font-weight: bold;">Tập cử động dang – khép khớp vai:</li>
+                        <li><b>Tư thế: </b>Đứng đối diện với dụng cụ. </li>
+                        <li><b>Thực hiện: </b>  </li>
+                        <li>Bàn tay nắm vào tay nắm của dụng cụ. </li>
+                        <li>Quay vòng quay chậm rãi theo chiều kim đồng hồ, sau đó quay ngược lại. </li>
+                        <li>Cố định thân mình, không để người nghiêng theo vòng quay. </li>
+                        <li style="color: green; font-weight: bold;">Tập cử động gập - duỗi khớp vai:</li>
+                        <li><b>Tư thế: </b> Đứng song song với dụng cụ. </li>
+                        <li><b>Thực hiện: </b> </li>
+                        <li>Bàn tay nắm vào tay cầm, quay theo vòng tròn từ trên xuống dưới và ngược lại. </li>
+                        <li>Đảm bảo cánh tay di chuyển sát thân mình, không đưa tay ra xa khỏi mặt phẳng dọc. </li>
+                        <li style="color: green; font-weight: bold;">Kết hợp cổ tay và cẳng tay:</li>
+                        <li><b>Thực hiện: </b>Tận dụng ụ tay quay xoay 360° để thực hiện các cử động sấp ngửa cẳng tay hoặc gập duỗi cổ tay ngay trong lúc quay vòng quay lớn. </li>
+                    `,
+                warning: "Đứng sai vị trí khiến tâm vòng quay không khớp với trục vai.<br>Tuyệt đối không dùng lực toàn thân để thúc đẩy vòng quay.",
+                stopSign: "Cảm giác kẹt khớp, đau nhói khi quay đến một điểm nhất định hoặc chóng mặt do nhìn theo vòng quay quá lâu.",
+                recommendation: "<b.>Tần suất: </b> 2-3 lần/ngày.<br><b>Cường độ:</b><br>Tăng tầm vận động: Điều chỉnh kháng lực của ụ xoay ở mức 0 (nhẹ nhất). Quay đến ngưỡng cảm thấy căng tức vùng bao khớp nhưng không gây đau nhói (VAS < 3/10).<br>Tập mạnh cơ:</b> Tăng dần lực cản qua ụ xoay. Tập đến ngưỡng chịu được, cảm thấy mỏi cơ sau đó tăng dần lên (Không để cảm thấy căng tức quá mức hoặc đau nhói).<br><b>Thời gian: </b><br>Giữ ở tư thế kéo giãn tối đa từ 15 - 30 giây. Mỗi lần tập kéo dài từ 10 - 15 phút.",
+                contraindication: "Viêm khớp vai cấp tính, <br>Rách lớn gân cơ chóp xoay chưa qua giai đoạn bảo vệ."
+            },
+            {
+                id: 30,
+                name: "Khung tập đi",
+                category: "Dụng cụ trợ giúp di chuyển",
+                image: "/PHCN/hinhanh/dung_cu_vltl/khung_tap_di.jpg",
+                exercise: "Tập chức năng đi.",
+                features: [
+                    "Dụng cụ để hỗ trợ người bệnh trong quá trình di chuyển. Sử dụng trong quá trình chờ phục hồi hoặc cần vận động sớm.",
+                    "Là công cụ hỗ trợ cho người khuyết tật chi dưới.",
+                    "Hỗ trợ thăng bằng tối đa",
+                    "Giảm nguy cơ té ngã cao"
+                ],
+                target: "Người bệnh liệt nửa người / liệt hai chi dưới<br>Người sau phẫu thuật chỉnh hình chi dưới (thay khớp, kết hợp xương) hoặc mới sử dụng chân giả, nẹp chỉnh hình,...<br>Trẻ mắc bệnh bại não<br>Một số bệnh lý chi dưới khác…",
+                instruction: `
+                        <li>Kích thước của khung tập đi phải phù hợp với từng người bệnh vì vậy cần đo trước khi tập luyện. </li>
+                        <li style="color: black; font-weight: bold;">Đo chiều cao:</li>
+                        <li>Mức 1: đến thắt lưng </li>
+                        <li>Mức 2: đến giữa thắt lưng và nách </li>
+                        <li>Mức 3: có giá đỡ đến nách </li>
+                        <li style="color: black; font-weight: bold;">Đo chiều rộng:</li>
+                        <li>Hướng dẫn người bệnh đứng thẳng, hai tay nắm lấy phần trên khung, hai chân đứng phần giữa khung, hơi nghiêng về phía trước để giữ trọng lượng. Chiều rộng bằng hai vai người bệnh </li>
+                        <li style="color: red; font-weight: bold;">Hướng dẫn người bệnh đi như sau:</li>
+                        <li>Người bệnh di chuyển khung lên phía trước bằng cách đẩy hoặc nhấc khung lên. </li>
+                        <li>Bước 1 chân / chân yếu lên phía trước. </li>
+                        <li>Tiếp tục bước chân còn lại lên </li>
+                        <li>Lặp lại</li>
+                    `,
+                warning: "Tì toàn bộ trọng lượng lên tay gây đau cổ tay/khuỷu.<br>Đưa khung quá xa về phía trước.",
+                stopSign: "Đau tâng<br>Chóng mặt<br>Tê tay<br>Mất thăng bằng",
+                recommendation: "<b>Tần suất:</b> Tập đi 2-3 lần mỗi ngày.<br><b>Cường độ:</b> Bắt đầu đi với quãng đường ngắn trước, sau đó tăng dần khi thấy an toàn và ít mệt. <br><b> Thời gian:</b> mỗi lần tập 10-20 phút tùy vào sức bền",
+                contraindication: "Người bệnh có rối loạn tri giác nhận thức, không hiểu lệnh và không điều khiển được các cử động của cơ thể."
+            },
+            {
+                id: 31,
+                name: "Nạng nách",
+                category: "Dụng cụ trợ giúp di chuyển",
+                image: "/PHCN/hinhanh/dung_cu_vltl/nang_nach.jpg",
+                exercise: "Tập chức năng đi.",
+                features: [
+                    "Hỗ trợ di chuyển khi giảm hoặc không chịu lực chi dưới.",
+                    "Giữ thăng bằng khi đi lại."
+                ],
+                target: "Người bệnh sau chấn thương hoặc phẫu thuật chi dưới (gãy xương, kết hợp xương, tái tạo dây chằng) cần hạn chế chịu trọng lượng.<br>Người bệnh có sức mạnh cơ chi trên và khả năng thăng bằng từ mức trung bình đến tốt.<br>Phù hợp cho các đối tượng trẻ tuổi hoặc trung niên; hạn chế sử dụng cho người già yếu do yêu cầu cao về sức bền cơ tay và sự phối hợp vận động.",
+                instruction: `
+                        <li style="color: black; font-weight: bold;">Điều chỉnh nạng đúng kích thước là rất quan trọng để tránh biến chứng.</li>
+                        <li><b><i>Độ cao nạng:</i></b> Khi đứng thẳng, phần đệm nách của nạng nên cách hõm nách khoảng 2–3 cm (tương đương 2–3 khoát ngón tay).</li>
+                        <li><b><i>Vị trí tay cầm: </i></b> được điều chỉnh sao cho khuỷu tay gập khoảng 20–30 độ khi cầm. </li>
+                        <li style="color: black; font-weight: bold;">Nguyên tắc chịu lực</li>
+                        <li>Trong quá trình đi, không tì trọng lượng cơ thể lên vùng nách mà dồn lực xuống tay cầm để tránh chèn ép thần kinh. </li>
+                        <li style="color: black; font-weight: bold;">Lựa chọn cách đi nạng phù hợp:</li>
+                            <li style="color: green; font-weight: bold;">Đi 3 điểm </li>
+                                <li><b><i>Chỉ định: </i></b> sau gãy thương, phẫu thuật dây chằng, bong dây chằng cổ chân,... tùy loại chấn thương mà chia ra là triệu sức toàn phần, bán phần, 1 phần hoặc không chịu sức </li>
+                                <li><b><i>Cách đi:</i></b> Đưa 2 nạng ra trước – Bước chân yếu (không chịu lực) – Bước chân lành lên. </li>
+                            <li style="color: green; font-weight: bold;">Đi 4 điểm</li>
+                                <li><b><i>Chỉ định:</i></b>Người bệnh yếu cơ chi dưới hoặc giảm khả năng điều hợp sau tai biến, đột quỵ. </li>
+                                <li><b><i>Cách đi: </i></b> Nạng phải lên trước một khoảng ngắn sau đó bước  chân trái lên; Nạng trái lên trước sau đó bước chân phải lên. </li>
+                            <li style="color: green; font-weight: bold;">Đi 2 điểm: (tăng tiến của đi 4 điểm)</li>
+                                <li><b><i>Cách đi: </i></b>  Nạng phải + chân trái bước ra trước cùng lúc; Nạng trái + chân phải bước ra trước cùng lúc. </li>
+                                <li style="color: green; font-weight: bold;">Cách đi kiểu đu đƣa</li>
+                                <li><b><i>Chỉ định: </i></b> Dùng cho người bệnh không thể dồn trọng lượng lên một chân.</li>
+                                <li><b><i>Cách đi: </i></b> Cả hai nạng đưa về phía trước cùng một lúc với bàn chân yếu. Chân khỏe hơn đưa về phía trước qua điểm tì của nạng để giữ thăng bằng.</li>
+                                <li style="color: green; font-weight: bold;">Cách lên xuống cầu thang bằng nạng </li>
+                                <li><b><i>Đi lên cầu thang: </i></b>  Đặt chân lành lên bậc thang tiếp theo, dồn trọng lượng thân thể lên chân đó, hai nạng và chân yếu sẽ cùng di chuyển lên bậc thang đó.  </li>
+                                <li><b><i>Xuống cầu thang: </i></b>  Đặt nạng và chân yếu xuống trước, sau đó bước chân lành xuống bậc thang đó. Chân yếu luôn luôn có nạng để trợ giúp. </li>
+                                <li style="color: green; font-weight: bold;">sử dụng 1 nạng </li>
+                                <li>Cho nạng ở phía bên lành, cho chân liệt và một nạng bước lên cùng một lúc, tiếp theo sau là chân lành. </li>
+                    `,
+                warning: "Tì trực tiếp vào nách (có thể gây tổn thương thần kinh nách)<br>Đưa nạng quá xa về phía trước<br>Tư thế sai (người bệnh cần giữ lưng thẳng, mắt nhìn trước, không cúi người)<br>Đi sai cách",
+                stopSign: "Đau tăng<br>Chóng mặt<br>Tê tay<br>Mất thăng bằng",
+                recommendation: "<b>Tần suất:</b> Tập đi nhiều lần trong ngày (3-5 lần mỗi ngày)<br><b>Cường độ:</b> Bắt đầu đi với quãng đường ngắn trước, sau đó tăng dần khi thấy an toàn và ít mệt.<br><b> Thời gian:</b> 5–15 phút ở giai đoạn đầu. Sau tiến tới mỗi lần tập 10-20 phút tùy vào sức bền.<b>Lưu ý:</b> Thời gian và mức chịu lực phải theo đúng chỉ định của bác sĩ và đánh giá của nhân viên y tế. Không tự ý tăng chịu lực lên chân đau.",
+                contraindication: "Người bệnh có rối loạn tri giác nhận thức, không hiểu lệnh và không điều khiển được các cử động của cơ thể."
+            },
+            {
+                id: 32,
+                name: "Xe lăn",
+                category: "Dụng cụ trợ giúp di chuyển",
+                image: "/PHCN/hinhanh/dung_cu_vltl/xe_lan.webp",
+                exercise: "hỗ trợ di chuyển, giảm tải lên chi dưới sau giai đoạn phục hồi",
+                features: [
+                    "Giúp hỗ trợ di chuyển, giảm tải lên chi dưới sau giai đoạn phục hồi chấn thương, tăng tính độc lập cho người bệnh di chuyển trong nhà, ngoài trời để nâng cao chất lượng cuộc sống và sự tự tin."
+                ],
+                target: "Người cao tuổi.<br>Người sau tai biến.<br>Người bệnh sau chấn thương hoặc phẫu thuật (giai đoạn không chịu lực hoặc chịu lực hạn chế).<br>Người có khiếm khuyết vận động: liệt hai chân, liệt tứ chi, cụt chi dưới.",
+                instruction: `
+                        <li style="color: black; font-weight: bold;">Chuẩn bị trước khi sử dụng</li>
+                        <li><b><i>Kiểm tra xe:</i></b> Khóa phanh chắc chắn, bánh xe không mòn, khung không lỏng lẻo, nệm sạch. </li>
+                        <li><b><i>Mở xe lăn: </i></b>  Đẩy hai thanh hai bên ghế ngồi xuống đến khi mặt ghế căng phẳng hoàn toàn. </li>
+                        <li><b><i>Điều chỉnh gác chân (tựa chân): </i></b>  Phù hợp chiều cao chân người bệnh (chân thả thoải mái, gót không chạm đất). </li>
+                        <li>Khóa phanh bánh sau trước khi người bệnh lên/xuống.</li>
+                        <li style="color: black; font-weight: bold;">Kỹ thuật lên/xuống xe (từ giường hoặc ghế)</li>
+                        <li style="color: green; font-weight: bold;">Từ giường sang xe lăn </li>
+                        <li>Đặt xe lăn nghiêng góc 45° phía bên chi lành (bên khỏe). </li>
+                        <li>Khóa phanh, đẩy gác chân sang một bên. </li>
+                        <li>Người bệnh ngồi dậy, thõng chân ra mép giường (chân chạm đất). </li>
+                        <li>Chống tay lành lên tay vịn xe, đứng lên bằng chân lành. </li>
+                        <li>Chuyển tay lành sang tay vịn phía xa, xoay người và từ từ ngồi xuống ghế. </li>
+                        <li>Dùng chân lành gạt gác chân xuống và đặt chân yếu lên. </li>
+                        <li style="color: green; font-weight: bold;">Từ xe lăn sang giường:</li>Thực hiện ngược lại
+                        <li style="color: black; font-weight: bold;">Kỹ thuật di chuyển</li>
+                        <li><b><i>Tự đẩy xe: </i></b>  Ngồi thẳng lưng, hai tay nắm vành lăn inox, đẩy vòng tròn đều về phía trước (tay lành đẩy mạnh hơn, tay yếu hỗ trợ). Giữ thân người cân bằng. </li>
+                        <li><b><i>Người khác đẩy: </i></b>   Đứng phía sau, nắm hai tay đẩy, đẩy nhẹ nhàng, tránh tốc độ cao. </li>
+                        <li style="color: black; font-weight: bold;">Lên/xuống dốc (có người đẩy):</li>
+                        <li><b><i>Lên dốc: </i></b> Mặt người bệnh hướng về phía dốc, người hỗ trợ đạp thanh ở phía dưới chân để hỗ trợ có thể lên dốc sau đó đẩy xe lên dốc </li>
+                        <li><b><i>Xuống dốc: </i></b> Lưng người bệnh hướng về phía dốc, người hỗ trợ đẩy xe lùi xuống chân dốc. </li>
+                    `,
+                warning: "Không phá phanh khi lên xuống xe<br> Ngồi sai tư thế<br> Đặt chân sai vị trí<br> Di chuyển nhnah<br>  Đẩy xe sai kỹ thuật",
+                stopSign: "Không có",
+                recommendation: "Sẽ không có mức độ hay thời gian cụ thể cho loại dụng cụ này, nhưng sẽ có mức khuyến nghị an toàn dành cho từng nhóm đối tượng<br> <b><i>Người cao tuổi: </i></b> Ưu tiên có người đẩy + tự đẩy nhẹ, tập trung an toàn và di chuyển ngắn trong nhà.<br> <b><i>Sau đột quỵ/tai biến: </i></b> Bắt đầu bên chi lành đẩy hỗ trợ, tập chuyển vị trí và tự đẩy nhẹ để tăng sức cơ tay + thăng bằng ngồi. Theo dõi huyết áp và mệt mỏi.<br> <b><i>Sau chấn thương/phẫu thuật (không chịu lực): </i></b> Chủ yếu dùng xe để di chuyển mà không tải trọng lên chi dưới. Tập đẩy chỉ khi bác sĩ cho phép chịu lực hạn chế.<br> <b><i>Liệt hai chân / liệt tứ chi / cụt chi dưới: </i></b> Tùy mức độ – liệt tứ chi nặng thường chỉ dùng có người đẩy; liệt hai chân ổn định có thể tập tự đẩy với kỹ thuật bảo vệ vai.<br> <b><i>Các khuyến nghị chung </i></b><br> Luôn bắt đầu với giám sát của nhà điều trị, đánh giá sức cơ tay, tim mạch và thăng bằng trước khi áp dụng.<br> Kết hợp với các dụng cụ khác (bập bênh để tập thăng bằng ngồi, gậy tựa khuỷu khi tiến bộ).<br> <b><i>Mục tiêu dài hạn: <br> <b><i> Tăng độc lập di chuyển và cải thiện chất lượng cuộc sống.",
+                contraindication: ""
+            },
+            {
+                id: 33,
+                name: "Ròng rọc kéo tay",
+                category: "Tăng tầm vận động khớp",
+                image: "/PHCN/hinhanh/dung_cu_vltl/rong_roc.jpg",
+                exercise: "Bài tập vận động chủ động có trợ giúp.",
+                features: [
+                    "Duy trì và gia tăng tầm vận động (ROM) gập, dang và xoay trong; ngăn ngừa kết dính bao khớp."
+                ],
+                target: "Hạn chế tầm vận động (ROM): Viêm quanh khớp vai, sau bất động (bó bột, phẫu thuật).<br>Nhóm suy giảm lực cơ chi trên.<br>Nhóm bệnh lý thần kinh: người bệnh liệt nửa người do đột quỵ, chấn thương sọ não.",
+                instruction: `
+                        <li style="color: green; font-weight: bold;">Đưa tay ra trước và lên cao (gập vai)</li>
+                        <li><b>Tư thế:</b> ngồi trên ghế tựa, quay lưng lại phía ròng rọc, nắm lấy hai tay cầm của ròng rọc. </li>
+                        <li><b>Thực hiện:</b> </li>
+                        <li>Dùng tay lành từ từ kéo dây xuống phía dưới sàn nhà. </li>
+                        <li>Lực kéo sẽ nâng tay đau lên cao phía trước mặt (cánh tay sát tai). </li>
+                        <li>Kéo đến khi cảm thấy căng nhẹ ở vùng vai thì dừng lại. </li>
+                        <li>Giữ nguyên 5 - 10 giây, sau đó dùng tay lành thả chậm để tay đau hạ xuống. </li>
+                        <li style="color: green; font-weight: bold;">Đưa tay sang ngang và lên cao (Dang vai)</li>
+                        <li><b>Tư thế:</b> ngồi trên ghế tựa, ngồi nghiêng, bên vai đau hướng về phía ròng rọc, hai tay nắm tay cầm. </li>
+                        <li><b>Thực hiện:</b> </li>
+                        <li>Tay lành kéo dây xuống phía trước bụng. </li>
+                        <li>Tay đau được hỗ trợ nâng sang ngang và hướng dần lên phía tai. </li>
+                        <li style="color: red; font-weight: bold;">Lưu ý</li>
+                        <li>Giữ lòng bàn tay đau hướng về phía trước. </li>
+                        <li>Giữ 5 - 10 giây ở vị trí cao nhất rồi từ từ hạ xuống. </li>
+                        <li style="color: green; font-weight: bold;">Đưa tay ra sau lưng (xoay trong)</li>
+                        <li><b>Tư thế:</b> đứng hoặc ngồi quay lưng vào ròng rọc. </li>
+                        <li><b>Thực hiện:</b></li>
+                        <li>Tay lành đưa lên cao qua đầu nắm tay cầm.</li>
+                        <li>Tay đau đưa ra sau lưng (lòng bàn tay hướng ra ngoài) nắm tay cầm còn lại.</li>
+                        <li>Tay lành kéo dây ra phía trước, hỗ trợ trượt tay đau lên cao dọc theo cột sống.</li>
+                        <li>Giữ 5 giây rồi thả lỏng </li>
+                    `,
+                warning: "Tránh hiện tượng nhún vai (nâng xương bả vai) hoặc ưỡn lưng để bù trừ khi đưa tay lên cao. Phải giữ thân mình cố định trên ghế.<br>Tốc độ quá nhanh: Thực hiện chậm, đều; tuyệt đối không giật dây mạnh để tránh tổn thương bao khớp.",
+                stopSign: "Đau chói đột ngột ở khớp vai, sưng nóng hoặc đau tăng kéo dài quá 30 phút sau khi tập.",
+                recommendation: "<b>Tần suất:</b> 2 - 3 lần/ngày<br><b>Cường độ:</b> Tập đến ngưỡng chịu được, không cảm thấy căng tức hay đau nhói, không gây đau tăng lên.<br><b> Thời gian:</b> Giữ 5-10 giây, mỗi hướng cử động thực hiện 10-15 lần/hiệp",
+                contraindication: "Người bệnh liệt nửa người sau đột quỵ giai đoạn sớm.<br>Người bị trật khớp vai cấp, gãy xương vùng đai vai chưa liền, hoặc có tình trạng mất vững khớp vai mức độ nặng."
+            },
+            {
+                id: 34,
+                name: "TẠ CẦM TAY",
+                category: "Tập mạnh cơ",
+                image: "/PHCN/hinhanh/dung_cu_vltl/ta_cam_tay.jpg",
+                exercise: "Bài tập sức mạnh có kháng lực.",
+                features: [
+                    "Sức nặng của tạ tạo ra lực cản lên các nhóm cơ chi trên. Khi nâng tạ lên: Cơ bắp co lại để thắng sức nặng của tạ. Khi hạ tạ xuống: Cơ bắp vẫn phải duy trì lực gồng để điều khiển tạ hạ xuống từ từ, không để rơi tự do.",
+                    "Tăng sức mạnh các nhóm cơ vùng cổ tay, khuỷu tay và vai."
+                ],
+                target: " Người bệnh cần PHCN chi trên sau tai biến (từ khi tay bắt đầu có lực)<br>Người cần tập sức mạnh cơ sau chấn thương hoặc phẫu thuật chi trên.<br>Người cao tuổi cần duy trì sức mạnh cơ để thực hiện các hoạt động tự chăm sóc.",
+                instruction: `
+                        <li style="color: black; font-weight: bold;">Tư thế:</li>
+                        <li>Đứng hoặc ngồi thẳng lưng. Chọn mức tạ phù hợp. </li>
+                        <li style="color: green; font-weight: bold;">Dang vai:</li>
+                        <li>Hai tay cầm tạ xuôi theo thân. Dang ngang hai cánh tay đến khi song song với mặt đất, rồi hạ chậm. </li>
+                        <li style="color: green; font-weight: bold;">TGập khuỷu tay:</li>
+                        <li>Lòng bàn tay hướng ra trước, khuỷu tay sát hông. Gập tay đưa tạ về phía vai, rồi hạ chậm. </li>
+                        <li style="color: green; font-weight: bold;">Đẩy vai qua đầu:</li>
+                        <li>Lòng bàn tay hướng ra trước, khuỷu tay sát hông. Gập tay đưa tạ về phía vai, rồi hạ chậm. </li>
+                        <li style="color: green; font-weight: bold;">Gập cổ tay:</li>
+                        <li>Lòng bàn tay hướng lên. Gập cổ tay đưa tạ về phía thân mình, sau đó hạ chậm. </li>
+                        <li style="color: green; font-weight: bold;">Duỗi cổ tay:</li>
+                        <li>Lòng bàn tay hướng xuống. Nâng mu bàn tay lên phía trên, sau đó hạ chậm. </li>
+                        <li style="color: green; font-weight: bold;">Sấp ngửa cẳng tay:</li>
+                        <li>Cầm tạ theo chiều dọc (như cầm ly nước). Xoay cổ tay để lòng bàn tay ngửa lên trời, giữ 2 giây, rồi xoay úp xuống đất. </li>
+                    `,
+                warning: "Nín thở khi nâng tạ: Đây là lỗi nguy hiểm nhất, làm tăng áp lực nội lồng ngực và gây biến cố huyết áp. Hãy ghi nhớ: Thở ra khi gắng sức (nâng lên) - Hít vào khi thả lỏng (hạ chậm).<br>Dùng lực quán tính: Tránh vung vẩy tạ quá nhanh. Cần điều khiển cử động chậm rãi để cơ bắp làm việc tối đa.<br>Tạ quá nặng: Chọn mức tạ vượt quá sức mạnh cơ học sẽ dẫn đến các cử động bù trừ (như ưỡn lưng, nhấc vai), gây căng cơ và tổn thương bao khớp.",
+                stopSign: "Xuất hiện cơn đau nhói đột ngột tại cơ hoặc khớp.<br>Cảm giác chóng mặt, hoa mắt hoặc tức ngực.",
+                recommendation: "<b>Tần suất:</b> Tập luyện 2 - 3 buổi/tuần. Nghỉ ít nhất 24 giờ giữa các buổi tập cùng một nhóm cơ để cơ bắp có thời gian phục hồi.<br><b>Cường độ:</b><br>Thực hiện 10 - 15 lần/hiệp.<br>Lặp lại 3 - 4 hiệp cho mỗi bài tập.<br>Nghỉ giữa các hiệp từ 30 - 60 giây.<br>Bắt đầu với trọng lượng tạ nhẹ (0.5kg - 2kg).<br> Nguyên tắc chọn tạ: Mức tạ phù hợp là mức mà người bệnh cảm thấy mỏi cơ rõ rệt ở những cái cuối cùng (cái thứ 12 - 15) nhưng vẫn giữ được đúng tư thế, không phải gồng mình hay bù trừ bằng các bộ phận khác.<br><b> Thời gian:</b> Mỗi buổi tập từ 15 - 20 phút.",
+                contraindication: " Người bệnh có bệnh lý tim mạch, cao huyết áp chưa kiểm soát ổn định.<br>Tình trạng viêm khớp cấp tính (khớp đang sưng, nóng, đỏ, đau)."
+            },
+            {
+                id: 35,
+                name: "Dụng cụ tập gập - duỗi cổ tay",
+                category: "Tăng tầm vận động khớp",
+                image: "/PHCN/hinhanh/dung_cu_vltl/dung_cu_tap_gap_duoi_co_tay.webp",
+                exercise: "Bài tập vận động ở khớp cổ tay.",
+                features: [
+                    "Giúp gia tăng tầm hoạt động khớp cổ tay theo các hướng gập duỗi cổ tay (gập mặt lưng/mặt lòng) và tập mạnh nhóm cơ gập duỗi cổ tay."
+                ],
+                target: "<b>Nhóm bệnh lý thần kinh: </b><br>Người bệnh di chứng sau tai biến mạch máu não (liệt nửa người) có yếu liệt vùng cẳng tay và bàn tay.<br>Người bị tổn thương dây thần kinh ngoại biên (dây quay, dây trụ, dây giữa) gây yếu cơ hoặc mất cảm giác bàn tay.<br>Hỗ trợ phục hồi chức năng sau điều trị Hội chứng ống cổ tay.<br><b>Nhóm sau chấn thương & phẫu thuật: </b><br>Người bệnh sau phẫu thuật kết xương, khâu nối gân vùng cổ tay/bàn tay đã qua giai đoạn bất động.<br>Người bị cứng khớp cổ tay sau thời gian dài bó bột hoặc nẹp cố định.<br>Phòng ngừa loạn dưỡng cơ do bất động lâu ngày (Hội chứng Sudeck).<br><b>Nhóm bệnh lý cơ xương khớp:</b><br>Người bị hạn chế tầm vận động (ROM) khớp cổ tay do thoái hóa hoặc viêm khớp giai đoạn ổn định.<br>Người cần phục hồi các chức năng vận động thô (cầm, nắm, giữ) của bàn tay.",
+                instruction: `
+                        <li style="color: green; font-weight: bold;">
+</li>
+                        <li>Đứng đối diện với thiết bị đã gắn trên tường. </li>
+                        <li>Xoay núm vặn để chọn mức lực kháng của trục xoay thấp nhất khi bắt đầu. </li>
+                        <li>Hai tay nắm vào tay nắm đẩy cổ tay lên và gập xuống (gập và duỗi cổ tay) </li>
+                        <li style="color: red; font-weight: bold;">Lưu ý</li>
+                        <li>Tùy theo sức cơ, có thể điều chỉnh lực kháng nặng – nhẹ cho phù hợp với từng người bệnh và từng giai đoạn tiến triển của người bệnh. </li>
+                    `,
+                warning: "Tuyệt đối không dùng lực của toàn bộ cơ thể để đẩy tay nắm, phải giữ yên thân mình và chỉ tập trung lực tại cổ tay.",
+                stopSign: "Nếu sau khi tập thấy cổ tay bị sưng, nóng đỏ, cần dừng tập ngay, sử dụng liệu pháp chườm lạnh và giảm cường độ tập vào những buổi sau.",
+                recommendation: "<b>Tần suất:</b> 1 - 2 lần mỗi ngày.<br><b>Cường độ:</b><br>Luôn bắt đầu bằng mức vặn nhẹ nhất (không có lực cản). Khi tập thấy vặn nhẹ thấy dễ dàng sau 20 cái, xoay núm cho lực kháng của trục xoay tăng thêm một chút.<br>Thực hiện 10 - 15 lần/hiệp.<br>Lặp lại 3 - 4 hiệp cho mỗi bài tập.<br>Nghỉ giữa các hiệp từ 30 - 60 giây.<br><b> Thời gian:</b> Mỗi buổi tập từ 15 - 20 phút.",
+                contraindication: "Những người bệnh vừa trải qua phẫu thuật nối gân, kết xương vùng cổ tay chưa ổn định chỉ được tiến hành luyện tập khi có chỉ định rõ ràng của bác sĩ chuyên khoa."
+            },
+            {
+                id: 36,
+                name: "Thang nấc tập khớp vai thẳng ",
+                category: "Tăng tầm vận động khớp",
+                image: "/PHCN/hinhanh/dung_cu_vltl/thang_nac_tap_khop_vai_loai_thang.png",
+                exercise: "Bài tập chủ động gia tăng tầm vận động khớp vai.",
+                features: [
+                    "Người tập dùng các đầu ngón tay luân phiên bám vào các nấc thang để đưa cánh tay lên cao.",
+                    "Gia tăng tầm vận động (ROM) khớp vai hướng gập và dang.",
+                    "Theo dõi tiến triển vận động thông qua việc đánh dấu các nấc thang đạt được."
+                ],
+                target: "Sau bệnh lý, chấn thương bất động lâu ngày làm giảm tầm vận động khớp vai.",
+                instruction: `
+                        <li style="color: black; font-weight: bold;">Chuẩn bị</li>
+                        <li>Người tập đứng thẳng, hai chân cách tường khoảng 5cm để giữ thăng bằng. </li>
+                        <li style="color: green; font-weight: bold;">Tập gập khớp vai</li>
+                        <li><b>Tư thế: </b>Đứng đối diện với thang nấc. </li>
+                        <li><b>Thực hiện: </b> </li>
+                        <li>Dùng ngón trỏ và ngón giữa thay phiên nhau chạm vào từng nấc thang để đưa tay lên cao dần. </li>
+                        <li>Dừng lại khi cánh tay vươn đến vị trí bắt đầu thấy căng tức nhẹ. </li>
+                        <li>Giữ tư thế này trong 15 - 30 giây. </li>
+                        <li>Dùng các ngón tay di chuyển ngược xuống từng nấc để hạ tay về vị trí ban đầu. </li>
+                        <li style="color: green; font-weight: bold;">Tập dang khớp vai</li>
+                        <li><b>Tư thế: </b> Đứng song song với thang nấc, bên vai cần tập sát vào dụng cụ. </li>
+                        <li><b>Thực hiện:</b> </li>
+                        <li>Thực hiện thao tác leo ngón tay tương tự như bài tập gập để đưa tay dang sang ngang và lên cao. </li>
+                        <li>Giữ thân mình thẳng, không nghiêng người sang bên đối diện khi đưa tay lên cao. </li>
+                        <li style="color: red; font-weight: bold;">Lưu ý</li>
+                        <li>Theo dõi tiến triển: Nên đánh dấu lại nấc thang cao nhất đạt được để theo dõi sự tăng tiến và điều chỉnh mức độ tập luyện cho phù hợp những lần sau. </li>
+                    `,
+                warning: "Kiễng chân hoặc rướn người để đạt nấc cao hơn. Thả rơi tay đột ngột từ trên cao thay vì di chuyển tay xuống từng nấc.",
+                stopSign: "Đau chói cấp tính ở vùng vai hoặc tê mỏi các đầu ngón tay quá mức.",
+                recommendation: "<b>Tần suất:</b> 2 - 3 lần/ngày<br><b>Cường độ:</b> Vươn các đầu ngón tay luân phiên lần lượt vào từng nấc thang cho đến khi không thể vươn tay cao được và có cảm giác đau nhẹ.<br><b> Thời gian:</b> 10 - 15 phút/ lần tập.",
+                contraindication: " Trật khớp vai, dãn dây chằng nặng, hoặc liệt mềm hoàn toàn chi trên (không có khả năng kiểm soát tay)."
+            },
+            {
+                id: 37,
+                name: "Thang nấc tập khớp vai loại cong",
+                category: "Tăng tầm vận động khớp",
+                image: "/PHCN/hinhanh/dung_cu_vltl/thang_nac_tap_khop_vai_loai_cong.png",
+                exercise: "Bài tập chủ động gia tăng tầm vận động khớp vai.",
+                features: [
+                    "Thiết kế hình cung tạo ra sự thay đổi về góc độ tiếp xúc của cánh tay khi lên cao, giúp kích thích các nhóm cơ đai vai hoạt động linh hoạt hơn.",
+                    "Gia tăng tầm vận động khớp vai các hướng gập và dang.",
+                    "Tập luyện sự khéo léo và điều hợp vận động của các ngón tay.",
+                    "Cải thiện sự phối hợp tay - mắt."
+                ],
+                target: "Các bệnh lý ở khớp vai gây ra hạn chế vận động khớp vai<br>Viêm quanh khớp vai, thoái hóa khớp vai,...<br>Di chứng tai biến mạch máu não",
+                instruction: `
+                        <li style="color: black; font-weight: bold;">Chuẩn bị</li>
+                        <li>Người tập đứng thẳng, hai chân cách tường khoảng 5cm để giữ thăng bằng. </li>
+                        <li style="color: green; font-weight: bold;">Tập gập vai</li>
+                        <li><b>Tư thế: </b> Đứng đối diện với thang nấc. </li>
+                        <li><b>Thực hiện: </b> </li>
+                        <li>Dùng các đầu ngón tay luân phiên chạm lần lượt vào từng nấc thang để đưa tay lên cao dần theo đường cong của thang. </li>
+                        <li>Vươn đến nấc cao nhất mà cơ thể chịu đựng được (cảm giác căng tức nhẹ). </li>
+                        <li>Giữ tư thế này trong 15 - 30 giây. </li>
+                        <li>. Di chuyển ngón tay ngược trở xuống từng nấc để hạ tay về vị trí ban đầu. </li>
+
+                        <li style="color: green; font-weight: bold;">Tập dang vai</li>
+                        <li><b>Tư thế: </b> Đứng song song với thang nấc, bên vai cần tập sát vào dụng cụ. </li>
+                        <li><b>Thực hiện:</b> Thao tác tương tự bài tập gập để đưa tay dang sang ngang. Chú ý giữ thân người thẳng, không nghiêng sang bên lành. </li>
+                        <li style="color: red; font-weight: bold;">Lưu ý:</li>
+                        <li>Theo dõi tiến triển: Nên đánh dấu lại nấc thang cao nhất đạt được để theo dõi sự tăng tiến và điều chỉnh mức độ tập luyện cho phù hợp những lần sau. </li>
+                    `,
+                warning: "+ Không cố rướn thân mình hoặc kiễng chân để với nấc cao hơn. Cần tập trung vào cử động đơn thuần của khớp vai và ngón tay.<br>Tập trung quá nhiều vào việc leo nấc mà quên giữ thẳng trục thân mình.<br> Không giữ đủ thời gian kéo giãn.",
+                stopSign: "Đau tăng dần ở các khớp ngón tay hoặc khớp vai.",
+                recommendation: "<b>Tần suất:</b> 2 - 3 lần/ngày<br><b>Cường độ:</b> Vươn các đầu ngón tay luân phiên lần lượt vào từng nấc thang cho đến khi không thể vươn tay cao được và có cảm giác đau nhẹ.<br><b> Thời gian:</b> 10 - 15 phút/ lần tập.",
+                contraindication: "Tương tự thang thẳng; đặc biệt thận trọng với người có rối loạn thăng bằng khi phải đứng sát tường quan sát thang cong."
+            },
+            {
+                id: 38,
+                name: "Thang gỗ gấn tường",
+                category: "Kéo giãn",
+                image: "/PHCN/hinhanh/dung_cu_vltl/thang_go_gan_tuong.jpg",
+                exercise: "Các bài kéo giãn và tăng sức mạnh với thang gỗ gắn tường (bám thang, kéo giãn, tập tay – chân – lưng).",
+                features: [
+                    "Kéo giãn cột sống, tăng tầm vận động khớp",
+                    "Cải thiện tư thế và sức mạnh cơ sau phục hồi chấn thương.",
+                    "Tập mạnh cơ vùng chi trên và chi dưới. "
+                ],
+                target: "Nhóm người bệnh hạn chế tầm vận động khớp do chấn thương hay sau mổ (vai), di chứng sau chấn thương, bó bột lâu ngày, phẫu thuật (vai, cột sống).<br>Nhóm người muốn cải thiện tư thế, kéo giãn cột sống, tăng độ linh hoạt.<br>Nhóm người bệnh sau tai biến mạch máu não, liệt nửa người, liệt chi dưới, yếu cơ thân mình và chi trên.",
+                instruction: `
+                        <li style="color: green; font-weight: bold;">Bài tập giúp kéo giãn cột sống: </li>
+                        <li>Dùng 2 tay nắm vào thanh gỗ, đu người lên sao cho hai chân nhấc khỏi mặt đất. Có thể cột thêm tạ vào 2 cổ chân để tăng thêm trọng lượng. </li>
+                        <li style="color: green; font-weight: bold;">Bài tập giúp kéo giãn cột sống và đồng thời cũng kéo giãn cả khớp vai, khớp khuỷu tay, cổ tay và hông</li>
+                        <li>Dùng 2 tay nắm vào thanh gỗ, đu người lên khỏi mặt đất, một chân đứng trên thanh gỗ cuối cùng, một chân đưa thẳng ra sau. Lần lượt đổi chân bên kia, lặp lại động tác như thế. </li>
+                        <li style="color: green; font-weight: bold;">Bài tập giúp kéo giãn khớp cổ tay:</li>
+                        <li>khớp khuỷu tay và gia tăng tầm hoạt động của khớp vai: Dùng 2 tay nắm vào thanh gỗ, kéo thẳng tay. Cách tập này rất có hiệu quả cho trường hợp bạn bị giới hạn tầm hoạt động các khớp trên do bó bột lâu ngày hoặc đau khớp không dám cử động làm các khớp bị co cứng </li>
+                        <li style="color: green; font-weight: bold;">Bài tập giúp tập mạnh 2 cơ chân, khớp gối và khớp cổ chân vững vàng khi di chuyển: </li>
+                        <li>Dùng 2 tay nắm vào thanh gỗ, gập 2 gối xuống rồi đứng thẳng lên.  </li>
+                        <li>Trường hợp bạn nắm 2 tay vào thanh gỗ rồi từ từ ngồi xuống trong tư thế ngồi xổm bàn chân đặt sát sàn nhà, mông chạm gót sẽ giúp bạn kéo giãn được gân gót rất tốt. </li>
+                        <li>Bạn ngồi chạm mông vào thanh gỗ trong tư thế thoải mái, 2 chân chạm sàn nhà, 2 tay đưa ra sau nắm vào thanh gỗ ưỡn ngực về phía trước. Động tác này cũng làm kéo giãn cột sống rất có hiệu quả. </li>
+                        <li style="color: green; font-weight: bold;">Bài tập giúp kéo giãn nhiều vùng cột sống ngực:</li>
+                        <li>Dùng 2 dây dài khoảng 1m cột chặt vào thanh gỗ vừa tầm với khớp vai, đứng quay mặt ra ngoài, 2 chân đứng vững chắc trên sàn nhà, chân trước hơi gập gối, chân sau đứng sát vào thanh gỗ cuối cùng, khoảng cách 2 chân cách nhau nhiều hay ít tuỳ thuộc vào độ ngã về trước. Đưa 2 tay ra sau nắm 2 sợi dây, đồng thời đổ người về phía trước, ưỡn ngực, đẩy mông ra sau. </li>
+                        <li style="color: green; font-weight: bold;">Đối với các trường hợp vẹo cột sống</li>
+                        <li>Đứng quay mặt vào thang, 2 chân sát nhau. Nếu cột sống bạn bị vẹo về bên trái. Đứng thẳng giữ chắc khung chậu, 2 tay đưa thẳng qua khỏi đầu rướn người lên đồng thời nghiêng sang trái giữ lại vài giây, sau đó kéo tay về thẳng trục với thân người, làm như thế nhiều lần.  </li>
+                        <li>Đối với trường hợp cột sống bị vẹo có chiều cong lồi về bên phải thì bạn cũng tập lần lượt như thế nhưng theo chiều ngược lại.  </li>
+                        <li style="color: red; font-weight: bold; ">Kiên trì tập luyện vì đối với trường hợp này không thể giảm ngay được, nó phù thuộc vào nhiều yếu tố khác nữa. Ngoài việc tập luyện thường xuyên, đúng cách, bạn còn phải sửa dáng khi ngồi, đứng, đi …. </li>
+                    `,
+                warning: "Cử động thay thế<br>Tập quá sức",
+                stopSign: "Đau tăng lên<br>Chóng mặt",
+                recommendation: "<b>Tần suất:</b><br> Giai đoạn đầu (cấp tính hoặc mới bắt đầu): 3 – 4 buổi/tuần (cách ngày để cơ thể phục hồi).<br>Giai đoạn duy trì hoặc cải thiện: 4 – 5 buổi/tuần.<br><b>Cường độ:</b> Tập ở mức nhẹ đến vừa, tăng dần theo mức độ tiến bộ <br><b> Thời gian:</b> Mỗi buổi 15–20 phút. Mỗi động tác thực hiện 10 - 15 lần, lặp lại 3–4 hiệp, nghỉ giữa các hiệp từ 1-2 phút.",
+                contraindication: "Loãng xương nặng (nguy cơ gãy xương khi tập).<br>Tăng huyết áp không kiểm soát, bệnh tim mạch nặng, rối loạn nhịp tim.<br>Đau cấp tính tại cột sống hoặc khớp.<br>Rối loạn nhận thức nặng, không hiểu lệnh hoặc không phối hợp được."
+            },
+            {
+                id: 39,
+                name: "Xe đạp",
+                category: "Tập mạnh cơ",
+                image: "/PHCN/hinhanh/dung_cu_vltl/xe đạp.webp",
+                exercise: "Tập aerobic bằng xe đạp tại chỗ.",
+                features: [
+                    "Giúp tăng cường sức mạnh cơ chân, khớp hông, gối và cổ chân",
+                    "Cải thiện tuần hoàn máu, tăng sức bền tim mạch và hô hấp.",
+                    "Giúp người bệnh duy trì vận động đều đặn, cải thiện tinh thần và chất lượng cuộc sống "
+                ],
+                target: "Nhóm người cao tuổi yếu chi dưới, đi lại chậm chạp và ít vận động. <br>Người bệnh sau đột quỵ hoặc tai biến mạch máu não cần tập các bài tập phục hồi chức năng vận động.<br>Người bị cứng khớp gối, hông do nằm lâu hoặc do ít di chuyển <br>Người bệnh cần cải thiện sức bền chân và tuần hoàn máu nhưng chưa thể đi bộ hoặc đạp xe, các môn thể thao vận động ngoài trời <br>Người muốn tập luyện nhẹ nhàng, đều đặn tại nhà để duy trì sức khỏe và phục hồi chức năng. <br><b><i>Loại dụng cụ tập phù hợp với nhóm đối tượng đang trong giai đoạn phục hồi chức năng chi dưới, cần tập ngồi tại chỗ một cách an toàn và dễ kiểm soát.</i></b>",
+                instruction: `
+                        <li>Đặt xe trên sàn nhà phẳng và chắc chắn.</li>
+                        <li>Điều chỉnh độ cao yên xe: Khi ngồi lên, chân phải duỗi gần thẳng nhưng vẫn hơi gập ở đầu gối (khoảng 10–15 độ). Không để chân duỗi quá thẳng hoặc co quá nhiều. </li>
+                        <li>Ngồi thẳng lưng, hai tay nắm chắc tay cầm (Nếu chân yếu hoặc liệt, có thể dùng dây mềm cố định bàn chân vào bàn đạp.) </li>
+                        <li>Ngồi thoải mái trên yên xe, đặt hai chân lên bàn đạp. </li>
+                        <li>Bắt đầu đạp bằng chân khỏe trước, chân yếu sẽ theo nhịp quay. </li>
+                        <li>Đạp với tốc độ chậm, đều và nhịp nhàng (giống như đạp xe đạp thật). Hít thở đều: hít vào khi đạp xuống, thở ra khi đạp lên. </li>
+                        <li>Tập liên tục trong thời gian quy định, sau đó nghỉ ngơi. </li>
+                    `,
+                warning: "Điều chỉnh yên sai độ cao <br>Tăng sức cản quá nhanh<br>Sai tư thế",
+                stopSign: "Đau nhói tại khớp<br>Chuột rút<br>Tê bì",
+                recommendation: "<b>Tần suất:</b> 3 - 5 buổi/tuần <br>Giai đoạn đầu (yếu hoặc sau đột quỵ, chấn thương đang phục hồi): 3 buổi/ tuần <br> Khi tiến bộ: 4 - 5 buổi/ tuần <br>Nghỉ ít nhất 1 ngày giữa các buổi để cho cơ phục hồi.  <br><b>Cường độ:</b> thấp đến trung bình <br>Giai đoạn đầu: nhẹ đến trung bình (40 - 60% nhịp tim tối đa; Nhịp tim tối đa tính bằng: 220 - tuổi)<br>Tiến bộ: trung bình ( 60 - 80% nhịp tim tối đa)<br><b> Thời gian:</b> 15 - 30 phút/buổi <br> Giai đoạn đầu tập khoảng 5 - 10 phút, tăng thời gian theo giai đoạn phục hồi<br> Nên có 3 - 5 phút khởi động và hạ nhiệt. ",
+                contraindication: "Chấn thương cấp tính<br>Viêm khớp dạng thấp đợt cấp<br>Suy tim độ 3,4<br>Tăng huyết áp chưa được kiểm soát<br>Loạn nhịp tim nặng"
+            },
+            {
+                id: 40,
+                name: "Xe đạp cải tiến",
+                category: "Tập mạnh cơ",
+                image: "/PHCN/hinhanh/dung_cu_vltl/xe dap_cai_tien.webp",
+                exercise: "Đạp xe tại chỗ có cải tiến.",
+                features: [
+                    "Tập mạnh cơ 2 chân, khớp hông, khớp gối, khớp cổ chân. ",
+                    "Phục hồi sức cơ và vận động cho tay và chân bị yếu.",
+                    "Đây là loại xe đạp được cải tiến đơn giản, nhỏ gọn có thể ngồi ghế đạp hoặc nằm đạp. ",
+                    "Khi đạp xe ở tư thế nằm sẽ tập thêm được cơ lưng và cơ bụng. "
+                ],
+                target: "Các bệnh để lại di chứng yếu liệt chân: Tai biến mạch máu não, các bệnh về xương khớp…",
+                instruction: `
+                        <li style="color: black; font-weight: bold;">Chuẩn bị</li>
+                        <li>Ghế ngồi phải chắc chắn, không lung lay. Không dùng ghế xoay hoặc ghế mềm. </li>
+                        <li>Xe đạp phải được đặt ổn định: đầu xe đạp sát tường hoặc có vật nặng chặn lại để xe không bị dịch chuyển khi đạp. </li>
+                        <li>Dây quai bàn đạp (guốc) phải dán chặt vừa với bàn chân, không quá lỏng (dễ tuột) cũng không quá chặt gây đau. </li>
+                        <li style="color: green; font-weight: bold;">Tập tư thế ngồi ghế</li>
+                        <li>Dùng ghế ngồi sử dụng tại nhà nhưng ghế phải bảo đảm chắc chắn, xe đạp để phía trước ghế, 2 chân người bệnh để trên 2 chiếc guốc, dán dây chặc vừa với bàn chân, đầu xe đạp để sát tường hoặc có vật cản để xe không bị dịch chuyển </li>
+                        <li>Dùng chân mạnh đạp, chân yếu sẽ quay theo giống như đạp xe đạp. </li>
+                        <li style="color: green; font-weight: bold;">Tập tư thế nằm</li>
+                        <li>Người bệnh nằm trên giường, đầu xe đạp để sát cạnh giường để cố định xe không dịch chuyển. </li>
+                        <li>Động tác tập giống như đạp ở tư thế ngồi. </li>
+                        <li>Khi đạp xe ở tư thế nằm này ngoài tác dụng làm mạnh cơ khớp 2 chân còn làm mạnh được cơ bụng và cơ lưng. </li>
+                        <li>Nên tập kiên trì mỗi ngày 2-3 lần, mỗi lần 10-20 phút/ 1 lần tập. </li>
+                    `,
+                warning: "Ngồi ghế quá cao hoặc quá thấp<br> Không cố định dụng cụ vào tường hoặc thảm chống trượt<br>Đạp quá nhanh theo quán tính",
+                stopSign: "Đau khớp, đau cơ nhiều, <br>Chóng mặt, <br>Khó thở hoặc mệt bất thường.",
+                recommendation: "<b>Tần suất:</b> 3 - 5 buổi/tuần; Giai đoạn sớm có thể cách ngày<br><b>Cường độ:</b> nhẹ → trung bình<br><b> Thời gian:</b> <br>Bắt đầu: 10–15 phút<br>Tiến triển: 20–30 phút",
+                contraindication: "Chấn thương câos<br>Mất vững khớp gối hoặc khớp háng<br>Viêm tắc tĩnh mạch chi dưới giai đoạn cấp<br>Huyết áp không ổn định<br>Vết thương hở"
+            },
+            {
+                id: 41,
+                name: "Xe đạp cải tiến có lực đề kháng",
+                category: "Tập mạnh cơ",
+                image: "/PHCN/hinhanh/dung_cu_vltl/xe dap_cai_tien.webp",
+                exercise: "Đạp xe tại chỗ có lực kháng.",
+                features: [
+                    "Tập mạnh cơ 2 chân, khớp hông, khớp gối, khớp cổ chân. ",
+                    "Có bộ phận điều chỉnh lực kháng từ nhẹ tới nặng.   ",
+                    "Đây là loại xe đạp được cải tiến đơn giản, nhỏ gọn có thể ngồi ghế đạp hoặc nằm đạp. ",
+                    "Khi đạp xe ở tư thế nằm sẽ tập thêm được cơ lưng và cơ bụng."
+                ],
+                target: "Các bệnh để lại di chứng yếu liệt chân: Tai biến mạch máu não, các bệnh về xương khớp....<br>Người cao tuổi, người muốn tập sức mạnh chi dưới.",
+                instruction: `
+                        <li style="color: green; font-weight: bold;">Tập tư thế ngồi ghế</li>
+                        <li>Dùng ghế ngồi sử dụng tại nhà nhưng ghế phải bảo đảm chắc chắn, xe đạp để phía trước ghế, 2 chân người bệnh để trên 2 chiếc guốc, dán dây chặt vừa với bàn chân, đầu xe đạp để sát tường hoặc có vật cản để xe không bị dịch chuyển. </li>
+                        <li>Dùng chân mạnh đạp, chân yếu sẽ quay theo giống như đạp xe đạp. </li>
+                        <li>Có thể điều chỉnh nút tăng lực kháng tăng dần theo sức cơ tăng tiến người tập. </li>
+                        <li style="color: green; font-weight: bold;">Tập tư thế nằm</li>
+                        <li>Người bệnh nằm trên giường, đâu xe đạp để sát cạnh giường để cố định xe không dịch chuyển. </li>
+                        <li>Động tác tập giống như đạp ở tư thế ngồi. </li>
+                        <li>Khi đạp xe ở tư thế nằm này ngoài tác dụng làm mạnh cơ khớp 2 chân còn làm mạnh được cơ bụng và cơ lưng. </li>
+                        <li>Nên tập kiên trì mỗi ngày 2-3 lần, mỗi lần 10-20 phút/ 1 lần tập. </li>
+                    `,
+                warning: "Điều chỉnh chiều cao yên không phù hợp dễ gây đau khớp gối hoặc căng gân khoeo.<br>Tăng lực đề kháng đột ngột<br>Sai tư thế (Người bệnh cần ngồi đúng tư thế lưng thẳng, không gù, gối thẳng trục, không đổ vào trong<br>Gắng sức quá mức",
+                stopSign: "Đau khớp, đau cơ nhiều, <br>Chóng mặt, <br>Khó thở hoặc mệt bất thường",
+                recommendation: "<b>Tần suất:</b> 3 - 5 buổi/tuần; Giai đoạn sớm có thể cách ngày<br><b>Cường độ:</b> nhẹ → trung bình<br><b> Thời gian:</b> <br> Bắt đầu: 10–15 phút<br>Tiến triển: 20–30 phút",
+                contraindication: "Chấn thương câos<br>Mất vững khớp gối hoặc khớp háng<br>Viêm tắc tĩnh mạch chi dưới giai đoạn cấp<br>Huyết áp không ổn định<br>Vết thương hở"
+            },
+            {
+                id: 42,
+                name: "Gương trị liệu",
+                category: "Tăng tầm vận động khớp",
+                image: "/PHCN/hinhanh/dung_cu_vltl/guong_tri_lieu.webp",
+                exercise: "Tập luyện thông qua phản chiếu trong gương.",
+                features: [
+                    "Gia tăng tầm vận động",
+                    "Tăng độ khéo léo của bàn tay, chức năng chi dưới"
+                ],
+                target: "Phục hồi chức năng chi trên và chi dưới ở các giai đoạn của liệt nửa người do tai biến mạch máu não, chấn thương sọ n o, viêm n o, viêm màng n o, đau chi do cắt cụt chi.",
+                instruction: `
+                        <li style="color: black; font-weight: bold;">Chuẩn bị:</li>
+                        <li>Gương phải đủ lớn để che hoàn toàn chi bị tổn thương và phản chiếu toàn bộ cử động của chi lành. </li>
+                        <li>Chọn ghế có độ cao phù hợp, có tựa lưng để bạn ngồi vững chãi và thoải mái nhất. </li>
+                        <li>Tùy vào mục tiêu tập luyện (vận động tinh hoặc cảm giác) </li>
+                        <li>Vật liệu xúc giác: Bông gòn, bàn chải mềm, khăn vải thô, các loại hạt (đậu, gạo) để luyện tập cảm nhận bề mặt. </li>
+                        <li>Dụng cụ vận động: Bóng tennis, vòng chun, các khối gỗ nhỏ, bút hoặc kẹp tăm để tập cầm nắm và thao tác khéo léo. </li>
+                        <li style="color: green; font-weight: bold;">Chi trên: </li>
+                        <li>Gương đặt trên bàn, trước mặt người bệnh. Tay lành của người bệnh sẽ được đặt đối diện với gương. Tay liệt đặt phía đằng sau gương. </li>
+                        <li>Trong suốt thời gian tập, người bệnh sẽ quan sát cử động của tay lành qua gương, cố gắng tưởng tượng tay cử động trong gương chính là tay liệt. Đồng thời, cử động tay liệt theo tay lành. </li>
+                        <li style="color: green; font-weight: bold;">Các bài tập cho bàn tay và cổ tay </li>
+                        <li>Thực hiện các cử động bình thường của bàn tay như gập duỗi, dang khép các ngón tay, đối chiếu ngón cái với các ngón tay khác. Thực hiện các cử động của cổ tay như gập duỗi cổ tay, nghiêng trụ, nghiêng quay cổ tay.  </li>
+                        <li>Tập với dụng cụ làm tăng sức mạnh bàn tay</li>
+                        <li style="color: green; font-weight: bold;">Chi dưới </li>
+                        <li>Gương được đặt ở đường giữa cơ thể và giữa hai chân của người bệnh.  </li>
+                        <li>Người bệnh thực hiện các động tác co duỗi đồng thời hai bên của chi dưới trong khi quan sát chuyển động của chi không bị ảnh hưởng được phản chiếu qua gương. </li>
+                    `,
+                warning: "Không tập trung nhìn vào gương<br>Vị trí đặt gương không chính xác (Đặt gương ở đường giữa cơ thể, vuông góc với tầm mất<br>Cử động hai bên không đồng bộ<br>Tập luyện quá sức hoặc khi đang mệt mỏi<br>Môi trường tập luyện gây xao nhãn<br>Bỏ qua các bài tập cảm giác",
+                stopSign: "Chóng mặt<br>Đau đầu<br>Ngắt",
+                recommendation: "20 - 30 phút/lần/ngày x 5 ngày/tuần x 4 tuần.",
+                contraindication: "Thận trọng khi người bệnh còn trong tình trạng cấp cứu."
+            },
+            {
+                id: 43,
+                name: "Bàn tập đứng thẳng bại não",
+                category: "",
+                image: "/PHCN/hinhanh/dung_cu_vltl/ban_tap_dung_thang_CP.webp",
+                exercise: "Dụng cụ tập trẻ đứng, giúp giúp trẻ phát triển khả năng kiểm soát cổ, thân mình, hông, gối, cổ chân",
+                features: [
+                    "Tập trẻ đứng thẳng gối, giúp trẻ phát triển khả năng kiểm soát cổ, thân mình, hông, gối, cổ chân. Giúp phát triển hệ thống xương khớp hai chân mạnh hơn. Cũng có thể dùng cho trẻ chậm phát triển."
+                ],
+                target: "Trẻ em bại não (CP) có khả năng kiểm soát đầu cổ và thân mình kém. <br>Bệnh nhi yếu liệt hai chi dưới hoặc có xu hướng co rút gân gót.<br>Trẻ cần tập luyện khả năng thăng bằng đứng tĩnh.",
+                instruction: `
+                        <li style="color: black; font-weight: bold;">Chuẩn bị:</li>
+                        <li>Khóa bánh xe cố định. Điều chỉnh chiều cao bàn và các thanh đỡ phù hợp với chiều cao của trẻ. </li>
+                        <li style="color: black; font-weight: bold;">Tư thế:</li>
+                        <li>Đặt chân trẻ vào đai cố định ở đế gỗ. Đưa mông trẻ tựa vào gối đệm đỏ, quàng dây đai xanh qua hông để giữ vững. </li>
+                        <li style="color: black; font-weight: bold;">Cố định:</li>
+                        <li>Đảm bảo gối và háng thẳng hàng. Tay trẻ đặt thoải mái trên mặt bàn. </li>
+                    `,
+                warning: "<b>Ưỡn gối</b> Khớp gối bị đẩy quá mức về phía sau.<br><b>Lệch hông: </b>  Trẻ đứng dồn lực không đều, khiến xương chậu bị nghiêng sang một bên. <br> <b>Gập thân: </b>  Trẻ cúi đầu hoặc gập người lên mặt bàn thay vì đứng thẳng trục.<br><b>Bàn chân không bằng phẳng: </b>  Gót chân bị nhấc lên khỏi mặt đế.",
+                stopSign: "Trẻ có biểu hiện vã mồ hôi, sắc mặt tái nhợt hoặc môi thâm tím.<br>Quấy khóc dữ dội hoặc biểu hiện đau ở các khớp (cổ chân, gối, háng). <br> Run rẩy chi dưới quá mức hoặc tụt huyết áp tư thế.",
+                recommendation: "Bắt đầu từ 15–20 phút, tăng dần tùy theo sức bền của trẻ.",
+                contraindication: "Trẻ đang bị gãy xương chưa liền hoặc có loãng xương nặng. <br> Trẻ có tình trạng trật khớp háng hoàn toàn hoặc bán trật khớp gây đau.<br> Đang có tình trạng nhiễm trùng cấp tính hoặc sốt cao. <br>Co rút cơ nặng đến mức không thể đưa khớp về tư thế trung tính để đứng."
+            },
+        ];
+
+ let currentFilter = 'Tất cả';
+
+        function renderFilters() {
+            const filterContainer = document.getElementById('filter-container');
+            const categories = ['Tất cả', ...new Set(tools.map(tool => tool.category))];
+            
+            filterContainer.innerHTML = categories.map(category => `
+                <button 
+                    onclick="filterTools('${category}')" 
+                    class="filter-chip ${category === currentFilter ? 'active' : ''} px-6 py-2 rounded-full border border-blue-200 text-blue-800 font-semibold bg-white hover:bg-blue-50"
+                >
+                    ${category}
+                </button>
+            `).join('');
+        }
+
+        function displayTools(filter = 'Tất cả') {
+            const container = document.getElementById('tools-container');
+            const filtered = filter === 'Tất cả' ? tools : tools.filter(t => t.category === filter);
+            
+            container.innerHTML = '';
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500 italic">Không tìm thấy dụng cụ phù hợp.</div>`;
+                return;
+            }
+
+            filtered.forEach((tool, index) => {
+                const card = document.createElement('div');
+                card.className = "tool-card bg-white rounded-3xl overflow-hidden shadow-sm cursor-pointer group h-full";
+                card.onclick = () => showDetails(tool.id);
+                card.setAttribute('data-aos', 'fade-up');
+                card.setAttribute('data-aos-delay', index * 100);
+                
+                card.innerHTML = `
+                    <div class="img-container">
+                        <img src="${tool.image}" alt="${tool.name}" onerror="this.src='https://placehold.co/600x400?text=PHCN'">
+                        <div class="absolute inset-0 bg-blue-900/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                             <div class="bg-white/90 p-2 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                             </div>
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <span class="text-xs font-bold text-blue-500 uppercase tracking-widest mb-2">${tool.category}</span>
+                        <h3 class="text-xl font-bold text-gray-800 group-hover:text-blue-700 transition-colors line-clamp-2 mb-3">${tool.name}</h3>
+                        <p class="text-gray-500 text-sm line-clamp-3 mb-6 italic">
+                            "${tool.exercise}"
+                        </p>
+                        <div class="mt-auto flex items-center justify-between">
+                            <span class="text-blue-600 font-semibold text-sm">Xem chi tiết</span>
+                            <div class="btn-detail h-8 w-8 bg-blue-600 rounded-full flex items-center justify-center text-white">
+                                <i class="fa-solid fa-chevron-right text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            AOS.refresh();
+        }
+
+        function filterTools(category) {
+            currentFilter = category;
+            renderFilters();
+            displayTools(category);
+        }
+
+        function showDetails(id) {
+            const tool = tools.find(t => t.id === id);
+            
+            Swal.fire({
+                title: `<span class="text-xl text-blue-800 font-bold">${tool.name}</span>`,
+                html: `
+                    <div class="text-left space-y-4 py-2 custom-swal-content max-h-[65vh] overflow-y-auto pr-2">
+                        <img src="${tool.image}" class="w-full h-48 object-contain bg-gray-50 rounded-xl mb-4" onerror="this.src='https://placehold.co/600x400?text=PHCN'">
+                        <div>
+                            <h4>🎯 Loại bài tập</h4>
+                            <p class="text-blue-800 text-sm font-medium italic bg-blue-50 p-3 rounded-lg">${tool.exercise}</p>
+                        </div>
+                        <div>
+                            <h4>📌 Đặc điểm & Công dụng</h4>
+                            <ul class="list-disc ml-5 space-y-1 text-gray-600 text-sm">
+                                ${tool.features.map(f => `<li>${f}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>📖 Hướng dẫn</h4>
+                            <div class="text-gray-600 text-sm leading-relaxed">${tool.instruction}</div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div class="bg-red-50 p-3 rounded-xl border border-red-100">
+                                <p class="font-bold text-red-700 text-xs uppercase mb-1">⚠️ Cảnh báo</p>
+                                <p class="text-red-600 text-xs">${tool.warning}</p>
+                            </div>
+                            <div class="bg-orange-50 p-3 rounded-xl border border-orange-100">
+                                <p class="font-bold text-orange-700 text-xs uppercase mb-1">🛑 Dừng tập khi</p>
+                                <p class="text-orange-600 text-xs">${tool.stopSign}</p>
+                            </div>
+                        </div>
+                        <!-- PHẦN BỔ SUNG: RECOMMENDATION -->
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                            <p class="font-bold text-blue-900 text-xs uppercase mb-1">📊 Mức độ khuyến nghị</p>
+                            <p class="text-blue-800 text-sm leading-relaxed">${tool.recommendation || 'Theo chỉ định của bác sĩ/KTV.'}</p>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                            <p class="font-bold text-slate-700 text-xs uppercase mb-1">🚫 Chống chỉ định</p>
+                            <p class="text-slate-600 text-xs">${tool.contraindication}</p>
+                        </div>
+                    </div>
+                `,
+                confirmButtonText: 'Đóng lại',
+                confirmButtonColor: '#1e40af',
+                width: '700px'
+            });
+        }
+
+        window.onload = function() {
+            renderFilters();
+            displayTools();
+            AOS.init({ 
+                duration: 800, 
+                once: true
+            });
+        };
+    </script>    
+    
+        <div id="footer-placeholder"></div>
+
+        <script src="/script.js"></script>
+        <script src="/search.js"></script>
+        <script src="/banner_trang_con.js"></script>
+</body>
+</html>
