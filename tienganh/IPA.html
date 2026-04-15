@@ -4,17 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bảng phiên âm quốc tế - Nguyễn Mai Đan Trường</title>
-    
     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
     <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
     <meta property="og:image" content="/hinhanh/logo_web.png">
     <meta property="og:url" content="https://dantruongag.id.vn">
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="/hinhanh/logo_web.png" type="">
     <link rel="stylesheet" href="/style.css">
-        
- 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
@@ -80,7 +76,8 @@
     <div class="container mx-auto px-4 py-12 md:py-20">
         <header class="mb-12 md:mb-16">
             <div id="info-container" class="text-center rounded-2xl shadow-2xl p-6 md:p-8 border border-slate-200 bg-gradient-to-br from-blue-50 to-purple-50">
-                <h1 class="text-4xl md:text-5xl font-extrabold text-blue-600 tracking-tight">Bảng Phiên Âm Quốc Tế</h1>
+                <h1 class="text-4xl md:text-5xl font-extrabold text-blue-600 tracking-tight">BẢNG PHIÊN ÂM QUỐC TẾ</h1>
+                <img src="https://st.ielts-fighter.com/src/ielts-fighter/2019/08/31/bang-phien-am-tieng-anh-day-du-cach-phat-am-chuan-quoc-te-1.jpg" alt="" style="display: none;">
                 <p class="text-lg md:text-xl text-slate-500 mt-2">International Phonetic Alphabet (IPA)</p>
                 
                 <div class="mt-6 max-w-4xl mx-auto text-left">
@@ -226,19 +223,12 @@
             }
         });
 
-        /**
-         * Toggles the visibility and playback of a video card.
-         * Manages closing previously open videos and initializing new players.
-         * @param {string} symbol - The IPA symbol for the card.
-         * @param {HTMLElement} clickedButton - The "Học" button element that was clicked.
-         */
         function toggleVideoCard(symbol, clickedButton) {
             const card = clickedButton.closest('.ipa-card');
             const videoSection = card.querySelector('.video-section');
             const isOpening = !videoSection.classList.contains('open');
             const soundData = ipaSounds.find(s => s.symbol === symbol);
 
-            // If another card is open, close it first
             if (openVideoInfo.symbol && openVideoInfo.symbol !== symbol) {
                 const oldCard = document.querySelector(`.ipa-card .learn-btn-main[data-symbol="${openVideoInfo.symbol}"]`).closest('.ipa-card');
                 if (oldCard) {
@@ -254,19 +244,15 @@
                 }
             }
 
-            // Toggle the clicked video card's section and button state
             videoSection.classList.toggle('open');
             clickedButton.classList.toggle('open');
 
             if (isOpening) {
-                // If the video section is being opened
                 openVideoInfo = { symbol: symbol, videoType: 'main' }; // Set initial state to main video
                 clickedButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/></svg>`;
 
-                // Load and play the main video
                 loadAndPlayVideo(symbol, soundData.videoId);
 
-                // Update the state of the "Xem video khác" button
                 const toggleAltBtn = card.querySelector('.toggle-alt-video-btn');
                 if (toggleAltBtn) {
                     toggleAltBtn.dataset.currentVideoType = 'main';
@@ -283,12 +269,6 @@
             }
         }
 
-        /**
-         * Switches the video playing within an already open card.
-         * @param {string} symbol - The IPA symbol for the card.
-         * @param {'main'|'alt'} newVideoType - The type of video to switch to.
-         * @param {HTMLElement} toggleButton - The "Xem video khác" / "Xem video chính" button.
-         */
         function switchVideoInCard(symbol, newVideoType, toggleButton) {
             const soundData = ipaSounds.find(s => s.symbol === symbol);
             let videoIdToLoad;
@@ -307,11 +287,7 @@
             loadAndPlayVideo(symbol, videoIdToLoad);
         }
 
-        /**
-         * Loads and plays a specific YouTube video in a card's player.
-         * @param {string} symbol - The IPA symbol for the card.
-         * @param {string} videoId - The YouTube video ID to load.
-         */
+
         function loadAndPlayVideo(symbol, videoId) {
             const playerDivId = `player-${symbol}`;
             if (players[symbol]) {

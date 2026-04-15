@@ -200,7 +200,7 @@
             {
                 file: '/tienganh/VSTEP/lesson/Learning_english.html',
                 image: '/tienganh/hinhanh.tienganh/VSTEP/Learning english.png'
-            },
+            }
 
         ];
 
@@ -235,11 +235,7 @@
 
         // 3. Hàm bất đồng bộ để tạo và hiển thị các thẻ bài học
         async function createLessonCards() {
-<<<<<<< HEAD
             // Sử dụng for.of để xử lý các tác vụ bất đồng bộ một cách tuần tự
-=======
-            // Sử dụng for...of để xử lý các tác vụ bất đồng bộ một cách tuần tự
->>>>>>> af8986cc9beca7c18e8e100d418ec470a0be7ad9
             for (const lesson of lessons) {
                 const title = await getTitleFromFile(lesson.file);
 

@@ -32,20 +32,28 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // ================= UTILS =================
 
-    // Chuẩn hóa text
     const normalizeText = (text) => {
         if (!text) return '';
         const lower = text.trim().toLowerCase();
         return lower.charAt(0).toUpperCase() + lower.slice(1);
     };
 
-    // BỎ DẤU TIẾNG VIỆT (QUAN TRỌNG)
     const removeVietnameseTones = (str) => {
+        if (!str) return '';
         return str
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "")
             .replace(/đ/g, "d")
             .replace(/Đ/g, "D");
+    };
+
+    // Hàm lấy tên môn học từ tiêu đề (Ví dụ: "Bệnh học - Nguyễn Mai Đan Trường" -> "Bệnh học")
+    const extractSubject = (fullTitle) => {
+        if (!fullTitle) return 'Khác';
+        if (fullTitle.includes('-')) {
+            return fullTitle.split('-')[0].trim();
+        }
+        return 'Chung'; 
     };
 
     // ================= DATA =================
@@ -296,6 +304,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     "/PHCN/PHCN_dua_vao_cong_dong/PHCN_viem_khop_dang_thap.html",
                     "/PHCN/PHCN_dua_vao_cong_dong/phong_ngua_thuong_tat_thu_phat.html",
                     "/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_tu_ky.html",
+                    "/PHCN/HĐTL/dung_cu_vltl.html",
                 // ---Vận động trị liệu ---
                     "/PHCN/Van_dong_tri_lieu/vandongtrilieu.html",
                     // ---Di động khớp ---

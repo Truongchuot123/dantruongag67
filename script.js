@@ -1,3 +1,191 @@
+(function initFeedbackResources() {
+    // 1. Tải SweetAlert2 nếu chưa có
+    if (!window.Swal) {
+        const swalScript = document.createElement('script');
+        swalScript.src = 'https://cdn.jsdelivr.net/npm/sweetalert2@11';
+        document.head.appendChild(swalScript);
+    }
+
+    // 2. Tải Google Fonts
+    const fontLink = document.createElement('link');
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap';
+    fontLink.rel = 'stylesheet';
+    document.head.appendChild(fontLink);
+
+    // 3. Thêm Style tối ưu hiệu ứng
+    const style = document.createElement('style');
+    style.textContent = `
+        #fb-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10000; 
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s;
+        }
+        
+        /* Trạng thái khi hiển thị */
+        #fb-modal-overlay.active { 
+            opacity: 1; 
+            visibility: visible; 
+        }
+        
+        .fb-wrapper {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            width: 95%; max-width: 450px; padding: 35px;
+            background: #1e1e2e; border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            color: white;
+            /* Hiệu ứng Scale & Slide nhẹ */
+            transform: scale(0.8) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        #fb-modal-overlay.active .fb-wrapper {
+            transform: scale(1) translateY(0);
+        }
+
+        .fb-close-btn {
+            position: absolute; top: 15px; right: 20px;
+            color: #fff; font-size: 28px; cursor: pointer; opacity: 0.6;
+            line-height: 1; transition: 0.2s;
+        }
+        .fb-close-btn:hover { opacity: 1; color: #ff4d4d; transform: rotate(90deg); }
+
+        .fb-header h2 { 
+            background: linear-gradient(135deg, #fff, #a29bfe);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin: 0; font-size: 26px; text-align: center; font-weight: 700;
+        }
+
+        .fb-form { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
+        .fb-form input, .fb-form textarea {
+            width: 100%; padding: 14px 18px; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 14px;
+            color: #fff; outline: none; transition: 0.3s; font-size: 14px;
+            box-sizing: border-box;
+        }
+        .fb-form input:focus, .fb-form textarea:focus { 
+            border-color: #a29bfe; background: rgba(255,255,255,0.1);
+            box-shadow: 0 0 0 4px rgba(162, 155, 254, 0.1);
+        }
+        
+        .fb-btn {
+            background: #a29bfe; color: #1e1e2e; border: none;
+            padding: 14px; border-radius: 14px; font-weight: 700;
+            cursor: pointer; margin-top: 10px; transition: 0.3s;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .fb-btn:hover { background: #bdb9ff; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(162, 155, 254, 0.3); }
+        .fb-btn:active { transform: translateY(0); }
+        .fb-btn:disabled { background: #4a4a6a; cursor: not-allowed; transform: none; }
+        
+        .fb-spinner {
+            display: none; width: 18px; height: 18px; border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%; border-top-color: #fff; animation: fb-spin 0.8s linear infinite;
+        }
+        @keyframes fb-spin { to { transform: rotate(360deg); } }
+    `;
+    document.head.appendChild(style);
+
+    if (!document.getElementById('feedback-modal-container')) {
+        const container = document.createElement('div');
+        container.id = 'feedback-modal-container';
+        document.body.appendChild(container);
+    }
+})();
+
+function showFeedback() {
+    const container = document.getElementById('feedback-modal-container');
+    
+    container.innerHTML = `
+        <div id="fb-modal-overlay">
+            <div class="fb-wrapper">
+                <span class="fb-close-btn" onclick="closeFeedback()">&times;</span>
+                <div class="fb-header">
+                    <h2>ĐÓNG GÓP Ý KIẾN</h2>
+                </div>
+                <form id="fb-main-form" class="fb-form">
+                    <input type="text" name="name" placeholder="Tên của bạn" required>
+                    <input type="email" name="email" placeholder="Email của bạn" required>
+                    <textarea name="feedback" rows="4" placeholder="Nội dung góp ý..." required></textarea>
+                    <button type="submit" id="fb-submit" class="fb-btn">
+                        <span id="fb-btn-text">Gửi Ngay</span>
+                        <div class="fb-spinner" id="fb-loader"></div>
+                    </button>
+                </form>
+            </div>
+        </div>
+    `;
+
+    const overlay = document.getElementById('fb-modal-overlay');
+
+    // Kích hoạt animation sau khi chèn vào DOM
+    requestAnimationFrame(() => {
+        overlay.classList.add('active');
+    });
+
+    overlay.onclick = function(e) {
+        if (e.target === overlay) closeFeedback();
+    };
+
+    const form = document.getElementById('fb-main-form');
+    form.onsubmit = function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('fb-submit');
+        const loader = document.getElementById('fb-loader');
+        const btnText = document.getElementById('fb-btn-text');
+
+        btn.disabled = true;
+        btnText.style.display = "none";
+        loader.style.display = "inline-block";
+
+        const scriptURL = "https://script.google.com/macros/s/AKfycbyw7Y0n0-DWx2fX_DCztR7cq0F_RlX9oFHeW1qURjxalo0OpVIuwELlrxdFhDpLrNQp/exec";
+        
+        fetch(scriptURL, {
+            method: 'POST',
+            body: new FormData(form)
+        })
+        .then(res => {
+            closeFeedback();
+            setTimeout(() => {
+                Swal.fire({
+                    title: "Cảm ơn bạn!",
+                    text: "Góp ý của bạn đã được gửi thành công.",
+                    icon: "success",
+                    background: "#1e1e2e",
+                    color: "#fff",
+                    confirmButtonColor: "#a29bfe"
+                });
+            }, 400);
+        })
+        .catch(error => {
+            Swal.fire({
+                title: "Lỗi!",
+                text: "Không thể gửi góp ý lúc này.",
+                icon: "error",
+                background: "#1e1e2e", color: "#fff"
+            });
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btnText.style.display = "inline-block";
+            loader.style.display = "none";
+        });
+    };
+}
+
+function closeFeedback() {
+    const overlay = document.getElementById('fb-modal-overlay');
+    if (overlay) {
+        overlay.classList.remove('active');
+        // Đợi kết thúc transition (0.4s) mới gỡ DOM
+        setTimeout(() => { 
+            overlay.remove(); 
+        }, 400);
+    }
+}
 // --- REUSABLE COMPONENT LOADER ---
 function loadComponents() {
     const headerPlaceholder = document.getElementById('header-placeholder');
@@ -13,10 +201,10 @@ function loadComponents() {
                            <img src="/hinhanh/logo_web.png" alt="Logo">
                         </a>
                     </div>
-                    <nav class="hidden md:flex items-center space-x-8">
-                        <a href="/index.html" class="desktop-nav-link">TRANG CHỦ</a>
-                        <a href="javascript:void(0);" onclick="showContact()" class="desktop-nav-link">LIÊN HỆ</a>
-                        <a href="/gopy.html" class="desktop-nav-link">GÓP Ý</a>
+                     <nav class="hidden md:flex items-center space-x-8">
+                        <a href="/index.html" class="desktop-nav-link text-white font-bold">TRANG CHỦ</a>
+                        <a href="javascript:void(0);" onclick="showContact()" class="desktop-nav-link text-white font-bold">LIÊN HỆ</a>
+                        <a href="javascript:void(0);" onclick="showFeedback()" class="desktop-nav-link text-white font-bold">GÓP Ý</a>
                         <div id="desktop-login-btn" class="pl-4">
                             <a href="javascript:void(0);" onclick="showLoginForm()" class="login-button bg-purple-700 text-white px-5 py-2 rounded-full hover:bg-red-500 transition-all duration-300 transform hover:scale-105">
                                 <i class="fas fa-user-circle mr-2"></i>ĐĂNG NHẬP
@@ -48,7 +236,7 @@ function loadComponents() {
             </div>
             <a href="/index.html"><i class="fas fa-home"></i>TRANG CHỦ</a>
             <a href="javascript:void(0);" onclick="showContact()"><i class="fas fa-phone"></i>LIÊN HỆ</a>
-            <a href="/gopy.html"><i class="fas fa-envelope"></i>GÓP Ý</a>
+            <a href="javascript:void(0);" onclick="showFeedback()" class="block p-4 text-white hover:bg-gray-800"><i class="fas fa-envelope mr-3"></i>GÓP Ý</a>
         </aside>
     `;
 
@@ -77,7 +265,7 @@ function loadComponents() {
                 <div class="footer-links">
                     <a href="/index.html">Trang chủ</a>
                     <a href="javascript:void(0);" onclick="showContact()">Liên hệ</a>
-                    <a href="/gopy.html">Góp ý</a>
+                    <a href="javascript:void(0);" onclick="showFeedback()">Góp ý</a>
                 </div>
                 <div class="footer-social">
                     <a href="https://web.facebook.com/dantruongag/" target="_blank"><i class="fab fa-facebook-f"></i></a>
@@ -97,7 +285,7 @@ function loadComponents() {
                     <i class="fas fa-phone"></i>
                     <p>Liên hệ</p>
                 </a>
-                <a href="/gopy.html" class="mobile-nav-item">
+                <a href="javascript:void(0);" onclick="showFeedback()" class="mobile-nav-item">
                     <i class="fas fa-envelope"></i>
                     <p>Góp ý</p>
                 </a>
