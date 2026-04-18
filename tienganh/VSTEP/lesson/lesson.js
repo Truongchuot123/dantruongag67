@@ -415,7 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 : [];
 
             if (vocabularyData.length === 0) {
-                const emptyHTML = `<div class="py-12 text-center text-gray-400 font-medium">No vocabulary data available for this lesson.</div>`;
+                const emptyHTML = `<div class="py-12 text-center text-gray-400 font-medium">Xin lỗi!Bài học này chưa có từ vựng</div>`;
                 vocabTableBody.innerHTML = `<tr><td colspan="5">${emptyHTML}</td></tr>`;
                 vocabCardContainer.innerHTML = emptyHTML;
                 return;

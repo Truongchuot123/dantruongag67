@@ -355,12 +355,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const banners = {
             'default': document.querySelector(".banner_trangcon"),
-            '18-4': document.querySelector(".ngay_gio_to_hung_vuong"), // Giỗ Tổ Hùng Vương (Approx. date)
+            '26-4': document.querySelector(".ngay_gio_to_hung_vuong"), // Giỗ Tổ Hùng Vương (Approx. date)
             '30-4': document.querySelector(".banner_giai_phong_mien_nam_30-4"),
-            '7-5': document.querySelector(".banner_chien_thang_dien_bien_phu"),
-            '19-5': document.querySelector(".banner_ngay_sinh_chu_tich_HCM_1905"),
             '18-7': document.querySelector(".banner_ngay_sinh_nhat_1807"),
-            '19-8': document.querySelector(".banner_ngay_cach_mang_thang_tam"),
             '2-9': document.querySelector(".banner_ngay_quoc_khanh")
         };
 

@@ -1,4 +1,3 @@
-        /* Custom Variables and Base Styles */
         :root {
             --menu-color: #2563EB;
             --background-dark: #191F3A;
@@ -243,20 +242,20 @@
             margin-bottom: 10px;
         }
         @media (max-width: 600px) {
-            .banner_trangcon_header h1 {
+        .banner_trangcon_header h1 {
                 font-size: 1.5rem;
             }
         }
         
         @media (max-width: 768px) {
-            .banner_trangcon_header h1 {
+        .banner_trangcon_header h1 {
                 font-size: 2rem;
             }
         }
         
         
         @media (min-width: 1024px) {
-            .banner_trangcon_header h1 {
+        .banner_trangcon_header h1 {
                 font-size: 3rem;
             }
         }
@@ -277,7 +276,7 @@
         .ngay_gio_to_hung_vuong {
             font-family: 'Arial', sans-serif; min-height: 100vh; display: flex;
             justify-content: center; align-items: center; padding: 20px;
-            background: url('https://placehold.co/1920x1080/e6f2ff/333333?text=Giỗ+Tổ+Hùng+Vương') no-repeat center center;
+            background: url('/hinhanh/giotohungvuong.1.png') no-repeat center center;
             background-size: cover;
         }
         .title_ngay_gio_to_hung_vuong { padding: 20px; border-radius: 10px; text-align: center; }
@@ -290,7 +289,7 @@
         .banner_giai_phong_mien_nam_30-4 {
             position: relative; font-family: 'Arial', sans-serif; min-height: 100vh;
             display: flex; justify-content: center; align-items: center; padding: 20px;
-            background: url('https://placehold.co/1920x1080/c40000/ffffff?text=30/4') no-repeat center center;
+            background: url('/hinhanh/giaiphongmiennam30-4.png') no-repeat center center;
             background-size: cover; z-index: 1;
         }
         .banner_giai_phong_mien_nam_30-4::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: -1; }
@@ -326,23 +325,105 @@
         #nut_gui_loi_chuc { padding: 12px 30px; background-color: #ffd700; border: none; border-radius: 25px; font-weight: bold; font-size: 16px; color: #222; cursor: pointer; transition: all 0.3s ease; }
         
         /* Other banners */
-        .banner_chien_thang_dien_bien_phu, .banner_ngay_sinh_chu_tich_HCM_1905, .banner_ngay_cach_mang_thang_tam, .banner_ngay_quoc_khanh {
+        .banner_ngay_quoc_khanh {
             position: relative; min-height: 100vh; display: flex; justify-content: center; align-items: center; text-align: center; color: white;
             background-size: cover; background-position: center;
         }
-        .banner_chien_thang_dien_bien_phu::before, .banner_ngay_sinh_chu_tich_HCM_1905::before, .banner_ngay_cach_mang_thang_tam::before, .banner_ngay_quoc_khanh::before {
+        .banner_ngay_quoc_khanh::before {
              content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 0;
         }
         .banner-content-inner { position: relative; z-index: 1; }
         .banner-content-inner h1 { font-size: clamp(2rem, 6vw, 3rem); font-weight: bold; }
         .banner-content-inner h2 { font-size: clamp(1.5rem, 5vw, 2.5rem); color: var(--text-menu-hover); }
         .banner-content-inner .title { font-size: 1.5rem; color: #ff8e90; margin-bottom: 1rem; }
-
-        .banner_chien_thang_dien_bien_phu { background-image: url('https://placehold.co/1920x1080/1a2b4c/ffffff?text=7/5'); }
-        .banner_ngay_sinh_chu_tich_HCM_1905 { background-image: url('https://placehold.co/1920x1080/b4a07d/ffffff?text=19/5'); }
-        .banner_ngay_cach_mang_thang_tam { background-image: url('https://placehold.co/1920x1080/d94a3d/ffffff?text=19/8'); }
         .banner_ngay_quoc_khanh { background-image: url('/hinhanh//banner_quoc_khanh_0209.png'); }
-.banner_ngay_sinh_nhat_1807 { background-image: url('/hinhanh/banner_ngay_sinh_nhat_1807.png'); }
+        .banner_ngay_sinh_nhat_1807 { background-image: url('/hinhanh/banner_ngay_sinh_nhat_1807.png'); }
+        /* ================= RESPONSIVE ================= */
+
+        /* Tablet (<= 1024px) */
+        @media (max-width: 1024px) {
+            .title_ngay_gio_to_hung_vuong h1 {
+                font-size: 40px;
+            }
+            .title_ngay_gio_to_hung_vuong h2 {
+                font-size: 45px;
+            }
+            .title_giai_phong_mien_nam_30-4 {
+                font-size: 40px;
+            }
+            .noidung_giai_phong_mien_nam_30-4 h2 {
+                font-size: 38px;
+            }
+            .logo-banner_phat_sang {
+                width: 200px;
+            }
+        }
+        @media (max-width: 768px) {
+            .title_ngay_gio_to_hung_vuong h1 {
+                font-size: 28px;
+            }
+            .title_ngay_gio_to_hung_vuong h2 {
+                font-size: 32px;
+            }
+            .text_ngay_gio_to_hung_vuong {
+                font-size: 18px;
+            }
+            .ngay_gio_to_hung_vuong {
+                background: url('/hinhanh/background-giotohungvuong-mobile.png') no-repeat center center;
+                background-size: cover;
+            }
+            .title_giai_phong_mien_nam_30-4 {
+                font-size: 28px;
+            }
+            .noidung_giai_phong_mien_nam_30-4 h2 {
+                font-size: 30px;
+            }
+            .time_giai_phong_mien_nam_30-4 {
+                font-size: 1.3rem;
+            }
+            .banner_giai_phong_mien_nam_30-4 {
+                background: url('/hinhanh//banner_ngay_30_4_mobile.jpg') no-repeat center center;
+                background-size: cover;
+            }
+
+            /* Sinh nhật */
+            .text_ngay_sinh_nhat_1807 {
+                font-size: 1.8rem;
+            }
+            .date_ngay_sinh_nhat_1807 {
+                font-size: 1.3rem;
+            }
+
+            #nut_form_gui_loi_chuc {
+                font-size: 16px;
+                padding: 12px 25px;
+            }
+        }
+        @media (max-width: 480px) {
+            .ngay_gio_to_hung_vuong,
+            .banner_giai_phong_mien_nam_30-4,
+            .banner_ngay_sinh_nhat_1807 {
+                padding: 10px;
+            }
+            .title_ngay_gio_to_hung_vuong h1 {
+                font-size: 22px;
+            }
+            .title_ngay_gio_to_hung_vuong h2 {
+                font-size: 24px;
+            }
+            .title_giai_phong_mien_nam_30-4 {
+                font-size: 22px;
+            }
+            .noidung_giai_phong_mien_nam_30-4 h2 {
+                font-size: 24px;
+            }
+            .text_ngay_sinh_nhat_1807 {
+                font-size: 1.5rem;
+            }
+            .date_ngay_sinh_nhat_1807 {
+                font-size: 1.1rem;
+            }
+        }
         /* Footer Styles */
         .main-footer {
            background: linear-gradient(135deg, #38759e 0%, #350f62 100%);

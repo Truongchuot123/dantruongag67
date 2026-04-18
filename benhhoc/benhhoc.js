@@ -314,14 +314,5 @@ function setupCardPaginator(cardElement, config) {
                 setupCardPaginator(cardElement, config);
             });
         }
-        const iframe = document.getElementById("driveFrame");
-        if (iframe) {
-            const originalSrc = iframe.getAttribute("src");
-            const match = originalSrc.match(/\/file\/d\/([^/]+)\/view/);
-            if (match && match[1]) {
-                const fileId = match[1];
-                const previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
-                iframe.src = previewUrl;
-            }
-        }
+
     });

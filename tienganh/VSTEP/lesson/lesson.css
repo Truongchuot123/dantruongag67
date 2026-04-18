@@ -163,3 +163,35 @@
             white-space: normal;
             word-wrap: break-word;
         }
+
+        /* CSS CHO FILE PDF GAMMART */
+.pdf-container {
+        position: relative;
+        width: 100%;
+        /* Tăng chiều cao trên mobile để dễ đọc hơn (thường là dọc), mặc định 16:9 trên desktop */
+        aspect-ratio: 16 / 9;
+        margin-top: 1.5rem;
+        border-radius: 0.8rem;
+        overflow: hidden;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        background-color: #f3f4f6;
+        border: 1px solid #e5e7eb;
+    }
+
+    /* Tối ưu cho màn hình điện thoại (dưới 640px) */
+    @media (max-width: 640px) {
+        .pdf-container {
+            aspect-ratio: 3 / 4; /* Chuyển sang khung dọc để khớp với khổ giấy PDF trên điện thoại */
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+        }
+    }
+
+    .pdf-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }

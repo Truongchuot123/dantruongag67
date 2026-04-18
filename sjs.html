@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MHT Viewer Professional</title>
+    <style>
+        /* Giao diện Dark Mode */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            padding: 15px 25px;
+            background-color: #1e1e1e;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #333;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #4da6ff;
+        }
+
+        .upload-btn-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .btn {
+            border: 2px solid #4da6ff;
+            color: #4da6ff;
+            background-color: transparent;
+            padding: 8px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #4da6ff;
+            color: white;
+        }
+
+        .upload-btn-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Khu vực hiển thị file */
+        #viewer-container {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #mht-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: white; /* Giữ nền trắng cho nội dung file để dễ đọc */
+            border-radius: 8px;
+            display: none;
+        }
+
+        .placeholder-text {
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">MHT READER</div>
+        <div class="upload-btn-wrapper">
+            <button class="btn">Chọn file .mht</button>
+            <input type="file" id="file-input" accept=".mht,.mhtml" />
+        </div>
+    </header>
+
+    <main id="viewer-container">
+        <div id="placeholder" class="placeholder-text">
+            <p>Vui lòng tải lên file .mht để xem nội dung</p>
+        </div>
+        <iframe id="mht-iframe"></iframe>
+    </main>
+
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const iframe = document.getElementById('mht-iframe');
+        const placeholder = document.getElementById('placeholder');
+
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Tạo một URL tạm thời cho file được chọn
+                const fileURL = URL.createObjectURL(file);
+                
+                // Hiển thị iframe và nạp nội dung
+                iframe.src = fileURL;
+                iframe.style.display = 'block';
+                placeholder.style.display = 'none';
+
+                // Giải phóng bộ nhớ sau khi load (tùy chọn)
+                iframe.onload = () => {
+                    console.log("File MHT đã được tải thành công.");
+                };
+            }
+        });
+    </script>
+</body>
+</html>
