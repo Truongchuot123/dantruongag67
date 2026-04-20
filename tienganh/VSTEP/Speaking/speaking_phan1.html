@@ -81,17 +81,17 @@
         </div>
     </div>
 
-<script>
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby5-L81bL0mtFx3UDGsl8dHpK4AX_tm8WOKcsk7y7b2N48UOEIaq9oGkJvlzn3OXBfa/exec'; // <--- THAY THẾ URL NÀY
+ <script>
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby5-L81bL0mtFx3UDGsl8dHpK4AX_tm8WOKcsk7y7b2N48UOEIaq9oGkJvlzn3OXBfa/exec';
 
         const topics = [
             { title: "Learning English", questions: [
                 "How long have you been learning English?",
-                "How do you feel about your English?Why? ", 
+                "How do you feel about your English? Why?", 
                 "How do you usually study it?", 
                 "How do you like to learn English?",
                 "What do you find most difficult when learning English?",
-                "For you, what is a mistake in English? How do you feel about making mistakes"
+                "For you, what is a mistake in English? How do you feel about making mistakes?"
             ] },
             { title: "Family", questions: [
                 "Tell me about your family?", 
@@ -148,7 +148,7 @@
                 "What do you do to keep fit and healthy?", 
                 "Do you do anything which is not healthy?", 
                 "What do you think is more important, eating a healthy diet or doing exercise?"] },
-            { title: "Tramsport", questions: [
+            { title: "Transport", questions: [
                 "How do you usually get to and from work/ college? Why?", 
                 "How often do you use public transport?", 
                 "What types of public transport do you use?", 
@@ -171,288 +171,265 @@
         ];
 
         document.addEventListener('DOMContentLoaded', function () {
-        const accordionContainer = document.querySelector('.accordion');
-        
-        topics.forEach((topic, index) => {
-            const questionsHTML = topic.questions.map(q => `
-                <li class="question-item p-4 border-b border-slate-100 last:border-0" data-question="${q.replace(/"/g, '&quot;')}">
-                    <p class="font-medium text-slate-800 mb-3">${q}</p>
-                    <div class="practice-area" data-practice-type="Speaking">
-                        <button class="practice-btn flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-all">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                            Viết bài nói
+            const accordionContainer = document.querySelector('.accordion');
+            
+            topics.forEach((topic, index) => {
+                const questionsHTML = topic.questions.map(q => `
+                    <li class="question-item p-4 border-b border-slate-100 last:border-0" data-question="${q.replace(/"/g, '&quot;')}">
+                        <p class="font-medium text-slate-800 mb-3">${q}</p>
+                        <div class="practice-area">
+                            <button class="practice-btn flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-all">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                Viết bài nói
+                            </button>
+                            
+                            <div class="speaking-form">
+                                <textarea placeholder="Write your answer here..."></textarea>
+                                <div class="flex gap-3 mt-3">
+                                    <button class="submit-btn px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-sm transition-all">Gửi bài</button>
+                                    <button class="cancel-btn px-6 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-lg transition-all">Hủy</button>
+                                </div>
+                            </div>
+
+                            <div class="submitted-articles-container mt-4">
+                                <h4 class="submitted-articles-title hidden text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Bài đã nộp</h4>
+                                <div class="articles-list space-y-2"></div>
+                                <div class="loading-indicator hidden flex items-center text-sm text-blue-500 mt-2">
+                                    <svg class="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    Đang tải bài viết...
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                `).join('');
+
+                const itemHTML = `
+                    <div class="accordion-item bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm" data-topic-title="${topic.title}">
+                        <button class="accordion-header">
+                            <span class="font-bold text-slate-700">Topic ${index + 1}: ${topic.title}</span>
+                            <svg class="w-5 h-5 transform transition-transform duration-300 icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
-                        
-                        <div class="speaking-form">
-                            <textarea placeholder="Write your answer here..."></textarea>
-                            <div class="flex gap-3 mt-3">
-                                <button class="submit-btn px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-sm transition-all">Gửi bài</button>
-                                <button class="cancel-btn px-6 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-lg transition-all">Hủy</button>
+                        <div class="accordion-content">
+                            <div class="p-2">
+                                <ul class="divide-y divide-slate-100">
+                                    ${questionsHTML}
+                                </ul>
                             </div>
                         </div>
-
-                        <div class="submitted-articles-container mt-4">
-                            <h4 class="submitted-articles-title hidden text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Bài đã nộp</h4>
-                            <div class="articles-list space-y-2"></div>
-                            <div class="loading-indicator hidden flex items-center text-sm text-blue-500 mt-2">
-                                <svg class="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                                Đang tải bài viết...
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            `).join('');
-
-            const itemHTML = `
-                <div class="accordion-item shadow-sm" data-topic-title="${topic.title}">
-                    <button class="accordion-header">
-                        <span class="font-bold text-slate-700">Topic ${index + 1}: ${topic.title}</span>
-                        <svg class="w-5 h-5 transform transition-transform duration-300 icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    <div class="accordion-content">
-                        <div class="p-2">
-                            <ul class="divide-y divide-slate-100">
-                                ${questionsHTML}
-                            </ul>
-                        </div>
-                    </div>
-                </div>`;
-            accordionContainer.innerHTML += itemHTML;
+                    </div>`;
+                accordionContainer.innerHTML += itemHTML;
+            });
+            
+            setupEventListeners();
+            loadAllSubmissions();
         });
-        
-        setupEventListeners();
-        loadAllSubmissions();
-    });
 
-    function setupEventListeners() {
-        // Accordion toggle
-        document.querySelectorAll('.accordion-header').forEach(header => {
-            header.addEventListener('click', () => {
-                const item = header.parentElement;
-                const content = header.nextElementSibling;
-                const icon = header.querySelector('.icon');
-                
-                const isOpen = header.classList.contains('active');
-                
-                // Close others
-                document.querySelectorAll('.accordion-header').forEach(h => {
-                    h.classList.remove('active');
-                    h.nextElementSibling.style.maxHeight = null;
-                    h.querySelector('.icon').style.transform = 'rotate(0deg)';
+        function setupEventListeners() {
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const icon = header.querySelector('.icon');
+                    const isOpen = header.classList.contains('active');
+                    
+                    document.querySelectorAll('.accordion-header').forEach(h => {
+                        h.classList.remove('active');
+                        h.nextElementSibling.style.maxHeight = null;
+                        h.querySelector('.icon').style.transform = 'rotate(0deg)';
+                    });
+
+                    if (!isOpen) {
+                        header.classList.add('active');
+                        content.style.maxHeight = content.scrollHeight + 800 + 'px';
+                        icon.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+
+            document.addEventListener('click', e => {
+                if (e.target.closest('.practice-btn')) {
+                    const btn = e.target.closest('.practice-btn');
+                    const form = btn.nextElementSibling;
+                    btn.style.display = 'none';
+                    form.style.display = 'block';
+                    updateAccordionHeight(btn);
+                }
+
+                if (e.target.closest('.cancel-btn')) {
+                    const btn = e.target.closest('.cancel-btn');
+                    const form = btn.closest('.speaking-form');
+                    const practiceBtn = form.previousElementSibling;
+                    form.style.display = 'none';
+                    practiceBtn.style.display = 'flex';
+                    form.querySelector('textarea').value = '';
+                    updateAccordionHeight(btn);
+                }
+            });
+
+            document.querySelectorAll('.submit-btn').forEach(btn => btn.addEventListener('click', handleSubmit));
+
+            document.addEventListener('click', async (e) => {
+                const btn = e.target.closest('.note-btn');
+                if (!btn) return;
+
+                const article = btn.closest('.submitted-article');
+                const display = article.querySelector('.note-display');
+                const textarea = article.querySelector('.user-notes-textarea');
+
+                if (btn.classList.contains('edit-mode') || btn.classList.contains('add-note')) {
+                    btn.innerHTML = 'Lưu';
+                    btn.className = 'note-btn save-mode px-3 py-1 bg-blue-600 text-white rounded text-xs';
+                    if (display) display.style.display = 'none';
+                    textarea.style.display = 'block';
+                    textarea.focus();
+                } else if (btn.classList.contains('save-mode')) {
+                    const newNote = textarea.value.trim();
+                    if (!newNote) {
+                        Swal.fire('Thông báo', 'Ghi chú không được để trống', 'warning');
+                        return;
+                    }
+
+                    btn.disabled = true;
+                    btn.textContent = '...';
+
+                    try {
+                        await fetch(APPS_SCRIPT_URL, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            body: JSON.stringify({
+                                type: 'saveNote',
+                                topic: btn.dataset.topic,
+                                question: btn.dataset.question,
+                                submissionNumber: btn.dataset.submissionNumber,
+                                notesContent: newNote
+                            })
+                        });
+
+                        display.textContent = newNote;
+                        display.style.display = 'block';
+                        textarea.style.display = 'none';
+                        btn.disabled = false;
+                        btn.className = 'note-btn edit-mode p-1 text-blue-600 hover:bg-blue-50 rounded';
+                        btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>';
+                        
+                        Swal.fire({ icon: 'success', title: 'Đã lưu', timer: 1000, showConfirmButton: false });
+                    } catch (err) {
+                        Swal.fire('Lỗi', 'Không thể lưu ghi chú', 'error');
+                        btn.disabled = false;
+                        btn.textContent = 'Lưu';
+                    }
+                }
+                updateAccordionHeight(btn);
+            });
+        }
+
+        function updateAccordionHeight(el) {
+            const content = el.closest('.accordion-content');
+            if (content) {
+                content.style.maxHeight = content.scrollHeight + 300 + 'px';
+            }
+        }
+
+        async function handleSubmit(e) {
+            const btn = e.target;
+            const qItem = btn.closest('.question-item');
+            const topic = btn.closest('.accordion-item').dataset.topicTitle;
+            const question = qItem.dataset.question;
+            const content = qItem.querySelector('textarea').value.trim();
+
+            if (!content) {
+                Swal.fire('Chú ý', 'Hãy nhập nội dung bài nói', 'warning');
+                return;
+            }
+
+            const subNum = qItem.querySelectorAll('.submitted-article').length + 1;
+            btn.disabled = true;
+            btn.textContent = 'Đang gửi...';
+
+            try {
+                await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({
+                        type: 'Speaking',
+                        topic,
+                        question,
+                        submissionNumber: subNum,
+                        articleContent: content
+                    })
                 });
 
-                if (!isOpen) {
-                    header.classList.add('active');
-                    content.style.maxHeight = content.scrollHeight + 500 + 'px'; // Buffer for expanded forms
-                    icon.style.transform = 'rotate(180deg)';
-                }
-            });
-        });
-
-        // Toggle Writing Form
-        document.addEventListener('click', e => {
-            if (e.target.closest('.practice-btn')) {
-                const btn = e.target.closest('.practice-btn');
-                const form = btn.nextElementSibling;
-                btn.style.display = 'none';
-                form.style.display = 'block';
+                addSubmissionToUI(qItem.querySelector('.practice-area'), content, subNum);
+                Swal.fire('Thành công', 'Bài của bạn đã được ghi lại', 'success');
+                qItem.querySelector('textarea').value = '';
+                qItem.querySelector('.speaking-form').style.display = 'none';
+                qItem.querySelector('.practice-btn').style.display = 'flex';
+            } catch (err) {
+                Swal.fire('Lỗi', 'Không thể lưu bài. Hãy thử lại.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Gửi bài';
                 updateAccordionHeight(btn);
             }
-
-            if (e.target.closest('.cancel-btn')) {
-                const btn = e.target.closest('.cancel-btn');
-                const form = btn.closest('.speaking-form');
-                const practiceBtn = form.previousElementSibling;
-                form.style.display = 'none';
-                practiceBtn.style.display = 'flex';
-                form.querySelector('textarea').value = '';
-                updateAccordionHeight(btn);
-            }
-        });
-
-        // Submit logic
-        document.querySelectorAll('.submit-btn').forEach(btn => btn.addEventListener('click', handleSubmit));
-
-        // Note editing logic
-        document.addEventListener('click', async (e) => {
-            const btn = e.target.closest('.note-btn');
-            if (!btn) return;
-
-            const article = btn.closest('.submitted-article');
-            const display = article.querySelector('.note-display');
-            const textarea = article.querySelector('.user-notes-textarea');
-
-            if (btn.classList.contains('edit-mode') || btn.classList.contains('add-note')) {
-                // Switch to edit
-                btn.innerHTML = 'Lưu';
-                btn.className = 'note-btn save-mode px-3 py-1 bg-blue-600 text-white rounded text-xs';
-                if (display) display.style.display = 'none';
-                textarea.style.display = 'block';
-                textarea.focus();
-            } else if (btn.classList.contains('save-mode')) {
-                // Save
-                const newNote = textarea.value.trim();
-                if (!newNote) {
-                    Swal.fire('Thông báo', 'Ghi chú không được để trống', 'warning');
-                    return;
-                }
-
-                btn.disabled = true;
-                btn.textContent = '...';
-
-                try {
-                    await fetch(APPS_SCRIPT_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        body: JSON.stringify({
-                            type: 'saveNote',
-                            topic: btn.dataset.topic,
-                            question: btn.dataset.question,
-                            submissionNumber: btn.dataset.submissionNumber,
-                            notesContent: newNote
-                        })
-                    });
-
-                    // Update UI
-                    display.textContent = newNote;
-                    display.style.display = 'block';
-                    textarea.style.display = 'none';
-                    btn.disabled = false;
-                    btn.className = 'note-btn edit-mode p-1 text-blue-600 hover:bg-blue-50 rounded';
-                    btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>';
-                    
-                    Swal.fire({ icon: 'success', title: 'Đã lưu', timer: 1000, showConfirmButton: false });
-                } catch (err) {
-                    Swal.fire('Lỗi', 'Không thể lưu ghi chú', 'error');
-                    btn.disabled = false;
-                    btn.textContent = 'Lưu';
-                }
-            }
-            updateAccordionHeight(btn);
-        });
-    }
-
-    function updateAccordionHeight(el) {
-        const content = el.closest('.accordion-content');
-        if (content) {
-            content.style.maxHeight = content.scrollHeight + 300 + 'px';
-        }
-    }
-
-    async function handleSubmit(e) {
-        const btn = e.target;
-        const qItem = btn.closest('.question-item');
-        const topic = btn.closest('.accordion-item').dataset.topicTitle;
-        const question = qItem.dataset.question;
-        const content = qItem.querySelector('textarea').value.trim();
-
-        if (!content) {
-            Swal.fire('Chú ý', 'Hãy nhập nội dung bài nói', 'warning');
-            return;
         }
 
-        const subNum = qItem.querySelectorAll('.submitted-article').length + 1;
-        
-        btn.disabled = true;
-        btn.textContent = 'Đang gửi...';
+        function addSubmissionToUI(container, content, number, feedback = '', notes = '') {
+            const list = container.querySelector('.articles-list');
+            const title = container.querySelector('.submitted-articles-title');
+            title.classList.remove('hidden');
 
-        try {
-            await fetch(APPS_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({
-                    type: 'Speaking',
-                    topic,
-                    question,
-                    submissionNumber: subNum,
-                    articleContent: content
-                })
-            });
-
-            addSubmissionToUI(qItem.querySelector('.practice-area'), content, subNum);
-            Swal.fire('Thành công', 'Bài của bạn đã được ghi lại', 'success');
+            const article = document.createElement('div');
+            article.className = 'submitted-article bg-slate-50 border border-slate-200 rounded-lg overflow-hidden';
             
-            // Reset form
-            qItem.querySelector('textarea').value = '';
-            qItem.querySelector('.speaking-form').style.display = 'none';
-            qItem.querySelector('.practice-btn').style.display = 'flex';
-        } catch (err) {
-            Swal.fire('Lỗi', 'Không thể lưu bài. Hãy thử lại.', 'error');
-        } finally {
-            btn.disabled = false;
-            btn.textContent = 'Lưu bài';
-            updateAccordionHeight(btn);
-        }
-    }
+            const topic = container.closest('.accordion-item').dataset.topicTitle;
+            const question = container.closest('.question-item').dataset.question;
 
-    function addSubmissionToUI(container, content, number, feedback = '', notes = '') {
-        const list = container.querySelector('.articles-list');
-        const title = container.querySelector('.submitted-articles-title');
-        title.classList.remove('hidden');
+            const noteBtn = notes.trim() 
+                ? `<button class="note-btn edit-mode p-1 text-blue-600 hover:bg-blue-50 rounded" data-submission-number="${number}" data-topic="${topic}" data-question="${question.replace(/"/g, '&quot;')}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>`
+                : `<button class="note-btn add-note text-xs text-blue-600 font-medium hover:underline" data-submission-number="${number}" data-topic="${topic}" data-question="${question.replace(/"/g, '&quot;')}">+ Thêm ghi chú</button>`;
 
-        const article = document.createElement('div');
-        article.className = 'submitted-article bg-slate-50 border border-slate-200 rounded-lg overflow-hidden';
-        
-        const topic = container.closest('.accordion-item').dataset.topicTitle;
-        const question = container.closest('.question-item').dataset.question;
-
-        const noteBtn = notes.trim() 
-            ? `<button class="note-btn edit-mode p-1 text-blue-600 hover:bg-blue-50 rounded" data-submission-number="${number}" data-topic="${topic}" data-question="${question.replace(/"/g, '&quot;')}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>`
-            : `<button class="note-btn add-note text-xs text-blue-600 font-medium hover:underline" data-submission-number="${number}" data-topic="${topic}" data-question="${question.replace(/"/g, '&quot;')}">+ Thêm ghi chú</button>`;
-
-        article.innerHTML = `
-            <details class="group">
-                <summary class="flex justify-between items-center p-3 cursor-pointer select-none">
-                    <span class="text-sm font-semibold text-slate-600">Bài viết ${number}</span>
-                    <svg class="w-4 h-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
-                </summary>
-                <div class="p-3 bg-white border-t border-slate-100">
-                    <p class="text-sm text-slate-700 whitespace-pre-wrap mb-4">${content}</p>
-                    
-                    <div class="mt-4 pt-3 border-t border-dashed border-slate-200">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-bold text-indigo-600 uppercase tracking-tight">Ghi chú</span>
-                            ${noteBtn}
-                        </div>
-                        <div class="note-display text-xs text-slate-500 italic bg-indigo-50/50 p-2 rounded" style="${notes ? '' : 'display:none'}">${notes}</div>
-                        <textarea class="user-notes-textarea" placeholder="Nhập ghi chú...">${notes}</textarea>
+            article.innerHTML = `
+                <details class="group">
+                    <summary class="flex justify-between items-center p-3 cursor-pointer select-none">
+                        <span class="text-sm font-semibold text-slate-600">Bài viết ${number}</span>
+                        <svg class="w-4 h-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
+                    </summary>
+                    <div class="p-3 bg-white border-t border-slate-100">
+                        <p class="text-sm text-slate-700 whitespace-pre-wrap mb-4">${content}</p>
                     </div>
-                </div>
-            </details>
-        `;
-        list.prepend(article);
-        updateAccordionHeight(container);
-    }
-
-    async function loadAllSubmissions() {
-        const indicators = document.querySelectorAll('.loading-indicator');
-        indicators.forEach(i => i.classList.remove('hidden'));
-
-        try {
-            const res = await fetch(APPS_SCRIPT_URL);
-            const data = await res.json();
-
-            for (let topic in data) {
-                const topicEl = document.querySelector(`.accordion-item[data-topic-title="${topic}"]`);
-                if (!topicEl) continue;
-
-                for (let q in data[topic]) {
-                    const qEl = topicEl.querySelector(`.question-item[data-question="${q.replace(/"/g, '&quot;')}"]`);
-                    if (!qEl) continue;
-
-                    const submissions = data[topic][q].Speaking || [];
-                    submissions.forEach((s, idx) => {
-                        addSubmissionToUI(qEl.querySelector('.practice-area'), s.articleContent, idx + 1, s.feedback, s.notes);
-                    });
-                }
-            }
-        } catch (err) {
-            console.error("Load failed", err);
-        } finally {
-            indicators.forEach(i => i.classList.add('hidden'));
+                </details>`;
+            list.prepend(article);
+            updateAccordionHeight(container);
         }
-    }
-</script>
+
+        async function loadAllSubmissions() {
+            const indicators = document.querySelectorAll('.loading-indicator');
+            indicators.forEach(i => i.classList.remove('hidden'));
+
+            try {
+                const res = await fetch(APPS_SCRIPT_URL);
+                const data = await res.json();
+
+                for (let topic in data) {
+                    const topicEl = document.querySelector(`.accordion-item[data-topic-title="${topic}"]`);
+                    if (!topicEl) continue;
+
+                    for (let q in data[topic]) {
+                        const qEl = topicEl.querySelector(`.question-item[data-question="${q.replace(/"/g, '&quot;')}"]`);
+                        if (!qEl) continue;
+
+                        const submissions = data[topic][q].Speaking || [];
+                        submissions.forEach((s, idx) => {
+                            addSubmissionToUI(qEl.querySelector('.practice-area'), s.articleContent, idx + 1, s.feedback, s.notes);
+                        });
+                    }
+                }
+            } catch (err) {
+                console.error("Load failed", err);
+            } finally {
+                indicators.forEach(i => i.classList.add('hidden'));
+            }
+        }
+    </script>
 
 </body>
 </html>
