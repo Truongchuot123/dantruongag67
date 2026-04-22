@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         practiceBtn.onclick = openPracticeModal;
 
         const buttonLink = document.createElement('a');
-        buttonLink.href = '/tienganh/vocabulary.html';
+        buttonLink.href = '/tienganh/vocab_notebook.html';
         buttonLink.target = '_blank';
         buttonLink.className = 'inline-flex items-center justify-center text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-6 rounded-full shadow-lg shadow-blue-200 transition-all active:scale-95';
         buttonLink.innerHTML = `<i class="fas fa-rocket mr-2"></i> Học Từ Vựng`;

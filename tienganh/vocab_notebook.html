@@ -25,6 +25,12 @@
             content: "•"; position: absolute; left: 0.5rem; color: #8b5cf6; font-weight: bold; 
         }
         .clickable-word:hover { text-decoration: underline; cursor: pointer; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
     </style>
 </head>
 <body class="min-h-screen pb-20">
@@ -89,6 +95,8 @@
     let allWords = [];
     let currentFilter = 'all';
     let selectedTopic = 'all';
+    // Watchlist bây giờ lưu cả Object thay vì chỉ String
+    let watchlist = JSON.parse(localStorage.getItem('vocab_watchlist_data') || '[]');
     
     const $ = (selector) => document.querySelector(selector);
     const $$ = (selector) => document.querySelectorAll(selector);
@@ -98,6 +106,11 @@
         try {
             const response = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
             if (!response.ok) throw new Error("Lỗi kết nối.");
+            
+            // Nếu lưu thành công từ watchlist vào DB, xóa nó khỏi watchlist
+            const english = formData.get('english');
+            removeFromWatchlist(english);
+
             await loadVocabulary(); 
             Swal.fire({ icon: 'success', title: isUpdate ? 'Đã cập nhật!' : 'Đã thêm mới!', confirmButtonColor: '#8b5cf6' });
         } catch (error) {
@@ -136,7 +149,11 @@
 
     function setFilter(filter, btn) {
         currentFilter = filter;
-        $$('.filter-btn').forEach(b => b.className = 'filter-btn bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm transition-all');
+        $$('.filter-btn').forEach(b => {
+            b.className = 'filter-btn bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm transition-all';
+            if (b.innerText.includes('Cần tìm hiểu')) b.classList.add('text-yellow-400');
+        });
+        
         btn.className = 'filter-btn bg-purple-500 text-white px-4 py-2 rounded-lg text-sm transition-all font-medium';
         displayVocabulary();
     }
@@ -146,52 +163,143 @@
         displayVocabulary();
     }
 
-    // Tính năng nhấp vào từ để tìm kiếm
     function jumpToWord(wordText) {
         const cleanWord = wordText.trim().toLowerCase();
         const searchInput = $('#search');
         searchInput.value = cleanWord;
-        selectedTopic = 'all'; // Reset topic để tìm trên toàn bộ
+        selectedTopic = 'all'; 
         displayVocabulary();
-        window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
+    // --- LOGIC WATCHLIST MỚI ---
+
+    function saveToWatchlist(wordData) {
+        // Kiểm tra xem đã tồn tại chưa
+        const exists = watchlist.find(w => w.english.toLowerCase() === wordData.english.toLowerCase());
+        if (!exists) {
+            watchlist.push(wordData);
+            localStorage.setItem('vocab_watchlist_data', JSON.stringify(watchlist));
+            updateStats();
+            displayVocabulary();
+        }
+    }
+
+    function removeFromWatchlist(english) {
+        watchlist = watchlist.filter(w => w.english.toLowerCase() !== english.toLowerCase());
+        localStorage.setItem('vocab_watchlist_data', JSON.stringify(watchlist));
+        updateStats();
+    }
+
+    function openQuickAddWatchlist(query) {
+        Swal.fire({
+            title: 'Lưu tạm từ mới',
+            html: `
+                <div class="text-left space-y-3">
+                    <p class="text-xs text-slate-400">Từ này chưa có trong dữ liệu. Bạn muốn lưu tạm để tra cứu sau?</p>
+                    <input id="quick-eng" class="swal2-input !m-0 !w-full" value="${query}" placeholder="Từ tiếng Anh...">
+                    <input id="quick-viet" class="swal2-input !m-0 !w-full" placeholder="Nghĩa sơ bộ (không bắt buộc)...">
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Lưu vào Watchlist',
+            cancelButtonText: 'Hủy',
+            preConfirm: () => {
+                const eng = $('#quick-eng').value.trim();
+                if (!eng) return Swal.showValidationMessage('Cần nhập từ tiếng Anh');
+                return {
+                    english: eng,
+                    vietnamese: $('#quick-viet').value.trim() || 'Chưa rõ nghĩa',
+                    topic: 'Cần tìm hiểu',
+                    isTemp: true // Đánh dấu là từ tạm thời
+                };
+            }
+        }).then(result => {
+            if (result.isConfirmed) {
+                saveToWatchlist(result.value);
+                Swal.fire({ icon: 'success', title: 'Đã lưu tạm!', timer: 1500, showConfirmButton: false });
+            }
+        });
+    }
+
+    // --- HIỂN THỊ ---
 
     function displayVocabulary() {
         const container = $('#vocab-list');
         const searchQuery = $('#search').value.toLowerCase().trim();
         
-        let filtered = allWords.filter(word => {
+        // 1. Lấy dữ liệu từ DB
+        let filteredDB = allWords.filter(word => {
             const matchesTopic = selectedTopic === 'all' || word.topic === selectedTopic;
             const matchesSearch = !searchQuery || 
                 word.english.toLowerCase().includes(searchQuery) ||
                 word.vietnamese.toLowerCase().includes(searchQuery) ||
                 word.lesson.toLowerCase().includes(searchQuery);
-            const matchesStatus = currentFilter === 'all' || 
-                (currentFilter === 'checked' && word.checked) || 
-                (currentFilter === 'unchecked' && !word.checked);
+            
+            let matchesStatus = true;
+            if (currentFilter === 'checked') matchesStatus = word.checked;
+            else if (currentFilter === 'unchecked') matchesStatus = !word.checked;
+            else if (currentFilter === 'watchlist') return false; // Sẽ xử lý riêng ở dưới
+
             return matchesTopic && matchesSearch && matchesStatus;
         });
 
-        updateTopicNav([...new Set(allWords.map(w => w.topic))]);
+        // 2. Lấy dữ liệu từ Watchlist
+        let filteredWatchlist = watchlist.filter(word => {
+            const matchesSearch = !searchQuery || 
+                word.english.toLowerCase().includes(searchQuery) ||
+                word.vietnamese.toLowerCase().includes(searchQuery);
+            
+            if (currentFilter === 'watchlist') return matchesSearch;
+            if (currentFilter === 'all') return matchesSearch;
+            return false;
+        });
+
+        // Hợp nhất dữ liệu hiển thị (ưu tiên DB lên trước)
+        let finalData = [];
+        if (currentFilter === 'watchlist') {
+            finalData = filteredWatchlist;
+        } else {
+            finalData = [...filteredDB, ...filteredWatchlist];
+        }
+
         container.innerHTML = '';
 
-        if (filtered.length === 0) {
-            container.innerHTML = `<div class="text-center py-10 text-slate-500">Không tìm thấy từ vựng phù hợp...</div>`;
+        // Hiển thị nút "Thêm nhanh" nếu không tìm thấy gì trong DB mà có searchQuery
+        if (searchQuery && filteredDB.length === 0 && currentFilter !== 'watchlist') {
+            container.innerHTML = `
+                <div class="bg-slate-800/40 border-2 border-dashed border-slate-700 p-8 rounded-2xl text-center space-y-4 animate-fadeIn">
+                    <p class="text-slate-400">Không tìm thấy "<strong>${searchQuery}</strong>" trong dữ liệu chính.</p>
+                    <button onclick="openQuickAddWatchlist('${searchQuery}')" class="bg-yellow-500 hover:bg-yellow-600 text-slate-900 px-6 py-3 rounded-xl font-bold transition-all shadow-lg">
+                        ⭐ Lưu tạm vào Watchlist
+                    </button>
+                </div>
+            `;
+            if (finalData.length === 0) {
+                updateStats();
+                return;
+            }
+        }
+
+        if (finalData.length === 0) {
+            container.innerHTML = `<div class="text-center py-20 text-slate-500">Danh sách trống...</div>`;
             updateStats();
             return;
         }
 
-        const grouped = filtered.reduce((acc, word) => {
-            (acc[word.topic] = acc[word.topic] || []).push(word);
+        const grouped = finalData.reduce((acc, word) => {
+            const t = word.isTemp ? '⭐ DANH SÁCH TẠM THỜI' : word.topic;
+            (acc[t] = acc[t] || []).push(word);
             return acc;
         }, {});
 
         Object.keys(grouped).sort().forEach(topic => {
             const section = document.createElement('div');
             section.className = 'animate-fadeIn';
+            const isWatchlistGroup = topic.includes('DANH SÁCH TẠM');
             section.innerHTML = `
-                <h3 class="text-lg font-bold text-slate-400 mb-4 flex items-center gap-3 px-2">
-                    <span class="w-1 h-5 bg-purple-500 rounded-full"></span> ${topic.toUpperCase()}
+                <h3 class="text-lg font-bold ${isWatchlistGroup ? 'text-yellow-500' : 'text-slate-400'} mb-4 flex items-center gap-3 px-2">
+                    <span class="w-1 h-5 ${isWatchlistGroup ? 'bg-yellow-500' : 'bg-purple-500'} rounded-full"></span> ${topic.toUpperCase()}
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             `;
@@ -220,18 +328,11 @@
         });
     }
 
-    function formatList(text, colorClass) {
-        if (!text) return '';
-        return text.split(/[,;]\s*/).map(item => 
-            `<span class="clickable-word ${colorClass} font-medium underline-offset-4 decoration-dotted" onclick="jumpToWord('${item}')">${item}</span>`
-        ).join(', ');
-    }
-
     function createWordCard(word) {
         const card = document.createElement('div');
-        card.className = `group relative p-6 bg-slate-800/80 rounded-2xl border border-slate-700 hover:border-purple-500/50 hover:bg-slate-800 transition-all ${word.checked ? 'border-purple-900/40 bg-purple-900/5' : ''}`;
+        const isTemp = word.isTemp;
+        card.className = `group relative p-6 bg-slate-800/80 rounded-2xl border ${isTemp ? 'border-yellow-500/30 bg-yellow-500/5' : 'border-slate-700'} hover:border-purple-500/50 hover:bg-slate-800 transition-all ${word.checked ? 'border-purple-900/40 bg-purple-900/5' : ''}`;
 
-        // Định dạng ví dụ thành từng dòng
         const exampleLines = word.example ? word.example.split('\n').filter(l => l.trim()).map(line => 
             `<div class="example-line">${line.trim()}</div>`
         ).join('') : '';
@@ -241,14 +342,21 @@
                 <div class="flex-1">
                     <div class="flex items-center gap-2 flex-wrap">
                         <h4 class="text-xl font-bold text-white tracking-tight">${word.english}</h4>
-                        <span class="text-[11px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded font-bold uppercase">${word.type || 'N/A'}</span>
+                        ${word.type ? `<span class="text-[11px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded font-bold uppercase">${word.type}</span>` : ''}
                         <button onclick="speak('${word.english}')" class="text-slate-500 hover:text-purple-400 transition-colors">🔊</button>
                     </div>
                     <p class="text-xs text-slate-500 font-mono mt-1">${word.ipa ? `[${word.ipa}]` : ''}</p>
                 </div>
-                <div class="flex items-center gap-3">
-                    <button onclick="openForm(${JSON.stringify(word).replace(/"/g, '&quot;')})" class="opacity-0 group-hover:opacity-100 p-1 text-slate-500 hover:text-blue-400 transition-all">✏️</button>
-                    <input type="checkbox" class="w-5 h-5 rounded-md border-slate-600 text-purple-600 bg-slate-700 focus:ring-0 cursor-pointer" ${word.checked ? 'checked' : ''}>
+                <div class="flex items-center gap-2">
+                    ${isTemp ? `
+                        <button onclick="openForm(${JSON.stringify(word).replace(/"/g, '&quot;')})" class="text-xs bg-yellow-600 hover:bg-yellow-500 text-white px-3 py-1 rounded-lg font-bold transition-all">
+                            Chính thức hóa
+                        </button>
+                        <button onclick="removeFromWatchlist('${word.english}'); displayVocabulary();" class="text-slate-500 hover:text-red-400">🗑️</button>
+                    ` : `
+                        <button onclick="openForm(${JSON.stringify(word).replace(/"/g, '&quot;')})" class="opacity-0 group-hover:opacity-100 p-1 text-slate-500 hover:text-blue-400 transition-all">✏️</button>
+                        <input type="checkbox" class="w-5 h-5 rounded-md border-slate-600 text-purple-600 bg-slate-700 focus:ring-0 cursor-pointer" ${word.checked ? 'checked' : ''}>
+                    `}
                 </div>
             </div>
 
@@ -260,11 +368,6 @@
 
                 ${word.definition ? `<div class="text-sm text-slate-400 leading-relaxed bg-slate-900/50 p-3 rounded-lg border-l-2 border-purple-500/50">${word.definition}</div>` : ''}
                 
-                <div class="grid grid-cols-1 gap-1.5">
-                    ${word.synonym ? `<div class="text-xs flex gap-2"><span class="text-green-500 font-bold shrink-0">Synonyms:</span><div class="text-slate-300 leading-relaxed">${formatList(word.synonym, 'hover:text-green-400')}</div></div>` : ''}
-                    ${word.antonym ? `<div class="text-xs flex gap-2"><span class="text-red-500 font-bold shrink-0">Antonyms:</span><div class="text-slate-300 leading-relaxed">${formatList(word.antonym, 'hover:text-red-400')}</div></div>` : ''}
-                </div>
-
                 ${exampleLines ? `
                     <div class="mt-4 pt-3 border-t border-slate-700/50">
                         <p class="text-[10px] font-bold text-slate-500 uppercase mb-2 tracking-widest">Examples</p>
@@ -274,14 +377,16 @@
             </div>
         `;
 
-        const checkbox = card.querySelector('input[type="checkbox"]');
-        checkbox.onchange = (e) => {
-            word.checked = e.target.checked;
-            localStorage.setItem(`vocab_checked_${word.english}`, e.target.checked);
-            card.classList.toggle('border-purple-900/40', e.target.checked);
-            card.classList.toggle('bg-purple-900/5', e.target.checked);
-            updateStats();
-        };
+        if (!isTemp) {
+            const checkbox = card.querySelector('input[type="checkbox"]');
+            checkbox.onchange = (e) => {
+                word.checked = e.target.checked;
+                localStorage.setItem(`vocab_checked_${word.english}`, e.target.checked);
+                card.classList.toggle('border-purple-900/40', e.target.checked);
+                card.classList.toggle('bg-purple-900/5', e.target.checked);
+                updateStats();
+            };
+        }
 
         return card;
     }
@@ -289,8 +394,8 @@
     function updateStats() {
         const statsEl = $('#stats');
         const total = allWords.length;
-        const checked = allWords.filter(w => w.checked).length;
-        statsEl.innerHTML = total > 0 ? `Tổng: ${total}` : 'Chưa có dữ liệu';
+        const watchCount = watchlist.length;
+        statsEl.innerHTML = total > 0 ? `Tổng: ${total} | ⭐ Tạm: ${watchCount}` : `⭐ Tạm: ${watchCount}`;
     }
 
     function speak(text) {
@@ -302,7 +407,10 @@
     }
 
     function openForm(wordToEdit = null) {
-        const isUpdate = !!wordToEdit;
+        // Nếu wordToEdit.isTemp = true, nghĩa là ta đang "Chuyển từ tạm thành từ thật"
+        const isUpdate = !!wordToEdit && !wordToEdit.isTemp;
+        const isFromWatchlist = !!wordToEdit && wordToEdit.isTemp;
+        
         const topics = [...new Set(allWords.map(w => w.topic))].filter(t => t !== 'Chưa phân loại').sort();
 
         Swal.fire({
@@ -313,24 +421,24 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="text-[10px] text-slate-500 font-bold ml-1 uppercase">Tiếng Anh *</label>
-                            <input id="swal-eng" class="swal2-input !m-0 !w-full" value="${isUpdate ? wordToEdit.english : ''}" ${isUpdate ? 'readonly' : ''}" placeholder="Nhập từ tiếng Anh...">
+                            <input id="swal-eng" class="swal2-input !m-0 !w-full" value="${wordToEdit ? wordToEdit.english : ''}" ${isUpdate ? 'readonly' : ''} placeholder="Nhập từ tiếng Anh...">
                         </div>
                         <div>
                             <label class="text-[10px] text-slate-500 font-bold ml-1 uppercase">Phiên âm</label>
-                            <input id="swal-ipa" class="swal2-input !m-0 !w-full" value="${isUpdate ? wordToEdit.ipa : ''}" placeholder="Nhập phiên âm...">
+                            <input id="swal-ipa" class="swal2-input !m-0 !w-full" value="${wordToEdit?.ipa || ''}" placeholder="Nhập phiên âm...">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="text-[10px] text-slate-500 font-bold ml-1 uppercase">Loại từ</label>
-                            <input id="swal-type" class="swal2-input !m-0 !w-full" value="${isUpdate ? wordToEdit.type : ''}" placeholder="Nhập loại từ...">
+                            <input id="swal-type" class="swal2-input !m-0 !w-full" value="${wordToEdit?.type || ''}" placeholder="Nhập loại từ...">
                         </div>
                         <div>
                             <label class="text-[10px] text-slate-500 font-bold ml-1 uppercase">Chủ đề</label>
                             <select id="swal-topic-select" class="swal2-select !m-0 !w-full">
                                 <option value="Chưa phân loại">-- Chọn chủ đề --</option>
-                                ${topics.map(t => `<option value="${t}" ${isUpdate && wordToEdit.topic === t ? 'selected' : ''}>${t}</option>`).join('')}
+                                ${topics.map(t => `<option value="${t}" ${wordToEdit?.topic === t ? 'selected' : ''}>${t}</option>`).join('')}
                                 <option value="--new--">+ Thêm chủ đề mới...</option>
                             </select>
                             <input id="swal-topic-new" class="swal2-input !mt-2 !m-0 !w-full hidden" placeholder="Nhập tên chủ đề mới...">
@@ -340,17 +448,16 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="text-[10px] text-slate-500 font-bold ml-1 uppercase">Tiếng Việt *</label>
-                            <input id="swal-viet" class="swal2-input !m-0 !w-full" value="${isUpdate ? wordToEdit.vietnamese : ''}" placeholder="Nhập từ tiếng Việt...">
+                            <input id="swal-viet" class="swal2-input !m-0 !w-full" value="${wordToEdit ? wordToEdit.vietnamese : ''}" placeholder="Nhập từ tiếng Việt...">
                         </div>
                         <div>
                             <label class="text-[10px] text-slate-500 font-bold ml-1 uppercase">Bài học</label>
                             <select id="swal-lesson" class="swal2-select !m-0 !w-full">
                                 <option value="">-- Chọn bài học --</option>
-                                ${LESSON_OPTIONS.map(opt => `<option value="${opt}" ${isUpdate && wordToEdit.lesson === opt ? 'selected' : ''}>${opt}</option>`).join('')}
+                                ${LESSON_OPTIONS.map(opt => `<option value="${opt}" ${wordToEdit?.lesson === opt ? 'selected' : ''}>${opt}</option>`).join('')}
                             </select>
                         </div>
                     </div>
-
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="text-[10px] text-slate-500 font-bold ml-1 uppercase">Đồng nghĩa</label>
@@ -363,9 +470,9 @@
                     </div>
                     <div>
                         <label class="text-[10px] text-slate-500 font-bold ml-1 uppercase">Định nghĩa</label>
-                        <textarea id="swal-def" class="swal2-textarea !m-0 !w-full h-16" placeholder="Nhập định nghĩa từ tiếng Anh....">${isUpdate ? wordToEdit.definition : ''}</textarea>
+                        <textarea id="swal-def" class="swal2-textarea !m-0 !w-full h-16" placeholder="Nhập định nghĩa từ tiếng Anh....">${wordToEdit?.definition || ''}</textarea>
                         <label class="text-[10px] text-slate-500 font-bold ml-1 uppercase">Ví dụ</label>
-                        <textarea id="swal-ex" class="swal2-textarea !mt-2 !m-0 !w-full h-24" placeholder="Nhập câu ví dụ...">${isUpdate ? wordToEdit.example : ''}</textarea>
+                        <textarea id="swal-ex" class="swal2-textarea !mt-2 !m-0 !w-full h-24" placeholder="Nhập câu ví dụ...">${wordToEdit?.example || ''}</textarea>
                     </div>
                 </div>
             `,
@@ -397,7 +504,11 @@
                 fd.append('antonym', $('#swal-ant').value.trim());
                 return fd;
             }
-        }).then(res => res.isConfirmed && apiCall(res.value, isUpdate));
+        }).then(res => {
+            if (res.isConfirmed) {
+                apiCall(res.value, isUpdate);
+            }
+        });
     }
 
     window.onload = () => {
