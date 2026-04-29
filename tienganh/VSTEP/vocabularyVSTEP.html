@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngMaster - Dark Mode & Flashcards</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            color-scheme: dark;
+        }
+        .perspective-1000 { perspective: 1000px; }
+        .preserve-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        .hidden-view { display: none !important; }
+        
+        /* Custom Scrollbar Dark */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+        .card-shadow {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-950 font-sans text-slate-200">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-slate-900/80 backdrop-blur-md text-white border-b border-slate-800 fixed top-0 w-full z-50">
+        <div class="max-w-5xl mx-auto px-4 h-16 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="bg-indigo-600 p-1.5 rounded-lg">
+                    <i data-lucide="sparkles" class="h-5 w-5 text-white"></i>
+                </div>
+                <span class="font-bold text-lg tracking-tight text-slate-100">EngMaster</span>
+            </div>
+            <div class="flex space-x-1" id="nav-container">
+                <!-- Navigation buttons populated by JS -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="max-w-4xl mx-auto px-4 pt-24 pb-12">
+        
+        <!-- Error & Alert Messages -->
+        <div id="status-message" class="hidden-view mb-6 p-4 rounded-xl flex items-center border shadow-lg"></div>
+
+        <!-- SEARCH & LIBRARY VIEW -->
+        <section id="view-library" class="hidden-view animate-fadeIn">
+            <div class="text-center mb-10">
+                <h1 class="text-3xl font-extrabold text-white mb-2">Tra cứu từ vựng</h1>
+                <p class="text-slate-400">Khám phá kho dữ liệu từ vựng thông minh</p>
+            </div>
+
+            <div class="relative max-w-xl mx-auto mb-12">
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i data-lucide="search" class="h-5 w-5 text-slate-500 group-focus-within:text-indigo-400 transition-colors"></i>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="search-input"
+                        placeholder="Tìm kiếm Anh - Việt..."
+                        class="block w-full pl-11 pr-4 py-4 bg-slate-900 border-2 border-slate-800 rounded-2xl focus:ring-4 focus:ring-indigo-900/30 focus:border-indigo-500 transition-all outline-none text-lg text-white shadow-inner"
+                        autocomplete="off"
+                    >
+                    <div id="search-loading" class="hidden absolute inset-y-0 right-0 pr-4 flex items-center">
+                        <div class="animate-spin h-5 w-5 border-2 border-indigo-500 border-t-transparent rounded-full"></div>
+                    </div>
+                </div>
+
+                <!-- Suggestions Dropdown -->
+                <div id="search-suggestions" class="hidden absolute z-20 w-full mt-2 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl max-h-64 overflow-y-auto">
+                    <!-- Suggestions rendered here -->
+                </div>
+            </div>
+
+            <!-- Selected Word Result -->
+            <div id="word-detail-container" class="max-w-xl mx-auto">
+                <!-- Result card will be rendered here -->
+            </div>
+        </section>
+
+        <!-- MY WORDS VIEW -->
+        <section id="view-mywords" class="hidden-view animate-fadeIn">
+            <div class="flex justify-between items-end mb-6">
+                <h2 class="text-2xl font-bold text-white">Danh sách của tôi</h2>
+                <span id="mywords-count" class="text-sm font-medium bg-indigo-900/50 text-indigo-300 px-3 py-1 rounded-full border border-indigo-800/50">0 từ</span>
+            </div>
+            <div id="mywords-list" class="space-y-3"></div>
+        </section>
+
+        <!-- DASHBOARD VIEW -->
+        <section id="view-dashboard" class="hidden-view animate-fadeIn">
+            <h2 class="text-2xl font-bold mb-6 text-white">Thống kê học tập</h2>
+            <div id="stats-content"></div>
+        </section>
+
+        <!-- PRACTICE VIEW -->
+        <section id="view-practice" class="hidden-view animate-fadeIn">
+            <div id="practice-content"></div>
+        </section>
+
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // CONFIGURATION
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbykgN9Mf37KxqMZx2XW1mqPJJ3jVunAWVEljUAszFJVwMLxDXJpDHg6cvpdkMHR2v_iKQ/exec";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDSU-0sQqaFGHQcMyjJLs_wt0GLVPAXKig",
+            authDomain: "vstep-c02b6.firebaseapp.com",
+            projectId: "vstep-c02b6",
+            storageBucket: "vstep-c02b6.firebasestorage.app",
+            messagingSenderId: "5134797464",
+            appId: "1:5134797464:web:b4b5b13a58be4922fbdeed"
+        };
+
+        const app_fb = initializeApp(firebaseConfig);
+        const auth = getAuth(app_fb);
+        const db = getFirestore(app_fb);
+        const appId = 'english-vocab-app';
+
+        // STATE
+        let state = {
+            user: null,
+            activeTab: 'library',
+            allWords: [], 
+            myWords: [],  
+            selectedWord: null,
+            isLoading: false,
+            practice: {
+                mode: null, // 'en-vi' or 'vi-en'
+                index: 0,
+                flipped: false,
+                pool: [],
+                timer: 60,
+                interval: null,
+                isFinished: false
+            }
+        };
+
+        // UI HELPERS
+        const updateUI = () => {
+            renderNav();
+            renderViews();
+            lucide.createIcons();
+        };
+
+        const renderNav = () => {
+            const navItems = [
+                { id: 'library', icon: 'search', text: 'Tra cứu' },
+                { id: 'mywords', icon: 'bookmark', text: 'Đã lưu' },
+                { id: 'practice', icon: 'zap', text: 'Luyện tập' },
+                { id: 'dashboard', icon: 'bar-chart', text: 'Thống kê' }
+            ];
+            
+            const container = document.getElementById('nav-container');
+            container.innerHTML = navItems.map(item => `
+                <button onclick="window.app.switchTab('${item.id}')" 
+                    class="px-3 py-2 rounded-xl flex items-center space-x-2 text-sm font-medium transition-all ${state.activeTab === item.id ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800'}">
+                    <i data-lucide="${item.icon}" class="w-4 h-4"></i>
+                    <span class="hidden md:inline">${item.text}</span>
+                </button>
+            `).join('');
+        };
+
+        const renderViews = () => {
+            ['library', 'mywords', 'practice', 'dashboard'].forEach(view => {
+                const el = document.getElementById(`view-${view}`);
+                if (state.activeTab === view) {
+                    el.classList.remove('hidden-view');
+                    if (view === 'mywords') renderMyWords();
+                    if (view === 'practice') renderPractice();
+                    if (view === 'dashboard') renderDashboard();
+                } else {
+                    el.classList.add('hidden-view');
+                }
+            });
+        };
+
+        const showStatus = (msg, type = "success") => {
+            const el = document.getElementById('status-message');
+            el.className = `mb-6 p-4 rounded-xl flex items-center animate-fadeIn border shadow-xl ${type === 'error' ? 'bg-red-950/50 text-red-300 border-red-800' : 'bg-emerald-950/50 text-emerald-300 border-emerald-800'}`;
+            el.innerHTML = `<i data-lucide="${type === 'error' ? 'alert-circle' : 'check-circle'}" class="w-5 h-5 mr-3"></i><span class="font-medium">${msg}</span>`;
+            el.classList.remove('hidden-view');
+            lucide.createIcons();
+            setTimeout(() => el.classList.add('hidden-view'), 3000);
+        };
+
+        // FIREBASE & DATA
+        const fetchSheetData = async () => {
+            document.getElementById('search-loading').classList.remove('hidden');
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL);
+                const data = await response.json();
+                state.allWords = data.map((item, index) => ({
+                    id: item.ID || `word-${index}`,
+                    english: item.english || item["từ vựng"] || item["Word"] || "",
+                    vietnamese: item.vietnamese || item["tiếng việt"] || item["Meaning"] || "",
+                    type: item.type || item["từ loại"] || "",
+                    example: item.examples || item["ví dụ"] || "",
+                })).filter(w => w.english);
+            } catch (err) {
+                showStatus("Lỗi kết nối dữ liệu", "error");
+            } finally {
+                document.getElementById('search-loading').classList.add('hidden');
+            }
+        };
+
+        const setupAuth = async () => {
+            await signInAnonymously(auth);
+            onAuthStateChanged(auth, (user) => {
+                state.user = user;
+                if (user) {
+                    const colRef = collection(db, 'artifacts', appId, 'users', user.uid, 'my_vocabulary');
+                    onSnapshot(colRef, (snap) => {
+                        state.myWords = snap.docs.map(d => d.data());
+                        document.getElementById('mywords-count').innerText = `${state.myWords.length} từ`;
+                        if (state.activeTab === 'mywords') renderMyWords();
+                    }, (err) => console.error(err));
+                }
+            });
+        };
+
+        // FLASHCARDS LOGIC
+        const shuffle = (array) => {
+            let currentIndex = array.length,  randomIndex;
+            while (currentIndex != 0) {
+              randomIndex = Math.floor(Math.random() * currentIndex);
+              currentIndex--;
+              [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        const startPracticeMode = (mode) => {
+            clearInterval(state.practice.interval);
+            const source = state.myWords.length >= 2 ? state.myWords : state.allWords.slice(0, 20);
+            state.practice = {
+                mode: mode,
+                index: 0,
+                flipped: false,
+                pool: shuffle([...source]),
+                timer: 60,
+                isFinished: false,
+                interval: null
+            };
+            startTimer();
+            renderPractice();
+        };
+
+        const startTimer = () => {
+            clearInterval(state.practice.interval);
+            state.practice.timer = 60;
+            state.practice.interval = setInterval(() => {
+                state.practice.timer--;
+                const timerEl = document.getElementById('flash-timer');
+                if (timerEl) timerEl.innerText = state.practice.timer + 's';
+                
+                if (state.practice.timer <= 0) {
+                    clearInterval(state.practice.interval);
+                    if (!state.practice.flipped) window.app.flipCard();
+                }
+            }, 1000);
+        };
+
+        const renderPractice = () => {
+            const container = document.getElementById('practice-content');
+            
+            // Selection Screen
+            if (!state.practice.mode) {
+                container.innerHTML = `
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold text-white mb-2">Luyện tập Flashcards</h2>
+                        <p class="text-slate-400">Chọn chế độ học để bắt đầu xáo trộn thẻ</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <button onclick="window.app.startPractice('en-vi')" class="p-8 bg-slate-900 border border-slate-800 rounded-3xl hover:border-indigo-500 transition-all group text-left">
+                            <div class="w-12 h-12 bg-indigo-950 text-indigo-400 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                                <i data-lucide="languages" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white">Anh → Việt</h3>
+                            <p class="text-slate-500 text-sm mt-1">Nhìn từ tiếng Anh, đoán nghĩa tiếng Việt</p>
+                        </button>
+                        <button onclick="window.app.startPractice('vi-en')" class="p-8 bg-slate-900 border border-slate-800 rounded-3xl hover:border-emerald-500 transition-all group text-left">
+                            <div class="w-12 h-12 bg-emerald-950 text-emerald-400 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                                <i data-lucide="refresh-cw" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white">Việt → Anh</h3>
+                            <p class="text-slate-500 text-sm mt-1">Nhìn nghĩa tiếng Việt, nhớ từ tiếng Anh</p>
+                        </button>
+                    </div>
+                `;
+            } 
+            // Finished Screen
+            else if (state.practice.isFinished) {
+                container.innerHTML = `
+                    <div class="max-w-md mx-auto bg-slate-900 border border-slate-800 rounded-3xl p-10 text-center animate-fadeIn shadow-2xl">
+                        <div class="w-20 h-20 bg-indigo-600/20 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i data-lucide="party-popper" class="w-10 h-10"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Tuyệt vời!</h3>
+                        <p class="text-slate-400 mb-8">Bạn đã hoàn thành tất cả ${state.practice.pool.length} thẻ trong lượt này.</p>
+                        <div class="space-y-3">
+                            <button onclick="window.app.startPractice('${state.practice.mode}')" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold transition-all">Luyện tập lại (Xáo trộn mới)</button>
+                            <button onclick="window.app.stopPractice()" class="w-full py-4 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-2xl font-bold transition-all">Thoát</button>
+                        </div>
+                    </div>
+                `;
+            }
+            // Flashcard Screen
+            else {
+                const word = state.practice.pool[state.practice.index];
+                const isEnVi = state.practice.mode === 'en-vi';
+                const frontText = isEnVi ? word.english : word.vietnamese;
+                const backText = isEnVi ? word.vietnamese : word.english;
+
+                container.innerHTML = `
+                    <div class="max-w-lg mx-auto">
+                        <div class="flex justify-between items-center mb-6 px-2">
+                            <button onclick="window.app.stopPractice()" class="text-slate-500 hover:text-white transition-colors flex items-center">
+                                <i data-lucide="x" class="w-4 h-4 mr-1"></i> Thoát
+                            </button>
+                            <div class="flex items-center space-x-4">
+                                <span id="flash-timer" class="text-amber-500 font-mono font-bold bg-amber-950/30 px-3 py-1 rounded-full border border-amber-900/50">${state.practice.timer}s</span>
+                                <span class="text-xs font-bold text-slate-500 bg-slate-800 px-3 py-1 rounded-full">${state.practice.index + 1} / ${state.practice.pool.length}</span>
+                            </div>
+                        </div>
+
+                        <div onclick="window.app.flipCard()" class="relative h-80 w-full cursor-pointer perspective-1000 group">
+                            <div class="relative w-full h-full duration-500 preserve-3d ${state.practice.flipped ? 'rotate-y-180' : ''}">
+                                <!-- Front -->
+                                <div class="absolute w-full h-full backface-hidden bg-slate-900 rounded-3xl shadow-2xl flex flex-col items-center justify-center border border-slate-800 card-shadow">
+                                    <span class="text-xs text-slate-600 uppercase tracking-widest mb-4">${isEnVi ? 'Từ vựng' : 'Nghĩa tiếng Việt'}</span>
+                                    <h3 class="text-4xl font-black text-white text-center px-6">${frontText}</h3>
+                                    <p class="mt-8 text-slate-500 text-sm animate-pulse">Chạm để lật thẻ</p>
+                                </div>
+                                <!-- Back -->
+                                <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-indigo-600 text-white rounded-3xl shadow-2xl flex flex-col items-center justify-center p-8 text-center">
+                                    <span class="text-xs uppercase font-bold bg-indigo-500/50 px-3 py-1 rounded-full mb-4 border border-indigo-400/30">${word.type || 'N/A'}</span>
+                                    <h3 class="text-3xl font-black mb-4">${backText}</h3>
+                                    ${word.example ? `<p class="text-indigo-100 text-sm italic opacity-90 border-t border-indigo-500 pt-4 mt-2">"${word.example}"</p>` : ''}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between mt-10 space-x-4">
+                            <button onclick="window.app.prevCard()" class="w-20 p-4 bg-slate-900 text-slate-400 rounded-2xl hover:bg-slate-800 border border-slate-800 transition-colors flex justify-center">
+                                <i data-lucide="arrow-left" class="w-6 h-6"></i>
+                            </button>
+                            <button onclick="window.app.nextCard()" class="flex-1 p-4 bg-indigo-600 text-white rounded-2xl hover:bg-indigo-700 shadow-xl shadow-indigo-900/20 font-bold transition-all flex items-center justify-center">
+                                <span>Thẻ tiếp theo</span>
+                                <i data-lucide="chevron-right" class="w-5 h-5 ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            lucide.createIcons();
+        };
+
+        // APP ACTIONS
+        window.app = {
+            switchTab: (tab) => {
+                state.activeTab = tab;
+                updateUI();
+            },
+            selectWord: (id) => {
+                const word = state.allWords.find(w => String(w.id) === String(id));
+                state.selectedWord = word;
+                document.getElementById('search-suggestions').classList.add('hidden');
+                document.getElementById('search-input').value = word.english;
+                renderWordDetail(word);
+            },
+            toggleSaveWord: async () => {
+                if (!state.user || !state.selectedWord) return;
+                const id = String(state.selectedWord.id);
+                const isSaved = state.myWords.some(w => String(w.id) === id);
+                try {
+                    const docRef = doc(db, 'artifacts', appId, 'users', state.user.uid, 'my_vocabulary', id);
+                    if (isSaved) {
+                        await deleteDoc(docRef);
+                        showStatus("Đã gỡ khỏi danh sách");
+                    } else {
+                        await setDoc(docRef, { ...state.selectedWord, addedAt: new Date().toISOString() });
+                        showStatus("Đã lưu vào danh sách");
+                    }
+                    renderWordDetail(state.selectedWord);
+                } catch (err) { showStatus("Lỗi hệ thống", "error"); }
+            },
+            deleteWord: async (id) => {
+                if (!state.user) return;
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'users', state.user.uid, 'my_vocabulary', String(id)));
+                    showStatus("Đã xóa");
+                } catch (e) { showStatus("Lỗi khi xóa", "error"); }
+            },
+            // Practice handlers
+            startPractice: (mode) => startPracticeMode(mode),
+            stopPractice: () => {
+                clearInterval(state.practice.interval);
+                state.practice.mode = null;
+                renderPractice();
+            },
+            flipCard: () => {
+                state.practice.flipped = !state.practice.flipped;
+                if (state.practice.flipped) clearInterval(state.practice.interval);
+                renderPractice();
+            },
+            nextCard: () => {
+                if (state.practice.index >= state.practice.pool.length - 1) {
+                    state.practice.isFinished = true;
+                    clearInterval(state.practice.interval);
+                } else {
+                    state.practice.index++;
+                    state.practice.flipped = false;
+                    startTimer();
+                }
+                renderPractice();
+            },
+            prevCard: () => {
+                if (state.practice.index > 0) {
+                    state.practice.index--;
+                    state.practice.flipped = false;
+                    startTimer();
+                    renderPractice();
+                }
+            }
+        };
+
+        // Render Functions
+        const renderWordDetail = (word) => {
+            const container = document.getElementById('word-detail-container');
+            const isSaved = state.myWords.some(w => String(w.id) === String(word.id));
+            container.innerHTML = `
+                <div class="bg-slate-900 rounded-3xl shadow-2xl border border-slate-800 p-8 animate-fadeIn card-shadow">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <span class="text-indigo-400 font-bold text-xs uppercase tracking-widest bg-indigo-950 px-3 py-1 rounded-full border border-indigo-900/50">${word.type || 'N/A'}</span>
+                            <h2 class="text-4xl font-black text-white mt-3">${word.english}</h2>
+                        </div>
+                        <button onclick="window.app.toggleSaveWord()" class="p-3 rounded-2xl transition-all ${isSaved ? 'bg-indigo-600 text-white shadow-lg' : 'bg-slate-800 text-slate-500 hover:bg-slate-700'}">
+                            <i data-lucide="${isSaved ? 'check' : 'plus'}" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="bg-slate-950/50 p-5 rounded-2xl border border-slate-800/50">
+                            <p class="text-slate-500 text-xs mb-2 uppercase font-bold tracking-tighter">Nghĩa tiếng Việt</p>
+                            <p class="text-xl font-medium text-slate-200">${word.vietnamese}</p>
+                        </div>
+                        ${word.example ? `
+                            <div class="bg-indigo-950/20 p-5 rounded-2xl border-l-4 border-indigo-500">
+                                <p class="text-indigo-400/60 text-xs mb-2 uppercase font-bold tracking-tighter">Ví dụ thực tế</p>
+                                <p class="text-slate-300 italic text-lg leading-relaxed">"${word.example}"</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        };
+
+        const renderMyWords = () => {
+            const listEl = document.getElementById('mywords-list');
+            if (state.myWords.length === 0) {
+                listEl.innerHTML = `<div class="text-center py-20 bg-slate-900 rounded-3xl border border-dashed border-slate-800 text-slate-500">Danh sách trống. Hãy tra cứu và lưu từ mới!</div>`;
+                return;
+            }
+            listEl.innerHTML = state.myWords.map(w => `
+                <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-sm flex justify-between items-center hover:border-slate-700 transition-all">
+                    <div>
+                        <p class="font-bold text-white text-lg">${w.english} <span class="text-xs font-normal text-slate-500 ml-2">(${w.type})</span></p>
+                        <p class="text-slate-400 mt-0.5">${w.vietnamese}</p>
+                    </div>
+                    <button onclick="window.app.deleteWord('${w.id}')" class="p-2 text-slate-600 hover:text-red-400 hover:bg-red-950/30 rounded-xl transition-all">
+                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        };
+
+        const renderDashboard = () => {
+            const content = document.getElementById('stats-content');
+            const total = state.myWords.length;
+            content.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 text-center card-shadow">
+                        <p class="text-slate-500 text-xs font-bold uppercase mb-2">Tổng từ đã lưu</p>
+                        <p class="text-5xl font-black text-indigo-500">${total}</p>
+                    </div>
+                    <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 text-center">
+                        <p class="text-slate-500 text-xs font-bold uppercase mb-2">Trạng thái</p>
+                        <p class="text-2xl font-bold text-emerald-500">${total > 10 ? 'Chăm chỉ' : 'Bắt đầu'}</p>
+                    </div>
+                </div>
+            `;
+        };
+
+        // SEARCH EVENT
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            const suggEl = document.getElementById('search-suggestions');
+            if (query.length < 1) { suggEl.classList.add('hidden'); return; }
+
+            const res = state.allWords.filter(w => w.english.toLowerCase().includes(query) || w.vietnamese.toLowerCase().includes(query)).slice(0, 6);
+            if (res.length > 0) {
+                suggEl.innerHTML = res.map(w => `
+                    <div onclick="window.app.selectWord('${w.id}')" class="px-5 py-4 hover:bg-slate-800 cursor-pointer flex justify-between items-center border-b border-slate-800 last:border-0">
+                        <div>
+                            <span class="font-bold text-white">${w.english}</span>
+                            <span class="text-xs text-slate-500 ml-2 italic">${w.type}</span>
+                        </div>
+                        <span class="text-sm text-slate-400">${w.vietnamese}</span>
+                    </div>
+                `).join('');
+                suggEl.classList.remove('hidden');
+            } else {
+                suggEl.innerHTML = `<div class="px-5 py-4 text-slate-500 text-sm italic">Không tìm thấy kết quả...</div>`;
+                suggEl.classList.remove('hidden');
+            }
+        });
+
+        // INIT
+        (async () => {
+            updateUI();
+            await setupAuth();
+            await fetchSheetData();
+        })();
+    </script>
+</body>
+</html>
