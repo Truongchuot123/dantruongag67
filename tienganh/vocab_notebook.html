@@ -1,9 +1,17 @@
 <!DOCTYPE html>
-<html lang="vi" class="dark">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EngMaster & Sổ Tay Từ Vựng</title>
+    <title>Sổ tay từ vựng</title>
+    
+     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:image" content="/hinhanh/logo_web.png">
+    <meta property="og:url" content="https://dantruongag.id.vn">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/hinhanh/logo_web.png" type="">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -70,7 +78,7 @@
                 <div class="bg-gradient-to-br from-purple-600 to-indigo-600 p-1.5 rounded-lg shadow-lg">
                     <i data-lucide="sparkles" class="h-5 w-5 text-white"></i>
                 </div>
-                <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">EngMaster</span>
+                <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">Vocab Notebook</span>
             </div>
             
             <!-- Thích nghi màn hình: flex-1 trên mobile để dàn đều, co lại trên desktop -->
@@ -88,11 +96,6 @@
 
         <!-- VIEW: LIBRARY (SỔ TAY MỞ RỘNG) -->
         <section id="view-library" class="hidden-view animate-fadeIn">
-            <div class="text-center mb-10">
-                <h1 class="text-3xl font-black text-white mb-2">Thư viện Từ vựng</h1>
-                <p class="text-slate-400">Khám phá và quản lý kho dữ liệu thông minh</p>
-            </div>
-
             <!-- Search & Filters -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                 <div class="lg:col-span-2 space-y-4">
@@ -136,7 +139,7 @@
             <!-- Loader -->
             <div id="loader" class="text-center py-20 hidden">
                 <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
-                <p class="mt-4 text-slate-400 font-medium">Đang tải dữ liệu từ Google Sheet...</p>
+                <p class="mt-4 text-slate-400 font-medium">Đang tải dữ liệu...</p>
             </div>
             
             <!-- Word List Container -->
@@ -899,13 +902,13 @@
                                 <input id="swal-ant" class="swal2-input !m-0 !w-full" value="${wordToEdit?.antonym || ''}" placeholder="..."></div>
                             </div>
                             <div><label class="text-[10px] text-slate-500 font-bold uppercase mb-1 block">Định nghĩa tiếng Anh</label>
-                            <textarea id="swal-def" class="swal2-textarea !m-0 !w-full h-16" placeholder="A round fruit with red or green skin...">${wordToEdit?.definition || ''}</textarea></div>
+                            <textarea id="swal-def" class="swal2-textarea !m-0 !w-full h-16" placeholder="Nhập định nghĩa hoặc cụm từ liên quan....">${wordToEdit?.definition || ''}</textarea></div>
                             
                             <div><label class="text-[10px] text-slate-500 font-bold uppercase mb-1 block">Ví dụ</label>
-                            <textarea id="swal-ex" class="swal2-textarea !m-0 !w-full h-24" placeholder="I ate an apple yesterday.">${wordToEdit?.example || ''}</textarea></div>
+                            <textarea id="swal-ex" class="swal2-textarea !m-0 !w-full h-24" placeholder="Nhập ví dụ.....">${wordToEdit?.example || ''}</textarea></div>
                         </div>
                     `,
-                    confirmButtonText: 'Lưu Dữ Liệu',
+                    confirmButtonText: 'Lưu từ vựng',
                     confirmButtonColor: '#9333ea',
                     showCancelButton: true,
                     cancelButtonText: 'Hủy',
