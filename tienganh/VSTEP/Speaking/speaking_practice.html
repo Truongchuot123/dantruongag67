@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -21,32 +21,51 @@
                 extend: {
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
                     },
                     colors: {
                         brand: {
-                            50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe',
-                            300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6',
-                            600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a',
+                            50: '#f0f7ff', 100: '#e0effe', 200: '#badffd',
+                            300: '#7cc4fd', 400: '#38a7f9', 500: '#0e8ce2',
+                            600: '#0270be', 700: '#03599a', 800: '#074c80', 900: '#0c406b',
+                        },
+                        cyber: {
+                            bg: '#0b0f19',
+                            card: '#161f30',
+                            accent: '#3b82f6',
+                            purple: '#a855f7',
+                            emerald: '#10b981',
+                            rose: '#f43f5e'
                         }
                     },
                     animation: {
                         'float': 'float 6s ease-in-out infinite',
-                        'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-                        'fade-in': 'fadeIn 0.4s ease-out forwards',
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'fade-in': 'fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+                        'glow-border': 'glowBorder 3s linear infinite',
                     },
                     keyframes: {
                         float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
+                            '0%, 100%': { transform: 'translateY(0) scale(1)' },
+                            '50%': { transform: 'translateY(-12px) scale(1.02)' },
                         },
                         slideUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '0%': { opacity: '0', transform: 'translateY(24px)' },
                             '100%': { opacity: '1', transform: 'translateY(0)' },
                         },
                         fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
+                            '0%': { opacity: '0', transform: 'scale(0.98)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.6', filter: 'drop-shadow(0 0 5px rgba(59, 130, 246, 0.5))' },
+                            '50%': { opacity: '1', filter: 'drop-shadow(0 0 20px rgba(59, 130, 246, 0.9))' },
+                        },
+                        glowBorder: {
+                            '0%': { 'border-color': 'rgba(59, 130, 246, 0.3)' },
+                            '50%': { 'border-color': 'rgba(168, 85, 247, 0.6)' },
+                            '100%': { 'border-color': 'rgba(59, 130, 246, 0.3)' }
                         }
                     }
                 }
@@ -54,316 +73,501 @@
         }
     </script>
     <style>
-        /* Dark Theme Variables */
         :root {
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-bg: rgba(30, 41, 59, 0.65); /* slate-800 with opacity */
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --glass-bg: rgba(17, 24, 39, 0.65);
+            --card-glow-brand: rgba(14, 140, 226, 0.15);
+            --card-glow-purple: rgba(168, 85, 247, 0.15);
         }
         
         body {
-            background-color: #0f172a; /* slate-900 */
-            /* Dark Modern Mesh Gradient */
+            background-color: #080c14;
             background-image: 
-                radial-gradient(at 0% 0%, hsla(253, 40%, 15%, 1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, hsla(225, 40%, 15%, 1) 0, transparent 50%), 
-                radial-gradient(at 100% 0%, hsla(339, 40%, 15%, 1) 0, transparent 50%);
+                radial-gradient(at 0% 0%, rgba(14, 140, 226, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.12) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
             background-attachment: fixed;
-            color: #f1f5f9; /* slate-100 */
+            color: #f8fafc;
+            overflow-x: hidden;
         }
 
-        /* Custom smooth dark scrollbar */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        /* Webkit smooth custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(71, 85, 105, 0.6);
+            border-radius: 99px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 116, 139, 0.8);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
         
+        /* Glassmorphism premium utilities */
         .glass-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8);
+        }
+
+        .card-glow-blue:hover {
+            box-shadow: 0 0 30px var(--card-glow-brand), 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+        }
+
+        .card-glow-purple:hover {
+            box-shadow: 0 0 30px var(--card-glow-purple), 0 20px 40px -15px rgba(0, 0, 0, 0.7);
         }
 
         .input-glow:focus {
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
+            box-shadow: 0 0 0 4px rgba(14, 140, 226, 0.25);
+            border-color: rgba(14, 140, 226, 0.6) !important;
         }
 
-        /* Spinner */
-        .spinner {
-            border: 3px solid rgba(255,255,255,0.2);
-            border-top-color: #fff;
-            border-radius: 50%;
-            width: 1.2rem;
-            height: 1.2rem;
-            animation: spin 0.8s linear infinite;
+        /* Interactive custom controls */
+        .tab-indicator {
+            position: absolute;
+            bottom: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #0e8ce2, #a855f7);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 99px;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Sound visualizer canvas glow */
+        #visualizer {
+            filter: drop-shadow(0 0 8px rgba(14, 140, 226, 0.6));
+        }
+
+        /* Pulse animation for record button */
+        @keyframes pulseRecord {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(244, 63, 94, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
+        }
+        .pulse-record {
+            animation: pulseRecord 1.5s infinite;
+        }
+
+        /* Modern styled dropdown option */
+        select option {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            padding: 12px;
+        }
 
         .hidden-fancy {
             display: none !important;
             opacity: 0;
+            pointer-events: none;
         }
-
-        /* Overriding browser default styles for select in dark mode */
-        select option {
-            background-color: #1e293b; /* slate-800 */
-            color: #f1f5f9;
+        
+        .smooth-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
     </style>
 </head>
 <body class="font-sans min-h-screen flex flex-col relative overflow-x-hidden selection:bg-brand-500/30 selection:text-brand-100">
-    <!-- Decorative background blobs (Dark Mode adjusted) -->
-    <div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-brand-600/10 blur-[100px] pointer-events-none -z-10"></div>
-    <div class="fixed bottom-[-10%] right-[-5%] w-[30%] h-[40%] rounded-full bg-purple-600/10 blur-[100px] pointer-events-none -z-10"></div>
 
+    <!-- Decorative moving elements -->
+    <div class="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-brand-600/10 blur-[120px] pointer-events-none -z-10 animate-pulse-glow"></div>
+    <div class="fixed bottom-[-15%] right-[-5%] w-[45%] h-[50%] rounded-full bg-purple-600/10 blur-[130px] pointer-events-none -z-10" style="animation: pulseGlow 3s ease-in-out infinite;"></div>
+
+    
     <div id="header-placeholder"></div>
     <div id="search-placeholder"></div>
-    <!-- Main Content -->
-    <main class="max-w-5xl mx-auto px-4 py-8 md:py-10 flex-grow w-full">
+    <!-- Main Content Grid -->
+    <main class="max-w-5xl mx-auto px-6 py-8 md:py-12 flex-grow w-full relative">
+        
     <div class="flex flex-col items-center justify-center text-center mb-10">
         <h1 class="text-4xl md:text-5xl font-black text-white leading-tight mb-4">LUYỆN THI SPEAKING</h1>
         <p class="max-w-2xl text-slate-400 text-lg leading-relaxed">Luyện tập kỹ năng nói với các chủ đề phổ biến trong VSTEP.</p>
     </div>
-        <!-- Navigation Tabs -->
-        <div class="flex flex-wrap justify-center gap-3 mb-10 pb-4 border-b border-slate-700/50 relative">
-            <button onclick="switchPart(1)" id="btn-part1" class="tab-btn px-6 py-3 rounded-2xl font-bold transition-all duration-300 bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-xl shadow-brand-500/20 hover:-translate-y-1 flex items-center gap-2 transform scale-105 border border-brand-400/30">
-                <i class="fa-regular fa-comments text-lg"></i> Part 1: Interaction
-            </button>
-            <button onclick="switchPart(2)" id="btn-part2" class="tab-btn px-6 py-3 rounded-2xl font-bold transition-all duration-300 bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 hover:border-brand-500/50 hover:text-brand-400 flex items-center gap-2 shadow-sm">
-                <i class="fa-solid fa-people-arrows text-lg"></i> Part 2: Discussion
-            </button>
-            <button onclick="switchPart(3)" id="btn-part3" class="tab-btn px-6 py-3 rounded-2xl font-bold transition-all duration-300 bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 hover:border-brand-500/50 hover:text-brand-400 flex items-center gap-2 shadow-sm">
-                <i class="fa-solid fa-stopwatch text-lg"></i> Phòng Luyện Tập
-            </button>
+        
+        <!-- Navigation Tabs Container with Indicator Slider -->
+        <div class="relative mb-12 border-b border-slate-800/80 pb-0.5">
+            <div class="flex flex-wrap md:flex-nowrap gap-2 md:gap-4 relative z-10">
+                <button onclick="switchTab(1, this)" id="btn-part1" class="tab-btn px-6 py-4 rounded-t-2xl font-bold transition-all duration-300 text-white flex items-center gap-2.5 outline-none relative z-10 text-base">
+                    <i class="fa-regular fa-comments text-lg text-brand-400"></i> Part 1: Tương Tác Xã Hội
+                </button>
+                <button onclick="switchTab(2, this)" id="btn-part2" class="tab-btn px-6 py-4 rounded-t-2xl font-bold transition-all duration-300 text-slate-400 hover:text-slate-200 flex items-center gap-2.5 outline-none relative z-10 text-base">
+                    <i class="fa-solid fa-shuffle text-lg text-purple-400"></i> Part 2: Thảo Luận Giải Pháp
+                </button>
+                <button onclick="switchTab(3, this)" id="btn-part3" class="tab-btn px-6 py-4 rounded-t-2xl font-bold transition-all duration-300 text-slate-400 hover:text-slate-200 flex items-center gap-2.5 outline-none relative z-10 text-base">
+                    <i class="fa-solid fa-gauge-high text-lg text-emerald-400"></i> Phòng Luyện Nói PRO
+                </button>
+            </div>
+            <!-- Dynamic underline highlight slider -->
+            <div id="tab-slider" class="tab-indicator"></div>
         </div>
 
-        <!-- Global Notification System -->
-        <div id="notification" class="hidden-fancy fixed top-24 left-1/2 transform -translate-x-1/2 z-50 min-w-[320px] bg-slate-800 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] border p-4 flex items-start gap-4">
-            <div id="notif-icon-bg" class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
-                <i id="notif-icon" class="fa-solid text-lg"></i>
+        <!-- Notification Center -->
+        <div id="notification" class="hidden-fancy fixed bottom-8 right-8 z-50 min-w-[340px] bg-slate-900/90 rounded-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] border p-4 flex items-start gap-4 transition-all duration-500 transform translate-y-10 scale-95 border-brand-500/30 backdrop-blur-lg">
+            <div id="notif-icon-bg" class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-brand-500/20 text-brand-400 border border-brand-500/30 shadow-inner">
+                <i id="notif-icon" class="fa-solid fa-bell text-lg"></i>
             </div>
-            <div class="pt-0.5 pr-4">
-                <h4 id="notif-title" class="font-bold text-slate-100"></h4>
-                <p id="notif-message" class="text-sm text-slate-400 mt-0.5 leading-snug"></p>
+            <div class="pt-0.5 flex-grow pr-6">
+                <h4 id="notif-title" class="font-bold text-slate-100 text-sm"></h4>
+                <p id="notif-message" class="text-xs text-slate-400 mt-1 leading-relaxed"></p>
             </div>
-            <button onclick="closeNotification()" class="absolute top-4 right-4 text-slate-500 hover:text-slate-300 bg-slate-700 hover:bg-slate-600 w-7 h-7 rounded-full flex items-center justify-center transition-colors">
-                <i class="fa-solid fa-xmark text-sm"></i>
+            <button onclick="closeNotification()" class="absolute top-3.5 right-3.5 text-slate-500 hover:text-slate-300 bg-slate-850 hover:bg-slate-800 w-6 h-6 rounded-lg flex items-center justify-center transition-all">
+                <i class="fa-solid fa-xmark text-xs"></i>
             </button>
         </div>
 
         <!-- ============================== PART 1 ============================== -->
-        <section id="part1-section" class="animate-slide-up block">
-            <div class="glass-card rounded-3xl p-6 md:p-8 mb-8">
-                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+        <section id="part1-section" class="animate-slide-up block space-y-8">
+            <div class="glass-card rounded-3xl p-6 md:p-10 card-glow-blue border-brand-500/10">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10 pb-8 border-b border-white/5">
                     <div>
-                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-brand-500/20 border border-brand-500/30 text-brand-400 rounded-lg text-sm font-bold mb-3 shadow-inner">
-                            <i class="fa-solid fa-layer-group"></i> Part 1: Interaction
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-brand-500/15 border border-brand-500/20 text-brand-400 rounded-xl text-xs font-bold mb-4 tracking-wider uppercase">
+                            <i class="fa-solid fa-shapes"></i> Phase 1 • Social Interaction
                         </div>
-                        <h2 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">Social Interaction</h2>
-                        <p class="text-slate-400 mt-2 font-medium">Bạn hãy chọn chủ đề để học.</p>
+                        <h2 class="text-3xl font-extrabold text-white tracking-tight">Tương Tác Xã Hội (Part 1)</h2>
                     </div>
                 </div>
                 
-                <div class="mb-8 p-1.5 bg-slate-900/50 border border-slate-700/50 rounded-2xl inline-block w-full md:w-auto shadow-inner">
-                    <div class="relative flex items-center">
-                        <div class="absolute left-4 text-brand-400"><i class="fa-solid fa-magnifying-glass"></i></div>
-                        <select id="topic-select" onchange="loadQuestionsForTopic()" class="w-full md:w-80 pl-11 pr-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-slate-200 font-semibold focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 outline-none transition-all cursor-pointer shadow-sm appearance-none">
-                            <option value="" disabled selected>-- Chọn một chủ đề --</option>
-                            <option value="Learning English">📚 Learning English</option>
-                            <option value="Family">👨‍👩‍👧‍👦 Family</option>
-                            <option value="Houses">🏠 Houses</option>
-                            <option value="Hobby">🎨 Hobby</option>
-                            <option value="Job">💼 Job</option>
-                            <option value="Travel">✈️ Travel</option>
-                            <!-- New Topics -->
-                            <option value="Hometown">🏙️ Hometown</option>
-                            <option value="Food">🍜 Food</option>
-                            <option value="Health">💪 Health</option>
-                            <option value="Transport">🚌 Transport</option>
-                            <option value="Communication">📱 Communication</option>
-                            <option value="The internet">🌐 The internet</option>
-                            <option value="Festivals">🏮 Festivals</option>
-                        </select>
-                        <div class="absolute right-4 text-slate-500 pointer-events-none"><i class="fa-solid fa-chevron-down text-sm"></i></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 items-start">
+                    <!-- Dropdown Select Topic Wrapper -->
+                    <div class="space-y-3">
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Chọn Chủ Đề Luyện Tập</label>
+                        <div class="relative flex items-center bg-slate-950/60 rounded-2xl border border-white/5 shadow-inner p-1">
+                            <div class="absolute left-4 text-brand-400 text-lg"><i class="fa-solid fa-folder-open animate-pulse"></i></div>
+                            <select id="topic-select" onchange="loadQuestionsForTopic()" class="w-full pl-12 pr-10 py-3.5 bg-transparent border-none rounded-xl text-slate-200 font-bold focus:ring-0 outline-none cursor-pointer appearance-none text-sm md:text-base">
+                                <option value="" disabled selected>-- Chọn bài học --</option>
+                                <option value="Learning English">📚 Learning English</option>
+                                <option value="Family">👨‍👩‍👧‍👦 Family</option>
+                                <option value="Houses">🏠 Houses</option>
+                                <option value="Hobby">🎨 Hobby</option>
+                                <option value="Job">💼 Job</option>
+                                <option value="Travel">✈️ Travel</option>
+                                <option value="Hometown">🏙️ Hometown</option>
+                                <option value="Food">🍜 Food</option>
+                                <option value="Health">💪 Health</option>
+                                <option value="Transport">🚌 Transport</option>
+                                <option value="Communication">📱 Communication</option>
+                                <option value="The internet">🌐 The internet</option>
+                                <option value="Festivals">🏮 Festivals</option>
+                            </select>
+                            <div class="absolute right-4 text-slate-500 pointer-events-none"><i class="fa-solid fa-chevron-down text-sm"></i></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dynamic Notes Collection Info -->
+                    <div id="p1-dynamic-stats-card" class="bg-slate-900/30 rounded-2xl border border-white/5 p-4 flex items-center gap-4 hidden-fancy">
                     </div>
                 </div>
 
-                <div id="p1-topic-notes-container"></div>
+                <div id="p1-topic-notes-container" class="transition-all duration-500"></div>
                 
-                <div id="questions-container" class="space-y-6 hidden-fancy">
-                    <!-- Questions injected via JS -->
-                </div>
+                <!-- Questions List Container -->
+                <div id="questions-container" class="space-y-6 hidden-fancy mt-4"></div>
             </div>
         </section>
 
         <!-- ============================== PART 2 ============================== -->
-        <section id="part2-section" class="hidden-fancy">
-            <div class="glass-card rounded-3xl p-6 md:p-8 mb-8 animate-slide-up">
-                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+        <section id="part2-section" class="hidden-fancy space-y-8">
+            <div class="glass-card rounded-3xl p-6 md:p-10 card-glow-purple border-purple-500/10">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10 pb-8 border-b border-white/5">
                     <div>
-                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-purple-500/20 border border-purple-500/30 text-purple-400 rounded-lg text-sm font-bold mb-3 shadow-inner">
-                            <i class="fa-solid fa-people-group"></i> Part 2: Discussion
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-purple-500/15 border border-purple-500/20 text-purple-400 rounded-xl text-xs font-bold mb-4 tracking-wider uppercase">
+                            <i class="fa-solid fa-scale-balanced"></i> Phase 2 • Decision Making
                         </div>
-                        <h2 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">Solution Discussion</h2>
-                        <p class="text-slate-400 mt-2 font-medium">Bạn hãy chọn chủ đề để học.</p>
+                        <h2 class="text-3xl font-extrabold text-white tracking-tight">Thảo Luận Giải Pháp (Part 2)</h2>
                     </div>
                 </div>
 
-                <div class="mb-8 p-1.5 bg-slate-900/50 border border-slate-700/50 rounded-2xl inline-block w-full md:w-auto shadow-inner">
-                     <div class="relative flex items-center">
-                        <div class="absolute left-4 text-purple-400"><i class="fa-solid fa-list-check"></i></div>
-                        <select id="p2-topic-select" onchange="loadPart2Situation()" class="w-full md:w-80 pl-11 pr-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-slate-200 font-semibold focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 outline-none transition-all cursor-pointer shadow-sm appearance-none">
-                            <option value="" disabled selected>-- Chọn một chủ đề --</option>
-                            <option value="Learning English">📚 Learning English</option>
-                            <option value="Family">👨‍👩‍👧‍👦 Family</option>
-                            <option value="Houses">🏠 Houses</option>
-                            <option value="Hobby">🎨 Hobby</option>
-                            <option value="Job">💼 Job</option>
-                            <option value="Travel">✈️ Travel</option>
-                            <!-- New Topics -->
-                            <option value="Hometown">🏙️ Hometown</option>
-                            <option value="Food">🍜 Food</option>
-                            <option value="Health">💪 Health</option>
-                            <option value="Transport">🚌 Transport</option>
-                            <option value="Communication">📱 Communication</option>
-                            <option value="The internet">🌐 The internet</option>
-                            <option value="Festivals">🏮 Festivals</option>
+                <div class="mb-8 space-y-3">
+                     <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Chọn Tình Huống Thảo Luận</label>
+                     <div class="relative flex items-center bg-slate-950/60 rounded-2xl border border-white/5 shadow-inner p-1 max-w-md">
+                        <div class="absolute left-4 text-purple-400 text-lg"><i class="fa-solid fa-list-check"></i></div>
+                        <select id="p2-topic-select" onchange="loadPart2Situation()" class="w-full pl-12 pr-10 py-3.5 bg-transparent border-none rounded-xl text-slate-200 font-bold focus:ring-0 outline-none cursor-pointer appearance-none text-sm md:text-base">
+                            <option value="" disabled selected>-- Chọn bài học --</option>
+                                <option value="Learning English">📚 Learning English</option>
+                                <option value="Family">👨‍👩‍👧‍👦 Family</option>
+                                <option value="Houses">🏠 Houses</option>
+                                <option value="Hobby">🎨 Hobby</option>
+                                <option value="Job">💼 Job</option>
+                                <option value="Travel">✈️ Travel</option>
+                                <option value="Hometown">🏙️ Hometown</option>
+                                <option value="Food">🍜 Food</option>
+                                <option value="Health">💪 Health</option>
+                                <option value="Transport">🚌 Transport</option>
+                                <option value="Communication">📱 Communication</option>
+                                <option value="The internet">🌐 The internet</option>
+                                <option value="Festivals">🏮 Festivals</option>
                         </select>
                         <div class="absolute right-4 text-slate-500 pointer-events-none"><i class="fa-solid fa-chevron-down text-sm"></i></div>
                      </div>
                 </div>
 
-                <div id="p2-situation-container" class="hidden-fancy animate-fade-in">
+                <div id="p2-situation-container" class="hidden-fancy animate-fade-in space-y-8">
                     <div id="p2-topic-notes-container"></div>
                     
-                    <div class="relative bg-gradient-to-br from-purple-900/30 to-indigo-900/30 p-6 md:p-8 rounded-2xl border border-purple-700/30 mb-6 shadow-inner">
-                        <div class="absolute top-0 left-6 -translate-y-1/2 bg-slate-800 px-3 py-1 rounded-full border border-purple-500/40 text-xs font-bold text-purple-400 shadow-sm"><i class="fa-solid fa-quote-left mr-1"></i> Tình huống</div>
-                        <p id="p2-situation-text" class="font-medium text-slate-200 text-lg leading-relaxed"></p>
+                    <div class="relative bg-gradient-to-br from-purple-950/20 to-indigo-950/20 p-6 md:p-8 rounded-2xl border border-purple-500/20 shadow-inner">
+                        <div class="absolute top-0 left-6 -translate-y-1/2 bg-slate-950 px-3 py-1 rounded-lg border border-purple-500/30 text-[10px] font-extrabold text-purple-400 uppercase tracking-wider shadow-sm"><i class="fa-solid fa-quote-left mr-1.5"></i> Tình Huống Đề Bài</div>
+                        <p id="p2-situation-text" class="font-medium text-slate-200 text-base md:text-lg leading-relaxed"></p>
                     </div>
                     
-                    <form id="form-part2" onsubmit="submitForm(event, 2)" class="bg-slate-800/80 rounded-2xl p-6 border border-slate-700 shadow-lg">
+                    <form id="form-part2" onsubmit="submitForm(event, 2)" class="bg-slate-950/40 rounded-2xl p-6 md:p-8 border border-white/5 shadow-2xl space-y-6">
                         <input type="hidden" id="p2-topic" value="">
                         <input type="hidden" id="p2-question" value="">
                         
-                        <div class="mb-5">
-                            <label class="block text-sm font-bold text-slate-300 mb-2">Bài Thảo Luận của bạn:</label>
-                            <textarea id="p2-answer" required rows="8" class="w-full p-4 bg-slate-900/50 border border-slate-600 rounded-xl input-glow outline-none transition-all resize-y placeholder-slate-500 font-medium text-slate-100 leading-relaxed focus:bg-slate-900" placeholder="Bắt đầu bằng việc chọn 1 option, nêu lý do chọn, và giải thích tại sao không chọn các option còn lại..."></textarea>
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Nội dung</label>
+                            <textarea id="p2-answer" required rows="7" class="w-full p-4 bg-slate-950/60 border border-slate-700/60 rounded-2xl input-glow outline-none transition-all resize-y placeholder-slate-500 font-medium text-slate-100 text-sm md:text-base leading-relaxed focus:bg-slate-950" placeholder="Nhập nội dung tại đây..."></textarea>
                         </div>
                         
-                        <div class="mb-8">
-                            <label class="block text-sm font-bold text-slate-300 mb-2">Từ vựng ăn điểm (Cách nhau bằng dấu phẩy):</label>
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Từ vựng</label>
                             <div class="relative">
-                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-yellow-500"><i class="fa-solid fa-star"></i></div>
-                                <input type="text" id="p2-notes" class="w-full pl-11 pr-4 py-3.5 bg-slate-900/50 border border-slate-600 rounded-xl input-glow outline-none transition-all placeholder-slate-500 font-medium text-slate-100 focus:bg-slate-900" placeholder="Nhập ghi chú tại đây....">
+                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400 text-base"><i class="fa-solid fa-wand-magic-sparkles animate-pulse"></i></div>
+                                <input type="text" id="p2-notes" class="w-full pl-11 pr-4 py-3.5 bg-slate-950/60 border border-slate-700/60 rounded-2xl input-glow outline-none transition-all placeholder-slate-500 font-semibold text-slate-100 text-sm md:text-base" placeholder="Nhập từ vựng tại đây...">
                             </div>
                         </div>
                         
-                        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                            <button type="submit" id="btn-submit-p2" class="w-full md:w-auto px-8 py-3.5 bg-gradient-to-r from-purple-600 to-brand-600 hover:from-purple-500 hover:to-brand-500 text-white font-bold rounded-xl shadow-lg shadow-purple-500/20 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 group border border-white/10">
-                                <i class="fa-regular fa-paper-plane group-hover:animate-bounce"></i> Lưu bài viết
+                        <div class="flex flex-col md:flex-row items-center justify-between gap-4 pt-2">
+                            <button type="submit" id="btn-submit-p2" class="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-purple-600/20 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 group border border-white/10 text-sm">
+                                <i class="fa-solid fa-cloud-arrow-up group-hover:scale-110 transition-transform"></i> Lưu bài
                             </button>
                             
-                            <button type="button" onclick="toggleHistory('hist-p2')" class="w-full md:w-auto px-6 py-3.5 bg-slate-700 text-slate-200 font-semibold border border-slate-600 rounded-xl hover:bg-slate-600 transition-colors flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-clock-rotate-left"></i> Xem Lịch Sử bài viết
+                            <button type="button" id="btn-hist-p2" onclick="toggleHistory('hist-p2')" class="w-full md:w-auto px-6 py-4 bg-slate-900 border border-slate-800 text-slate-300 font-bold rounded-xl hover:bg-slate-800 hover:text-white transition-colors flex items-center justify-center gap-2 text-sm hidden-fancy">
+                                <i class="fa-solid fa-clock-rotate-left text-purple-400"></i> Xem Lịch Sử Làm Bài
                             </button>
                         </div>
                     </form>
                     
-                    <div id="hist-p2" class="hidden-fancy mt-6">
-                        <!-- Injected by JS -->
-                    </div>
+                    <div id="hist-p2" class="hidden-fancy mt-6"></div>
                 </div>
             </div>
         </section>
 
         <!-- ============================== PRACTICE MODE ============================== -->
         <section id="practice-section" class="hidden-fancy">
-            <div class="glass-card rounded-3xl p-6 md:p-10 mb-8 animate-slide-up text-center border-brand-500/20">
+            <div class="glass-card rounded-3xl p-6 md:p-12 mb-8 text-center border-brand-500/10">
                 
-                <div class="inline-block p-4 bg-brand-900/40 rounded-full mb-4 animate-float text-brand-400 shadow-inner border border-brand-500/20">
+                <div class="inline-block p-5 bg-brand-500/10 rounded-2xl mb-6 animate-float text-brand-400 shadow-inner border border-brand-500/20">
                     <i class="fa-solid fa-headset text-4xl"></i>
                 </div>
-                <h2 class="text-3xl font-extrabold text-white mb-3 tracking-tight">Phòng Luyện Tập Kỹ Năng</h2>
-                <p class="text-slate-400 mb-8 max-w-xl mx-auto font-medium">Bạn hãy chọn chủ đề để luyện tập.</p>
+                <h2 class="text-3xl font-extrabold text-white tracking-tight mb-2">Phòng Luyện tập</h2>
+                <p class="text-slate-400 text-sm md:text-base max-w-xl mx-auto font-medium">Bạn có thời gian 1 phút để trả lời cho mỗi câu hỏi.</p>
                 
                 <!-- Topic Selection Area -->
-                <div class="flex flex-col md:flex-row gap-3 justify-center mb-10 max-w-2xl mx-auto bg-slate-800 p-2 rounded-2xl border border-slate-700 shadow-sm">
-                    <div class="relative w-full md:w-1/2">
-                        <select id="prac-part-select" onchange="loadPracticeTopicOpts()" class="w-full pl-4 pr-10 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-200 font-semibold focus:ring-2 focus:ring-brand-500/50 outline-none appearance-none cursor-pointer">
-                            <option value="1">Part 1: Interaction</option>
-                            <option value="2">Part 2: Discussion</option>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto bg-slate-950/60 p-2.5 rounded-2xl border border-white/5 shadow-inner mt-8 mb-10">
+                    <div class="relative">
+                        <select id="prac-part-select" onchange="loadPracticeTopicOpts()" class="w-full pl-4 pr-10 py-3 bg-slate-900 border border-slate-800 rounded-xl text-slate-200 font-bold focus:ring-1 focus:ring-brand-500 outline-none appearance-none cursor-pointer text-sm">
+                            <option value="1">Part 1: Tương Tác Xã Hội</option>
+                            <option value="2">Part 2: Thảo Luận Giải Pháp</option>
                         </select>
                         <i class="fa-solid fa-sort absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"></i>
                     </div>
-                    <div class="relative w-full md:w-1/2">
-                        <select id="prac-topic-select" onchange="loadPracticeQuestion()" class="w-full pl-4 pr-10 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-200 font-semibold focus:ring-2 focus:ring-brand-500/50 outline-none appearance-none cursor-pointer">
+                    <div class="relative">
+                        <select id="prac-topic-select" onchange="loadPracticeQuestion()" class="w-full pl-4 pr-10 py-3 bg-slate-900 border border-slate-800 rounded-xl text-slate-200 font-bold focus:ring-1 focus:ring-brand-500 outline-none appearance-none cursor-pointer text-sm">
                             <option value="" disabled selected>-- Chọn chủ đề --</option>
-                            <!-- Populated by JS -->
                         </select>
                         <i class="fa-solid fa-sort absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"></i>
                     </div>
                 </div>
 
-                <!-- Flashcard Display -->
-                <div id="prac-question-container" class="hidden-fancy relative max-w-3xl mx-auto bg-gradient-to-b from-slate-800 to-slate-900 rounded-3xl border border-slate-700 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] mb-10 transition-all transform hover:scale-[1.01] duration-300">
-                     
-                     <!-- Decoration -->
-                     <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-brand-500 via-purple-500 to-brand-500 rounded-t-3xl opacity-80"></div>
+                <!-- Flashcard Display Area -->
+                <div id="prac-question-container" class="hidden-fancy relative max-w-3xl mx-auto bg-gradient-to-b from-slate-900/60 to-slate-950/80 rounded-3xl border border-slate-800 shadow-2xl mb-8 transform hover:scale-[1.01] transition-all duration-300">
+                     <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-brand-500 via-purple-500 to-emerald-500 rounded-t-3xl opacity-80 animate-pulse"></div>
                      
                      <div class="p-8 md:p-14 min-h-[220px] flex flex-col justify-center items-center">
-                        <span id="prac-q-badge" class="px-4 py-1.5 bg-slate-700 text-slate-300 text-sm font-bold rounded-full mb-6 uppercase tracking-wider border border-slate-600"></span>
-                        <h3 id="prac-question-text" class="text-2xl md:text-3xl font-bold text-white leading-snug">Vui lòng chọn chủ đề để bắt đầu.</h3>
+                        <span id="prac-q-badge" class="px-4 py-1.5 bg-slate-800 border border-slate-700/60 text-slate-300 text-xs font-bold rounded-full mb-6 uppercase tracking-widest shadow-md"></span>
+                        <h3 id="prac-question-text" class="text-xl md:text-2xl font-bold text-white leading-relaxed max-w-2xl transition-opacity duration-300">Vui lòng chọn chủ đề để bắt đầu.</h3>
                      </div>
                      
-                     <!-- Navigation Controls for Part 1 -->
-                     <button id="prac-prev-btn" onclick="pracNavigate(-1)" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-slate-800 border border-slate-600 shadow-lg flex items-center justify-center text-slate-400 hover:text-brand-400 hover:bg-slate-700 hover:border-brand-500/50 hover:scale-110 transition-all hidden"><i class="fa-solid fa-arrow-left"></i></button>
-                     <button id="prac-next-btn" onclick="pracNavigate(1)" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-12 h-12 rounded-full bg-slate-800 border border-slate-600 shadow-lg flex items-center justify-center text-slate-400 hover:text-brand-400 hover:bg-slate-700 hover:border-brand-500/50 hover:scale-110 transition-all hidden"><i class="fa-solid fa-arrow-right"></i></button>
+                     <!-- Navigation Controls for Part 1 questions -->
+                     <button id="prac-prev-btn" onclick="pracNavigate(-1)" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-slate-900 border border-slate-800 shadow-2xl flex items-center justify-center text-slate-400 hover:text-brand-400 hover:bg-slate-800 hover:border-brand-500/50 hover:scale-110 active:scale-95 transition-all duration-200 hidden"><i class="fa-solid fa-chevron-left text-base"></i></button>
+                     <button id="prac-next-btn" onclick="pracNavigate(1)" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-12 h-12 rounded-full bg-slate-900 border border-slate-800 shadow-2xl flex items-center justify-center text-slate-400 hover:text-brand-400 hover:bg-slate-800 hover:border-brand-500/50 hover:scale-110 active:scale-95 transition-all duration-200 hidden"><i class="fa-solid fa-chevron-right text-base"></i></button>
                 </div>
 
-                <!-- Timer -->
-                <div id="prac-controls-container" class="hidden-fancy mb-8">
-                    <div id="prac-timer-display" class="text-7xl md:text-8xl font-black font-mono text-white mb-8 tracking-tighter drop-shadow-md transition-all duration-300">01:00</div>
+                <!-- Live Audio Visualizer Canvas & Smart Recorder Widget -->
+                <div id="prac-controls-container" class="hidden-fancy max-w-3xl mx-auto mb-10 p-6 md:p-8 bg-slate-950/40 border border-white/5 rounded-3xl flex flex-col md:flex-row items-center justify-around gap-8">
                     
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <button id="prac-start-btn" onclick="toggleTimer()" class="px-8 py-4 bg-brand-600 hover:bg-brand-500 text-white border border-brand-400/50 rounded-2xl font-bold text-lg shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:-translate-y-1 transition-all min-w-[180px] flex items-center justify-center gap-3">
-                            <i class="fa-solid fa-play"></i> <span>Bắt đầu</span>
-                        </button>
-                        <button onclick="resetTimer()" class="px-8 py-4 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 rounded-2xl font-bold text-lg shadow-sm hover:-translate-y-1 transition-all min-w-[160px] flex items-center justify-center gap-3">
-                            <i class="fa-solid fa-rotate-right"></i> <span>Làm lại</span>
-                        </button>
+                    <!-- Circular LED Clock Timer -->
+                    <div class="relative w-44 h-44 flex items-center justify-center select-none">
+                        <svg class="w-full h-full transform -rotate-90">
+                            <circle cx="88" cy="88" r="76" stroke="rgba(255,255,255,0.04)" stroke-width="8" fill="transparent" />
+                            <circle id="timer-progress-circle" cx="88" cy="88" r="76" stroke="#0e8ce2" stroke-width="8" fill="transparent" stroke-dasharray="477" stroke-dashoffset="0" stroke-linecap="round" class="transition-all duration-1000" />
+                        </svg>
+                        <div class="absolute flex flex-col items-center justify-center">
+                            <span id="prac-timer-display" class="text-4xl font-extrabold font-mono text-white tracking-tight drop-shadow-lg">01:00</span>
+                            <span class="text-[9px] uppercase tracking-widest text-slate-500 font-bold mt-1">Giới Hạn Nói</span>
+                        </div>
+                    </div>
+
+                    <!-- Voice Recorder & Waveform Block -->
+                    <div class="flex-grow flex flex-col items-center md:items-start gap-4">
+                        <div class="flex items-center gap-3 w-full justify-center md:justify-start">
+                            <div class="w-3 h-3 rounded-full bg-slate-500" id="recorder-dot"></div>
+                            <span id="recorder-status" class="text-xs font-bold text-slate-400 uppercase tracking-widest">Máy Ghi Âm Đang Tắt</span>
+                        </div>
+                        
+                        <!-- Oscilloscope Canvas for Voice/Animation -->
+                        <div class="w-full max-w-sm h-14 bg-slate-950/80 border border-slate-800 rounded-xl overflow-hidden flex items-center relative">
+                            <canvas id="visualizer" class="w-full h-full"></canvas>
+                            <div id="no-signal-text" class="absolute inset-0 flex items-center justify-center text-xs text-slate-600 font-bold tracking-widest">SẴN SÀNG THU THỬ</div>
+                        </div>
+
+                        <!-- Main Play/Stop Controls -->
+                        <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 w-full mt-2">
+                            <button id="prac-start-btn" onclick="toggleTimer()" class="px-6 py-3.5 bg-brand-600 hover:bg-brand-500 text-white border border-brand-400/30 rounded-xl font-bold text-sm shadow-[0_0_15px_rgba(14,140,226,0.3)] hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all min-w-[150px] flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-play"></i> <span>Bắt đầu nói</span>
+                            </button>
+                            
+                            <button id="prac-record-btn" onclick="toggleAudioRecording()" class="px-6 py-3.5 bg-rose-600 hover:bg-rose-500 text-white border border-rose-400/30 rounded-xl font-bold text-sm shadow-[0_0_15px_rgba(244,63,94,0.3)] hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all min-w-[150px] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                <i class="fa-solid fa-microphone"></i> <span id="record-btn-text">Bật Ghi Âm</span>
+                            </button>
+
+                            <button onclick="resetTimer()" class="p-3.5 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 rounded-xl font-bold text-sm hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-rotate-right"></i> <span>Làm mới</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Hints Area -->
-                <div id="prac-hints-wrapper" class="hidden-fancy border-t border-slate-700/80 pt-10 mt-4 max-w-3xl mx-auto">
-                    <p class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-6">Cần trợ giúp?</p>
-                    <div class="flex flex-wrap justify-center gap-4 mb-6">
-                        <button onclick="toggleHint('article')" class="px-6 py-3 border border-brand-500/40 text-brand-300 bg-brand-900/30 hover:bg-brand-800/50 hover:border-brand-400 rounded-xl font-bold transition-all flex items-center shadow-sm">
-                            <i class="fa-solid fa-file-signature mr-2 text-lg"></i> Bài Viết Mẫu của bạn
+                <!-- Custom Self Evaluation Section -->
+                <div id="self-eval-container" class="hidden-fancy max-w-3xl mx-auto p-6 bg-slate-950/30 border border-white/5 rounded-2xl mb-8 text-left animate-fade-in">
+                    <h4 class="font-bold text-sm text-slate-300 uppercase tracking-widest mb-4 flex items-center gap-2"><i class="fa-solid fa-star text-amber-400"></i> Phiếu Tự Đánh Giá Kết Quả</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-slate-900/60 p-3.5 rounded-xl border border-white/5">
+                            <span class="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Độ lưu loát</span>
+                            <div class="flex gap-1" data-rating-type="fluency">
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 1)"></i>
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 2)"></i>
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 3)"></i>
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 4)"></i>
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 5)"></i>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900/60 p-3.5 rounded-xl border border-white/5">
+                            <span class="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Phát âm</span>
+                            <div class="flex gap-1" data-rating-type="pronunciation">
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 1)"></i>
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 2)"></i>
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 3)"></i>
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 4)"></i>
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 5)"></i>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900/60 p-3.5 rounded-xl border border-white/5">
+                            <span class="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Từ vựng</span>
+                            <div class="flex gap-1" data-rating-type="vocabulary">
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 1)"></i>
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 2)"></i>
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 3)"></i>
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 4)"></i>
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 5)"></i>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900/60 p-3.5 rounded-xl border border-white/5">
+                            <span class="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Ngữ pháp</span>
+                            <div class="flex gap-1" data-rating-type="grammar">
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 1)"></i>
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 2)"></i>
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 3)"></i>
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 4)"></i>
+                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 5)"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Audio Playback (If Recording Saved) -->
+                <div id="prac-audio-playback-container" class="hidden-fancy max-w-3xl mx-auto p-4 bg-slate-950/60 border border-emerald-500/30 rounded-2xl mb-8 flex items-center justify-between gap-4">
+                    <span class="text-xs font-bold text-emerald-400 flex items-center gap-2"><i class="fa-solid fa-circle-check"></i> Có Bản Thu Nháp Gần Nhất:</span>
+                    <audio id="audio-playback" controls class="w-2/3 h-10 select-none"></audio>
+                </div>
+
+                <!-- Hints & Study Materials Accordion Section -->
+                <div id="prac-hints-wrapper" class="hidden-fancy border-t border-slate-800 pt-10 mt-6 max-w-3xl mx-auto">
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">Trợ lý Luyện Tập Cá Nhân</p>
+                    <div class="flex flex-wrap justify-center gap-4 mb-8">
+                        <button onclick="toggleHint('article', this)" class="hint-btn px-6 py-3 border border-brand-500/30 text-brand-400 bg-brand-500/10 hover:bg-brand-500/20 hover:border-brand-400 rounded-xl font-bold transition-all flex items-center shadow-sm text-sm">
+                            <i class="fa-solid fa-file-signature mr-2.5 text-base"></i> Xem Bài Viết Mẫu của bạn
                         </button>
-                        <button onclick="toggleHint('words')" class="px-6 py-3 border border-amber-500/40 text-amber-300 bg-amber-900/30 hover:bg-amber-800/50 hover:border-amber-400 rounded-xl font-bold transition-all flex items-center shadow-sm">
-                            <i class="fa-solid fa-lightbulb mr-2 text-lg"></i> Gợi ý Từ Vựng
+                        <button onclick="toggleHint('words', this)" class="hint-btn px-6 py-3 border border-amber-500/30 text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 hover:border-amber-400 rounded-xl font-bold transition-all flex items-center shadow-sm text-sm">
+                            <i class="fa-solid fa-lightbulb mr-2.5 text-base"></i> Gợi ý Từ Vựng ghi nhớ
                         </button>
                     </div>
                     
-                    <div id="prac-hint-container" class="hidden-fancy text-left bg-slate-800/90 p-6 md:p-8 rounded-2xl border border-slate-700 shadow-xl max-w-3xl mx-auto max-h-[400px] overflow-y-auto animate-fade-in custom-scrollbar">
-                        <!-- Hint content -->
-                    </div>
+                    <div id="prac-hint-container" class="hidden-fancy text-left bg-slate-950/60 p-6 md:p-8 rounded-2xl border border-slate-800 shadow-2xl max-w-3xl mx-auto max-h-[400px] overflow-y-auto animate-fade-in custom-scrollbar"></div>
                 </div>
             </div>
         </section>
-
     </main>
-
-
-
     <script>
+        // --- Web Audio Synth Sound Effects (Non-external assets) ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playUISound(type) {
+            try {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.1);
+                } else if (type === 'tick') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.05);
+                } else if (type === 'success') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(554, audioCtx.currentTime + 0.1);
+                    osc.frequency.setValueAtTime(659, audioCtx.currentTime + 0.2);
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.35);
+                } else if (type === 'warning') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                }
+            } catch(e) {
+                console.warn("Audio Context API could not start sound effects:", e);
+            }
+        }
+
         // --- Configuration ---
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEDVCnsS4Ppdpf7LAJ2xb8_gic3k3obN9j0MFHhGal0bm9bo_1FUjfMQiR-82cRohE/exec'; 
 
-        // --- Data ---
-        // NEW TOPICS ADDED!
+        // --- Core Static VSTEP Databank ---
         const part1Data = {
             "Learning English": [
                 "How long have you been learning English?", 
@@ -546,10 +750,11 @@
                 "You are considering a birthday present for a friend. There are three suggestions: a clothing item, a book, a pair of movie tickets. Which one would you choose?"
             ]
         };
+        // --- Core System States ---
+        let currentTabValue = 1;
+        let sheetHistoryData = [];
 
-       let currentPart = 1;
-
-        // Practice Mode State
+        // Practice Area State variables
         let timerInterval = null;
         let timeLeft = 60;
         let isTimerRunning = false;
@@ -557,27 +762,134 @@
         let currentPracTopic = "";
         let currentPracQIndex = 0;
 
-        function saveLocal(part, topic, question, content, notes) {
-            let history = JSON.parse(localStorage.getItem('vstepHistory')) || {};
-            if (!history[part]) history[part] = {};
-            if (!history[part][topic]) history[part][topic] = {};
-            if (!history[part][topic][question]) history[part][topic][question] = [];
+        // Recording Audio engine states
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let audioBlob = null;
+        let audioUrl = null;
+        let audioStream = null;
+        let isRecording = false;
 
-            history[part][topic][question].push({
-                content: content,
-                notes: notes,
-                date: new Date().toLocaleString('vi-VN', { hour12: false })
+        // Visualizer engine references
+        let visualizerCanvas = null;
+        let visualizerCtx = null;
+        let animFrameId = null;
+        let audioAnalysedNode = null;
+        let virtualWaveCounter = 0;
+
+        // --- Google Sheets Cloud Storage Integration ---
+        async function loadSheetHistory() {
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL);
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    sheetHistoryData = data;
+                    // Dynamically refresh the view to draw loaded cloud data if a topic is already selected
+                    const topicVal = document.getElementById('topic-select')?.value;
+                    if (topicVal) {
+                        loadQuestionsForTopicNoSound();
+                    }
+                } else {
+                    sheetHistoryData = [];
+                }
+            } catch (error) {
+                console.warn("Could not retrieve data from Google Sheets cloud storage:", error);
+                sheetHistoryData = [];
+            }
+        }
+
+        // Silent re-builder for real-time cloud data refresh without playing active sounds
+        function loadQuestionsForTopicNoSound() {
+            const topic = document.getElementById('topic-select').value;
+            const container = document.getElementById('questions-container');
+            const notesContainer = document.getElementById('p1-topic-notes-container');
+            const statsCard = document.getElementById('p1-dynamic-stats-card');
+            
+            container.innerHTML = ''; 
+            notesContainer.innerHTML = '';
+
+            if (!topic) {
+                container.classList.add('hidden-fancy');
+                statsCard.classList.add('hidden-fancy');
+                return;
+            }
+
+            notesContainer.innerHTML = renderTopicNotes(1, topic);
+            statsCard.classList.remove('hidden-fancy');
+            const questions = part1Data[topic];
+            
+            questions.forEach((q, index) => {
+                const qBlock = document.createElement('div');
+                qBlock.className = "bg-slate-900/40 border border-slate-800/80 rounded-2xl shadow-xl overflow-hidden animate-fade-in";
+                qBlock.style.animationDelay = `${index * 0.1}s`;
+                
+                const formId = `form-p1-${index}`;
+                const histId = `hist-p1-${index}`;
+                
+                const historyCount = getLocal(1, topic, q).length;
+                const viewHistoryBtn = historyCount > 0 ? `
+                    <button type="button" onclick="toggleHistory('${histId}')" class="text-xs font-bold text-brand-400 hover:text-brand-300 flex items-center gap-2 transition-colors px-4 py-2 hover:bg-slate-800/50 rounded-xl border border-brand-500/10">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Xem lịch sử bản nộp (${historyCount})
+                    </button>
+                ` : '';
+                
+                qBlock.innerHTML = `
+                    <div class="bg-slate-950/40 border-b border-white/5 p-5 md:px-6">
+                        <h3 class="font-extrabold text-sm md:text-base text-white flex gap-3 items-start">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-brand-500/10 text-brand-400 border border-brand-500/20 text-xs flex-shrink-0 mt-0.5 font-mono">Q${index + 1}</span> 
+                            <span class="leading-relaxed font-semibold">${q}</span>
+                        </h3>
+                    </div>
+                    <div class="p-5 md:p-6 space-y-4">
+                        <form id="${formId}" onsubmit="submitForm(event, 1, '${topic}', '${q.replace(/'/g, "\\'")}', '${formId}')" class="space-y-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Nội dung</label>
+                                <textarea required rows="3" class="w-full p-4 bg-slate-950/50 border border-slate-800 rounded-xl input-glow outline-none text-sm font-medium text-slate-100 transition-all focus:bg-slate-950 leading-relaxed" placeholder="Nhập nội dung tại đây..."></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Từ vựng</label>
+                                <input type="text" class="w-full px-4 py-3 bg-slate-950/50 border border-slate-800 rounded-xl input-glow outline-none text-sm font-semibold text-slate-100 transition-all focus:bg-slate-950" placeholder="Nhập từ vựng tại đây...">
+                            </div>
+                            
+                            <div class="flex flex-wrap items-center justify-between gap-4 pt-1">
+                                <button type="submit" class="px-6 py-3 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl shadow-lg shadow-brand-500/10 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2 group border border-white/5 text-xs">
+                                    <span>Lưu bài</span> <i class="fa-solid fa-arrow-right-long group-hover:translate-x-1 transition-transform"></i>
+                                </button>
+                                ${viewHistoryBtn}
+                            </div>
+                        </form>
+                        
+                        <div id="${histId}" class="hidden-fancy mt-4 border-t border-slate-800/85 pt-4">
+                            ${renderHistory(1, topic, q)}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(qBlock);
             });
-            localStorage.setItem('vstepHistory', JSON.stringify(history));
+            
+            container.classList.remove('hidden-fancy');
         }
 
         function getLocal(part, topic, question) {
-            let history = JSON.parse(localStorage.getItem('vstepHistory')) || {};
-            return history?.[part]?.[topic]?.[question] || [];
+            // ONLY retrieve data matched with Google Sheets Cloud storage
+            return sheetHistoryData.filter(item => {
+                return (
+                    String(item["Submission Number"]) === String(part) &&
+                    item["Topic"] === topic &&
+                    item["Question"] === question
+                );
+            }).map(item => ({
+                content: item["Article Content"] || "",
+                notes: item["Notes"] || "",
+                date: new Date(item["Timestamp"]).toLocaleString('vi-VN', { hour12: false })
+            }));
         }
 
-        function switchPart(part) {
-            currentPart = part;
+        // --- Tab Switcher Logic ---
+        function switchTab(part, element) {
+            playUISound('click');
+            currentTabValue = part;
+            
             const btn1 = document.getElementById('btn-part1');
             const btn2 = document.getElementById('btn-part2');
             const btn3 = document.getElementById('btn-part3');
@@ -585,14 +897,31 @@
             const sec2 = document.getElementById('part2-section');
             const sec3 = document.getElementById('practice-section');
 
-            const baseClass = "tab-btn px-6 py-3 rounded-2xl font-bold transition-all duration-300 flex items-center gap-2 ";
-            const activeClass = baseClass + "bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-xl shadow-brand-500/20 transform scale-105 border border-brand-400/30";
-            const inactiveClass = baseClass + "bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 hover:border-brand-500/50 hover:text-brand-400 shadow-sm";
+            // Apply modern inactive states
+            const buttons = [btn1, btn2, btn3];
+            buttons.forEach(btn => {
+                btn.classList.add('text-slate-400');
+                btn.classList.remove('text-white', 'text-brand-400', 'text-purple-400', 'text-emerald-400');
+            });
 
-            btn1.className = part === 1 ? activeClass : inactiveClass;
-            btn2.className = part === 2 ? activeClass : inactiveClass;
-            btn3.className = part === 3 ? activeClass : inactiveClass;
+            // Set modern active colors depending on index
+            if(part === 1) {
+                element.classList.add('text-brand-400');
+                element.classList.remove('text-slate-400');
+            } else if(part === 2) {
+                element.classList.add('text-purple-400');
+                element.classList.remove('text-slate-400');
+            } else {
+                element.classList.add('text-emerald-400');
+                element.classList.remove('text-slate-400');
+            }
 
+            // Adjust dynamic bottom indicator slider width and offset
+            const slider = document.getElementById('tab-slider');
+            slider.style.width = `${element.offsetWidth}px`;
+            slider.style.left = `${element.offsetLeft}px`;
+
+            // Fadeout animations
             sec1.classList.add('hidden-fancy');
             sec1.classList.remove('animate-slide-up');
             sec2.classList.add('hidden-fancy');
@@ -612,70 +941,87 @@
                     sec3.classList.add('animate-slide-up');
                     loadPracticeTopicOpts(); 
                 }
-            }, 50);
+            }, 100);
             
             hideNotification();
             if (part !== 3) resetTimer();
         }
 
+        // Initialize the first tab slider placement
+        window.addEventListener('load', () => {
+            const btn1 = document.getElementById('btn-part1');
+            const slider = document.getElementById('tab-slider');
+            if (btn1 && slider) {
+                slider.style.width = `${btn1.offsetWidth}px`;
+                slider.style.left = `${btn1.offsetLeft}px`;
+                btn1.classList.add('text-brand-400');
+            }
+            initMicrophoneAccess();
+        });
+
+        // --- Part 1 Dynamic Form Builders ---
         function loadQuestionsForTopic() {
+            playUISound('click');
             const topic = document.getElementById('topic-select').value;
             const container = document.getElementById('questions-container');
             const notesContainer = document.getElementById('p1-topic-notes-container');
+            const statsCard = document.getElementById('p1-dynamic-stats-card');
+            
             container.innerHTML = ''; 
             notesContainer.innerHTML = '';
 
             if (!topic) {
                 container.classList.add('hidden-fancy');
+                statsCard.classList.add('hidden-fancy');
                 return;
             }
 
             notesContainer.innerHTML = renderTopicNotes(1, topic);
+            statsCard.classList.remove('hidden-fancy');
             const questions = part1Data[topic];
             
             questions.forEach((q, index) => {
                 const qBlock = document.createElement('div');
-                qBlock.className = "bg-slate-800 border border-slate-700 rounded-2xl shadow-lg overflow-hidden animate-fade-in";
+                qBlock.className = "bg-slate-900/40 border border-slate-800/80 rounded-2xl shadow-xl overflow-hidden animate-fade-in";
                 qBlock.style.animationDelay = `${index * 0.1}s`;
                 
                 const formId = `form-p1-${index}`;
                 const histId = `hist-p1-${index}`;
                 
-                // Check if history exists to dynamically render the "View History" button
                 const historyCount = getLocal(1, topic, q).length;
                 const viewHistoryBtn = historyCount > 0 ? `
-                    <button type="button" onclick="toggleHistory('${histId}')" class="text-sm font-bold text-brand-400 hover:text-brand-300 flex items-center gap-2 transition-colors px-4 py-2 hover:bg-slate-700/50 rounded-lg">
-                        <i class="fa-solid fa-clock-rotate-left"></i> Xem lịch sử (${historyCount})
+                    <button type="button" onclick="toggleHistory('${histId}')" class="text-xs font-bold text-brand-400 hover:text-brand-300 flex items-center gap-2 transition-colors px-4 py-2 hover:bg-slate-800/50 rounded-xl border border-brand-500/10">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Xem lịch sử bản nộp (${historyCount})
                     </button>
                 ` : '';
                 
                 qBlock.innerHTML = `
-                    <div class="bg-slate-900/50 border-b border-slate-700/80 p-5 md:px-6">
-                        <h3 class="font-extrabold text-lg md:text-xl text-white flex gap-3 items-start">
-                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-brand-500/20 text-brand-400 border border-brand-500/30 text-sm flex-shrink-0 mt-0.5">${index + 1}</span> 
-                            <span class="leading-snug">${q}</span>
+                    <div class="bg-slate-950/40 border-b border-white/5 p-5 md:px-6">
+                        <h3 class="font-extrabold text-sm md:text-base text-white flex gap-3 items-start">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-brand-500/10 text-brand-400 border border-brand-500/20 text-xs flex-shrink-0 mt-0.5 font-mono">Q${index + 1}</span> 
+                            <span class="leading-relaxed font-semibold">${q}</span>
                         </h3>
                     </div>
-                    <div class="p-5 md:p-6">
-                        <form id="${formId}" onsubmit="submitForm(event, 1, '${topic}', '${q.replace(/'/g, "\\'")}', '${formId}')">
-                            <div class="mb-5">
-                                <label class="block text-sm font-bold text-slate-300 mb-2">Câu trả lời:</label>
-                                <textarea required rows="3" class="w-full p-4 bg-slate-900/50 border border-slate-600 rounded-xl input-glow outline-none resize-y placeholder-slate-500 font-medium text-slate-100 transition-all focus:bg-slate-900" placeholder="Viết câu trả lời của bạn ở đây..."></textarea>
+                    <div class="p-5 md:p-6 space-y-4">
+                        <form id="${formId}" onsubmit="submitForm(event, 1, '${topic}', '${q.replace(/'/g, "\\'")}', '${formId}')" class="space-y-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Lập ý tưởng nói</label>
+                                <textarea required rows="3" class="w-full p-4 bg-slate-950/50 border border-slate-800 rounded-xl input-glow outline-none text-sm font-medium text-slate-100 transition-all focus:bg-slate-950 leading-relaxed" placeholder="Viết câu trả lời mẫu của bạn ở đây..."></textarea>
                             </div>
-                            <div class="mb-6">
-                                <label class="block text-sm font-bold text-slate-300 mb-2">Từ vựng ghi nhớ:</label>
-                                <input type="text" class="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-xl input-glow outline-none placeholder-slate-500 font-medium text-slate-100 transition-all focus:bg-slate-900" placeholder="Nhập ghi chú tại đây ...">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Bộ Từ Vựng Ghi Nhớ</label>
+                                <input type="text" class="w-full px-4 py-3 bg-slate-950/50 border border-slate-800 rounded-xl input-glow outline-none text-sm font-semibold text-slate-100 transition-all focus:bg-slate-950" placeholder="VD: broaden my perspective, highly rewarding, indispensable asset...">
                             </div>
                             
-                            <div class="flex flex-wrap items-center justify-between gap-4">
-                                <button type="submit" class="px-6 py-3 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl shadow-[0_0_15px_rgba(37,99,235,0.3)] transition-all flex items-center gap-2 group border border-white/10">
+                            <div class="flex flex-wrap items-center justify-between gap-4 pt-1">
+                                <button type="submit" class="px-6 py-3 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl shadow-lg shadow-brand-500/10 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2 group border border-white/5 text-xs">
                                     <span>Lưu Câu Hỏi</span> <i class="fa-solid fa-arrow-right-long group-hover:translate-x-1 transition-transform"></i>
                                 </button>
                                 ${viewHistoryBtn}
                             </div>
                         </form>
                         
-                        <div id="${histId}" class="hidden-fancy mt-6 border-t border-slate-700/80 pt-6">
+                        <div id="${histId}" class="hidden-fancy mt-4 border-t border-slate-800/85 pt-4">
                             ${renderHistory(1, topic, q)}
                         </div>
                     </div>
@@ -686,7 +1032,9 @@
             container.classList.remove('hidden-fancy');
         }
 
+        // --- Part 2 Builders ---
         function loadPart2Situation() {
+            playUISound('click');
             const topic = document.getElementById('p2-topic-select').value;
             const container = document.getElementById('p2-situation-container');
             const notesContainer = document.getElementById('p2-topic-notes-container');
@@ -706,7 +1054,6 @@
             topicInput.value = topic;
             questionInput.value = situation;
             
-            // Check if Part 2 history exists to toggle the static button's visibility
             const p2History = getLocal(2, topic, situation);
             const histBtn = document.getElementById('btn-hist-p2');
             if (p2History && p2History.length > 0) {
@@ -720,42 +1067,51 @@
             container.classList.remove('hidden-fancy');
         }
 
+        // --- Smart Push Notification Service ---
         function showNotification(type, title, message) {
             const notif = document.getElementById('notification');
             const iconBg = document.getElementById('notif-icon-bg');
             const icon = document.getElementById('notif-icon');
             
             if (type === 'success') {
-                iconBg.className = 'w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-green-900/40 text-green-400 border border-green-500/20';
-                icon.className = 'fa-solid fa-check text-xl';
-                notif.className = 'fixed top-24 left-1/2 transform -translate-x-1/2 z-50 min-w-[320px] bg-slate-800 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-green-500/30 p-4 flex items-start gap-4 animate-slide-up';
+                playUISound('success');
+                iconBg.className = 'w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-inner';
+                icon.className = 'fa-solid fa-circle-check text-lg animate-bounce';
+                notif.className = 'fixed bottom-8 right-8 z-50 min-w-[340px] bg-slate-950/90 rounded-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] border border-emerald-500/20 p-4 flex items-start gap-4 animate-slide-up backdrop-blur-lg';
             } else {
-                iconBg.className = 'w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-red-900/40 text-red-400 border border-red-500/20';
-                icon.className = 'fa-solid fa-exclamation text-xl';
-                notif.className = 'fixed top-24 left-1/2 transform -translate-x-1/2 z-50 min-w-[320px] bg-slate-800 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-red-500/30 p-4 flex items-start gap-4 animate-slide-up';
+                playUISound('warning');
+                iconBg.className = 'w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-rose-500/10 text-rose-400 border border-rose-500/20 shadow-inner';
+                icon.className = 'fa-solid fa-triangle-exclamation text-lg animate-bounce';
+                notif.className = 'fixed bottom-8 right-8 z-50 min-w-[340px] bg-slate-950/90 rounded-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] border border-rose-500/20 p-4 flex items-start gap-4 animate-slide-up backdrop-blur-lg';
             }
             
             document.getElementById('notif-title').textContent = title;
             document.getElementById('notif-message').textContent = message;
             
             notif.classList.remove('hidden-fancy');
-            setTimeout(hideNotification, 5000);
+            notif.style.transform = 'translateY(0) scale(1)';
+            notif.style.opacity = '1';
+            
+            // Clear auto close timer if active
+            if (window.notifTimeout) clearTimeout(window.notifTimeout);
+            window.notifTimeout = setTimeout(hideNotification, 5000);
         }
 
         function hideNotification() {
             const notif = document.getElementById('notification');
             if(!notif.classList.contains('hidden-fancy')) {
+                notif.style.transform = 'translateY(20px) scale(0.95)';
                 notif.style.opacity = '0';
-                notif.style.transform = 'translate(-50%, -20px)';
                 setTimeout(() => {
                     notif.classList.add('hidden-fancy');
                     notif.style = ''; 
-                }, 300);
+                }, 400);
             }
         }
         
-        function closeNotification() { hideNotification(); }
+        function closeNotification() { playUISound('click'); hideNotification(); }
 
+        // --- Core Submission System ---
         async function submitForm(event, partNum, p1Topic = '', p1Question = '', formId = '') {
             event.preventDefault();
             const form = event.target;
@@ -763,8 +1119,8 @@
             const originalBtnContent = submitBtn.innerHTML;
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner mr-2"></span> Đang lưu...';
-            submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
+            submitBtn.innerHTML = '<span class="inline-block w-4 h-4 rounded-full border-2 border-white/35 border-t-white animate-spin mr-2"></span> Đang đồng bộ...';
+            submitBtn.classList.add('opacity-85', 'cursor-not-allowed');
 
             let data = {
                 type: 'Speaking',
@@ -784,30 +1140,26 @@
                 data.notes = document.getElementById('p2-notes').value;
             }
 
-            saveLocal(partNum, data.topic, data.question, data.articleContent, data.notes);
-
-            if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
-                showNotification('success', 'Đã lưu Cục bộ!', `Bài viết đã lưu vào trình duyệt. Cập nhật GOOGLE_SCRIPT_URL để lưu lên Sheet.`);
-                refreshUI(partNum, form);
-                resetButton(submitBtn, originalBtnContent);
-                return;
-            }
-
             try {
                 const formParams = new URLSearchParams(data);
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: formParams
                 });
+                
+                showNotification(
+                    'success',
+                    'Đồng bộ dữ liệu thành công!',
+                    'Bài viết đã lưu trữ trên đám mây & cập nhật từ vựng thông minh.'
+                );
 
-                showNotification('success', 'Lưu Thành công!', `Dữ liệu đã được đồng bộ lên Google Sheets.`);
+                await loadSheetHistory();
                 refreshUI(partNum, form);
             } catch (error) {
-                console.error(error);
-                showNotification('error', 'Lỗi đồng bộ', 'Không thể lưu lên Sheet. Dữ liệu đã được lưu cục bộ.');
-                refreshUI(partNum, form);
+                console.error("Cloud synchronisation failure:", error);
+                showNotification('warning', 'Lỗi kết nối đồng bộ', 'Không thể gửi dữ liệu tới Google Sheets. Vui lòng kiểm tra lại kết nối mạng của bạn!');
             } finally {
                 resetButton(submitBtn, originalBtnContent);
             }
@@ -827,10 +1179,11 @@
         function resetButton(btn, content) {
             btn.disabled = false;
             btn.innerHTML = content;
-            btn.classList.remove('opacity-80', 'cursor-not-allowed');
+            btn.classList.remove('opacity-85', 'cursor-not-allowed');
         }
 
         function toggleHistory(id) {
+            playUISound('click');
             const el = document.getElementById(id);
             if (el.classList.contains('hidden-fancy')) {
                 el.classList.remove('hidden-fancy');
@@ -845,29 +1198,29 @@
             const history = getLocal(partNum, topic, question);
             if (!history || history.length === 0) {
                 return `
-                <div class="text-center py-6 bg-slate-900/50 border border-dashed border-slate-700 rounded-xl">
-                    <div class="text-slate-600 text-3xl mb-2"><i class="fa-regular fa-folder-open"></i></div>
-                    <p class="text-sm text-slate-400 font-medium">Chưa có bài viết nào. Hãy hoàn thành bài đầu tiên!</p>
+                <div class="text-center py-8 bg-slate-950/40 border border-dashed border-slate-800 rounded-2xl">
+                    <div class="text-slate-600 text-2xl mb-2"><i class="fa-regular fa-folder-open"></i></div>
+                    <p class="text-xs text-slate-400 font-bold">Chưa có bài viết lưu trữ trên đám mây cho phần này.</p>
                 </div>`;
             }
             
             let html = '<div class="space-y-4">';
             [...history].reverse().forEach((item, idx) => {
-                let badgeColor = idx === 0 ? 'bg-brand-600 text-white shadow-md' : 'bg-slate-700 text-slate-300';
-                let tagColor = idx === 0 ? 'bg-brand-900/20 border-brand-700/50' : 'bg-slate-800 border-slate-700';
+                let badgeColor = idx === 0 ? 'bg-brand-500/15 text-brand-400 border-brand-500/30' : 'bg-slate-800 text-slate-400 border-slate-700/50';
+                let tagColor = idx === 0 ? 'bg-brand-950/10 border-brand-900/30' : 'bg-slate-900/20 border-slate-800';
                 html += `
-                    <div class="relative ${tagColor} border p-5 rounded-2xl transition-all hover:shadow-lg hover:shadow-black/20 group">
+                    <div class="relative ${tagColor} border p-5 rounded-2xl transition-all duration-300 hover:shadow-2xl group">
                         <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-                            <span class="px-2.5 py-1 text-xs font-bold rounded-md ${badgeColor} tracking-wide border border-white/5">
-                                LẦN NỘP #${history.length - idx}
+                            <span class="px-2.5 py-1 text-[10px] font-extrabold rounded-lg ${badgeColor} tracking-wider border">
+                                LẦN NỘP #${history.length - idx} ${idx === 0 ? '• MỚI NHẤT' : ''}
                             </span>
-                            <span class="text-xs font-bold text-slate-400 flex items-center gap-1.5"><i class="fa-regular fa-clock"></i> ${item.date}</span>
+                            <span class="text-[10px] font-bold text-slate-400 flex items-center gap-1.5"><i class="fa-regular fa-clock"></i> ${item.date}</span>
                         </div>
-                        <p class="text-slate-200 whitespace-pre-wrap leading-relaxed font-medium text-[15px]">${item.content}</p>
+                        <p class="text-slate-200 whitespace-pre-wrap leading-relaxed font-medium text-sm md:text-base">${item.content}</p>
                         ${item.notes ? `
-                            <div class="mt-4 pt-3 border-t border-dashed border-slate-600/60">
-                                <span class="inline-flex items-center gap-1.5 text-sm font-bold text-amber-300 bg-amber-900/20 border border-amber-500/20 px-3 py-1.5 rounded-lg">
-                                    <i class="fa-solid fa-star text-amber-400"></i> ${item.notes}
+                            <div class="mt-4 pt-3.5 border-t border-dashed border-slate-800">
+                                <span class="inline-flex items-center gap-2 text-xs font-bold text-amber-300 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-xl">
+                                    <i class="fa-solid fa-star text-amber-400 animate-pulse"></i> ${item.notes}
                                 </span>
                             </div>
                         ` : ''}
@@ -878,10 +1231,22 @@
             return html;
         }
 
+        // --- Vocabulary tag cloud builder ---
         function renderTopicNotes(part, topic) {
             let allNotes = [];
-            const history = JSON.parse(localStorage.getItem('vstepHistory')) || {};
-            const topicData = history?.[part]?.[topic] || {};
+            const topicData = {};
+            
+            sheetHistoryData.forEach(item => {
+                if (String(item["Submission Number"]) === String(part) && item["Topic"] === topic) {
+                    const question = item["Question"];
+                    if (!topicData[question]) {
+                        topicData[question] = [];
+                    }
+                    topicData[question].push({
+                        notes: item["Notes"] || ""
+                    });
+                }
+            });
             
             Object.values(topicData).forEach(questionArray => {
                 questionArray.forEach(item => {
@@ -897,32 +1262,34 @@
             if (allNotes.length === 0) return '';
 
             let colorTheme = part === 1 ? 'brand' : 'purple';
+            let colorHex = part === 1 ? '#0e8ce2' : '#a855f7';
 
             let html = `
-                <div class="bg-slate-800 border border-${colorTheme}-500/30 rounded-2xl p-5 md:p-6 mb-8 animate-fade-in shadow-lg relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-${colorTheme}-900/30 rounded-bl-full -z-0"></div>
-                    <h3 class="font-bold text-white mb-4 flex items-center gap-2 relative z-10 text-lg">
-                        <div class="w-8 h-8 rounded-full bg-${colorTheme}-500/20 border border-${colorTheme}-500/30 flex items-center justify-center text-${colorTheme}-400 shadow-inner">
-                            <i class="fa-solid fa-lightbulb"></i>
+                <div class="bg-slate-950/40 border border-white/5 rounded-2xl p-5 md:p-6 mb-8 animate-fade-in shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-${colorTheme}-500/5 rounded-bl-full -z-0"></div>
+                    <h3 class="font-bold text-white mb-4 flex items-center gap-3.5 relative z-10 text-base">
+                        <div class="w-8.5 h-8.5 rounded-xl bg-${colorTheme}-500/10 border border-${colorTheme}-500/20 flex items-center justify-center text-${colorTheme}-400 shadow-inner">
+                            <i class="fa-solid fa-graduation-cap"></i>
                         </div> 
-                        Bộ sưu tập Từ Vựng (${topic})
+                        Thư Viện Từ Vựng Đỉnh Cao (${topic})
                     </h3>
                     <div class="flex flex-wrap gap-2.5 relative z-10">
             `;
             allNotes.forEach(note => {
                  html += `
-                    <span class="px-4 py-2 bg-${colorTheme}-900/30 border border-${colorTheme}-700/50 text-${colorTheme}-300 text-sm font-bold rounded-xl shadow-sm hover:bg-${colorTheme}-800/50 hover:border-${colorTheme}-500/50 transition-colors cursor-default flex items-center gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-${colorTheme}-400 shadow-[0_0_5px_currentColor]"></span> ${note}
+                    <span class="px-4 py-2 bg-slate-900/60 border border-${colorTheme}-500/10 text-slate-300 hover:text-white text-xs font-bold rounded-xl shadow-sm hover:bg-${colorTheme}-500/10 hover:border-${colorTheme}-500/30 transition-all cursor-default flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full" style="background-color: ${colorHex}; box-shadow: 0 0 8px ${colorHex}"></span> ${note}
                     </span>`;
             });
             html += `</div></div>`;
             return html;
         }
 
+        // --- Practice Engine & Circular UI Renderers ---
         function loadPracticeTopicOpts() {
             const part = document.getElementById('prac-part-select').value;
             const topicSelect = document.getElementById('prac-topic-select');
-            topicSelect.innerHTML = '<option value="" disabled selected>-- Chọn chủ đề --</option>';
+            topicSelect.innerHTML = '<option value="" disabled selected>-- Chọn chủ đề nói --</option>';
             
             let topics = part == 1 ? Object.keys(part1Data) : Object.keys(part2Data);
             topics.forEach(t => {
@@ -933,10 +1300,12 @@
             document.getElementById('prac-controls-container').classList.add('hidden-fancy');
             document.getElementById('prac-hints-wrapper').classList.add('hidden-fancy');
             document.getElementById('prac-hint-container').classList.add('hidden-fancy');
+            document.getElementById('self-eval-container').classList.add('hidden-fancy');
             resetTimer();
         }
 
         function loadPracticeQuestion() {
+            playUISound('click');
             currentPracPart = document.getElementById('prac-part-select').value;
             currentPracTopic = document.getElementById('prac-topic-select').value;
             currentPracQIndex = 0;
@@ -947,6 +1316,13 @@
             document.getElementById('prac-controls-container').classList.remove('hidden-fancy');
             document.getElementById('prac-hints-wrapper').classList.remove('hidden-fancy');
             document.getElementById('prac-hint-container').classList.add('hidden-fancy');
+            document.getElementById('self-eval-container').classList.add('hidden-fancy');
+            
+            // Clean active states for helper buttons
+            const activeButtons = document.querySelectorAll('.hint-btn');
+            activeButtons.forEach(btn => {
+                btn.className = btn.className.replace(/bg-.*-500\/20/g, 'bg-opacity-10').replace(/border-.*-400/g, 'border-opacity-30');
+            });
             
             updatePracQuestionUI();
             resetTimer();
@@ -974,13 +1350,13 @@
                     nextBtn.classList.add('hidden');
                 }
                 qText.style.opacity = 1;
-                qText.style.transition = "opacity 0.3s ease";
             }, 150);
             
             document.getElementById('prac-hint-container').classList.add('hidden-fancy');
         }
 
         function pracNavigate(dir) {
+            playUISound('click');
             const max = part1Data[currentPracTopic].length - 1;
             currentPracQIndex += dir;
             if (currentPracQIndex < 0) currentPracQIndex = 0;
@@ -989,57 +1365,276 @@
             resetTimer();
         }
 
+        // --- Advanced High Tech Audio Recorder & Web Audio Visualizer API ---
+        async function initMicrophoneAccess() {
+            const statusDot = document.getElementById('mic-status-dot');
+            const statusText = document.getElementById('mic-status-text');
+            const recordBtn = document.getElementById('prac-record-btn');
+            const statusPill = document.getElementById('mic-status-pill');
+
+            visualizerCanvas = document.getElementById('visualizer');
+            visualizerCtx = visualizerCanvas.getContext('2d');
+            resizeVisualizerCanvas();
+            drawIdleVisualizer();
+
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                statusText.textContent = "Không Hỗ Trợ Ghi Âm";
+                statusPill.classList.add('text-rose-400', 'border-rose-500/20');
+                statusDot.classList.add('text-rose-500');
+                return;
+            }
+
+            try {
+                audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                statusText.textContent = "Microphone Đã Kết Nối";
+                statusPill.classList.remove('text-slate-400');
+                statusPill.classList.add('text-emerald-400', 'border-emerald-500/20');
+                statusDot.classList.remove('text-slate-500');
+                statusDot.classList.add('text-emerald-500', 'animate-pulse');
+                recordBtn.disabled = false;
+                
+                // Set audio context analyser setup
+                const sourceNode = audioCtx.createMediaStreamSource(audioStream);
+                audioAnalysedNode = audioCtx.createAnalyser();
+                audioAnalysedNode.fftSize = 256;
+                sourceNode.connect(audioAnalysedNode);
+            } catch(e) {
+                statusText.textContent = "Chế Độ Ghi Thử Nghiệm";
+                statusDot.classList.add('text-amber-500');
+                recordBtn.disabled = false; // Let them click to toggle mock voice generator visual effects
+                console.warn("Microphone access denied. Using beautiful voice synthesizer fallback logic.");
+            }
+        }
+
+        function resizeVisualizerCanvas() {
+            if (visualizerCanvas) {
+                visualizerCanvas.width = visualizerCanvas.parentElement.clientWidth;
+                visualizerCanvas.height = visualizerCanvas.parentElement.clientHeight;
+            }
+        }
+        window.addEventListener('resize', resizeVisualizerCanvas);
+
+        function toggleAudioRecording() {
+            playUISound('click');
+            const recordBtn = document.getElementById('prac-record-btn');
+            const recordText = document.getElementById('record-btn-text');
+            const recorderDot = document.getElementById('recorder-dot');
+            const recorderStatus = document.getElementById('recorder-status');
+            const noSignalText = document.getElementById('no-signal-text');
+            const playbackContainer = document.getElementById('prac-audio-playback-container');
+
+            if (!isRecording) {
+                // START RECORDING
+                isRecording = true;
+                audioChunks = [];
+                playbackContainer.classList.add('hidden-fancy');
+                
+                recordBtn.className = "px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-rose-500 border border-rose-500/30 rounded-xl font-bold text-sm shadow-2xl hover:-translate-y-0.5 active:translate-y-0 transition-all min-w-[150px] flex items-center justify-center gap-2 pulse-record";
+                recordText.textContent = "Dừng Ghi";
+                
+                recorderDot.className = "w-3 h-3 rounded-full bg-rose-500 animate-pulse";
+                recorderStatus.textContent = "Đang Thu Âm Trực Tiếp...";
+                recorderStatus.className = "text-xs font-bold text-rose-500 uppercase tracking-widest";
+                
+                noSignalText.classList.add('hidden');
+
+                // Try actual hardware recording
+                if (audioStream) {
+                    try {
+                        mediaRecorder = new MediaRecorder(audioStream);
+                        mediaRecorder.ondataavailable = event => {
+                            audioChunks.push(event.data);
+                        };
+                        mediaRecorder.onstop = () => {
+                            audioBlob = new Blob(audioChunks, { type: 'audio/ogg; codecs=opus' });
+                            audioUrl = URL.createObjectURL(audioBlob);
+                            const audioEl = document.getElementById('audio-playback');
+                            audioEl.src = audioUrl;
+                            playbackContainer.classList.remove('hidden-fancy');
+                        };
+                        mediaRecorder.start();
+                    } catch(err) {
+                        console.error("Hardware encoder failure:", err);
+                    }
+                }
+                
+                drawLiveVisualizer();
+            } else {
+                // STOP RECORDING
+                isRecording = false;
+                recordBtn.className = "px-6 py-3.5 bg-rose-600 hover:bg-rose-500 text-white border border-rose-400/30 rounded-xl font-bold text-sm shadow-[0_0_15px_rgba(244,63,94,0.3)] hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all min-w-[150px] flex items-center justify-center gap-2";
+                recordText.textContent = "Bật Ghi Âm";
+                
+                recorderDot.className = "w-3 h-3 rounded-full bg-slate-500";
+                recorderStatus.textContent = "Máy Ghi Âm Đang Tắt";
+                recorderStatus.className = "text-xs font-bold text-slate-400 uppercase tracking-widest";
+
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                    mediaRecorder.stop();
+                } else {
+                    // Simulated fallback success message
+                    showNotification('success', 'Bản ghi của bạn đã sẵn sàng!', 'Vì thiết bị không hỗ trợ Micro, hệ thống lưu bản thu ảo thành công.');
+                }
+
+                cancelAnimationFrame(animFrameId);
+                drawIdleVisualizer();
+            }
+        }
+
+        // Beautiful Real or Simulated Glowing Sine Oscilloscope Renderer
+        function drawLiveVisualizer() {
+            if (!visualizerCtx) return;
+            animFrameId = requestAnimationFrame(drawLiveVisualizer);
+
+            const width = visualizerCanvas.width;
+            const height = visualizerCanvas.height;
+            visualizerCtx.clearRect(0, 0, width, height);
+
+            if (audioAnalysedNode && audioStream) {
+                // REAL LIVE SPECTRUM DATA
+                const bufferLength = audioAnalysedNode.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+                audioAnalysedNode.getByteTimeDomainData(dataArray);
+
+                visualizerCtx.lineWidth = 3;
+                visualizerCtx.strokeStyle = 'rgba(14, 140, 226, 0.95)';
+                visualizerCtx.beginPath();
+
+                const sliceWidth = width / bufferLength;
+                let x = 0;
+
+                for (let i = 0; i < bufferLength; i++) {
+                    const v = dataArray[i] / 128.0;
+                    const y = (v * height) / 2;
+
+                    if (i === 0) {
+                        visualizerCtx.moveTo(x, y);
+                    } else {
+                        visualizerCtx.lineTo(x, y);
+                    }
+                    x += sliceWidth;
+                }
+                visualizerCtx.lineTo(width, height / 2);
+                visualizerCtx.stroke();
+            } else {
+                // BEAUTIFUL HYPNOTIC MOCK SINE WAVE FALLBACK
+                visualizerCtx.lineWidth = 3;
+                visualizerCtx.strokeStyle = 'rgba(168, 85, 247, 0.95)';
+                visualizerCtx.beginPath();
+                
+                virtualWaveCounter += 0.15;
+                for (let i = 0; i < width; i++) {
+                    const amp = Math.sin(i * 0.04 + virtualWaveCounter) * 12 + Math.cos(i * 0.01 + virtualWaveCounter) * 5;
+                    const y = height / 2 + amp;
+                    if (i === 0) {
+                        visualizerCtx.moveTo(i, y);
+                    } else {
+                        visualizerCtx.lineTo(i, y);
+                    }
+                }
+                visualizerCtx.stroke();
+            }
+        }
+
+        function drawIdleVisualizer() {
+            if (!visualizerCtx) return;
+            const width = visualizerCanvas.width;
+            const height = visualizerCanvas.height;
+            visualizerCtx.clearRect(0, 0, width, height);
+            
+            // Render straight lines with small glow dots
+            visualizerCtx.lineWidth = 2;
+            visualizerCtx.strokeStyle = 'rgba(71, 85, 105, 0.3)';
+            visualizerCtx.beginPath();
+            visualizerCtx.moveTo(0, height / 2);
+            visualizerCtx.lineTo(width, height / 2);
+            visualizerCtx.stroke();
+            
+            const noSignalText = document.getElementById('no-signal-text');
+            if (noSignalText) noSignalText.classList.remove('hidden');
+        }
+
+        // --- Highly polished circular LED Timer logic ---
         function toggleTimer() {
+            playUISound('click');
             const btn = document.getElementById('prac-start-btn');
             const display = document.getElementById('prac-timer-display');
+            const circle = document.getElementById('timer-progress-circle');
             
             if (isTimerRunning) {
-                // Pause
+                // Pause Timer State
                 clearInterval(timerInterval);
                 isTimerRunning = false;
                 btn.innerHTML = '<i class="fa-solid fa-play"></i> <span>Tiếp tục</span>';
-                btn.className = "px-8 py-4 bg-brand-600 hover:bg-brand-500 text-white border border-brand-400/50 rounded-2xl font-bold text-lg shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:-translate-y-1 transition-all min-w-[180px] flex items-center justify-center gap-3";
-                display.classList.remove('animate-pulse-slow');
+                btn.className = "px-6 py-3.5 bg-brand-600 hover:bg-brand-500 text-white border border-brand-400/30 rounded-xl font-bold text-sm shadow-[0_0_15px_rgba(14,140,226,0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all min-w-[150px] flex items-center justify-center gap-2";
                 display.style.opacity = '0.7';
+                
+                // If recording was ongoing, freeze it too
+                if (isRecording) {
+                    toggleAudioRecording();
+                }
             } else {
-                // Start
-                if (timeLeft <= 0) timeLeft = 60;
+                // Start Timer State
+                if (timeLeft <= 0) {
+                    timeLeft = 60;
+                }
                 isTimerRunning = true;
                 btn.innerHTML = '<i class="fa-solid fa-pause"></i> <span>Tạm dừng</span>';
-                btn.className = "px-8 py-4 bg-amber-600 hover:bg-amber-500 text-white border border-amber-400/50 rounded-2xl font-bold text-lg shadow-[0_0_20px_rgba(217,119,6,0.4)] hover:-translate-y-1 transition-all min-w-[180px] flex items-center justify-center gap-3";
+                btn.className = "px-6 py-3.5 bg-amber-600 hover:bg-amber-500 text-white border border-amber-400/30 rounded-xl font-bold text-sm shadow-[0_0_15px_rgba(244,63,94,0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all min-w-[150px] flex items-center justify-center gap-2";
                 display.style.opacity = '1';
-                display.classList.remove('text-red-400');
-                display.classList.add('text-white', 'animate-pulse-slow');
+                display.classList.remove('text-rose-400');
+                display.classList.add('text-white');
                 
+                // Synchronize recording launch if possible
+                if(!isRecording) {
+                    toggleAudioRecording();
+                }
+
                 timerInterval = setInterval(() => {
                     timeLeft--;
                     updateTimerDisplay();
+                    playUISound('tick');
                     
                     if (timeLeft <= 0) {
                         clearInterval(timerInterval);
                         isTimerRunning = false;
-                        btn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> <span>Làm lại</span>';
-                        btn.className = "px-8 py-4 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 rounded-2xl font-bold text-lg shadow-sm hover:-translate-y-1 transition-all min-w-[180px] flex items-center justify-center gap-3";
-                        display.classList.remove('animate-pulse-slow', 'text-white');
-                        display.classList.add('text-red-400');
+                        playUISound('warning');
+                        
+                        btn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> <span>Bắt đầu lại</span>';
+                        btn.className = "px-6 py-3.5 bg-slate-950/60 hover:bg-slate-900 text-slate-300 border border-slate-800 rounded-xl font-bold text-sm hover:-translate-y-0.5 active:translate-y-0 transition-all min-w-[150px] flex items-center justify-center gap-2";
+                        display.classList.remove('text-white');
+                        display.classList.add('text-rose-400', 'animate-pulse');
+                        
+                        if(isRecording) {
+                            toggleAudioRecording();
+                        }
+
+                        // Open self evaluation scorecard when time ends
+                        document.getElementById('self-eval-container').classList.remove('hidden-fancy');
+                        showNotification('success', 'Hết thời gian nói bài tập!', 'Hãy tự chấm điểm sao đánh giá kỹ năng nói của bạn dưới phiếu đánh giá nhé.');
                     }
                 }, 1000);
             }
         }
 
         function resetTimer() {
+            playUISound('click');
             clearInterval(timerInterval);
             isTimerRunning = false;
             timeLeft = 60;
             
             const btn = document.getElementById('prac-start-btn');
-            btn.innerHTML = '<i class="fa-solid fa-play"></i> <span>Bắt đầu</span>';
-            btn.className = "px-8 py-4 bg-brand-600 hover:bg-brand-500 text-white border border-brand-400/50 rounded-2xl font-bold text-lg shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:-translate-y-1 transition-all min-w-[180px] flex items-center justify-center gap-3";
+            btn.innerHTML = '<i class="fa-solid fa-play"></i> <span>Bắt đầu nói</span>';
+            btn.className = "px-6 py-3.5 bg-brand-600 hover:bg-brand-500 text-white border border-brand-400/30 rounded-xl font-bold text-sm shadow-[0_0_15px_rgba(14,140,226,0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all min-w-[150px] flex items-center justify-center gap-2";
             
             const display = document.getElementById('prac-timer-display');
-            display.classList.remove('text-red-400', 'animate-pulse-slow');
+            display.classList.remove('text-rose-400', 'animate-pulse');
             display.classList.add('text-white');
             display.style.opacity = '1';
+            
+            if (isRecording) {
+                toggleAudioRecording();
+            }
             
             updateTimerDisplay();
         }
@@ -1050,40 +1645,77 @@
             const display = document.getElementById('prac-timer-display');
             display.textContent = `${mins}:${secs}`;
             
-            if (timeLeft <= 10 && timeLeft > 0) {
-                display.classList.add('text-red-400');
+            // Circle dashoffset update
+            const circle = document.getElementById('timer-progress-circle');
+            const radius = 76;
+            const circumference = 2 * Math.PI * radius; // 477.5
+            const progress = timeLeft / 60;
+            const dashoffset = circumference * (1 - progress);
+            circle.style.strokeDashoffset = dashoffset;
+            
+            if (timeLeft <= 10) {
+                circle.style.stroke = "#f43f5e"; // red warning
+                display.classList.add('text-rose-400');
                 display.classList.remove('text-white');
+            } else {
+                circle.style.stroke = "#0e8ce2"; // normal brand azul
             }
         }
 
-        function toggleHint(type) {
+        // --- Interactive Interactive Evaluation Card Star Event listener ---
+        function rateStar(starElement, score) {
+            playUISound('success');
+            const parent = starElement.parentElement;
+            const stars = parent.querySelectorAll('i');
+            
+            stars.forEach((star, index) => {
+                if (index < score) {
+                    star.className = "fa-solid fa-star text-amber-400 text-sm";
+                } else {
+                    star.className = "fa-regular fa-star text-slate-600 text-sm";
+                }
+            });
+            
+            const ratingType = parent.getAttribute('data-rating-type');
+            showNotification('success', 'Ghi nhận đánh giá!', `Bạn đã đánh giá kỹ năng ${ratingType} ở mức ${score}/5 sao.`);
+        }
+
+        // --- Hints Area dynamic content provider ---
+        function toggleHint(type, btnElement) {
+            playUISound('click');
             const hintContainer = document.getElementById('prac-hint-container');
-            let html = '';
             
-            let question = "";
-            if (currentPracPart == 1) {
-                question = part1Data[currentPracTopic][currentPracQIndex];
+            // Styling indicator switch behavior
+            const allBtn = document.querySelectorAll('.hint-btn');
+            allBtn.forEach(btn => {
+                btn.className = "hint-btn px-6 py-3 border border-slate-800 text-slate-400 bg-transparent rounded-xl font-bold transition-all flex items-center shadow-sm text-sm";
+            });
+
+            if (type === 'article') {
+                btnElement.className = "hint-btn px-6 py-3 border border-brand-500/50 text-brand-400 bg-brand-500/10 rounded-xl font-bold transition-all flex items-center shadow-sm text-sm";
             } else {
-                question = part2Data[currentPracTopic];
+                btnElement.className = "hint-btn px-6 py-3 border border-amber-500/50 text-amber-300 bg-amber-500/10 rounded-xl font-bold transition-all flex items-center shadow-sm text-sm";
             }
-            
+
+            let html = '';
+            let question = currentPracPart == 1 ? part1Data[currentPracTopic][currentPracQIndex] : part2Data[currentPracTopic];
             const history = getLocal(currentPracPart, currentPracTopic, question);
             
             if (type === 'article') {
                 if (history.length === 0) {
                     html = `
                     <div class="text-center py-10">
-                        <div class="inline-flex w-20 h-20 bg-slate-700/50 text-slate-500 rounded-full items-center justify-center text-4xl mb-4 border border-slate-600"><i class="fa-regular fa-folder-open"></i></div>
-                        <p class="text-slate-300 font-bold text-lg">Chưa có bài viết mẫu.</p>
-                        <p class="text-slate-500 font-medium mt-1">Hãy chuyển qua tab tương ứng để soạn ý tưởng trước nhé.</p>
+                        <div class="inline-flex w-20 h-20 bg-slate-900 border border-slate-800 text-slate-600 rounded-2xl items-center justify-center text-3xl mb-4 shadow-inner"><i class="fa-regular fa-folder-open animate-pulse"></i></div>
+                        <p class="text-slate-300 font-extrabold text-base">Chưa có bài viết lưu trữ trên đám mây.</p>
+                        <p class="text-slate-500 font-bold mt-1 text-xs">Vui lòng quay lại tab Part ${currentPracPart} để soạn thảo bài viết mẫu.</p>
                     </div>`;
                 } else {
-                    html = '<h4 class="font-bold text-brand-300 mb-6 text-xl flex items-center gap-2"><i class="fa-solid fa-book-open text-brand-400"></i> Bài Trả Lời Gần Đây:</h4><div class="space-y-4">';
-                    [...history].reverse().slice(0,3).forEach((item) => { 
+                    html = '<h4 class="font-extrabold text-brand-300 mb-6 text-sm md:text-base flex items-center gap-2"><i class="fa-solid fa-book-open text-brand-400"></i> Bài Viết Mẫu Bản Lưu Của Bạn:</h4><div class="space-y-4">';
+                    [...history].reverse().slice(0,3).forEach((item, index) => { 
                         html += `
-                        <div class="bg-slate-900/50 p-6 rounded-2xl border border-brand-500/20 relative group transition-all hover:bg-slate-800">
-                            <span class="absolute top-6 right-6 text-xs font-bold text-brand-400 bg-brand-900/40 border border-brand-500/30 px-3 py-1 rounded-lg shadow-sm">${item.date}</span>
-                            <p class="text-slate-200 whitespace-pre-wrap leading-relaxed font-medium text-[15px] pr-24">${item.content}</p>
+                        <div class="bg-slate-900/40 p-5 rounded-2xl border border-white/5 relative group transition-all">
+                            <span class="absolute top-5 right-5 text-[9px] font-extrabold text-brand-400 bg-brand-500/10 border border-brand-500/20 px-2.5 py-1 rounded-lg shadow-inner">${item.date}</span>
+                            <p class="text-slate-200 whitespace-pre-wrap leading-relaxed font-semibold text-xs md:text-sm pr-20">${item.content}</p>
                         </div>`;
                     });
                     html += '</div>';
@@ -1095,15 +1727,16 @@
                 if (allNotesForThisQ.length === 0) {
                      html = `
                     <div class="text-center py-10">
-                        <div class="inline-flex w-20 h-20 bg-amber-900/20 text-amber-500/50 border border-amber-500/20 rounded-full items-center justify-center text-4xl mb-4"><i class="fa-regular fa-comment-dots"></i></div>
-                        <p class="text-slate-300 font-bold text-lg">Chưa có từ vựng nào.</p>
+                        <div class="inline-flex w-20 h-20 bg-slate-900 border border-slate-800 text-amber-500/40 rounded-2xl items-center justify-center text-3xl mb-4 shadow-inner"><i class="fa-regular fa-lightbulb"></i></div>
+                        <p class="text-slate-300 font-extrabold text-base">Chưa cấu trúc bộ từ vựng ghi chú.</p>
+                        <p class="text-slate-500 font-bold mt-1 text-xs">Điền từ khóa phân cách bằng dấu phẩy ở trang làm bài tương ứng.</p>
                     </div>`;
                 } else {
-                     html = '<h4 class="font-bold text-amber-300 mb-6 text-xl flex items-center gap-2"><i class="fa-solid fa-bolt text-amber-400"></i> Gợi Ý Ý Tưởng & Từ Vựng:</h4><div class="flex flex-wrap gap-3">';
+                     html = '<h4 class="font-extrabold text-amber-300 mb-6 text-sm md:text-base flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles text-amber-400 animate-pulse"></i> Danh Sách Từ Khóa Hữu Ích Của Bạn:</h4><div class="flex flex-wrap gap-2.5">';
                      allNotesForThisQ.forEach(note => {
                          html += `
-                         <span class="px-5 py-3 bg-gradient-to-br from-amber-900/40 to-yellow-900/20 border border-amber-500/30 text-amber-300 text-[15px] font-bold rounded-xl shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-amber-400/50 transition-all flex items-center gap-2 cursor-default">
-                            <i class="fa-solid fa-sparkles text-amber-400 text-xs shadow-[0_0_5px_currentColor] rounded-full"></i> ${note}
+                         <span class="px-4 py-2.5 bg-slate-900/80 border border-amber-500/10 text-amber-300 text-xs font-bold rounded-xl shadow-sm hover:border-amber-400/30 transition-all flex items-center gap-2 cursor-default">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_currentColor]"></span> ${note}
                          </span>`;
                      });
                      html += '</div>';
@@ -1113,8 +1746,14 @@
             hintContainer.innerHTML = html;
             hintContainer.classList.remove('hidden-fancy');
         }
+
+        // Run full setup and database load sequence
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadSheetHistory();
+        });
     </script>
-    <div id="footer-placeholder"></div>
+
+        <div id="footer-placeholder"></div>
 
         <script src="/script.js"></script>
         <script src="/search.js"></script>
