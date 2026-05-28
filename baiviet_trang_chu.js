@@ -6,7 +6,8 @@ const allExternalLinks = [
     "/rua_tay.html",
     "/hoi_suc_tim_phoi_co_ban.html",
     "/tienganh/IPA.html",
-    "/PHCN/HĐTL/dung_cu_vltl.html"
+    "/PHCN/HĐTL/dung_cu_vltl.html",
+    "/yhoccotruyen/tra_cuu_huyet.html"
 ];
 
 // totalPages sẽ lớn hơn 1 khi có TỪ 6 bài viết trở lên
