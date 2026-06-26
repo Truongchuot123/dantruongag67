@@ -21,14 +21,23 @@
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-    <body class="bg-gray-900">
+<body class="bg-gray-900">
 
     <div id="header-placeholder"></div>
     <div id="search-placeholder"></div>
-
-      
-<!-- giới thiệu khi đăng nhập -->
 
     <header class="main-banner_trang_con">
             <div class="banner_trang_con-overlay"></div>
@@ -42,22 +51,18 @@
                     <div id="category-tabs" class="category-scroll" aria-label="Danh mục bài viết"></div>
                 </div>
             </div>
-        </header>
-<body class="text-gray-800">
-     <!-- Card Container: JS will populate this -->
-      <div id="card-container" class="max-w-6xl mx-auto px-4 grid gap-8 md:grid-cols-2 mb-12">
-      </div>
+    </header>
+
+
+        <div id="card-container" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <!-- JavaScript tự động hiển thị cấu trúc thẻ ở đây -->
+        </div>
 
 </body>
 
-
-
-
-    
     <div id="footer-placeholder"></div>
 
       <script src="/script.js"></script>
-        <script src="/search.js"></script>
       <script type="module" src="/quiz.js"></script>
       <script src="/benhhoc/benhhoc.js"></script>
 </body>

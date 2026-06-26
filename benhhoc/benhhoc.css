@@ -1,123 +1,122 @@
-/* Custom CSS for enhanced aesthetics and smooth effects */
-        .text-gray-800 body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #1a202c; /* Darker background for contrast */
+body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at 50% 50%, #111827 0%, #030712 100%);
+            min-height: 100vh;
+            color: #f3f4f6;
+            overflow-x: hidden;
         }
 
+        /* Hiệu ứng Glow mờ ảo phía sau */
+        .glow-orb {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(40px);
+        }
+
+        .glow-orb-1 { top: -10%; left: -10%; }
+        .glow-orb-2 { bottom: -10%; right: -10%; }
+
+        /* Chữ Gradient sang trọng */
         .text-gradient {
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 50%, #4f46e5 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            font-family: 'Oswald', sans-serif;
         }
 
-        /* Card transition and hover effects */
-        .card-transition {
-            transition: all 0.3s ease-in-out;
-            border-radius: 1.5rem; /* More rounded corners */
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Stronger shadow */
-        }
-        .card-transition:hover {
-            transform: translateY(-8px) scale(1.02); /* More pronounced lift and slight scale */
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3); /* Even stronger shadow on hover */
+        /* Khung Card Glassmorphism với viền phát sáng nhẹ */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Icon styling within cards */
-        .card-transition .icon {
-            font-size: 3rem; /* Larger icons */
-            color: #667eea; /* Gradient start color */
-            margin-bottom: 1rem;
-            transition: transform 0.3s ease-in-out;
-        }
-        .card-transition:hover .icon {
-            transform: rotateY(180deg); /* Flip effect on hover */
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 
+                        0 0 30px rgba(99, 102, 241, 0.1);
         }
 
-        /* Link styling within cards */
-        .js-list a {
+        /* Biểu tượng xoay 3D mượt mà */
+        .icon-container {
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            perspective: 1000px;
+        }
+        
+        .glass-card:hover .icon-container {
+            transform: rotateY(180deg);
+        }
+
+        /* Thiết kế link tài liệu cực kỳ hiện đại */
+        .doc-link {
             position: relative;
-            padding-left: 1.5rem; /* Space for a subtle icon */
-            transition: all 0.2s ease-in-out;
-            border-radius: 0.5rem;
-            display: flex; /* For icon alignment */
-            align-items: center;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.02);
         }
-        .js-list a::before {
-            content: '•'; /* Bullet point icon */
+
+        .doc-link::before {
+            content: '';
             position: absolute;
-            left: 0.5rem;
-            color: #667eea;
-            font-weight: bold;
-            transition: transform 0.2s ease-in-out;
-        }
-        .js-list a:hover::before {
-            transform: translateX(5px); /* Slide effect for bullet */
-        }
-        .js-list a:hover {
-            background-color: #e0e7ff; /* Lighter blue on hover */
-            color: #4338ca; /* Darker blue text */
-            transform: translateX(5px); /* Slight slide effect for the whole link */
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(to bottom, #818cf8, #4f46e5);
+            border-radius: 4px 0 0 4px;
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
         }
 
-        /* Pagination buttons */
-        .js-nav-controls button {
-            background-color: #a78bfa; /* Purple tone */
-            color: white;
-            transition: all 0.2s ease-in-out;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .js-nav-controls button:hover:not(:disabled) {
-            background-color: #8b5cf6; /* Darker purple on hover */
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        }
-        .js-nav-controls svg {
-            color: white; /* Ensure SVG icons are white */
+        .doc-link:hover::before {
+            transform: scaleY(1);
         }
 
-
-
-/* CSS CHO CÁC TRANG NGHIỆM PHÁP */
-        .section-lasegue {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
+        .doc-link:hover {
+            background: rgba(99, 102, 241, 0.12);
+            border-color: rgba(99, 102, 241, 0.2);
+            transform: translateX(6px);
+            padding-left: 1.25rem;
         }
 
-        /* Hiệu ứng xuất hiện */
-        @keyframes fadeSlideUp {
-            0% {
+        /* Nút phân trang */
+        .pagination-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.2s ease;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: #4f46e5;
+            border-color: #818cf8;
+            box-shadow: 0 0 15px rgba(79, 70, 229, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Hiệu ứng Fade-In xuất hiện danh sách */
+        @keyframes fadeInUp {
+            from {
                 opacity: 0;
-                transform: translateY(30px) scale(0.98);
+                transform: translateY(10px);
             }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        @keyframes fadeInDown {
-            0% {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            100% {
+            to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        /* Áp dụng cho card */
-        .card-animate {
-            animation: fadeSlideUp 0.9s ease-out forwards;
-        }
-
-        /* Áp dụng cho tiêu đề */
-        .title-animate {
-            animation: fadeInDown 1s ease-out forwards;
+        .animate-fade-in {
+            animation: fadeInUp 0.4s ease forwards;
         }

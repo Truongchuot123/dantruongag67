@@ -35,11 +35,11 @@
         <div class="w-full max-w-5xl rounded-lg shadow-xl transition-all duration-300 hover:shadow-2xl">
             <iframe
                 id="driveFrame"
-                src="https://drive.google.com/file/d/1Af9O2_TIx4fAkRQONz91t0OcgANmvNVD/view?usp=sharing"
-                class="w-full h-full rounded-lg"
-                style="height: 600px;"
-                allow="autoplay"
-                onerror="this.parentElement.innerHTML = '<div class=\'w-full h-full bg-gray-200 flex items-center justify-center rounded-lg\' style=\'height: 600px;\'><p class=\'text-gray-500\'>Failed to load content.</p></div>';"
+                src="https://drive.google.com/file/d/1Af9O2_TIx4fAkRQONz91t0OcgANmvNVD/preview"
+                class="w-full rounded-lg border-0"
+            style="height: 600px;"
+            allow="autoplay"
+            loading="lazy">
             ></iframe>
         </div>
     </div>
@@ -50,7 +50,6 @@
     <div id="footer-placeholder"></div>
     <!-- JSON data for quiz questions -->
       <script src="/script.js"></script>
-        <script src="/search.js"></script>
       <script type="module" src="/quiz.js"></script>
       <script src="/benhhoc/benhhoc.js"></script>
 </body>

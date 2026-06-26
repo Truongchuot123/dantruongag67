@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang học nói tiếng anh-Nguyễn Mai Đan Trường</title>
+    <title>Trang học nói tiếng anh - Nguyễn Mai Đan Trường</title>
     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
     <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
     <meta property="og:image" content="/hinhanh/logo_web.png">
@@ -12,7 +12,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -22,6 +22,7 @@
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
                         mono: ['"JetBrains Mono"', 'monospace'],
+                        title: ['"Playfair Display"', 'serif'],
                     },
                     colors: {
                         brand: {
@@ -150,7 +151,7 @@
         }
 
         /* Sound visualizer canvas glow */
-        #visualizer {
+        #visualizer, #mock-visualizer {
             filter: drop-shadow(0 0 8px rgba(14, 140, 226, 0.6));
         }
 
@@ -187,7 +188,6 @@
     <!-- Decorative moving elements -->
     <div class="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-brand-600/10 blur-[120px] pointer-events-none -z-10 animate-pulse-glow"></div>
     <div class="fixed bottom-[-15%] right-[-5%] w-[45%] h-[50%] rounded-full bg-purple-600/10 blur-[130px] pointer-events-none -z-10" style="animation: pulseGlow 3s ease-in-out infinite;"></div>
-
     
     <div id="header-placeholder"></div>
     <div id="search-placeholder"></div>
@@ -195,8 +195,8 @@
     <main class="max-w-5xl mx-auto px-6 py-8 md:py-12 flex-grow w-full relative">
         
     <div class="flex flex-col items-center justify-center text-center mb-10">
-        <h1 class="text-4xl md:text-5xl font-black text-white leading-tight mb-4">LUYỆN THI SPEAKING</h1>
-        <p class="max-w-2xl text-slate-400 text-lg leading-relaxed">Luyện tập kỹ năng nói với các chủ đề phổ biến trong VSTEP.</p>
+        <h1 class="text-4xl md:text-5xl font-black text-white leading-tight mb-4 tracking-tight uppercase">Luyện Thi VSTEP Speaking</h1>
+        <p class="max-w-2xl text-slate-400 text-lg leading-relaxed font-medium">Luyện tập kỹ năng nói và thi thử thời gian thực.</p>
     </div>
         
         <!-- Navigation Tabs Container with Indicator Slider -->
@@ -359,156 +359,336 @@
 
         <!-- ============================== PRACTICE MODE ============================== -->
         <section id="practice-section" class="hidden-fancy">
-            <div class="glass-card rounded-3xl p-6 md:p-12 mb-8 text-center border-brand-500/10">
-                
-                <div class="inline-block p-5 bg-brand-500/10 rounded-2xl mb-6 animate-float text-brand-400 shadow-inner border border-brand-500/20">
-                    <i class="fa-solid fa-headset text-4xl"></i>
-                </div>
-                <h2 class="text-3xl font-extrabold text-white tracking-tight mb-2">Phòng Luyện tập</h2>
-                <p class="text-slate-400 text-sm md:text-base max-w-xl mx-auto font-medium">Bạn có thời gian 1 phút để trả lời cho mỗi câu hỏi.</p>
-                
-                <!-- Topic Selection Area -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto bg-slate-950/60 p-2.5 rounded-2xl border border-white/5 shadow-inner mt-8 mb-10">
-                    <div class="relative">
-                        <select id="prac-part-select" onchange="loadPracticeTopicOpts()" class="w-full pl-4 pr-10 py-3 bg-slate-900 border border-slate-800 rounded-xl text-slate-200 font-bold focus:ring-1 focus:ring-brand-500 outline-none appearance-none cursor-pointer text-sm">
-                            <option value="1">Part 1: Tương Tác Xã Hội</option>
-                            <option value="2">Part 2: Thảo Luận Giải Pháp</option>
-                        </select>
-                        <i class="fa-solid fa-sort absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"></i>
-                    </div>
-                    <div class="relative">
-                        <select id="prac-topic-select" onchange="loadPracticeQuestion()" class="w-full pl-4 pr-10 py-3 bg-slate-900 border border-slate-800 rounded-xl text-slate-200 font-bold focus:ring-1 focus:ring-brand-500 outline-none appearance-none cursor-pointer text-sm">
-                            <option value="" disabled selected>-- Chọn chủ đề --</option>
-                        </select>
-                        <i class="fa-solid fa-sort absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"></i>
-                    </div>
-                </div>
+            <!-- MODE SWITCHER SUB-TAB -->
+            <div class="flex justify-center gap-3 mb-8 bg-slate-950/40 p-1.5 rounded-2xl border border-white/5 max-w-md mx-auto">
+                <button onclick="switchPracticeMode('flashcard')" id="btn-mode-flashcard" class="flex-1 py-2.5 rounded-xl font-bold transition-all text-xs flex items-center justify-center gap-2 bg-brand-500/15 text-brand-400 border border-brand-500/20">
+                    <i class="fa-solid fa-layer-group"></i> Luyện Từng Câu
+                </button>
+                <button onclick="switchPracticeMode('mock')" id="btn-mode-mock" class="flex-1 py-2.5 rounded-xl font-bold transition-all text-xs flex items-center justify-center gap-2 text-slate-400 hover:text-slate-200">
+                    <i class="fa-solid fa-graduation-cap"></i> Thi Thử Part 1
+                </button>
+            </div>
 
-                <!-- Flashcard Display Area -->
-                <div id="prac-question-container" class="hidden-fancy relative max-w-3xl mx-auto bg-gradient-to-b from-slate-900/60 to-slate-950/80 rounded-3xl border border-slate-800 shadow-2xl mb-8 transform hover:scale-[1.01] transition-all duration-300">
-                     <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-brand-500 via-purple-500 to-emerald-500 rounded-t-3xl opacity-80 animate-pulse"></div>
-                     
-                     <div class="p-8 md:p-14 min-h-[220px] flex flex-col justify-center items-center">
-                        <span id="prac-q-badge" class="px-4 py-1.5 bg-slate-800 border border-slate-700/60 text-slate-300 text-xs font-bold rounded-full mb-6 uppercase tracking-widest shadow-md"></span>
-                        <h3 id="prac-question-text" class="text-xl md:text-2xl font-bold text-white leading-relaxed max-w-2xl transition-opacity duration-300">Vui lòng chọn chủ đề để bắt đầu.</h3>
-                     </div>
-                     
-                     <!-- Navigation Controls for Part 1 questions -->
-                     <button id="prac-prev-btn" onclick="pracNavigate(-1)" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-slate-900 border border-slate-800 shadow-2xl flex items-center justify-center text-slate-400 hover:text-brand-400 hover:bg-slate-800 hover:border-brand-500/50 hover:scale-110 active:scale-95 transition-all duration-200 hidden"><i class="fa-solid fa-chevron-left text-base"></i></button>
-                     <button id="prac-next-btn" onclick="pracNavigate(1)" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-12 h-12 rounded-full bg-slate-900 border border-slate-800 shadow-2xl flex items-center justify-center text-slate-400 hover:text-brand-400 hover:bg-slate-800 hover:border-brand-500/50 hover:scale-110 active:scale-95 transition-all duration-200 hidden"><i class="fa-solid fa-chevron-right text-base"></i></button>
-                </div>
-
-                <!-- Live Audio Visualizer Canvas & Smart Recorder Widget -->
-                <div id="prac-controls-container" class="hidden-fancy max-w-3xl mx-auto mb-10 p-6 md:p-8 bg-slate-950/40 border border-white/5 rounded-3xl flex flex-col md:flex-row items-center justify-around gap-8">
+            <!-- CHẾ ĐỘ 1: LUYỆN TẬP TỪNG CÂU (FLASHCARD MODE) -->
+            <div id="practice-flashcard-view" class="space-y-8 animate-fade-in">
+                <div class="glass-card rounded-3xl p-6 md:p-12 text-center border-brand-500/10">
+                    <div class="inline-block p-5 bg-brand-500/10 rounded-2xl mb-6 animate-float text-brand-400 shadow-inner border border-brand-500/20">
+                        <i class="fa-solid fa-headset text-4xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-extrabold text-white tracking-tight mb-2">Phòng Luyện tập từng câu</h2>
+                    <p class="text-slate-400 text-sm md:text-base max-w-xl mx-auto font-medium">Bạn có thời gian 1 phút để trả lời cho mỗi câu hỏi.</p>
                     
-                    <!-- Circular LED Clock Timer -->
-                    <div class="relative w-44 h-44 flex items-center justify-center select-none">
-                        <svg class="w-full h-full transform -rotate-90">
-                            <circle cx="88" cy="88" r="76" stroke="rgba(255,255,255,0.04)" stroke-width="8" fill="transparent" />
-                            <circle id="timer-progress-circle" cx="88" cy="88" r="76" stroke="#0e8ce2" stroke-width="8" fill="transparent" stroke-dasharray="477" stroke-dashoffset="0" stroke-linecap="round" class="transition-all duration-1000" />
-                        </svg>
-                        <div class="absolute flex flex-col items-center justify-center">
-                            <span id="prac-timer-display" class="text-4xl font-extrabold font-mono text-white tracking-tight drop-shadow-lg">01:00</span>
-                            <span class="text-[9px] uppercase tracking-widest text-slate-500 font-bold mt-1">Giới Hạn Nói</span>
+                    <!-- Topic Selection Area -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto bg-slate-950/60 p-2.5 rounded-2xl border border-white/5 shadow-inner mt-8 mb-10">
+                        <div class="relative">
+                            <select id="prac-part-select" onchange="loadPracticeTopicOpts()" class="w-full pl-4 pr-10 py-3 bg-slate-900 border border-slate-800 rounded-xl text-slate-200 font-bold focus:ring-1 focus:ring-brand-500 outline-none appearance-none cursor-pointer text-sm">
+                                <option value="1">Part 1: Tương Tác Xã Hội</option>
+                                <option value="2">Part 2: Thảo Luận Giải Pháp</option>
+                            </select>
+                            <i class="fa-solid fa-sort absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"></i>
+                        </div>
+                        <div class="relative">
+                            <select id="prac-topic-select" onchange="loadPracticeQuestion()" class="w-full pl-4 pr-10 py-3 bg-slate-900 border border-slate-800 rounded-xl text-slate-200 font-bold focus:ring-1 focus:ring-brand-500 outline-none appearance-none cursor-pointer text-sm">
+                                <option value="" disabled selected>-- Chọn chủ đề --</option>
+                            </select>
+                            <i class="fa-solid fa-sort absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"></i>
                         </div>
                     </div>
 
-                    <!-- Voice Recorder & Waveform Block -->
-                    <div class="flex-grow flex flex-col items-center md:items-start gap-4">
-                        <div class="flex items-center gap-3 w-full justify-center md:justify-start">
-                            <div class="w-3 h-3 rounded-full bg-slate-500" id="recorder-dot"></div>
-                            <span id="recorder-status" class="text-xs font-bold text-slate-400 uppercase tracking-widest">Máy Ghi Âm Đang Tắt</span>
+                    <!-- Flashcard Display Area -->
+                    <div id="prac-question-container" class="hidden-fancy relative max-w-3xl mx-auto bg-gradient-to-b from-slate-900/60 to-slate-950/80 rounded-3xl border border-slate-800 shadow-2xl mb-8 transform hover:scale-[1.01] transition-all duration-300">
+                         <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-brand-500 via-purple-500 to-emerald-500 rounded-t-3xl opacity-80 animate-pulse"></div>
+                         
+                         <div class="p-8 md:p-14 min-h-[220px] flex flex-col justify-center items-center">
+                            <span id="prac-q-badge" class="px-4 py-1.5 bg-slate-800 border border-slate-700/60 text-slate-300 text-xs font-bold rounded-full mb-6 uppercase tracking-widest shadow-md"></span>
+                            <h3 id="prac-question-text" class="text-xl md:text-2xl font-bold text-white leading-relaxed max-w-2xl transition-opacity duration-300">Vui lòng chọn chủ đề để bắt đầu.</h3>
+                         </div>
+                         
+                         <!-- Navigation Controls for Part 1 questions -->
+                         <button id="prac-prev-btn" onclick="pracNavigate(-1)" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-slate-900 border border-slate-800 shadow-2xl flex items-center justify-center text-slate-400 hover:text-brand-400 hover:bg-slate-800 hover:border-brand-500/50 hover:scale-110 active:scale-95 transition-all duration-200 hidden"><i class="fa-solid fa-chevron-left text-base"></i></button>
+                         <button id="prac-next-btn" onclick="pracNavigate(1)" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-12 h-12 rounded-full bg-slate-900 border border-slate-800 shadow-2xl flex items-center justify-center text-slate-400 hover:text-brand-400 hover:bg-slate-800 hover:border-brand-500/50 hover:scale-110 active:scale-95 transition-all duration-200 hidden"><i class="fa-solid fa-chevron-right text-base"></i></button>
+                    </div>
+
+                    <!-- Live Audio Visualizer Canvas & Smart Recorder Widget -->
+                    <div id="prac-controls-container" class="hidden-fancy max-w-3xl mx-auto mb-10 p-6 md:p-8 bg-slate-950/40 border border-white/5 rounded-3xl flex flex-col md:flex-row items-center justify-around gap-8">
+                        
+                        <!-- Circular LED Clock Timer -->
+                        <div class="relative w-44 h-44 flex items-center justify-center select-none">
+                            <svg class="w-full h-full transform -rotate-90">
+                                <circle cx="88" cy="88" r="76" stroke="rgba(255,255,255,0.04)" stroke-width="8" fill="transparent" />
+                                <circle id="timer-progress-circle" cx="88" cy="88" r="76" stroke="#0e8ce2" stroke-width="8" fill="transparent" stroke-dasharray="477" stroke-dashoffset="0" stroke-linecap="round" class="transition-all duration-1000" />
+                            </svg>
+                            <div class="absolute flex flex-col items-center justify-center">
+                                <span id="prac-timer-display" class="text-4xl font-extrabold font-mono text-white tracking-tight drop-shadow-lg">01:00</span>
+                                <span class="text-[9px] uppercase tracking-widest text-slate-500 font-bold mt-1">Giới Hạn Nói</span>
+                            </div>
+                        </div>
+
+                        <!-- Voice Recorder & Waveform Block -->
+                        <div class="flex-grow flex flex-col items-center md:items-start gap-4">
+                            <div class="flex items-center gap-3 w-full justify-center md:justify-start">
+                                <div class="w-3 h-3 rounded-full bg-slate-500" id="recorder-dot"></div>
+                                <span id="recorder-status" class="text-xs font-bold text-slate-400 uppercase tracking-widest">Máy Ghi Âm Đang Tắt</span>
+                            </div>
+                            
+                            <!-- Oscilloscope Canvas for Voice/Animation -->
+                            <div class="w-full max-w-sm h-14 bg-slate-950/80 border border-slate-800 rounded-xl overflow-hidden flex items-center relative">
+                                <canvas id="visualizer" class="w-full h-full"></canvas>
+                                <div id="no-signal-text" class="absolute inset-0 flex items-center justify-center text-xs text-slate-600 font-bold tracking-widest">SẴN SÀNG THU THỬ</div>
+                            </div>
+
+                            <!-- Main Play/Stop Controls -->
+                            <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 w-full mt-2">
+                                <button id="prac-start-btn" onclick="toggleTimer()" class="px-6 py-3.5 bg-brand-600 hover:bg-brand-500 text-white border border-brand-400/30 rounded-xl font-bold text-sm shadow-[0_0_15px_rgba(14,140,226,0.3)] hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all min-w-[150px] flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-play"></i> <span>Bắt đầu nói</span>
+                                </button>
+                                
+                                <button id="prac-record-btn" onclick="toggleAudioRecording()" class="px-6 py-3.5 bg-rose-600 hover:bg-rose-500 text-white border border-rose-400/30 rounded-xl font-bold text-sm shadow-[0_0_15px_rgba(244,63,94,0.3)] hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all min-w-[150px] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                    <i class="fa-solid fa-microphone"></i> <span id="record-btn-text">Bật Ghi Âm</span>
+                                </button>
+
+                                <button onclick="resetTimer()" class="p-3.5 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 rounded-xl font-bold text-sm hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-rotate-right"></i> <span>Làm mới</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Custom Self Evaluation Section -->
+                    <div id="self-eval-container" class="hidden-fancy max-w-3xl mx-auto p-6 bg-slate-950/30 border border-white/5 rounded-2xl mb-8 text-left animate-fade-in">
+                        <h4 class="font-bold text-sm text-slate-300 uppercase tracking-widest mb-4 flex items-center gap-2"><i class="fa-solid fa-star text-amber-400"></i> Phiếu Tự Đánh Giá Kết Quả</h4>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="bg-slate-900/60 p-3.5 rounded-xl border border-white/5">
+                                <span class="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Độ lưu loát</span>
+                                <div class="flex gap-1" data-rating-type="fluency">
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 1)"></i>
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 2)"></i>
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 3)"></i>
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 4)"></i>
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 5)"></i>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/60 p-3.5 rounded-xl border border-white/5">
+                                <span class="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Phát âm</span>
+                                <div class="flex gap-1" data-rating-type="pronunciation">
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 1)"></i>
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 2)"></i>
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 3)"></i>
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 4)"></i>
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 5)"></i>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/60 p-3.5 rounded-xl border border-white/5">
+                                <span class="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Từ vựng</span>
+                                <div class="flex gap-1" data-rating-type="vocabulary">
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 1)"></i>
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 2)"></i>
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 3)"></i>
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 4)"></i>
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 5)"></i>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/60 p-3.5 rounded-xl border border-white/5">
+                                <span class="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Ngữ pháp</span>
+                                <div class="flex gap-1" data-rating-type="grammar">
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 1)"></i>
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 2)"></i>
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 3)"></i>
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 4)"></i>
+                                    <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 5)"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Audio Playback (If Recording Saved) -->
+                    <div id="prac-audio-playback-container" class="hidden-fancy max-w-3xl mx-auto p-4 bg-slate-950/60 border border-emerald-500/30 rounded-2xl mb-8 flex items-center justify-between gap-4">
+                        <span class="text-xs font-bold text-emerald-400 flex items-center gap-2"><i class="fa-solid fa-circle-check"></i> Có Bản Thu Nháp Gần Nhất:</span>
+                        <audio id="audio-playback" controls class="w-2/3 h-10 select-none"></audio>
+                    </div>
+
+                    <!-- Hints & Study Materials Accordion Section -->
+                    <div id="prac-hints-wrapper" class="hidden-fancy border-t border-slate-800 pt-10 mt-6 max-w-3xl mx-auto">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">Trợ lý Luyện Tập Cá Nhân</p>
+                        <div class="flex flex-wrap justify-center gap-4 mb-8">
+                            <button onclick="toggleHint('article', this)" class="hint-btn px-6 py-3 border border-brand-500/30 text-brand-400 bg-brand-500/10 hover:bg-brand-500/20 hover:border-brand-400 rounded-xl font-bold transition-all flex items-center shadow-sm text-sm">
+                                <i class="fa-solid fa-file-signature mr-2.5 text-base"></i> Xem Bài Viết Mẫu của bạn
+                            </button>
+                            <button onclick="toggleHint('words', this)" class="hint-btn px-6 py-3 border border-amber-500/30 text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 hover:border-amber-400 rounded-xl font-bold transition-all flex items-center shadow-sm text-sm">
+                                <i class="fa-solid fa-lightbulb mr-2.5 text-base"></i> Gợi ý Từ Vựng ghi nhớ
+                            </button>
                         </div>
                         
-                        <!-- Oscilloscope Canvas for Voice/Animation -->
-                        <div class="w-full max-w-sm h-14 bg-slate-950/80 border border-slate-800 rounded-xl overflow-hidden flex items-center relative">
-                            <canvas id="visualizer" class="w-full h-full"></canvas>
-                            <div id="no-signal-text" class="absolute inset-0 flex items-center justify-center text-xs text-slate-600 font-bold tracking-widest">SẴN SÀNG THU THỬ</div>
-                        </div>
-
-                        <!-- Main Play/Stop Controls -->
-                        <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 w-full mt-2">
-                            <button id="prac-start-btn" onclick="toggleTimer()" class="px-6 py-3.5 bg-brand-600 hover:bg-brand-500 text-white border border-brand-400/30 rounded-xl font-bold text-sm shadow-[0_0_15px_rgba(14,140,226,0.3)] hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all min-w-[150px] flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-play"></i> <span>Bắt đầu nói</span>
-                            </button>
-                            
-                            <button id="prac-record-btn" onclick="toggleAudioRecording()" class="px-6 py-3.5 bg-rose-600 hover:bg-rose-500 text-white border border-rose-400/30 rounded-xl font-bold text-sm shadow-[0_0_15px_rgba(244,63,94,0.3)] hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all min-w-[150px] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                                <i class="fa-solid fa-microphone"></i> <span id="record-btn-text">Bật Ghi Âm</span>
-                            </button>
-
-                            <button onclick="resetTimer()" class="p-3.5 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 rounded-xl font-bold text-sm hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-rotate-right"></i> <span>Làm mới</span>
-                            </button>
-                        </div>
+                        <div id="prac-hint-container" class="hidden-fancy text-left bg-slate-950/60 p-6 md:p-8 rounded-2xl border border-slate-800 shadow-2xl max-w-3xl mx-auto max-h-[400px] overflow-y-auto animate-fade-in custom-scrollbar"></div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Custom Self Evaluation Section -->
-                <div id="self-eval-container" class="hidden-fancy max-w-3xl mx-auto p-6 bg-slate-950/30 border border-white/5 rounded-2xl mb-8 text-left animate-fade-in">
-                    <h4 class="font-bold text-sm text-slate-300 uppercase tracking-widest mb-4 flex items-center gap-2"><i class="fa-solid fa-star text-amber-400"></i> Phiếu Tự Đánh Giá Kết Quả</h4>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="bg-slate-900/60 p-3.5 rounded-xl border border-white/5">
-                            <span class="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Độ lưu loát</span>
-                            <div class="flex gap-1" data-rating-type="fluency">
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 1)"></i>
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 2)"></i>
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 3)"></i>
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 4)"></i>
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 5)"></i>
-                            </div>
-                        </div>
-                        <div class="bg-slate-900/60 p-3.5 rounded-xl border border-white/5">
-                            <span class="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Phát âm</span>
-                            <div class="flex gap-1" data-rating-type="pronunciation">
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 1)"></i>
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 2)"></i>
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 3)"></i>
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 4)"></i>
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 5)"></i>
-                            </div>
-                        </div>
-                        <div class="bg-slate-900/60 p-3.5 rounded-xl border border-white/5">
-                            <span class="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Từ vựng</span>
-                            <div class="flex gap-1" data-rating-type="vocabulary">
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 1)"></i>
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 2)"></i>
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 3)"></i>
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 4)"></i>
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 5)"></i>
-                            </div>
-                        </div>
-                        <div class="bg-slate-900/60 p-3.5 rounded-xl border border-white/5">
-                            <span class="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-2">Ngữ pháp</span>
-                            <div class="flex gap-1" data-rating-type="grammar">
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 1)"></i>
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 2)"></i>
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 3)"></i>
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 4)"></i>
-                                <i class="fa-regular fa-star text-slate-600 hover:text-amber-400 cursor-pointer text-sm" onclick="rateStar(this, 5)"></i>
-                            </div>
-                        </div>
+            <!-- CHẾ ĐỘ 2: THI THỬ GIẢ LẬP (MOCK EXAM MODE) -->
+            <div id="practice-mock-view" class="hidden-fancy space-y-8 animate-fade-in">
+                <!-- Welcome overlay modal (Confined to Mock practice area) -->
+                <div id="mock-welcome-screen" class="glass-card rounded-3xl p-8 md:p-12 text-center border-brand-500/10 max-w-xl mx-auto relative overflow-hidden">
+                    <div class="absolute -top-12 -right-12 w-32 h-32 bg-brand-500/10 rounded-full blur-2xl"></div>
+                    <div class="w-16 h-16 bg-gradient-to-tr from-brand-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-brand-500/25">
+                        <i class="fa-solid fa-graduation-cap text-2xl text-white"></i>
                     </div>
-                </div>
-
-                <!-- Live Audio Playback (If Recording Saved) -->
-                <div id="prac-audio-playback-container" class="hidden-fancy max-w-3xl mx-auto p-4 bg-slate-950/60 border border-emerald-500/30 rounded-2xl mb-8 flex items-center justify-between gap-4">
-                    <span class="text-xs font-bold text-emerald-400 flex items-center gap-2"><i class="fa-solid fa-circle-check"></i> Có Bản Thu Nháp Gần Nhất:</span>
-                    <audio id="audio-playback" controls class="w-2/3 h-10 select-none"></audio>
-                </div>
-
-                <!-- Hints & Study Materials Accordion Section -->
-                <div id="prac-hints-wrapper" class="hidden-fancy border-t border-slate-800 pt-10 mt-6 max-w-3xl mx-auto">
-                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">Trợ lý Luyện Tập Cá Nhân</p>
-                    <div class="flex flex-wrap justify-center gap-4 mb-8">
-                        <button onclick="toggleHint('article', this)" class="hint-btn px-6 py-3 border border-brand-500/30 text-brand-400 bg-brand-500/10 hover:bg-brand-500/20 hover:border-brand-400 rounded-xl font-bold transition-all flex items-center shadow-sm text-sm">
-                            <i class="fa-solid fa-file-signature mr-2.5 text-base"></i> Xem Bài Viết Mẫu của bạn
-                        </button>
-                        <button onclick="toggleHint('words', this)" class="hint-btn px-6 py-3 border border-amber-500/30 text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 hover:border-amber-400 rounded-xl font-bold transition-all flex items-center shadow-sm text-sm">
-                            <i class="fa-solid fa-lightbulb mr-2.5 text-base"></i> Gợi ý Từ Vựng ghi nhớ
-                        </button>
-                    </div>
+                    <h3 class="text-2xl font-extrabold text-white font-title tracking-tight mb-2">VSTEP Speaking Simulator</h3>
+                    <p class="text-brand-300 text-xs font-bold tracking-wider uppercase mb-6">Phần 1: Tương Tác Xã Hội</p>
                     
-                    <div id="prac-hint-container" class="hidden-fancy text-left bg-slate-950/60 p-6 md:p-8 rounded-2xl border border-slate-800 shadow-2xl max-w-3xl mx-auto max-h-[400px] overflow-y-auto animate-fade-in custom-scrollbar"></div>
+                    <div class="space-y-4 text-left max-w-sm mx-auto mb-8">
+                        <div class="flex items-center gap-3 bg-slate-900/60 p-3.5 rounded-xl border border-white/5">
+                            <i class="fa-regular fa-clock text-brand-400 text-base"></i>
+                            <span class="text-xs text-slate-300"><strong>Thời gian làm bài thi:</strong> 3 phút</span>
+                        </div>
+                        <div class="flex items-center gap-3 bg-slate-900/60 p-3.5 rounded-xl border border-white/5">
+                            <i class="fa-solid fa-microphone-lines text-brand-400 text-base"></i>
+                            <span class="text-xs text-slate-300"><strong>Ghi âm:</strong></span>
+                        </div>
+                    </div>
+
+                    <button id="mock-btn-start-test" onclick="startMockExam()" class="w-full py-4 bg-gradient-to-r from-brand-500 to-purple-600 hover:from-brand-400 hover:to-purple-500 text-white rounded-xl font-bold text-base shadow-lg hover:-translate-y-0.5 active:scale-95 transition-all flex items-center justify-center gap-2 group">
+                        <span>BẮT ĐẦU THI THỬ</span>
+                        <i class="fa-solid fa-chevron-right group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+
+                <!-- Simulation Active Area (Grid Columns) -->
+                <div id="mock-exam-workspace" class="hidden-fancy grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                    
+                    <!-- Left: Exam Paper Panel -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="glass-card rounded-2xl border border-white/5 p-6 md:p-8 shadow-xl relative overflow-hidden min-h-[420px] flex flex-col justify-between">
+                            <div class="absolute top-0 right-0 w-40 h-40 bg-brand-500/5 rounded-bl-full pointer-events-none"></div>
+                            
+                            <div>
+                                <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
+                                    <span class="text-[10px] font-bold bg-brand-500/10 text-brand-400 border border-brand-500/20 px-3 py-1 rounded-md uppercase tracking-widest font-mono">ĐỀ THI VSTEP CHUẨN HOÁ</span>
+                                    <span id="mock-paper-title" class="text-xs text-slate-400 font-bold">Topic Set 1</span>
+                                </div>
+
+                                <div id="mock-questions-wrapper" class="transition-all duration-300 space-y-6">
+                                    <!-- Dynamic content injected here -->
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between mt-8 pt-4 border-t border-slate-800">
+                                <span class="text-[10px] text-slate-500 font-semibold italic">* Chọn câu hỏi để tập trung trả lời</span>
+                                <button onclick="nextMockTopic()" class="px-5 py-2.5 bg-slate-900 border border-slate-800 text-white rounded-xl text-xs font-bold transition-all hover:bg-slate-850 flex items-center gap-1.5 hover:-translate-y-0.5">
+                                    <i class="fa-solid fa-shuffle text-brand-400"></i> Đổi Đề Thi Tiếp
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Recording Console -->
+                    <div class="space-y-6">
+                        <!-- Active Timer Box -->
+                        <div id="mock-timer-box" class="glass-card rounded-2xl border border-white/5 p-4 flex items-center justify-between shadow-xl">
+                            <div class="flex items-center gap-3">
+                                <i id="mock-timer-icon" class="fa-regular fa-clock text-brand-400 text-xl animate-pulse"></i>
+                                <div class="flex flex-col">
+                                    <span class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Thời gian còn lại</span>
+                                    <span id="mock-timer-display" class="font-mono text-2xl font-extrabold text-brand-300 drop-shadow-md">03:00</span>
+                                </div>
+                            </div>
+                            <span id="mock-mic-status-pill" class="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-slate-900 text-slate-400 border border-slate-800 flex items-center gap-1.5">
+                                <span id="mock-mic-dot" class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> <span id="mock-mic-status-text">Đang tải Mic...</span>
+                            </span>
+                        </div>
+
+                        <!-- Console -->
+                        <div class="glass-card rounded-2xl border border-white/5 p-6 flex flex-col items-center justify-center relative overflow-hidden shadow-xl">
+                            <div id="mock-mic-glow" class="absolute w-36 h-36 bg-brand-500/5 rounded-full blur-3xl transition-all duration-500 pointer-events-none"></div>
+                            
+                            <div class="w-full flex items-center justify-between mb-4 pb-3 border-b border-white/5">
+                                <div class="flex items-center gap-2">
+                                    <span id="mock-record-dot" class="w-2.5 h-2.5 bg-slate-500 rounded-full"></span>
+                                    <span id="mock-record-text" class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 font-mono">STANDBY</span>
+                                </div>
+                                <span class="text-[9px] bg-slate-800/80 border border-slate-700/60 px-2.5 py-0.5 rounded text-brand-400 font-bold tracking-wider">AUDIO DECK</span>
+                            </div>
+
+                            <!-- Live Audio Visualizer Canvas -->
+                            <div class="w-full h-16 relative flex items-center justify-center mb-5 rounded-xl bg-slate-950/40 border border-slate-800/40 overflow-hidden">
+                                <canvas id="mock-visualizer" class="w-full h-full absolute inset-0"></canvas>
+                                <div id="mock-visualizer-placeholder" class="text-[11px] text-slate-500 flex flex-col items-center select-none pointer-events-none z-10 font-bold">
+                                    <i class="fa-solid fa-waveform text-brand-500/40 text-lg mb-1 animate-pulse"></i>
+                                </div>
+                            </div>
+
+                            <!-- Main Record Circular Button -->
+                            <div class="flex flex-col items-center gap-2 z-10 w-full mb-6">
+                                <button id="mock-btn-record-trigger" onclick="toggleMockRecording()" class="w-20 h-20 rounded-full bg-gradient-to-tr from-brand-500 to-purple-600 hover:from-brand-400 hover:to-purple-500 flex items-center justify-center shadow-lg shadow-brand-500/20 active:scale-95 transition-all duration-300">
+                                    <div class="w-18 h-18 rounded-full border-4 border-slate-900 flex items-center justify-center bg-slate-950 hover:bg-slate-900 transition-colors">
+                                        <i id="mock-record-icon" class="fa-solid fa-microphone text-white text-xl"></i>
+                                    </div>
+                                </button>
+                                <div class="text-center">
+                                    <span id="mock-recording-duration" class="font-mono text-sm font-bold text-slate-300">00:00</span>
+                                    <span class="text-[9px] text-slate-500 uppercase tracking-widest block mt-0.5">Thời gian thu âm</span>
+                                </div>
+                            </div>
+
+                            <!-- Timeline Playback Player -->
+                            <div id="mock-playback-card" class="w-full bg-slate-950/40 rounded-xl border border-white/5 p-4 flex flex-col space-y-3">
+                                <div class="flex items-center justify-between text-[10px] text-slate-400 font-mono font-bold">
+                                    <span id="mock-play-current-time">00:00</span>
+                                    <span id="mock-play-total-time">00:00</span>
+                                </div>
+
+                                <!-- Interactive Scrubbing Track -->
+                                <div id="mock-timeline-container" onclick="scrubMockPlayback(event)" class="relative w-full h-1.5 bg-slate-800 rounded-full cursor-pointer group">
+                                    <div id="mock-playback-progress" class="absolute top-0 left-0 h-full w-0 bg-gradient-to-r from-brand-500 to-purple-400 rounded-full"></div>
+                                    <div id="mock-playback-handle" class="absolute top-1/2 -translate-y-1/2 -ml-1.5 w-3 h-3 bg-white border border-brand-500 rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-md"></div>
+                                </div>
+
+                                <!-- Custom Player Action Controls -->
+                                <div class="flex items-center justify-between pt-1">
+                                    <button id="mock-btn-play" onclick="toggleMockPlayback()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed" disabled>
+                                        <i id="mock-play-icon" class="fa-solid fa-play text-brand-400"></i>
+                                        <span id="mock-play-text">PHÁT BẢN THU</span>
+                                    </button>
+
+                                    <div class="flex items-center gap-2">
+                                        <button id="mock-btn-reset-playback" onclick="resetMockPlaybackUI()" class="w-8 h-8 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-300 rounded-lg flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed" disabled>
+                                            <i class="fa-solid fa-rotate-left text-xs"></i>
+                                        </button>
+                                        <a id="mock-btn-download" class="w-8 h-8 bg-brand-950/30 border border-brand-500/20 text-brand-400 hover:bg-brand-900/40 rounded-lg flex items-center justify-center transition-all opacity-40 pointer-events-none" title="Tải tệp âm thanh xuống">
+                                            <i class="fa-solid fa-download text-xs"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <audio id="mock-audio-engine" class="hidden-fancy"></audio>
+                        </div>
+
+                        <!-- Submit Box -->
+                        <div class="flex flex-col gap-2">
+                            <button id="mock-btn-finish" onclick="finishMockExam()" class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-paper-plane"></i> NỘP BÀI THI THỬ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulation completion notification modal -->
+                <div id="mock-toast-modal" class="hidden-fancy fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md items-center justify-center p-4">
+                    <div class="glass-card max-w-sm w-full p-6 rounded-2xl border border-emerald-500/20 text-center relative overflow-hidden">
+                        <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-400 text-xl">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Đồng Bộ Kết Quả!</h3>
+                        <p id="mock-toast-message" class="text-xs text-slate-300 leading-relaxed mb-6"></p>
+                        
+                        <div class="flex gap-2 justify-center">
+                            <button onclick="restartMockExam()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 rounded-xl text-xs font-semibold transition-all">
+                                Luyện Tập Lại
+                            </button>
+                            <button onclick="closeMockToast()" class="px-5 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-semibold transition-all">
+                                Đóng cửa sổ
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -750,6 +930,71 @@
                 "You are considering a birthday present for a friend. There are three suggestions: a clothing item, a book, a pair of movie tickets. Which one would you choose?"
             ]
         };
+
+        // --- Simulated VSTEP Topic Sets (Part 1 Simulation) ---
+        const speakingTopicsMock = [
+            {
+                id: 1,
+                title: "VSTEP Topic Set 1",
+                block1: {
+                    title: "Topic 1: Let's talk about holidays.",
+                    questions: [
+                        "What did you do on your last holiday?",
+                        "Who do you prefer spending your holidays with?",
+                        "Do you prefer going on holidays abroad?"
+                    ]
+                },
+                block2: {
+                    title: "Topic 2: Now, let's talk about TV programs.",
+                    questions: [
+                        "How many hours a day do you watch television?",
+                        "What kinds of programs do you like?",
+                        "Do you prefer watching television alone or with others? Why?"
+                    ]
+                }
+            },
+            {
+                id: 2,
+                title: "VSTEP Topic Set 2",
+                block1: {
+                    title: "Topic 1: Let's talk about your hometown.",
+                    questions: [
+                        "Where is your hometown located?",
+                        "What do you like or dislike about your hometown?",
+                        "Would you like to live there in the future? Why/Why not?"
+                    ]
+                },
+                block2: {
+                    title: "Topic 2: Now, let's talk about your daily routine.",
+                    questions: [
+                        "What do you usually do in the morning?",
+                        "Do you have a busy daily routine? Please describe it.",
+                        "What part of the day do you like the most? Why?"
+                    ]
+                }
+            },
+            {
+                id: 3,
+                title: "VSTEP Topic Set 3",
+                block1: {
+                    title: "Topic 1: Let's talk about your studies.",
+                    questions: [
+                        "What are you studying at the moment?",
+                        "Why did you choose this major or school?",
+                        "Do you enjoy your studies? Why/Why not?"
+                    ]
+                },
+                block2: {
+                    title: "Topic 2: Now, let's talk about music.",
+                    questions: [
+                        "Do you often listen to music?",
+                        "What kind of music do you enjoy most?",
+                        "When do you usually listen to music?"
+                    ]
+                }
+            }
+        ];
+
         // --- Core System States ---
         let currentTabValue = 1;
         let sheetHistoryData = [];
@@ -776,6 +1021,26 @@
         let animFrameId = null;
         let audioAnalysedNode = null;
         let virtualWaveCounter = 0;
+
+        // --- MOCK SIMULATOR STATES (PART 1 SIMULATION) ---
+        let mockCurrentTopicIndex = 0;
+        let mockExamTimeLeft = 180; // 3 mins
+        let mockTimerInterval = null;
+        let mockIsExamActive = false;
+
+        let mockMediaRecorder = null;
+        let mockAudioChunks = [];
+        let mockAudioStream = null;
+        let mockRecordingDuration = 0;
+        let mockRecordingInterval = null;
+        let mockIsRecording = false;
+        let mockRecordedBlob = null;
+        let mockRecordedUrl = null;
+
+        let mockAnalyser = null;
+        let mockSourceNode = null;
+        let mockAnimFrameId = null;
+        let mockVirtualWaveCounter = 0;
 
         // --- Google Sheets Cloud Storage Integration ---
         async function loadSheetHistory() {
@@ -939,12 +1204,15 @@
                 } else {
                     sec3.classList.remove('hidden-fancy');
                     sec3.classList.add('animate-slide-up');
-                    loadPracticeTopicOpts(); 
+                    switchPracticeMode('flashcard');
                 }
             }, 100);
             
             hideNotification();
-            if (part !== 3) resetTimer();
+            if (part !== 3) {
+                resetTimer();
+                stopMockExamSequence();
+            }
         }
 
         // Initialize the first tab slider placement
@@ -1277,7 +1545,7 @@
             `;
             allNotes.forEach(note => {
                  html += `
-                    <span class="px-4 py-2 bg-slate-900/60 border border-${colorTheme}-500/10 text-slate-300 hover:text-white text-xs font-bold rounded-xl shadow-sm hover:bg-${colorTheme}-500/10 hover:border-${colorTheme}-500/30 transition-all cursor-default flex items-center gap-2">
+                    <span class="px-4 py-2.5 bg-slate-900/60 border border-${colorTheme}-500/10 text-slate-300 hover:text-white text-xs font-bold rounded-xl shadow-sm hover:bg-${colorTheme}-500/10 hover:border-${colorTheme}-500/30 transition-all cursor-default flex items-center gap-2">
                         <span class="w-1.5 h-1.5 rounded-full" style="background-color: ${colorHex}; box-shadow: 0 0 8px ${colorHex}"></span> ${note}
                     </span>`;
             });
@@ -1285,7 +1553,38 @@
             return html;
         }
 
-        // --- Practice Engine & Circular UI Renderers ---
+        // --- Mode Switcher inside Practice Mode ---
+        function switchPracticeMode(mode) {
+            playUISound('click');
+            const btnFlashcard = document.getElementById('btn-mode-flashcard');
+            const btnMock = document.getElementById('btn-mode-mock');
+            const flashcardView = document.getElementById('practice-flashcard-view');
+            const mockView = document.getElementById('practice-mock-view');
+
+            resetTimer();
+            stopMockExamSequence();
+
+            if (mode === 'flashcard') {
+                btnFlashcard.className = "flex-1 py-2.5 rounded-xl font-bold transition-all text-xs flex items-center justify-center gap-2 bg-brand-500/15 text-brand-400 border border-brand-500/20";
+                btnMock.className = "flex-1 py-2.5 rounded-xl font-bold transition-all text-xs flex items-center justify-center gap-2 text-slate-400 hover:text-slate-200";
+                flashcardView.classList.remove('hidden-fancy');
+                mockView.classList.add('hidden-fancy');
+                loadPracticeTopicOpts();
+            } else {
+                btnMock.className = "flex-1 py-2.5 rounded-xl font-bold transition-all text-xs flex items-center justify-center gap-2 bg-purple-500/15 text-purple-400 border border-purple-500/20";
+                btnFlashcard.className = "flex-1 py-2.5 rounded-xl font-bold transition-all text-xs flex items-center justify-center gap-2 text-slate-400 hover:text-slate-200";
+                mockView.classList.remove('hidden-fancy');
+                flashcardView.classList.add('hidden-fancy');
+                
+                // Show Welcome Screen first
+                document.getElementById('mock-welcome-screen').classList.remove('hidden-fancy');
+                document.getElementById('mock-exam-workspace').classList.add('hidden-fancy');
+                mockIsExamActive = false;
+                setupMockCanvas();
+            }
+        }
+
+        // --- Practice Mode (Mode 1: Flashcard) - Option Loaders ---
         function loadPracticeTopicOpts() {
             const part = document.getElementById('prac-part-select').value;
             const topicSelect = document.getElementById('prac-topic-select');
@@ -1318,7 +1617,6 @@
             document.getElementById('prac-hint-container').classList.add('hidden-fancy');
             document.getElementById('self-eval-container').classList.add('hidden-fancy');
             
-            // Clean active states for helper buttons
             const activeButtons = document.querySelectorAll('.hint-btn');
             activeButtons.forEach(btn => {
                 btn.className = btn.className.replace(/bg-.*-500\/20/g, 'bg-opacity-10').replace(/border-.*-400/g, 'border-opacity-30');
@@ -1365,44 +1663,28 @@
             resetTimer();
         }
 
-        // --- Advanced High Tech Audio Recorder & Web Audio Visualizer API ---
+        // --- Advanced Microphones & Visualizer Engines ---
         async function initMicrophoneAccess() {
-            const statusDot = document.getElementById('mic-status-dot');
-            const statusText = document.getElementById('mic-status-text');
-            const recordBtn = document.getElementById('prac-record-btn');
-            const statusPill = document.getElementById('mic-status-pill');
-
             visualizerCanvas = document.getElementById('visualizer');
             visualizerCtx = visualizerCanvas.getContext('2d');
             resizeVisualizerCanvas();
             drawIdleVisualizer();
 
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                statusText.textContent = "Không Hỗ Trợ Ghi Âm";
-                statusPill.classList.add('text-rose-400', 'border-rose-500/20');
-                statusDot.classList.add('text-rose-500');
                 return;
             }
 
             try {
                 audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                statusText.textContent = "Microphone Đã Kết Nối";
-                statusPill.classList.remove('text-slate-400');
-                statusPill.classList.add('text-emerald-400', 'border-emerald-500/20');
-                statusDot.classList.remove('text-slate-500');
-                statusDot.classList.add('text-emerald-500', 'animate-pulse');
-                recordBtn.disabled = false;
+                const recordBtn = document.getElementById('prac-record-btn');
+                if (recordBtn) recordBtn.disabled = false;
                 
-                // Set audio context analyser setup
                 const sourceNode = audioCtx.createMediaStreamSource(audioStream);
                 audioAnalysedNode = audioCtx.createAnalyser();
                 audioAnalysedNode.fftSize = 256;
                 sourceNode.connect(audioAnalysedNode);
             } catch(e) {
-                statusText.textContent = "Chế Độ Ghi Thử Nghiệm";
-                statusDot.classList.add('text-amber-500');
-                recordBtn.disabled = false; // Let them click to toggle mock voice generator visual effects
-                console.warn("Microphone access denied. Using beautiful voice synthesizer fallback logic.");
+                console.warn("Hardware microphone access blocked. Simulated mode available.");
             }
         }
 
@@ -1424,7 +1706,6 @@
             const playbackContainer = document.getElementById('prac-audio-playback-container');
 
             if (!isRecording) {
-                // START RECORDING
                 isRecording = true;
                 audioChunks = [];
                 playbackContainer.classList.add('hidden-fancy');
@@ -1438,7 +1719,6 @@
                 
                 noSignalText.classList.add('hidden');
 
-                // Try actual hardware recording
                 if (audioStream) {
                     try {
                         mediaRecorder = new MediaRecorder(audioStream);
@@ -1460,7 +1740,6 @@
                 
                 drawLiveVisualizer();
             } else {
-                // STOP RECORDING
                 isRecording = false;
                 recordBtn.className = "px-6 py-3.5 bg-rose-600 hover:bg-rose-500 text-white border border-rose-400/30 rounded-xl font-bold text-sm shadow-[0_0_15px_rgba(244,63,94,0.3)] hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all min-w-[150px] flex items-center justify-center gap-2";
                 recordText.textContent = "Bật Ghi Âm";
@@ -1472,7 +1751,6 @@
                 if (mediaRecorder && mediaRecorder.state !== 'inactive') {
                     mediaRecorder.stop();
                 } else {
-                    // Simulated fallback success message
                     showNotification('success', 'Bản ghi của bạn đã sẵn sàng!', 'Vì thiết bị không hỗ trợ Micro, hệ thống lưu bản thu ảo thành công.');
                 }
 
@@ -1481,7 +1759,6 @@
             }
         }
 
-        // Beautiful Real or Simulated Glowing Sine Oscilloscope Renderer
         function drawLiveVisualizer() {
             if (!visualizerCtx) return;
             animFrameId = requestAnimationFrame(drawLiveVisualizer);
@@ -1491,7 +1768,6 @@
             visualizerCtx.clearRect(0, 0, width, height);
 
             if (audioAnalysedNode && audioStream) {
-                // REAL LIVE SPECTRUM DATA
                 const bufferLength = audioAnalysedNode.frequencyBinCount;
                 const dataArray = new Uint8Array(bufferLength);
                 audioAnalysedNode.getByteTimeDomainData(dataArray);
@@ -1517,7 +1793,6 @@
                 visualizerCtx.lineTo(width, height / 2);
                 visualizerCtx.stroke();
             } else {
-                // BEAUTIFUL HYPNOTIC MOCK SINE WAVE FALLBACK
                 visualizerCtx.lineWidth = 3;
                 visualizerCtx.strokeStyle = 'rgba(168, 85, 247, 0.95)';
                 visualizerCtx.beginPath();
@@ -1542,7 +1817,6 @@
             const height = visualizerCanvas.height;
             visualizerCtx.clearRect(0, 0, width, height);
             
-            // Render straight lines with small glow dots
             visualizerCtx.lineWidth = 2;
             visualizerCtx.strokeStyle = 'rgba(71, 85, 105, 0.3)';
             visualizerCtx.beginPath();
@@ -1554,27 +1828,23 @@
             if (noSignalText) noSignalText.classList.remove('hidden');
         }
 
-        // --- Highly polished circular LED Timer logic ---
+        // --- Circular LED Timer controls (Flashcard Mode) ---
         function toggleTimer() {
             playUISound('click');
             const btn = document.getElementById('prac-start-btn');
             const display = document.getElementById('prac-timer-display');
-            const circle = document.getElementById('timer-progress-circle');
             
             if (isTimerRunning) {
-                // Pause Timer State
                 clearInterval(timerInterval);
                 isTimerRunning = false;
                 btn.innerHTML = '<i class="fa-solid fa-play"></i> <span>Tiếp tục</span>';
                 btn.className = "px-6 py-3.5 bg-brand-600 hover:bg-brand-500 text-white border border-brand-400/30 rounded-xl font-bold text-sm shadow-[0_0_15px_rgba(14,140,226,0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all min-w-[150px] flex items-center justify-center gap-2";
                 display.style.opacity = '0.7';
                 
-                // If recording was ongoing, freeze it too
                 if (isRecording) {
                     toggleAudioRecording();
                 }
             } else {
-                // Start Timer State
                 if (timeLeft <= 0) {
                     timeLeft = 60;
                 }
@@ -1585,7 +1855,6 @@
                 display.classList.remove('text-rose-400');
                 display.classList.add('text-white');
                 
-                // Synchronize recording launch if possible
                 if(!isRecording) {
                     toggleAudioRecording();
                 }
@@ -1609,7 +1878,6 @@
                             toggleAudioRecording();
                         }
 
-                        // Open self evaluation scorecard when time ends
                         document.getElementById('self-eval-container').classList.remove('hidden-fancy');
                         showNotification('success', 'Hết thời gian nói bài tập!', 'Hãy tự chấm điểm sao đánh giá kỹ năng nói của bạn dưới phiếu đánh giá nhé.');
                     }
@@ -1618,19 +1886,22 @@
         }
 
         function resetTimer() {
-            playUISound('click');
             clearInterval(timerInterval);
             isTimerRunning = false;
             timeLeft = 60;
             
             const btn = document.getElementById('prac-start-btn');
-            btn.innerHTML = '<i class="fa-solid fa-play"></i> <span>Bắt đầu nói</span>';
-            btn.className = "px-6 py-3.5 bg-brand-600 hover:bg-brand-500 text-white border border-brand-400/30 rounded-xl font-bold text-sm shadow-[0_0_15px_rgba(14,140,226,0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all min-w-[150px] flex items-center justify-center gap-2";
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-play"></i> <span>Bắt đầu nói</span>';
+                btn.className = "px-6 py-3.5 bg-brand-600 hover:bg-brand-500 text-white border border-brand-400/30 rounded-xl font-bold text-sm shadow-[0_0_15px_rgba(14,140,226,0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all min-w-[150px] flex items-center justify-center gap-2";
+            }
             
             const display = document.getElementById('prac-timer-display');
-            display.classList.remove('text-rose-400', 'animate-pulse');
-            display.classList.add('text-white');
-            display.style.opacity = '1';
+            if (display) {
+                display.classList.remove('text-rose-400', 'animate-pulse');
+                display.classList.add('text-white');
+                display.style.opacity = '1';
+            }
             
             if (isRecording) {
                 toggleAudioRecording();
@@ -1643,26 +1914,29 @@
             const mins = Math.floor(timeLeft / 60).toString().padStart(2, '0');
             const secs = (timeLeft % 60).toString().padStart(2, '0');
             const display = document.getElementById('prac-timer-display');
-            display.textContent = `${mins}:${secs}`;
+            if (display) display.textContent = `${mins}:${secs}`;
             
-            // Circle dashoffset update
             const circle = document.getElementById('timer-progress-circle');
-            const radius = 76;
-            const circumference = 2 * Math.PI * radius; // 477.5
-            const progress = timeLeft / 60;
-            const dashoffset = circumference * (1 - progress);
-            circle.style.strokeDashoffset = dashoffset;
-            
-            if (timeLeft <= 10) {
-                circle.style.stroke = "#f43f5e"; // red warning
-                display.classList.add('text-rose-400');
-                display.classList.remove('text-white');
-            } else {
-                circle.style.stroke = "#0e8ce2"; // normal brand azul
+            if (circle) {
+                const radius = 76;
+                const circumference = 2 * Math.PI * radius;
+                const progress = timeLeft / 60;
+                const dashoffset = circumference * (1 - progress);
+                circle.style.strokeDashoffset = dashoffset;
+                
+                if (timeLeft <= 10) {
+                    circle.style.stroke = "#f43f5e";
+                    if (display) {
+                        display.classList.add('text-rose-400');
+                        display.classList.remove('text-white');
+                    }
+                } else {
+                    circle.style.stroke = "#0e8ce2";
+                }
             }
         }
 
-        // --- Interactive Interactive Evaluation Card Star Event listener ---
+        // --- Interactive Evaluation Card Star Event listener ---
         function rateStar(starElement, score) {
             playUISound('success');
             const parent = starElement.parentElement;
@@ -1685,7 +1959,6 @@
             playUISound('click');
             const hintContainer = document.getElementById('prac-hint-container');
             
-            // Styling indicator switch behavior
             const allBtn = document.querySelectorAll('.hint-btn');
             allBtn.forEach(btn => {
                 btn.className = "hint-btn px-6 py-3 border border-slate-800 text-slate-400 bg-transparent rounded-xl font-bold transition-all flex items-center shadow-sm text-sm";
@@ -1747,15 +2020,536 @@
             hintContainer.classList.remove('hidden-fancy');
         }
 
+
+        // =====================================================================
+        // --- CHẾ ĐỘ 2: THI THỬ GIẢ LẬP (MOCK EXAM ENGINE) ---
+        // =====================================================================
+
+        function setupMockCanvas() {
+            const canvas = document.getElementById('mock-visualizer');
+            if (canvas) {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+                drawMockIdleWave();
+            }
+        }
+
+        function drawMockIdleWave() {
+            const canvas = document.getElementById('mock-visualizer');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+            ctx.clearRect(0, 0, w, h);
+            ctx.beginPath();
+            ctx.moveTo(0, h / 2);
+            for (let i = 0; i < w; i++) {
+                ctx.lineTo(i, h / 2 + Math.sin(i * 0.05) * 1.5);
+            }
+            ctx.strokeStyle = 'rgba(168, 85, 247, 0.2)';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            document.getElementById('mock-visualizer-placeholder').classList.remove('hidden-fancy');
+        }
+
+        async function startMockExam() {
+            playUISound('success');
+            document.getElementById('mock-welcome-screen').classList.add('hidden-fancy');
+            document.getElementById('mock-exam-workspace').classList.remove('hidden-fancy');
+            
+            mockIsExamActive = true;
+            mockCurrentTopicIndex = 0;
+            
+            loadMockQuestions(0);
+            setupMockCanvas();
+            initMockMicStatus();
+            startMockExamCountdown();
+        }
+
+        async function initMockMicStatus() {
+            const dot = document.getElementById('mock-mic-dot');
+            const txt = document.getElementById('mock-mic-status-text');
+            const pill = document.getElementById('mock-mic-status-pill');
+
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                txt.textContent = "Không hỗ trợ Mic";
+                dot.className = "w-1.5 h-1.5 rounded-full bg-rose-500";
+                return;
+            }
+
+            try {
+                mockAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                txt.textContent = "Mic Sẵn Sàng";
+                dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse";
+                pill.className = "text-[10px] font-bold px-2.5 py-1 rounded-lg bg-slate-900 text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5";
+            } catch(e) {
+                txt.textContent = "Ghi Âm Ảo";
+                dot.className = "w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse";
+                pill.className = "text-[10px] font-bold px-2.5 py-1 rounded-lg bg-slate-900 text-amber-400 border border-amber-500/20 flex items-center gap-1.5";
+                console.warn("Microphone access denied. Emulator fallback activated.");
+            }
+        }
+
+        function loadMockQuestions(index) {
+            const set = speakingTopicsMock[index];
+            document.getElementById('mock-paper-title').textContent = set.title;
+            
+            const wrapper = document.getElementById('mock-questions-wrapper');
+            wrapper.innerHTML = `
+                <div class="space-y-6">
+                    <div class="space-y-3">
+                        <h4 class="text-sm font-extrabold text-brand-300 flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span> ${set.block1.title}
+                        </h4>
+                        <ul class="space-y-2 pl-4">
+                            ${set.block1.questions.map(q => `
+                                <li class="mock-q-item text-xs text-slate-300 font-semibold p-2.5 rounded-xl border border-transparent hover:bg-slate-900/60 transition-all cursor-pointer flex items-start gap-2">
+                                    <span class="text-brand-500 mt-0.5">•</span> <span>${q}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h4 class="text-sm font-extrabold text-purple-300 flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span> ${set.block2.title}
+                        </h4>
+                        <ul class="space-y-2 pl-4">
+                            ${set.block2.questions.map(q => `
+                                <li class="mock-q-item text-xs text-slate-300 font-semibold p-2.5 rounded-xl border border-transparent hover:bg-slate-900/60 transition-all cursor-pointer flex items-start gap-2">
+                                    <span class="text-purple-500 mt-0.5">•</span> <span>${q}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            // Interactive highlight of questions
+            const items = document.querySelectorAll('.mock-q-item');
+            items.forEach(item => {
+                item.addEventListener('click', () => {
+                    playUISound('click');
+                    items.forEach(i => i.className = "mock-q-item text-xs text-slate-300 font-semibold p-2.5 rounded-xl border border-transparent hover:bg-slate-900/60 transition-all cursor-pointer flex items-start gap-2");
+                    item.className = "mock-q-item text-xs text-brand-300 bg-brand-500/10 border border-brand-500/20 font-bold p-2.5 rounded-xl transition-all cursor-pointer flex items-start gap-2 shadow-inner";
+                });
+            });
+        }
+
+        function startMockExamCountdown() {
+            clearInterval(mockTimerInterval);
+            mockExamTimeLeft = 180;
+            updateMockTimerUI();
+
+            mockTimerInterval = setInterval(() => {
+                mockExamTimeLeft--;
+                updateMockTimerUI();
+                playUISound('tick');
+
+                const tBox = document.getElementById('mock-timer-box');
+                const tIcon = document.getElementById('mock-timer-icon');
+                const tDisp = document.getElementById('mock-timer-display');
+
+                if (mockExamTimeLeft <= 30) {
+                    tBox.className = "glass-card rounded-2xl border border-rose-500/30 p-4 flex items-center justify-between shadow-xl animate-pulse bg-rose-950/10";
+                    tIcon.className = "fa-regular fa-clock text-rose-500 text-xl animate-bounce";
+                    tDisp.className = "font-mono text-2xl font-extrabold text-rose-400 drop-shadow-md";
+                } else {
+                    tBox.className = "glass-card rounded-2xl border border-white/5 p-4 flex items-center justify-between shadow-xl";
+                    tIcon.className = "fa-regular fa-clock text-brand-400 text-xl animate-pulse";
+                    tDisp.className = "font-mono text-2xl font-extrabold text-brand-300 drop-shadow-md";
+                }
+
+                if (mockExamTimeLeft <= 0) {
+                    clearInterval(mockTimerInterval);
+                    autoCloseMockExam();
+                }
+            }, 1000);
+        }
+
+        function updateMockTimerUI() {
+            const min = Math.floor(mockExamTimeLeft / 60).toString().padStart(2, '0');
+            const sec = (mockExamTimeLeft % 60).toString().padStart(2, '0');
+            document.getElementById('mock-timer-display').textContent = `${min}:${sec}`;
+        }
+
+        function toggleMockRecording() {
+            playUISound('click');
+            const trigger = document.getElementById('mock-btn-record-trigger');
+            const icon = document.getElementById('mock-record-icon');
+            const text = document.getElementById('mock-record-text');
+            const dot = document.getElementById('mock-record-dot');
+            const durationEl = document.getElementById('mock-recording-duration');
+            const glow = document.getElementById('mock-mic-glow');
+            const placeholder = document.getElementById('mock-visualizer-placeholder');
+
+            if (!mockIsRecording) {
+                // START MOCK RECORDING
+                mockIsRecording = true;
+                mockAudioChunks = [];
+                mockRecordingDuration = 0;
+                durationEl.textContent = "00:00";
+                placeholder.classList.add('hidden-fancy');
+                resetMockPlaybackUI();
+
+                trigger.className = "w-20 h-20 rounded-full bg-slate-900 hover:bg-slate-850 text-rose-500 border border-rose-500/40 flex items-center justify-center pulse-record transition-all duration-300";
+                icon.className = "fa-solid fa-square text-rose-500 scale-110";
+                text.textContent = "RECORDING";
+                text.className = "text-[10px] font-extrabold uppercase tracking-widest text-rose-500 font-mono";
+                dot.className = "w-2.5 h-2.5 bg-rose-500 animate-ping";
+                glow.className = "absolute w-36 h-36 bg-rose-500/10 rounded-full blur-3xl animate-pulse pointer-events-none";
+
+                if (mockAudioStream) {
+                    try {
+                        mockMediaRecorder = new MediaRecorder(mockAudioStream);
+                        mockMediaRecorder.ondataavailable = e => {
+                            if (e.data.size > 0) mockAudioChunks.push(e.data);
+                        };
+                        mockMediaRecorder.onstop = () => {
+                            mockRecordedBlob = new Blob(mockAudioChunks, { type: 'audio/mp3' });
+                            mockRecordedUrl = URL.createObjectURL(mockRecordedBlob);
+                            document.getElementById('mock-audio-engine').src = mockRecordedUrl;
+                            enableMockPlaybackUI(mockRecordedUrl);
+                        };
+
+                        // Web Audio visualizer setup
+                        const ctx = document.getElementById('mock-visualizer').getContext('2d');
+                        const actx = new (window.AudioContext || window.webkitAudioContext)();
+                        const ana = actx.createAnalyser();
+                        const src = actx.createMediaStreamSource(mockAudioStream);
+                        src.connect(ana);
+                        ana.fftSize = 128;
+                        const bufLen = ana.frequencyBinCount;
+                        const datArr = new Uint8Array(bufLen);
+
+                        const draw = () => {
+                            if (!mockIsRecording) return;
+                            mockAnimFrameId = requestAnimationFrame(draw);
+                            ana.getByteFrequencyData(datArr);
+
+                            const w = ctx.canvas.width;
+                            const h = ctx.canvas.height;
+                            ctx.clearRect(0, 0, w, h);
+
+                            const barWidth = (w / bufLen) * 1.5;
+                            let x = 0;
+                            for (let i = 0; i < bufLen; i++) {
+                                const val = datArr[i];
+                                const barHeight = (val / 255) * h * 0.7;
+                                const ratio = i / bufLen;
+                                ctx.fillStyle = `rgba(168, 85, 247, ${0.4 + (ratio * 0.6)})`;
+                                ctx.fillRect(x, (h / 2) - barHeight / 2, barWidth - 1.5, barHeight);
+                                x += barWidth;
+                            }
+                        };
+                        draw();
+                        mockMediaRecorder.start();
+                    } catch(err) {
+                        console.error("Hardware Recorder Exception:", err);
+                        runMockEmulatorRecording();
+                    }
+                } else {
+                    runMockEmulatorRecording();
+                }
+
+                mockRecordingInterval = setInterval(() => {
+                    mockRecordingDuration++;
+                    const min = Math.floor(mockRecordingDuration / 60).toString().padStart(2, '0');
+                    const sec = (mockRecordingDuration % 60).toString().padStart(2, '0');
+                    durationEl.textContent = `${min}:${sec}`;
+                }, 1000);
+
+            } else {
+                // STOP MOCK RECORDING
+                mockIsRecording = false;
+                clearInterval(mockRecordingInterval);
+                cancelAnimationFrame(mockAnimFrameId);
+
+                if (mockMediaRecorder && mockMediaRecorder.state !== 'inactive') {
+                    mockMediaRecorder.stop();
+                } else {
+                    enableMockPlaybackUI(null);
+                }
+
+                if (mockAudioStream) {
+                    mockAudioStream.getTracks().forEach(t => t.stop());
+                }
+
+                trigger.className = "w-20 h-20 rounded-full bg-gradient-to-tr from-brand-500 to-purple-600 hover:from-brand-400 hover:to-purple-500 flex items-center justify-center shadow-lg shadow-brand-500/20 active:scale-95 transition-all duration-300";
+                icon.className = "fa-solid fa-microphone text-white";
+                text.textContent = "BẢN GHI ĐÃ LƯU";
+                text.className = "text-[10px] font-extrabold uppercase tracking-widest text-brand-400 font-mono";
+                dot.className = "w-2.5 h-2.5 bg-brand-500";
+                glow.className = "absolute w-36 h-36 bg-brand-500/5 rounded-full blur-3xl pointer-events-none";
+
+                drawMockIdleWave();
+            }
+        }
+
+        function runMockEmulatorRecording() {
+            const ctx = document.getElementById('mock-visualizer').getContext('2d');
+            const w = ctx.canvas.width;
+            const h = ctx.canvas.height;
+            
+            const draw = () => {
+                if (!mockIsRecording) return;
+                mockAnimFrameId = requestAnimationFrame(draw);
+                ctx.clearRect(0, 0, w, h);
+                ctx.beginPath();
+                ctx.moveTo(0, h / 2);
+                mockVirtualWaveCounter += 0.12;
+                for (let i = 0; i < w; i++) {
+                    const wave = Math.sin(i * 0.05 + mockVirtualWaveCounter) * Math.cos(i * 0.02 + mockVirtualWaveCounter * 0.5) * 12;
+                    ctx.lineTo(i, (h / 2) + wave);
+                }
+                ctx.strokeStyle = 'rgba(244, 63, 94, 0.5)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            };
+            draw();
+        }
+
+        function nextMockTopic() {
+            playUISound('click');
+            mockCurrentTopicIndex = (mockCurrentTopicIndex + 1) % speakingTopicsMock.length;
+            
+            const wrapper = document.getElementById('mock-questions-wrapper');
+            wrapper.style.opacity = '0';
+            wrapper.style.transform = 'translateX(-20px)';
+            
+            setTimeout(() => {
+                loadMockQuestions(mockCurrentTopicIndex);
+                wrapper.style.opacity = '1';
+                wrapper.style.transform = 'translateX(0)';
+                
+                resetMockPlaybackUI();
+                if (mockIsRecording) {
+                    toggleMockRecording();
+                }
+                startMockExamCountdown();
+            }, 200);
+        }
+
+        // --- Custom Scrubber Timeline Playback Core (Simulation Mode) ---
+        function resetMockPlaybackUI() {
+            const engine = document.getElementById('mock-audio-engine');
+            engine.pause();
+            engine.src = "";
+            mockRecordedUrl = null;
+            mockRecordedBlob = null;
+
+            document.getElementById('mock-btn-play').disabled = true;
+            document.getElementById('mock-btn-reset-playback').disabled = true;
+
+            const dl = document.getElementById('mock-btn-download');
+            dl.className = "w-8 h-8 bg-brand-950/30 border border-brand-500/20 text-brand-400 hover:bg-brand-900/40 rounded-lg flex items-center justify-center transition-all opacity-40 pointer-events-none";
+            dl.removeAttribute('href');
+            dl.removeAttribute('download');
+
+            document.getElementById('mock-play-current-time').textContent = "00:00";
+            document.getElementById('mock-play-total-time').textContent = "00:00";
+            document.getElementById('mock-playback-progress').style.width = "0%";
+            document.getElementById('mock-playback-handle').style.left = "0%";
+
+            document.getElementById('mock-play-icon').className = "fa-solid fa-play text-brand-400";
+            document.getElementById('mock-play-text').textContent = "PHÁT BẢN THU";
+        }
+
+        function enableMockPlaybackUI(url) {
+            document.getElementById('mock-btn-play').disabled = false;
+            document.getElementById('mock-btn-reset-playback').disabled = false;
+
+            const dl = document.getElementById('mock-btn-download');
+            if (url) {
+                dl.className = "w-8 h-8 bg-brand-950/30 border border-brand-500/20 text-brand-400 hover:bg-brand-900/40 rounded-lg flex items-center justify-center transition-all cursor-pointer opacity-100";
+                dl.href = url;
+                
+                // Lấy ngày, tháng, năm hiện tại của thời điểm lưu file ghi âm
+                const recordingDate = new Date();
+                const day = String(recordingDate.getDate()).padStart(2, '0');
+                const month = String(recordingDate.getMonth() + 1).padStart(2, '0');
+                const year = recordingDate.getFullYear();
+                
+                // Đặt tên file theo định dạng ngay_thang_nam_VSTEP_Speaking_Part1.mp3
+                dl.download = `${day}_${month}_${year}_VSTEP_Speaking_Part1.mp3`;
+            } else {
+                document.getElementById('mock-play-current-time').textContent = "00:00";
+                document.getElementById('mock-play-total-time').textContent = "00:15"; // Simulated mock duration
+            }
+        }
+
+        function toggleMockPlayback() {
+            playUISound('click');
+            const engine = document.getElementById('mock-audio-engine');
+            const icon = document.getElementById('mock-play-icon');
+            const text = document.getElementById('mock-play-text');
+
+            if (!mockRecordedBlob) {
+                simulateMockPlaybackDeck();
+                return;
+            }
+
+            if (engine.paused) {
+                engine.play();
+                icon.className = "fa-solid fa-pause text-rose-400";
+                text.textContent = "TẠM DỪNG BẢN THU";
+            } else {
+                engine.pause();
+                icon.className = "fa-solid fa-play text-brand-400";
+                text.textContent = "PHÁT BẢN THU";
+            }
+        }
+
+        function scrubMockPlayback(e) {
+            const engine = document.getElementById('mock-audio-engine');
+            if (!mockRecordedUrl || engine.src === "") return;
+            const container = document.getElementById('mock-timeline-container');
+            const width = container.clientWidth;
+            const clickX = e.offsetX;
+            const duration = engine.duration;
+            if (duration) {
+                engine.currentTime = (clickX / width) * duration;
+            }
+        }
+
+        // Connect built-in audio engine hooks
+        window.addEventListener('DOMContentLoaded', () => {
+            const engine = document.getElementById('mock-audio-engine');
+            if (engine) {
+                engine.addEventListener('loadedmetadata', () => {
+                    const min = Math.floor(engine.duration / 60).toString().padStart(2, '0');
+                    const sec = Math.floor(engine.duration % 60).toString().padStart(2, '0');
+                    document.getElementById('mock-play-total-time').textContent = `${min}:${sec}`;
+                });
+
+                engine.addEventListener('timeupdate', () => {
+                    if (engine.duration) {
+                        const min = Math.floor(engine.currentTime / 60).toString().padStart(2, '0');
+                        const sec = Math.floor(engine.currentTime % 60).toString().padStart(2, '0');
+                        document.getElementById('mock-play-current-time').textContent = `${min}:${sec}`;
+
+                        const percent = (engine.currentTime / engine.duration) * 100;
+                        document.getElementById('mock-playback-progress').style.width = `${percent}%`;
+                        document.getElementById('mock-playback-handle').style.left = `${percent}%`;
+                    }
+                });
+
+                engine.addEventListener('ended', () => {
+                    document.getElementById('mock-play-icon').className = "fa-solid fa-play text-brand-400";
+                    document.getElementById('mock-play-text').textContent = "PHÁT BẢN THU";
+                });
+            }
+        });
+
+        let mockSimulatedTimer = null;
+        let mockIsSimulating = false;
+        function simulateMockPlaybackDeck() {
+            if (mockIsSimulating) {
+                clearInterval(mockSimulatedTimer);
+                mockIsSimulating = false;
+                document.getElementById('mock-play-icon').className = "fa-solid fa-play text-brand-400";
+                document.getElementById('mock-play-text').textContent = "PHÁT BẢN THU";
+                return;
+            }
+
+            mockIsSimulating = true;
+            document.getElementById('mock-play-icon').className = "fa-solid fa-pause text-amber-400";
+            document.getElementById('mock-play-text').textContent = "TẠM DỪNG GIẢ LẬP";
+
+            let cur = 0;
+            const max = 15;
+            mockSimulatedTimer = setInterval(() => {
+                cur++;
+                const min = Math.floor(cur / 60).toString().padStart(2, '0');
+                const sec = (cur % 60).toString().padStart(2, '0');
+                document.getElementById('mock-play-current-time').textContent = `${min}:${sec}`;
+
+                const percent = (cur / max) * 100;
+                document.getElementById('mock-playback-progress').style.width = `${percent}%`;
+                document.getElementById('mock-playback-handle').style.left = `${percent}%`;
+
+                if (cur >= max) {
+                    clearInterval(mockSimulatedTimer);
+                    mockIsSimulating = false;
+                    document.getElementById('mock-play-icon').className = "fa-solid fa-play text-brand-400";
+                    document.getElementById('mock-play-text').textContent = "PHÁT BẢN THU";
+                    document.getElementById('mock-play-current-time').textContent = "00:00";
+                    document.getElementById('mock-playback-progress').style.width = "0%";
+                    document.getElementById('mock-playback-handle').style.left = "0%";
+                }
+            }, 1000);
+        }
+
+        function finishMockExam() {
+            playUISound('success');
+            clearInterval(mockTimerInterval);
+            if (mockIsRecording) {
+                toggleMockRecording();
+            }
+            
+            const modal = document.getElementById('mock-toast-modal');
+            const msg = document.getElementById('mock-toast-message');
+            msg.innerHTML = `Bạn đã hoàn thành phiên luyện thi thử <strong>VSTEP Speaking Part 1</strong> theo thời gian quy định.<br><br>Hãy lưu lại hoặc nghe kiểm tra lại bài nói của bạn bằng cách nhấn phím Tải Tệp.`;
+            
+            modal.classList.remove('hidden-fancy');
+            modal.classList.add('flex');
+        }
+
+        function autoCloseMockExam() {
+            playUISound('warning');
+            if (mockIsRecording) {
+                toggleMockRecording();
+            }
+            const modal = document.getElementById('mock-toast-modal');
+            const msg = document.getElementById('mock-toast-message');
+            msg.innerHTML = `Hết thời gian thi 3 phút quy định! Biểu mẫu thi đã tự động khóa lại.<br><br>Bạn có thể nghe lại các câu trả lời của mình hoặc tiếp tục luyện tập.`;
+            modal.classList.remove('hidden-fancy');
+            modal.classList.add('flex');
+        }
+
+        function restartMockExam() {
+            closeMockToast();
+            startMockExam();
+        }
+
+        function stopMockExamSequence() {
+            clearInterval(mockTimerInterval);
+            clearInterval(mockRecordingInterval);
+            cancelAnimationFrame(mockAnimFrameId);
+            
+            if (mockIsRecording) {
+                mockIsRecording = false;
+                if (mockMediaRecorder && mockMediaRecorder.state !== 'inactive') {
+                    mockMediaRecorder.stop();
+                }
+            }
+            
+            if (mockAudioStream) {
+                mockAudioStream.getTracks().forEach(t => t.stop());
+            }
+
+            resetMockPlaybackUI();
+            mockIsExamActive = false;
+        }
+
+        function closeMockToast() {
+            playUISound('click');
+            document.getElementById('mock-toast-modal').classList.add('hidden-fancy');
+            document.getElementById('mock-toast-modal').classList.remove('flex');
+            stopMockExamSequence();
+            document.getElementById('mock-welcome-screen').classList.remove('hidden-fancy');
+            document.getElementById('mock-exam-workspace').classList.add('hidden-fancy');
+        }
+
         // Run full setup and database load sequence
         window.addEventListener('DOMContentLoaded', async () => {
             await loadSheetHistory();
         });
     </script>
-
+    
         <div id="footer-placeholder"></div>
 
-        <script src="/script.js"></script>
-        <script src="/search.js"></script>
+    <script src="/script.js"></script>
+    <script src="/search.js"></script>
 </body>
 </html>

@@ -12,6 +12,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/banner_trang_con.css">
     <link rel="icon" href="/hinhanh/logo_web.png" type="">
         
  
@@ -127,18 +128,16 @@
     
     <div id="header-placeholder"></div>
     <div id="search-placeholder"></div>
-<!-- giới thiệu -->
-        <section class="banner_trangcon event-banner">
-            <div class="banner_trangcon_header">
-                <h1>TIẾNG ANH</h1>
-                <div class="banner_trangcon_header_underline"></div>
-                <p>
-                    <a href="/gopy.html">
-                        <button class="banner_trangcon_btn btn">GÓP Ý</button>
-                    </a>
-                </p>
-            </div>
-        </section>
+
+    <header class="main-banner_trang_con">
+        <div class="banner_trang_con-overlay"></div>
+        <div class="hbanner_trang_con-image-bg"></div>
+
+        <div class="hbanner_trang_con-content">
+            <h1 class="main-title">NGOẠI NGỮ <span class="icon-span"></span></h1>
+            <p class="sub-text"></p>
+        </div>
+    </header>
 
 
 <section class="intro-features">
@@ -175,8 +174,9 @@
     <div id="footer-placeholder"></div>
     
   </section>  
-      <script src="../script.js"></script>
+          <script src="/script.js"></script>
           <script src="/search.js"></script>
+          <script src="/banner_trang_con.js"></script>
       <!-- AOS Animation JS -->
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>

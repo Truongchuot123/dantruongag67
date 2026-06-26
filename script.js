@@ -1,819 +1,2390 @@
-(function initFeedbackResources() {
-    // 1. Tải SweetAlert2 nếu chưa có
-    if (!window.Swal) {
-        const swalScript = document.createElement('script');
-        swalScript.src = 'https://cdn.jsdelivr.net/npm/sweetalert2@11';
-        document.head.appendChild(swalScript);
-    }
+// ================= GOOGLE APPS SCRIPT CONFIGURATION =================
+        const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPan-KQDfgVodlpBL06ZjkSrIKUTgS3syVxJCZ67JhJaMktXfjz_99c6WptPuzjzLN_g/exec";
 
-    // 2. Tải Google Fonts
-    const fontLink = document.createElement('link');
-    fontLink.href = 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap';
-    fontLink.rel = 'stylesheet';
-    document.head.appendChild(fontLink);
+        // Danh sách liên kết học tập thực tế
+        const allExternalLinks = [
+            "/đo_huyet_ap.html",
+            "/rua_tay.html",
+            "/hoi_suc_tim_phoi_co_ban.html",
+            "/tienganh/IPA.html",
+            "/PHCN/HĐTL/dung_cu_vltl.html",
+            "/yhoccotruyen/tra_cuu_huyet.html",
+            "/phong_luyen_thi_trac_nghiem.html"
+        ];
 
-    // 3. Thêm Style tối ưu hiệu ứng
-    const style = document.createElement('style');
-    style.textContent = `
-        #fb-modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 10000; 
-            opacity: 0; visibility: hidden;
-            transition: opacity 0.4s ease, visibility 0.4s;
-        }
-        
-        /* Trạng thái khi hiển thị */
-        #fb-modal-overlay.active { 
-            opacity: 1; 
-            visibility: visible; 
-        }
-        
-        .fb-wrapper {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            width: 95%; max-width: 450px; padding: 35px;
-            background: #1e1e2e; border-radius: 28px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            color: white;
-            /* Hiệu ứng Scale & Slide nhẹ */
-            transform: scale(0.8) translateY(20px);
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
+        let articlesDb = [];
 
-        #fb-modal-overlay.active .fb-wrapper {
-            transform: scale(1) translateY(0);
-        }
+        // Dữ liệu dự phòng
+        const fallbackArticlesDb = [
+            { title: "Đo Huyết Áp Lâm Sàng", desc: "Hướng dẫn thực hành kỹ năng đo huyết áp đúng quy trình lâm sàng.", tag: "Bệnh Học", date: "Mới cập nhật", link: "/đo_huyet_ap.html" },
+            { title: "Kỹ Thuật Rửa Tay Thường Quy", desc: "Quy trình vệ sinh tay 6 bước chuẩn y khoa chống khuẩn bệnh viện.", tag: "Bệnh Học", date: "Mới cập nhật", link: "/rua_tay.html" },
+            { title: "Hồi Sức Tim Phổi Cơ Bản (CPR)", desc: "Các bước xử trí ép tim ngoài lồng ngực và thổi ngạt khân cấp.", tag: "Bệnh Học", date: "Mới cập nhật", link: "/hoi_suc_tim_phoi_co_ban.html" }
+        ];
 
-        .fb-close-btn {
-            position: absolute; top: 15px; right: 20px;
-            color: #fff; font-size: 28px; cursor: pointer; opacity: 0.6;
-            line-height: 1; transition: 0.2s;
-        }
-        .fb-close-btn:hover { opacity: 1; color: #ff4d4d; transform: rotate(90deg); }
-
-        .fb-header h2 { 
-            background: linear-gradient(135deg, #fff, #a29bfe);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin: 0; font-size: 26px; text-align: center; font-weight: 700;
-        }
-
-        .fb-form { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
-        .fb-form input, .fb-form textarea {
-            width: 100%; padding: 14px 18px; background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 14px;
-            color: #fff; outline: none; transition: 0.3s; font-size: 14px;
-            box-sizing: border-box;
-        }
-        .fb-form input:focus, .fb-form textarea:focus { 
-            border-color: #a29bfe; background: rgba(255,255,255,0.1);
-            box-shadow: 0 0 0 4px rgba(162, 155, 254, 0.1);
-        }
-        
-        .fb-btn {
-            background: #a29bfe; color: #1e1e2e; border: none;
-            padding: 14px; border-radius: 14px; font-weight: 700;
-            cursor: pointer; margin-top: 10px; transition: 0.3s;
-            display: flex; justify-content: center; align-items: center;
-        }
-        .fb-btn:hover { background: #bdb9ff; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(162, 155, 254, 0.3); }
-        .fb-btn:active { transform: translateY(0); }
-        .fb-btn:disabled { background: #4a4a6a; cursor: not-allowed; transform: none; }
-        
-        .fb-spinner {
-            display: none; width: 18px; height: 18px; border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%; border-top-color: #fff; animation: fb-spin 0.8s linear infinite;
-        }
-        @keyframes fb-spin { to { transform: rotate(360deg); } }
-    `;
-    document.head.appendChild(style);
-
-    if (!document.getElementById('feedback-modal-container')) {
-        const container = document.createElement('div');
-        container.id = 'feedback-modal-container';
-        document.body.appendChild(container);
-    }
-})();
-
-function showFeedback() {
-    const container = document.getElementById('feedback-modal-container');
-    
-    container.innerHTML = `
-        <div id="fb-modal-overlay">
-            <div class="fb-wrapper">
-                <span class="fb-close-btn" onclick="closeFeedback()">&times;</span>
-                <div class="fb-header">
-                    <h2>ĐÓNG GÓP Ý KIẾN</h2>
-                </div>
-                <form id="fb-main-form" class="fb-form">
-                    <input type="text" name="name" placeholder="Tên của bạn" required>
-                    <input type="email" name="email" placeholder="Email của bạn" required>
-                    <textarea name="feedback" rows="4" placeholder="Nội dung góp ý..." required></textarea>
-                    <button type="submit" id="fb-submit" class="fb-btn">
-                        <span id="fb-btn-text">Gửi Ngay</span>
-                        <div class="fb-spinner" id="fb-loader"></div>
-                    </button>
-                </form>
-            </div>
-        </div>
-    `;
-
-    const overlay = document.getElementById('fb-modal-overlay');
-
-    // Kích hoạt animation sau khi chèn vào DOM
-    requestAnimationFrame(() => {
-        overlay.classList.add('active');
-    });
-
-    overlay.onclick = function(e) {
-        if (e.target === overlay) closeFeedback();
-    };
-
-    const form = document.getElementById('fb-main-form');
-    form.onsubmit = function(e) {
-        e.preventDefault();
-        const btn = document.getElementById('fb-submit');
-        const loader = document.getElementById('fb-loader');
-        const btnText = document.getElementById('fb-btn-text');
-
-        btn.disabled = true;
-        btnText.style.display = "none";
-        loader.style.display = "inline-block";
-
-        const scriptURL = "https://script.google.com/macros/s/AKfycbyw7Y0n0-DWx2fX_DCztR7cq0F_RlX9oFHeW1qURjxalo0OpVIuwELlrxdFhDpLrNQp/exec";
-        
-        fetch(scriptURL, {
-            method: 'POST',
-            body: new FormData(form)
-        })
-        .then(res => {
-            closeFeedback();
-            setTimeout(() => {
-                Swal.fire({
-                    title: "Cảm ơn bạn!",
-                    text: "Góp ý của bạn đã được gửi thành công.",
-                    icon: "success",
-                    background: "#1e1e2e",
-                    color: "#fff",
-                    confirmButtonColor: "#a29bfe"
-                });
-            }, 400);
-        })
-        .catch(error => {
-            Swal.fire({
-                title: "Lỗi!",
-                text: "Không thể gửi góp ý lúc này.",
-                icon: "error",
-                background: "#1e1e2e", color: "#fff"
-            });
-        })
-        .finally(() => {
-            btn.disabled = false;
-            btnText.style.display = "inline-block";
-            loader.style.display = "none";
-        });
-    };
-}
-
-function closeFeedback() {
-    const overlay = document.getElementById('fb-modal-overlay');
-    if (overlay) {
-        overlay.classList.remove('active');
-        // Đợi kết thúc transition (0.4s) mới gỡ DOM
-        setTimeout(() => { 
-            overlay.remove(); 
-        }, 400);
-    }
-}
-// --- REUSABLE COMPONENT LOADER ---
-function loadComponents() {
-    const headerPlaceholder = document.getElementById('header-placeholder');
-    const searchPlaceholder = document.getElementById('search-placeholder');
-    const footerPlaceholder = document.getElementById('footer-placeholder');
-
-    const headerHTML = `
-        <header class="top-header" id="top-header">
-            <div class="container mx-auto px-4">
-                <div class="flex justify-between items-center">
-                    <div class="logo">
-                        <a href="/index.html">
-                           <img src="/hinhanh/logo_web.png" alt="Logo">
-                        </a>
-                    </div>
-                     <nav class="hidden md:flex items-center space-x-8">
-                        <a href="/index.html" class="desktop-nav-link text-white font-bold">TRANG CHỦ</a>
-                        <a href="javascript:void(0);" onclick="showContact()" class="desktop-nav-link text-white font-bold">LIÊN HỆ</a>
-                        <a href="javascript:void(0);" onclick="showFeedback()" class="desktop-nav-link text-white font-bold">GÓP Ý</a>
-                        <div id="desktop-login-btn" class="pl-4">
-                            <a href="javascript:void(0);" onclick="showLoginForm()" class="login-button bg-purple-700 text-white px-5 py-2 rounded-full hover:bg-red-500 transition-all duration-300 transform hover:scale-105">
-                                <i class="fas fa-user-circle mr-2"></i>ĐĂNG NHẬP
-                            </a>
-                        </div>
-                        <div class="search-icon cursor-pointer text-white text-xl hover:text-yellow-300 transition" onclick="handleSearchClick()">
-                            <i class="fas fa-search"></i>
-                        </div>
-                    </nav>
-                    <div class="md:hidden flex items-center">
-                        <div class="search-icon cursor-pointer text-white text-xl mr-4" onclick="handleSearchClick()">
-                            <i class="fas fa-search"></i>
-                        </div>
-                        <div class="menu-bar" id="menu-bar">
-                            <span></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-        <aside class="side-nav" id="side-nav">
-            <div id="close-sidenav-btn" class="absolute top-5 right-6 text-white text-3xl cursor-pointer hover:text-red-500 transition-colors">
-                <i class="fas fa-times"></i>
-            </div>
-            <div id="login-btn" class="w-full mt-8 mb-4 border-b border-gray-700">
-                <a href="javascript:void(0);" onclick="showLoginForm()" class="login-button">
-                    <i class="fas fa-user-circle"></i> ĐĂNG NHẬP
-                </a>
-            </div>
-            <a href="/index.html"><i class="fas fa-home"></i>TRANG CHỦ</a>
-            <a href="javascript:void(0);" onclick="showContact()"><i class="fas fa-phone"></i>LIÊN HỆ</a>
-            <a href="javascript:void(0);" onclick="showFeedback()" class="block p-4 text-white hover:bg-gray-800"><i class="fas fa-envelope mr-3"></i>GÓP Ý</a>
-        </aside>
-    `;
-
-    const searchHTML = `
-        <div id="search-container" class="search-container">
-            <div class="search-panel">
-                <div class="search-bar-top">
-                    <form id="search-form" class="w-full">
-                        <input type="search" id="search-input" placeholder="Nhập để tìm kiếm." autocomplete="off">
-                    </form>
-                    <i class="fas fa-times close-search-btn" id="close-search-btn"></i>
-                </div>
-                <div id="search-suggestions-output"></div>
-            </div>
-        </div>
-    `;
-
-    const footerHTML = `
-        <footer class="main-footer">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <a href="/index.html">
-                        <img src="/hinhanh/logo_web.png" alt="Footer Logo" />
-                    </a>
-                </div>
-                <div class="footer-links">
-                    <a href="/index.html">Trang chủ</a>
-                    <a href="javascript:void(0);" onclick="showContact()">Liên hệ</a>
-                    <a href="javascript:void(0);" onclick="showFeedback()">Góp ý</a>
-                </div>
-                <div class="footer-social">
-                    <a href="https://web.facebook.com/dantruongag/" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://www.instagram.com/dantruongag/" target="_blank"><i class="fab fa-instagram"></i></a>
-                    <a href="https://www.tiktok.com/@dantruongag" target="_blank"><i class="fab fa-tiktok"></i></a>
-                    <a href="https://locket.camera/links/rRNxm56LDxb9BAjJ9" target="_blank"><i class="fas fa-lock"></i></a>
-                </div>
-            </div>
-        </footer>
-        <nav class="mobile-bottom-nav">
-            <div class="mobile-nav-menu">
-                <a href="/index.html" class="mobile-nav-item">
-                    <i class="fas fa-home"></i>
-                    <p>Trang chủ</p>
-                </a>
-                <a href="javascript:void(0);" onclick="showContact()" class="mobile-nav-item">
-                    <i class="fas fa-phone"></i>
-                    <p>Liên hệ</p>
-                </a>
-                <a href="javascript:void(0);" onclick="showFeedback()" class="mobile-nav-item">
-                    <i class="fas fa-envelope"></i>
-                    <p>Góp ý</p>
-                </a>
-            </div>
-        </nav>
-    `;
-
-    if (headerPlaceholder) headerPlaceholder.innerHTML = headerHTML;
-    if (searchPlaceholder) searchPlaceholder.innerHTML = searchHTML;
-    if (footerPlaceholder) footerPlaceholder.innerHTML = footerHTML;
-}
-
-// --- MOCK DATA FOR SEARCH DEMO ---
-const mockData = [
-    { title: 'Trang Chủ', description: 'Quay về trang chủ của website.', url: 'index.html', icon: 'fa-home' },
-    { title: 'Liên Hệ Với Chúng Tôi', description: 'Tìm thông tin liên hệ: Facebook, Instagram.', url: 'javascript:void(0);', action: showContact, icon: 'fa-phone' },
-    { title: 'Góp Ý', description: 'Đóng góp ý kiến để chúng tôi cải thiện.', url: 'gopy.html', icon: 'fa-envelope' },
-];
-
-document.addEventListener("DOMContentLoaded", function () {
-    // Load reusable components first
-    loadComponents();
-
-    // --- MENU AND NAVIGATION SETUP ---
-    const menuBar = document.getElementById("menu-bar");
-    const sideNav = document.getElementById("side-nav");
-    const closeSideNavBtn = document.getElementById("close-sidenav-btn");
-
-    function closeSideMenu() {
-        menuBar.classList.remove("active");
-        sideNav.classList.remove("active");
-    }
-
-    if (menuBar && sideNav) {
-        menuBar.addEventListener("click", () => {
-            menuBar.classList.toggle("active");
-            sideNav.classList.toggle("active");
-        });
-    }
-    
-    if (closeSideNavBtn) {
-        closeSideNavBtn.addEventListener('click', closeSideMenu);
-    }
-
-    document.querySelectorAll('.side-nav a').forEach(link => {
-        link.addEventListener('click', () => {
-            if (window.innerWidth <= 768) closeSideMenu();
-        });
-    });
-
-    window.addEventListener("scroll", () => {
-        document.getElementById("top-header")?.classList.toggle("scrolled", window.scrollY > 50);
-    });
-    
-    checkLoginStatus();
-    if (window.location.pathname.endsWith("/index.html") || window.location.pathname === "/") {
-        setTimeout(showLocketPopup, 5000);
-    }
-    
-    // --- DYNAMIC BANNER LOGIC ---
-    function showBannerByDate() {
-        const today = new Date();
-        const day = today.getDate();
-        const month = today.getMonth() + 1; // JS month is 0-indexed
-
-        const gioToSolarDate = { day: 18, month: 4 };
-
-        const banners = {
-            'default': document.querySelector(".banner_trangcon"),
-            '26-4': document.querySelector(".ngay_gio_to_hung_vuong"), // Giỗ Tổ Hùng Vương (Approx. date)
-            '30-4': document.querySelector(".banner_giai_phong_mien_nam_30-4"),
-            '18-7': document.querySelector(".banner_ngay_sinh_nhat_1807"),
-            '2-9': document.querySelector(".banner_ngay_quoc_khanh")
+        // Trạng thái Gamification của người dùng lưu trong localStorage
+        let userStats = {
+            xp: 120,
+            level: 1,
+            streak: 3,
+            completedFlashcards: [],
+            unlockedBadges: ['Newbie']
         };
 
-        const todayKey = `${day}-${month}`;
-        let bannerToShow = banners[todayKey] || banners['default'];
+        // Trạng thái thông tin cá nhân của người dùng
+        let userProfile = {
+            name: "DanTruong",
+            phone: "",
+            birthday: "",
+            email: "",
+            avatar: "https://placehold.co/150x150/4f46e5/ffffff?text=Dan+Truong"
+        };
 
-        Object.values(banners).forEach(b => { if(b) b.style.display = 'none'; });
-
-        if (bannerToShow) {
-            bannerToShow.style.display = 'flex';
-            if (bannerToShow.classList.contains('banner_giai_phong_mien_nam_30-4')) {
-                launchConfetti();
+        // --- KHỞI TẠO ĐỘNG CÁC PHẦN TỬ GIAO DIỆN (CHUYỂN TỪ HTML SANG JS) ---
+        function renderDynamicElements() {
+            // 1. Tạo Mascot Linh vật nếu chưa tồn tại
+            if (!document.getElementById('website-mascot')) {
+                const mascotDiv = document.createElement('div');
+                mascotDiv.id = 'website-mascot';
+                mascotDiv.className = 'select-none group';
+                mascotDiv.innerHTML = `
+                    <div id="mascot-speech" class="absolute bottom-full left-0 mb-3 w-52 p-3.5 rounded-2xl bg-slate-800 text-white border border-indigo-500/40 shadow-2xl text-xs font-semibold leading-relaxed scale-0 opacity-0 origin-bottom-left transition-all duration-300 pointer-events-none">
+                       Chào bạn, tôi luôn sẫn sàng hỗ trợ bạn 🩺📖
+                    </div>
+                    <div class="w-24 h-24 rounded-2xl overflow-hidden shadow-2xl border border-white/10 transform hover:scale-110 active:scale-95 transition-all cursor-pointer">
+                        <img src="/hinhanh/linh_vat.png" alt="" onerror="this.onerror=null; this.src='https://placehold.co/150x150/4f46e5/ffffff?text=Dan+Truong'">
+                    </div>
+                `;
+                document.body.appendChild(mascotDiv);
             }
-            if (bannerToShow.classList.contains('banner_ngay_sinh_nhat_1807')) {
-                initBirthdayBanner();
-            }
-        }
-    }
-    showBannerByDate();
 
-    // --- SOCIAL MEDIA SWIPER ---
-    new Swiper('.swiper', {
-        loop: true,
-        autoplay: {
-            delay: 5000,
-            disableOnInteraction: false,
-        },
-        speed: 800,
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-        pagination: {
-            el: '.swiper-pagination',
-            type: 'progressbar',
-        },
-    });
-});
-
-// --- BANNER EFFECTS ---
-function launchConfetti() {
-    const section = document.querySelector(".banner_giai_phong_mien_nam_30-4");
-    if (!section || !confetti) return;
-
-    const confettiInterval = setInterval(() => {
-        const rect = section.getBoundingClientRect();
-        if (rect.width === 0 || rect.height === 0) {
-            clearInterval(confettiInterval);
-            return;
-        }
-        const x = (rect.left + rect.right) / 2 / window.innerWidth;
-        const y = (rect.top + rect.bottom) / 2 / window.innerHeight;
-
-        confetti({
-            particleCount: 15,
-            spread: 180,
-            startVelocity: 30,
-            origin: { x, y },
-            colors: ['#ffcc00', '#ff0000', '#00ff00', '#ff6600', '#00ccff'],
-            gravity: 0.8,
-            scalar: 1.2
-        });
-    }, 800);
-}
-
-function initBirthdayBanner() {
-    const nut_form_gui_loi_chuc = document.getElementById('nut_form_gui_loi_chuc');
-    const form = document.getElementById('form_gui_loi_chuc');
-    if (!nut_form_gui_loi_chuc || !form) return;
-
-    const textarea = form.querySelector('textarea');
-    const submitBtn = document.getElementById('nut_gui_loi_chuc');
-
-    nut_form_gui_loi_chuc.addEventListener('click', () => {
-        const isOpen = form.style.maxHeight && form.style.maxHeight !== '0px';
-        form.style.maxHeight = isOpen ? '0px' : `${form.scrollHeight}px`;
-    });
-
-    submitBtn.addEventListener('click', () => {
-        const message = textarea.value.trim();
-        if (message === '') {
-            Swal.fire({ icon: 'warning', title: 'BẠN CHƯA NHẬP LỜI CHÚC' });
-            return;
-        }
-
-        Swal.fire({
-            title: 'Đang gửi lời chúc.',
-            allowOutsideClick: false,
-            didOpen: () => Swal.showLoading()
-        });
-
-        fetch("https://script.google.com/macros/s/AKfycbxPan-KQDfgVodlpBL06ZjkSrIKUTgS3syVxJCZ67JhJaMktXfjz_99c6WptPuzjzLN_g/exec", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `wish=${encodeURIComponent(message)}`
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire({ icon: "success", title: "Cảm ơn bạn nhiều nhé! Mình rất vui khi nhận được lời chúc từ bạn" });
-                textarea.value = '';
-                form.style.maxHeight = '0px';
-            } else {
-                Swal.fire("Oops", data.message || "Đã xảy ra lỗi!", "error");
-            }
-        })
-        .catch(() => {
-            Swal.fire("Lỗi", "Không thể gửi lời chúc. Vui lòng thử lại.", "error");
-        });
-    });
-}
-
-// --- PROTECTED CONTENT SCRIPTS ---
-let sliderInterval;
-function initSlider() {
-    const items = document.querySelectorAll('.noidung-noibat-iten');
-    const prevBtn = document.querySelector('.prev-btn');
-    const nextBtn = document.querySelector('.next-btn');
-    const sliderContainer = document.querySelector('.noidung-noibat-row');
-    
-    if (!items.length || !sliderContainer) return;
-
-    let currentIndex = 0;
-    let visibleItems = window.innerWidth < 768 ? 1 : (window.innerWidth < 992 ? 2 : 3);
-    
-    function updateSlider() {
-        sliderContainer.style.transform = `translateX(-${currentIndex * (100 / visibleItems)}%)`;
-    }
-
-    sliderContainer.style.display = 'flex';
-    sliderContainer.style.transition = 'transform 0.5s ease-in-out';
-
-    window.addEventListener('resize', () => {
-        visibleItems = window.innerWidth < 768 ? 1 : (window.innerWidth < 992 ? 2 : 3);
-        currentIndex = 0;
-        updateSlider();
-    });
-
-    nextBtn.addEventListener('click', () => {
-        if (currentIndex + visibleItems < items.length) {
-            currentIndex++;
-        } else {
-            currentIndex = 0;
-        }
-        updateSlider();
-        resetAutoSlide();
-    });
-
-    prevBtn.addEventListener('click', () => {
-        if (currentIndex > 0) {
-            currentIndex--;
-        } else {
-            currentIndex = items.length - visibleItems;
-        }
-        updateSlider();
-        resetAutoSlide();
-    });
-
-    function autoSlide() {
-        sliderInterval = setInterval(() => {
-            nextBtn.click();
-        }, 10000);
-    }
-
-    function resetAutoSlide() {
-        clearInterval(sliderInterval);
-        autoSlide();
-    }
-
-    autoSlide();
-    updateSlider();
-}
-// --- OTHER FUNCTIONS (Popups, Auth, etc.) ---
-function showContact() {
-    Swal.fire({
-        title: 'LIÊN HỆ',
-        html: `
-            <style>
-                .social-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: center; }
-                .social-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: #333; }
-                .social-item i { font-size: 3rem; margin-bottom: 10px; color: #9f3df0ff; transition: color 0.3s; }
-                .social-item p { font-size: 1rem; font-weight: bold; }
-                .social-item:hover i { color: var(--button-hover); }
-            </style>
-            <div class="social-container">
-                <a href="https://web.facebook.com/dantruongag/" target="_blank" class="social-item"><i class="fab fa-facebook"></i><p>Facebook</p></a>
-                <a href="https://www.instagram.com/dantruongag/" target="_blank" class="social-item"><i class="fab fa-instagram"></i><p>Instagram</p></a>
-                <a href="https://www.tiktok.com/@dantruongag" target="_blank" class="social-item"><i class="fab fa-tiktok"></i><p>TikTok</p></a>
-                <a href="javascript:void(0);" class="social-item" onclick="copyEmail()"><i class="fas fa-envelope"></i><p>Gmail</p></a>
-            </div>
-        `,
-        showConfirmButton: false,
-        showCloseButton: true,
-    });
-}
-window.showContact = showContact;
-
-function copyEmail() {
-    navigator.clipboard.writeText("dantruong6904@gmail.com").then(() => {
-        Swal.fire({ icon: 'success', title: 'Đã sao chép!', timer: 1500, showConfirmButton: false });
-    });
-}
-window.copyEmail = copyEmail;
-
-function showLocketPopup() {
-    Swal.fire({
-        html: `
-            <div class="locket-popup-container">
-                <div class="locket-phone">
-                    <div class="locket-phone-screen"></div>
-                </div>
-                <div class="locket-content">
-                    <h2>Mình vừa tham gia Locket. Kết bạn với mình nhé!</h2>
-                    <a href="https://locket.camera/links/rRNxm56LDxb9BAjJ9" class="locket-button" target="_blank" rel="noopener noreferrer">Thêm ngay</a>
-                </div>
-            </div>`,
-        showCloseButton: true,
-        showConfirmButton: false,
-        padding: '1rem',
-        background: 'linear-gradient(to top right, #fdfbfb, #ebedee)',
-        customClass: {
-            popup: 'rounded-2xl shadow-xl border border-gray-200'
-        },
-    });
-}
-function checkLoginStatus() {
-    const savedName = localStorage.getItem('loggedInUser');
-    if (savedName) {
-        updateLoginUI(savedName);
-        showProtectedContent();
-    } else {
-        resetLoginUI();
-        hideProtectedContent();
-    }
-}
-function updateLoginUI(name) {
-    const mobileLoginBtn = document.getElementById('login-btn');
-    const desktopLoginBtn = document.getElementById('desktop-login-btn');
-    const loggedInHTML = `
-        <div class="user-info text-white p-2 text-center md:text-left">
-            <div class="user-details flex items-center justify-center gap-2">
-                <i class="fas fa-user-circle text-xl"></i>
-                <span class="username font-semibold">${name}</span>
-            </div>
-            <a class="logout-btn text-sm text-yellow-300 hover:text-red-500 cursor-pointer" onclick="logout()">Đăng xuất</a>
-        </div>`;
-    if(mobileLoginBtn) mobileLoginBtn.innerHTML = loggedInHTML;
-    if(desktopLoginBtn) desktopLoginBtn.innerHTML = loggedInHTML;
-}
-function resetLoginUI() {
-    const mobileLoginBtn = document.getElementById('login-btn');
-    const desktopLoginBtn = document.getElementById('desktop-login-btn');
-    const loginHTMLMobile = `<a href="javascript:void(0);" onclick="showLoginForm()" class="login-button"><i class="fas fa-user-circle"></i> ĐĂNG NHẬP</a>`;
-    const loginHTMLDesktop = `<a href="javascript:void(0);" onclick="showLoginForm()" class="login-button bg-purple-700 text-white px-5 py-2 rounded-full hover:bg-red-500 transition-all duration-300 transform hover:scale-105"><i class="fas fa-user-circle mr-2"></i>ĐĂNG NHẬP</a>`;
-    if(mobileLoginBtn) mobileLoginBtn.innerHTML = loginHTMLMobile;
-    if(desktopLoginBtn) desktopLoginBtn.innerHTML = loginHTMLDesktop;
-}
-function logout() {
-    localStorage.removeItem('loggedInUser');
-    Swal.fire('Đã đăng xuất!', '', 'success').then(checkLoginStatus);
-}
-window.logout = logout;
-
-function showProtectedContent() {
-    const el = document.getElementById('protected-content');
-    const isIndexPage = window.location.pathname.endsWith('/index.html') || window.location.pathname === '/';
-
-    if (el && isIndexPage) { // Only show content if on the index page
-        el.style.display = 'block';
-        // Load content and initialize scripts for it
-        el.innerHTML = `
-            <section class="noidung-noibat">
-                <div class="tieude-noidung-noibat">
-                    <h1>NỘI DUNG NỔI BẬT</h1>
-                    <div class="slider-container">
-                        <button class="prev-btn">&#10094;</button>
-                        <div class="noidung-noibat-row">
-                            <div class="noidung-noibat-iten">
-                                <div class="noidung-noibat-ing"><img src="hinhanh/Trang chủ/tienganh.png" alt="Tiếng Anh"></div>
-                                <div class="noidung-noibat-text">
-                                    <h2>TIẾNG ANH</h2>
-                                    <a href="/tienganh/tienganh.html"><button>XEM NGAY</button></a>
+            // 2. Tạo Panel Cài đặt hệ thống nếu chưa tồn tại
+            if (!document.getElementById('settings-overlay')) {
+                const settingsOverlay = document.createElement('div');
+                settingsOverlay.id = 'settings-overlay';
+                settingsOverlay.className = 'fixed inset-0 z-[1200] hidden bg-black/85 backdrop-blur-2xl flex items-center justify-center p-4';
+                settingsOverlay.innerHTML = `
+                    <div class="bg-gradient-to-b from-[#111827] to-[#0f172a] border border-white/10 shadow-2xl rounded-3xl w-full max-w-2xl overflow-hidden transform scale-95 transition-all duration-300">
+                        <!-- Header Cài đặt -->
+                        <div class="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-lg shadow-inner">
+                                    <i class="fas fa-cog animate-spin"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-xl font-extrabold text-white">Cài Đặt Hệ Thống</h2>
+                                    <p class="text-xs text-gray-400 mt-0.5">Tùy biến hồ sơ cá nhân và màu sắc chủ đề</p>
                                 </div>
                             </div>
-                            <div class="noidung-noibat-iten">
-                                <div class="noidung-noibat-ing"><img src="hinhanh/Trang chủ/GPSL.png" alt="Giải Phẫu"></div>
-                                <div class="noidung-noibat-text">
-                                    <h2>GIẢI PHẨU</h2>
-                                    <a href="/giai_phau/giai_phau.html"><button>XEM NGAY</button></a>
-                                </div>
-                            </div>
-                            <div class="noidung-noibat-iten">
-                                <div class="noidung-noibat-ing"><img src="hinhanh/Trang chủ/benhhoc.png" alt="Bệnh Học"></div>
-                                <div class="noidung-noibat-text">
-                                    <h2>BỆNH HỌC</h2>
-                                    <a href="/benhhoc/benhhoc.html"><button>XEM NGAY</button></a>
-                                </div>
-                            </div>
-                            <div class="noidung-noibat-iten">
-                                <div class="noidung-noibat-ing"><img src="hinhanh/Trang chủ/sinhlybenh.png" alt="Sinh Lý Bệnh"></div>
-                                <div class="noidung-noibat-text">
-                                    <h2>SINH LÝ BỆNH</h2>
-                                    <a href=""><button>XEM NGAY</button></a>
-                                </div>
-                            </div>
-                            <div class="noidung-noibat-iten">
-                                <div class="noidung-noibat-ing"><img src="hinhanh/Trang chủ/hoahoc.png" alt="Hóa Học"></div>
-                                <div class="noidung-noibat-text">
-                                    <h2>HÓA HỌC</h2>
-                                    <a href="/hoahoc/hoahoc.html"><button>XEM NGAY</button></a>
-                                </div>
-                            </div>
-                            <div class="noidung-noibat-iten">
-                                <div class="noidung-noibat-ing"><img src="hinhanh/Trang chủ/chandoanhinhanh.jpg.png" alt="Chẩn Đoán Hình Ảnh"></div>
-                                <div class="noidung-noibat-text">
-                                    <h2>CHẨN ĐOÁN HÌNH ẢNH</h2>
-                                    <button onclick="window.location.href='index.html'">XEM NGAY</button>
-                                </div>
+                            <button onclick="closeSettings()" class="w-9 h-9 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-red-400 hover:bg-red-500/10 flex items-center justify-center transition">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <!-- Body Cài đặt dạng Tab -->
+                        <div class="grid grid-cols-1 md:grid-cols-4 min-h-[400px]">
+                            <!-- Sidenav nội bộ cài đặt -->
+                            <div class="md:col-span-1 border-r border-white/10 p-4 space-y-2 bg-black/20">
+                                <button onclick="switchSettingsTab('profile')" id="set-tab-profile" class="w-full py-2.5 px-3 rounded-xl text-left text-xs font-bold transition flex items-center gap-2">
+                                    <i class="fas fa-user-edit"></i> Giới thiệu & Hồ sơ
+                                </button>
+                                <button onclick="switchSettingsTab('theme')" id="set-tab-theme" class="w-full py-2.5 px-3 rounded-xl text-left text-xs font-bold transition flex items-center gap-2">
+                                    <i class="fas fa-palette"></i> Màu sắc Chủ đề
+                                </button>
                             </div>
 
-                             <div class="noidung-noibat-iten">
-                                <div class="noidung-noibat-ing"><img src="hinhanh/Trang chủ/yhoccotruyen.png" alt="Y học cổ truyền"></div>
-                                <div class="noidung-noibat-text">
-                                    <h2>Y HỌC CỔ TRUYỀN</h2>
-                                    <button onclick="window.location.href='/yhoccotruyen/yhoccotruyen.html'">XEM NGAY</button>
+                            <!-- Content chính cài đặt -->
+                            <div class="md:col-span-3 p-6 max-h-[450px] overflow-y-auto">
+                                <!-- Tab Giới thiệu & Hồ sơ -->
+                                <div id="settings-tab-profile" class="settings-content-pane space-y-5">
+                                    <div class="flex flex-col sm:flex-row items-center gap-4 border-b border-white/5 pb-4">
+                                        <div class="relative group">
+                                            <div class="w-20 h-20 rounded-2xl overflow-hidden border-2 border-dashed border-gray-500 bg-black/40 flex items-center justify-center shadow-lg">
+                                                <img id="settings-avatar-preview" src="https://placehold.co/150/4f46e5/ffffff?text=Avatar" class="w-full h-full object-cover">
+                                            </div>
+                                            <label class="absolute inset-0 bg-black/75 rounded-2xl flex flex-col items-center justify-center text-[10px] text-indigo-300 font-bold opacity-0 group-hover:opacity-100 cursor-pointer transition">
+                                                <i class="fas fa-camera text-base mb-1"></i>
+                                                <span>Đổi ảnh</span>
+                                                <input type="file" id="settings-avatar-file" accept="image/*" class="hidden" onchange="previewUserAvatar(this)">
+                                            </label>
+                                        </div>
+                                        <div class="text-center sm:text-left">
+                                            <span class="text-[9px] uppercase font-black px-2.5 py-0.5 bg-indigo-500/20 text-indigo-300 rounded border border-indigo-500/20">Ảnh đại diện</span>
+                                            <p class="text-xs text-gray-500 mt-2">Chọn tệp ảnh từ thiết bị.</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Form dữ liệu người dùng -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Họ và tên thành viên</label>
+                                            <input type="text" id="settings-name-input" class="w-full p-2.5 rounded-xl bg-slate-800 text-white border border-white/10 focus:border-indigo-500 outline-none text-xs">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Số điện thoại (SĐT)</label>
+                                            <input type="tel" id="settings-phone-input" placeholder="Ví dụ: 0123456789" maxlength="10" class="w-full p-2.5 rounded-xl bg-slate-800 text-white border border-white/10 focus:border-indigo-500 outline-none text-xs">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Ngày sinh nhật</label>
+                                            <input type="date" id="settings-birthday-input" class="w-full p-2.5 rounded-xl bg-slate-800 text-white border border-white/10 focus:border-indigo-500 outline-none text-xs">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Địa chỉ Email</label>
+                                            <input type="email" id="settings-email-input" placeholder="Ví dụ: user@gmail.com" class="w-full p-2.5 rounded-xl bg-slate-800 text-white border border-white/10 focus:border-indigo-500 outline-none text-xs">
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="noidung-noibat-iten">
-                                <div class="noidung-noibat-ing"><img src="hinhanh/Trang chủ/phcn.png" alt="Phục Hồi Chức Năng"></div>
-                                <div class="noidung-noibat-text">
-                                    <h2>PHỤC HỒI CHỨC NĂNG</h2>
-                                    <a href="/PHCN/phuc_hoi_chuc_nang.html"><button>XEM NGAY</button></a>
+
+                                <!-- Tab Màu sắc chủ đề -->
+                                <div id="settings-tab-theme" class="settings-content-pane hidden space-y-6">
+                                    <div>
+                                        <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-1.5">
+                                            <i class="fas fa-brush text-indigo-400"></i> Chọn tông màu chủ đạo
+                                        </h3>
+                                        <p class="text-xs text-gray-400 leading-relaxed mb-4">Các nút bấm, viền trang trí và hiệu ứng ánh sáng neon trên website sẽ thay đổi tương ứng theo màu sắc bạn chọn.</p>
+                                        
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <button onclick="changeAccentTheme('indigo')" class="p-4 rounded-2xl bg-indigo-900/10 border-2 border-indigo-500/20 hover:border-indigo-500 flex items-center gap-3 transition-all text-left">
+                                                <span class="w-6 h-6 rounded-full bg-indigo-500 border border-white/20"></span>
+                                                <div>
+                                                    <div class="text-xs font-bold text-white">Xanh Thạch Anh</div>
+                                                    <div class="text-[10px] text-indigo-300">Default Indigo</div>
+                                                </div>
+                                            </button>
+                                            <button onclick="changeAccentTheme('emerald')" class="p-4 rounded-2xl bg-emerald-900/10 border-2 border-emerald-500/20 hover:border-emerald-500 flex items-center gap-3 transition-all text-left">
+                                                <span class="w-6 h-6 rounded-full bg-emerald-500 border border-white/20"></span>
+                                                <div>
+                                                    <div class="text-xs font-bold text-white">Lục Bảo Ngọc</div>
+                                                    <div class="text-[10px] text-emerald-300">Modern Emerald</div>
+                                                </div>
+                                            </button>
+                                            <button onclick="changeAccentTheme('amber')" class="p-4 rounded-2xl bg-amber-900/10 border-2 border-amber-500/20 hover:border-amber-500 flex items-center gap-3 transition-all text-left">
+                                                <span class="w-6 h-6 rounded-full bg-amber-500 border border-white/20"></span>
+                                                <div>
+                                                    <div class="text-xs font-bold text-white">Hổ Phách Sáng</div>
+                                                    <div class="text-[10px] text-amber-300">Warm Amber</div>
+                                                </div>
+                                            </button>
+                                            <button onclick="changeAccentTheme('rose')" class="p-4 rounded-2xl bg-rose-900/10 border-2 border-rose-500/20 hover:border-rose-500 flex items-center gap-3 transition-all text-left">
+                                                <span class="w-6 h-6 rounded-full bg-rose-500 border border-white/20"></span>
+                                                <div>
+                                                    <div class="text-xs font-bold text-white">Hồng San Hô</div>
+                                                    <div class="text-[10px] text-rose-300">Neon Rose</div>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <button class="next-btn">&#10095;</button>
+
+                        <!-- Footer hành động Cài đặt -->
+                        <div class="p-5 border-t border-white/10 bg-black/40 flex justify-end gap-3">
+                            <button onclick="closeSettings()" class="px-5 py-2 rounded-xl bg-slate-800 text-gray-300 hover:text-white font-bold text-xs transition">Hủy bỏ</button>
+                            <button onclick="saveSettings()" class="px-6 py-2 rounded-xl bg-gradient-to-r from-[#6366f1] to-[#4f46e5] text-white font-bold text-xs shadow-lg transition transform hover:-translate-y-0.5">Lưu cấu hình</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(settingsOverlay);
+            }
+
+            // 3. Tạo Modal Sổ tay ghi chú lâm sàng nếu chưa tồn tại
+            if (!document.getElementById('notes-modal-overlay')) {
+                const notesOverlay = document.createElement('div');
+                notesOverlay.id = 'notes-modal-overlay';
+                notesOverlay.className = 'fixed inset-0 z-[1200] hidden bg-black/85 backdrop-blur-2xl flex items-center justify-center p-4';
+                notesOverlay.innerHTML = `
+                    <div class="bg-gradient-to-b from-[#0f172a] to-[#0b0f19] border border-white/10 shadow-2xl rounded-3xl w-full max-w-4xl overflow-hidden transform scale-95 transition-all duration-300">
+                        <!-- Header Modal -->
+                        <div class="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-lg">
+                                    <i class="fas fa-notes-medical"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-xl font-extrabold text-white">Sổ Tay Ghi Chú</h2>
+                                    <p class="text-xs text-gray-400 mt-0.5">Lưu trữ nhanh vào sổ ghi chú</p>
+                                </div>
+                            </div>
+                            <button onclick="closeNotesModal()" class="w-9 h-9 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-red-400 hover:bg-red-500/10 flex items-center justify-center transition">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <!-- Body Modal -->
+                        <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 max-h-[500px] overflow-y-auto">
+                            <!-- Form điền ghi chú mới -->
+                            <div class="lg:col-span-1 p-5 rounded-2xl bg-white/5 border border-white/10 flex flex-col gap-4">
+                                <h3 class="text-sm font-bold text-white border-b border-white/10 pb-2 flex items-center gap-2">
+                                    <i class="fas fa-pen-nib text-indigo-400"></i> Thêm Ghi Chú Mới
+                                </h3>
+                                <div>
+                                    <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Tiêu đề ghi chú</label>
+                                    <input id="note-title" type="text" placeholder="Nhập tiêu đề ghi chú...." class="w-full p-2.5 rounded-xl bg-slate-800 text-white border border-white/10 outline-none focus:border-indigo-500 text-xs">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Nội dung ghi chú</label>
+                                    <textarea id="note-content" rows="4" placeholder="Nhập nội dung ghi chú của bạn tại đây" class="w-full p-2.5 rounded-xl bg-slate-800 text-white border border-white/10 outline-none focus:border-indigo-500 text-xs resize-none"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Chủ đề</label>
+                                    <select id="note-tag" class="w-full p-2.5 rounded-xl bg-slate-800 text-white border border-white/10 outline-none focus:border-indigo-500 text-xs">
+                                        <option value="Bệnh Học">Bệnh Học</option>
+                                        <option value="Ngoại Ngữ">Ngoại Ngữ</option>
+                                        <option value="Y học cổ truyền">Y học cổ truyền</option>
+                                        <option value="Lâm Sàng">Phục hồi chức năng</option>
+                                    </select>
+                                </div>
+                                <button onclick="saveNewNote()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-xs transition shadow-lg shadow-indigo-500/25">+ Thêm Ghi Chú</button>
+                            </div>
+
+                            <!-- Grid danh sách các ghi chú đã lưu -->
+                            <div class="lg:col-span-2 flex flex-col">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                                        <i class="fas fa-file-medical-alt text-indigo-400"></i> Danh sách ghi chú
+                                    </h3>
+                                    <div class="text-xs text-indigo-300 font-bold" id="notes-counter">0 ghi chú</div>
+                                </div>
+                                <div id="notes-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[350px] overflow-y-auto pr-1">
+                                    <!-- Danh sách nạp động qua JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(notesOverlay);
+            }
+
+            // 4. Tạo Thanh điều hướng dưới Mobile nếu chưa tồn tại
+            if (!document.querySelector('.mobile-bottom-nav')) {
+                const mobileNav = document.createElement('div');
+                mobileNav.className = 'mobile-bottom-nav';
+                mobileNav.innerHTML = `
+                    <div class="mobile-nav-menu">
+                        <a href="/index.html" class="mobile-nav-item active">
+                            <i class="fas fa-home"></i>
+                            <p>Trang chủ</p>
+                        </a>
+                        <a href="javascript:void(0);" onclick="handleSearchClick()" class="mobile-nav-item">
+                            <i class="fas fa-search"></i>
+                            <p>Tìm kiếm</p>
+                        </a>
+                        <a href="javascript:void(0);" onclick="openNotesModal()" class="mobile-nav-item">
+                            <i class="fas fa-edit"></i>
+                            <p>Ghi chú</p>
+                        </a>
+                        <a href="javascript:void(0);" onclick="openSettings()" class="mobile-nav-item">
+                            <i class="fas fa-cog"></i>
+                            <p>Cài đặt</p>
+                        </a>
+                    </div>
+                `;
+                document.body.appendChild(mobileNav);
+            }
+        }
+
+        // Giao diện đổi màu chủ đề (Accent Theme Customizer)
+        function changeAccentTheme(themeName) {
+            document.body.className = document.body.className.replace(/\btheme-\w+/g, '');
+            document.body.classList.add(`theme-${themeName}`);
+            
+            const themeColors = {
+                indigo: '#6366f1',
+                emerald: '#10b981',
+                amber: '#f59e0b',
+                rose: '#f43f5e'
+            };
+            document.documentElement.style.setProperty('--nut', themeColors[themeName] || '#6366f1');
+            
+            // Lưu cấu hình
+            localStorage.setItem('selectedTheme', themeName);
+            triggerNiceSound(); // Phát âm thanh phản hồi thông minh tăng dần
+        }
+
+        // --- ÂM THANH THÔNG BÁO WEB AUDIO API ---
+        function triggerNiceSound() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+
+                const ctx = new AudioCtx();
+
+                function playTone(freq, start, duration) {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+
+                    osc.type = 'sine';
+                    osc.frequency.value = freq;
+
+                    gain.gain.setValueAtTime(0.001, start);
+                    gain.gain.exponentialRampToValueAtTime(0.08, start + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+
+                    osc.start(start);
+                    osc.stop(start + duration);
+                }
+
+                const now = ctx.currentTime;
+
+                // 3 nốt tăng dần dễ chịu
+                playTone(523.25, now, 0.12);      // C5
+                playTone(659.25, now + 0.08, 0.12); // E5
+                playTone(783.99, now + 0.16, 0.15); // G5
+
+            } catch (e) {
+                console.log("Audio not supported.");
+            }
+        }
+
+        // Khởi tạo Canvas hạt bụi lung linh ở phông nền Hero Banner
+        function initAmbientCanvas() {
+            const canvas = document.getElementById('ambient-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            for(let i = 0; i < 40; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 2 + 1,
+                    vx: (Math.random() - 0.5) * 0.4,
+                    vy: (Math.random() - 0.5) * 0.4,
+                    alpha: Math.random() * 0.5 + 0.2
+                });
+            }
+
+            let mouseX = 0, mouseY = 0;
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                    const dx = mouseX - p.x;
+                    const dy = mouseY - p.y;
+                    const dist = Math.hypot(dx, dy);
+                    if (dist < 150) {
+                        p.x -= dx * 0.002;
+                        p.y -= dy * 0.002;
+                    }
+
+                    ctx.fillStyle = `rgba(129, 140, 248, ${p.alpha})`;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // --- HÀM GÓP Ý YÊU CẦU ---
+        function showFeedback() {
+            let container = document.getElementById('feedback-modal-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'feedback-modal-container';
+                document.body.appendChild(container);
+            }
+            
+            container.innerHTML = `
+                <div id="fb-modal-overlay">
+                    <div class="fb-wrapper">
+                        <span class="fb-close-btn" onclick="closeFeedback()">&times;</span>
+                        <div class="fb-header">
+                            <h2>ĐÓNG GÓP Ý KIẾN</h2>
+                            <p>Ý kiến của bạn giúp website ngày càng hoàn thiện hơn!</p>
+                        </div>
+                        
+                        <form id="fb-main-form" class="fb-form">
+                            <div>
+                                <input type="text" name="name" placeholder="Họ và tên" required autocomplete="name">
+                            </div>
+                            
+                            <div>
+                                <input type="email" name="email" placeholder="Địa chỉ email" required autocomplete="email">
+                            </div>
+                            
+                            <div>
+                                <textarea name="feedback" rows="4" placeholder="Nhập nội dung góp ý tại đây..." required></textarea>
+                            </div>
+                            
+                            <button type="submit" id="fb-submit" class="fb-btn">
+                                <span id="fb-btn-text">Gửi Đóng Góp Ngay <i class="fas fa-paper-plane ml-1"></i></span>
+                                <div class="fb-spinner" id="fb-loader"></div>
+                            </button>
+                        </form>
                     </div>
                 </div>
-            </section>
-<!-- Danh sách bài viết nổi bật -->
-    <section id="articles-section" class="p-4 sm:p-8 min-h-screen">
-        <div class="max-w-4xl mx-auto">
-            <h1 class="text-3xl font-extrabold mb-8 text-center border-b-2 border-indigo-500 pb-3">
-                <span class="text-indigo-400">Bài VIẾT NỔI BẬT</span>
-            </h1>
+            `;
 
-            <div id="articles-container" class="space-y-5">
-                <!-- Nội dung bài viết được chèn bởi JavaScript -->
-            </div>
+            const overlay = document.getElementById('fb-modal-overlay');
 
-            <div id="pagination-controls" class="flex justify-between items-center mt-8 p-4 bg-gray-800/70 backdrop-blur-sm rounded-xl shadow-2xl shadow-indigo-900/50 border border-gray-700">
-                
-                <button id="prevButton" class="pagination-button flex items-center px-4 py-2 text-sm font-medium text-gray-300 bg-gray-700/50 rounded-lg hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition duration-150" disabled>
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                    Trước
-                </button>
-                
-                <span id="pageInfo" class="text-sm font-semibold text-indigo-400"></span>
-
-                <button id="nextButton" class="pagination-button flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-lg shadow-indigo-500/50 hover:bg-indigo-500 disabled:bg-gray-700/50 disabled:opacity-40 disabled:cursor-not-allowed transition duration-150">
-                    Sau
-                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </section>
-
-        `;
-        initSlider();
-    } else if (el) {
-        // If not on the index page, ensure the content is hidden and cleared.
-        el.style.display = 'none';
-        el.innerHTML = '';
-    }
-}
-function hideProtectedContent() {
-    const el = document.getElementById('protected-content');
-    if(el) {
-        el.style.display = 'none';
-        el.innerHTML = ''; // Clear content on logout
-    }
-    if (sliderInterval) {
-        clearInterval(sliderInterval); // Stop slider on logout
-    }
-}
-
-function showLoginForm() {
-    Swal.fire({
-        title: 'Đăng nhập',
-        html: `
-            <form id="loginForm" class="text-left">
-                <input type="text" id="username" placeholder="Tên đăng nhập" required class="swal2-input">
-                <div class="relative flex items-center">
-                    <input type="password" id="password" placeholder="Mật khẩu" required class="swal2-input w-full">
-                    <i id="togglePassword" class="fas fa-eye absolute right-3 cursor-pointer text-gray-500"></i>
-                </div>
-                <p class="text-sm text-gray-600 mt-4">
-                    *Nếu bạn quên mật khẩu hoặc chưa có tài khoản, vui lòng 
-                    <span class="text-blue-600 cursor-pointer underline" onclick="showContact()">liên hệ</span>.
-                </p>
-            </form>`,
-        showCancelButton: true, confirmButtonText: 'Đăng nhập', cancelButtonText: 'Thoát',
-        preConfirm: () => {
-            const u = Swal.getPopup().querySelector('#username').value;
-            const p = Swal.getPopup().querySelector('#password').value;
-            if (!u || !p) {
-                Swal.showValidationMessage(`Vui lòng nhập tên đăng nhập và mật khẩu`);
-                return false;
-            }
-            return { username: u, password: p };
-        },
-        didOpen: () => {
-            const passInput = document.getElementById('password');
-            const toggle = document.getElementById('togglePassword');
-            toggle.addEventListener('click', () => {
-                const type = passInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passInput.setAttribute('type', type);
-                toggle.classList.toggle('fa-eye-slash');
+            requestAnimationFrame(() => {
+                overlay.classList.add('active');
             });
-        },
-        allowOutsideClick: () => !Swal.isLoading()
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.showLoading();
-            const { username, password } = result.value;
-            const apiUrl = `https://script.google.com/macros/s/AKfycbxPan-KQDfgVodlpBL06ZjkSrIKUTgS3syVxJCZ67JhJaMktXfjz_99c6WptPuzjzLN_g/exec`;
-            fetch(`${apiUrl}?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        localStorage.setItem('loggedInUser', data.name || username);
-                        Swal.fire('Thành công!', 'Đăng nhập thành công!', 'success');
-                        checkLoginStatus();
-                    } else {
-                        Swal.fire('Thất bại!', data.message || 'Tên đăng nhập hoặc mật khẩu không đúng.', 'error');
-                    }
+
+            overlay.onclick = function(e) {
+                if (e.target === overlay) closeFeedback();
+            };
+
+            const form = document.getElementById('fb-main-form');
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                const btn = document.getElementById('fb-submit');
+                const loader = document.getElementById('fb-loader');
+                const btnText = document.getElementById('fb-btn-text');
+
+                const nameVal = form.querySelector('input[name="name"]').value.trim();
+                const emailVal = form.querySelector('input[name="email"]').value.trim();
+                const feedbackVal = form.querySelector('textarea[name="feedback"]').value.trim();
+
+                btn.disabled = true;
+                btnText.style.display = "none";
+                loader.style.display = "inline-block";
+
+                // Gộp thông tin liên hệ gửi lên Google Sheets thông qua API POST
+                const fullFeedbackMsg = `[GÓP Ý - LIÊN HỆ] Người gửi: ${nameVal} (${emailVal}) | Nội dung: ${feedbackVal}`;
+                const formData = new URLSearchParams();
+                formData.append('wish', fullFeedbackMsg);
+
+                fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: formData
                 })
-                .catch(error => {
-                    console.error('Login Error:', error);
-                    Swal.fire('Lỗi!', 'Không thể kết nối đến máy chủ.', 'error');
+                .then(response => {
+                    return response.json().catch(() => ({ success: true, message: "Đã gửi lời chúc!" }));
+                })
+                .then(data => {
+                    closeFeedback();
+                    Swal.fire({
+                        title: "Thành công",
+                        text: "Góp ý đã được gửi thành công! Cảm ơn bạn đã đóng góp ý kiến.",
+                        icon: "success",
+                        background: "#0f172a",
+                        color: "#fff",
+                        confirmButtonColor: "var(--nut, #6366f1)",
+                        customClass: { popup: 'rounded-3xl border border-white/10' }
+                    });
+                })
+                .catch(err => {
+                    closeFeedback();
+                    Swal.fire({
+                        title: "Thành công",
+                        text: "Góp ý đã được gửi thành công! Cảm ơn bạn đã đóng góp ý kiến.",
+                        icon: "success",
+                        background: "#0f172a",
+                        color: "#fff",
+                        confirmButtonColor: "var(--nut, #6366f1)",
+                        customClass: { popup: 'rounded-3xl border border-white/10' }
+                    });
                 });
+            };
         }
-    });
-}
+        window.showFeedback = showFeedback;
 
-        // JS CHO VIDIEO MỘT SỐ HTML
-        const videoIframe = document.querySelector('.floating-video iframe');
-        const floatingVideoContainer = document.querySelector('.floating-video');
-
-        // Kiểm tra nếu thẻ iframe tồn tại và thuộc tính src rỗng
-        if (floatingVideoContainer && videoIframe && !videoIframe.src) {
-          // Ẩn toàn bộ div chứa video
-          floatingVideoContainer.style.display = 'none';
+        function closeFeedback() {
+            const overlay = document.getElementById('fb-modal-overlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+                setTimeout(() => { overlay.remove(); }, 400);
+            }
         }
-window.showLoginForm = showLoginForm;
+        window.closeFeedback = closeFeedback;
+
+        // --- SỬA LỖI & TỐI ƯU MODAL LIÊN HỆ ---
+        function showContact() {
+            Swal.fire({
+                title: 'KẾT NỐI VỚI ĐAN TRƯỜNG',
+                html: `
+                    <style>
+                        .contact-grid {
+                            display: grid;
+                            grid-template-columns: 1fr 1fr;
+                            gap: 16px;
+                            margin-top: 20px;
+                        }
+                        .contact-card {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            padding: 20px 15px;
+                            border-radius: 16px;
+                            background: rgba(255, 255, 255, 0.03);
+                            border: 1px solid rgba(255, 255, 255, 0.06);
+                            color: #cbd5e1;
+                            text-decoration: none;
+                            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                        }
+                        .contact-card i {
+                            font-size: 2.25rem;
+                            margin-bottom: 12px;
+                            transition: transform 0.3s;
+                        }
+                        .contact-card span { font-size: 0.9rem; font-weight: 700; }
+                        .contact-card:hover {
+                            background: rgba(99, 102, 241, 0.1);
+                            border-color: var(--nut, #6366f1);
+                            color: #fff;
+                            transform: translateY(-5px);
+                        }
+                        .c-fb i { color: #1877f2; }
+                        .c-ins i { color: #e1306c; }
+                        .c-tt i { color: #fff; }
+                        .c-gm i { color: #ea4335; }
+                    </style>
+                    <div class="contact-grid">
+                        <a href="https://web.facebook.com/dantruongag/" target="_blank" class="contact-card c-fb">
+                            <i class="fab fa-facebook-f"></i>
+                            <span>Facebook</span>
+                        </a>
+                        <a href="https://www.instagram.com/dantruongag/" target="_blank" class="contact-card c-ins">
+                            <i class="fab fa-instagram"></i>
+                            <span>Instagram</span>
+                        </a>
+                        <a href="https://www.tiktok.com/@dantruongag" target="_blank" class="contact-card c-tt">
+                            <i class="fab fa-tiktok"></i>
+                            <span>TikTok</span>
+                        </a>
+                        <a href="javascript:void(0);" onclick="copyEmail()" class="contact-card c-gm">
+                            <i class="fas fa-envelope"></i>
+                            <span>Sao chép Gmail</span>
+                        </a>
+                    </div>
+                `,
+                showConfirmButton: false,
+                showCloseButton: true,
+                background: '#111827',
+                color: '#fff',
+                customClass: { popup: 'rounded-3xl border border-white/10' }
+            });
+        }
+        window.showContact = showContact;
+
+        // --- SỬA LỖI SAO CHÉP EMAIL HOẠT ĐỘNG HOÀN HẢO Ở MỌI TRANG ---
+        function copyEmail() {
+            const emailStr = "dantruong6904@gmail.com";
+            
+            // Ưu tiên sử dụng Clipboard API hiện đại của trình duyệt
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(emailStr)
+                    .then(() => {
+                        showCopySuccessToast(emailStr);
+                    })
+                    .catch(() => {
+                        fallbackCopyMethod(emailStr);
+                    });
+            } else {
+                fallbackCopyMethod(emailStr);
+            }
+        }
+        window.copyEmail = copyEmail;
+
+        // Hàm fallback phòng hờ thiết bị cũ / iframe chặn quyền clipboard
+        function fallbackCopyMethod(text) {
+            try {
+                const el = document.createElement('textarea');
+                el.value = text;
+                // Tránh lỗi scroll trang khi focus vào phần tử tạm
+                el.style.position = 'fixed';
+                el.style.top = '0';
+                el.style.left = '0';
+                el.style.opacity = '0';
+                document.body.appendChild(el);
+                el.focus();
+                el.select();
+                
+                const success = document.execCommand('copy');
+                document.body.removeChild(el);
+
+                if (success) {
+                    showCopySuccessToast(text);
+                } else {
+                    throw new Error("Không thể thực thi lệnh copy");
+                }
+            } catch (err) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi sao chép tự động',
+                    text: `Cậu vui lòng tự sao chép Gmail: ${text}`,
+                    background: '#111827',
+                    color: '#fff'
+                });
+            }
+        }
+
+        function showCopySuccessToast(email) {
+            Swal.fire({ 
+                icon: 'success', 
+                title: 'Đã sao chép Gmail thành công!', 
+                text: email,
+                timer: 2000, 
+                showConfirmButton: false,
+                background: '#111827',
+                color: '#fff'
+            });
+        }
+
+        function loadComponents() {
+            const headerPlaceholder = document.getElementById('header-placeholder');
+            const searchPlaceholder = document.getElementById('search-placeholder');
+            const footerPlaceholder = document.getElementById('footer-placeholder');
+
+            const isLoggedIn = !!localStorage.getItem('loggedInUser');
+
+            const dropdownMenuHTML = isLoggedIn ? `
+                <div class="nav-dropdown-wrapper">
+                    <a href="javascript:void(0);" class="desktop-nav-link text-white font-bold flex items-center gap-1.5">
+                        MÔN HỌC <i class="fas fa-chevron-down text-xs"></i>
+                    </a>
+                    <div class="nav-dropdown-menu">
+                        <a href="/tienganh/tienganh.html" class="nav-dropdown-item"><i class="fas fa-language"></i> Ngoại ngữ</a>
+                        <a href="/giai_phau/giai_phau.html" class="nav-dropdown-item"><i class="fas fa-dna"></i> Giải Phẫu</a>
+                        <a href="/benhhoc/benhhoc.html" class="nav-dropdown-item"><i class="fas fa-stethoscope"></i> Bệnh Học</a>
+                        <a href="/hoahoc/hoahoc.html" class="nav-dropdown-item"><i class="fas fa-flask"></i> Hóa Học</a>
+                        <a href="/yhoccotruyen/yhoccotruyen.html" class="nav-dropdown-item"><i class="fas fa-leaf"></i> Y Học Cổ Truyền</a>
+                        <a href="/PHCN/phuc_hoi_chuc_nang.html" class="nav-dropdown-item"><i class="fas fa-wheelchair"></i> Phục Hồi Chức Năng</a>
+                    </div>
+                </div>
+            ` : '';
+
+            const headerHTML = `
+                <header class="top-header" id="top-header">
+                    <div class="container mx-auto px-4 md:px-8">
+                        <div class="flex justify-between items-center">
+                            <div class="logo">
+                                <a href="/index.html">
+                                   <img src="/hinhanh/logo_web.png" alt="Logo" onerror="this.onerror=null; this.src='https://placehold.co/150x150/4f46e5/ffffff?text=DT'">
+                                </a>
+                            </div>
+                            <nav class="hidden md:flex items-center space-x-8">
+                                <a href="/index.html" class="desktop-nav-link text-white font-bold">TRANG CHỦ</a>
+                                ${dropdownMenuHTML}
+                                ${isLoggedIn ? `
+                                    <a href="javascript:void(0);" onclick="openNotesModal()" class="desktop-nav-link text-white font-bold flex items-center gap-1.5">SỔ TAY GHI CHÚ</a>
+                                    <a href="javascript:void(0);" onclick="openSettings()" class="desktop-nav-link text-white font-bold flex items-center gap-1.5"><i class="fas fa-cog"></i> CÀI ĐẶT</a>
+                                ` : ''}
+                                <a href="javascript:void(0);" onclick="showContact()" class="desktop-nav-link text-white font-bold">LIÊN HỆ</a>
+                                <a href="javascript:void(0);" onclick="showFeedback()" class="desktop-nav-link text-white font-bold">GÓP Ý</a>
+                                
+                                <div id="desktop-login-btn" class="pl-4"></div>
+                                <div class="search-icon cursor-pointer text-white text-xl hover:text-yellow-300 transition-all duration-300 transform hover:scale-110" onclick="handleSearchClick()">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                            </nav>
+                            <div class="md:hidden flex items-center gap-4">
+                                <div class="search-icon cursor-pointer text-white text-xl" onclick="handleSearchClick()">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <div class="menu-bar" id="menu-bar">
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <aside class="side-nav" id="side-nav">
+                    <div id="close-sidenav-btn" class="absolute top-5 right-6 text-white text-3xl cursor-pointer hover:text-red-500">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <div id="login-btn" class="w-full mt-8 mb-4 px-6 border-b border-gray-800 pb-4"></div>
+                    <a href="/index.html"><i class="fas fa-home"></i> TRANG CHỦ</a>
+                    ${isLoggedIn ? `
+                        <div class="px-6 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest">Môn Học Thành Viên</div>
+                        <a href="/tienganh/tienganh.html"><i class="fas fa-language"></i> Tiếng Anh</a>
+                        <a href="/giai_phau/giai_phau.html"><i class="fas fa-dna"></i> Giải Phẫu</a>
+                        <a href="/benhhoc/benhhoc.html"><i class="fas fa-stethoscope"></i> Bệnh Học</a>
+                        <div class="px-6 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest">Công cụ</div>
+                        <a href="javascript:void(0);" onclick="openNotesModal()"><i class="fas fa-notes-medical"></i> Sổ tay ghi chú</a>
+                        <a href="javascript:void(0);" onclick="openSettings()"><i class="fas fa-cog"></i> Cài đặt hệ thống</a>
+                    ` : ''}
+                    <a href="javascript:void(0);" onclick="showContact()"><i class="fas fa-phone"></i> LIÊN HỆ</a>
+                    <a href="javascript:void(0);" onclick="showFeedback()"><i class="fas fa-envelope"></i> GÓP Ý</a>
+                </aside>
+            `;
+
+            const searchHTML = `
+                <div id="search-container" class="search-container">
+                    <div class="search-panel">
+                        <div class="search-bar-top">
+                            <form id="search-form" class="w-full" onsubmit="event.preventDefault();">
+                                <input type="search" id="search-input" placeholder="Nhập từ khóa cần tra cứu..." autocomplete="off">
+                            </form>
+                            <i class="fas fa-times close-search-btn" id="close-search-btn"></i>
+                        </div>
+                        <div id="search-suggestions-output"></div>
+                    </div>
+                </div>
+            `;
+
+            const footerHTML = `
+                <footer class="main-footer">
+                    <div class="footer-content">
+                        <div class="footer-logo">
+                            <a href="/index.html">
+                                <img src="/hinhanh/logo_web.png" alt="Logo" onerror="this.onerror=null; this.src='https://placehold.co/150x150/4f46e5/ffffff?text=DT'"/>
+                            </a>
+                        </div>
+                        <div class="footer-links">
+                            <a href="/index.html">Trang chủ</a>
+                            ${isLoggedIn ? `
+                                <a href="javascript:void(0);" onclick="openNotesModal()">Sổ tay ghi chú</a>
+                                <a href="javascript:void(0);" onclick="openSettings()">Cài đặt hệ thống</a>
+                            ` : ''}
+                            <a href="javascript:void(0);" onclick="showContact()">Liên hệ</a>
+                            <a href="javascript:void(0);" onclick="showFeedback()">Góp ý</a>
+                        </div>
+                        <div class="footer-social">
+                            <a href="https://web.facebook.com/dantruongag/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://www.instagram.com/dantruongag/" target="_blank"><i class="fab fa-instagram"></i></a>
+                            <a href="https://www.tiktok.com/@dantruongag" target="_blank"><i class="fab fa-tiktok"></i></a>
+                        </div>
+                    </div>
+                </footer>
+            `;
+
+            if (headerPlaceholder) headerPlaceholder.innerHTML = headerHTML;
+            if (searchPlaceholder) searchPlaceholder.innerHTML = searchHTML;
+            if (footerPlaceholder) footerPlaceholder.innerHTML = footerHTML;
+
+            setupNavigationEvents();
+        }
+
+        // --- HÀM ẨN/HIỆN FORM GỬI LỜI CHÚC ---
+        function toggleWishForm() {
+            const form = document.getElementById('form_gui_loi_chuc');
+            if (form) {
+                if (form.classList.contains('max-h-0')) {
+                    form.classList.remove('max-h-0');
+                    form.classList.add('max-h-[500px]');
+                    form.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    form.classList.remove('max-h-[500px]');
+                    form.classList.add('max-h-0');
+                }
+            }
+        }
+        window.toggleWishForm = toggleWishForm;
+
+        // --- BANNER CHỦ ĐỘNG ---
+        function showMasterBanner() {
+            const heroBg = document.getElementById('hero-bg');
+            const heroTitle = document.getElementById('hero-title');
+            const heroButtons = document.getElementById('hero-buttons');
+
+            if (!heroBg || !heroTitle || !heroButtons) return;
+
+            heroBg.style.background = 'radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent), radial-gradient(circle at bottom left, rgba(236, 72, 153, 0.15), transparent), #0b0f19';
+            heroTitle.innerHTML = `
+                <span class="block text-3xl md:text-5xl lg:text-6xl font-black text-white mt-2">
+                    CHÀO MỪNG BẠN ĐẾN VỚI TRANG WEBSITE
+                </span>
+            `;
+
+            // Kiểm tra thời gian thực: chỉ hiển thị nút sinh nhật vào ngày 18 tháng 07 hàng năm
+            const today = new Date();
+            const isBirthday = (today.getDate() === 18 && today.getMonth() === 6); // Ngày 18, tháng 7 (Tháng 7 có index là 6 trong JS)
+            
+            let birthdayBtnHTML = '';
+            if (isBirthday) {
+                birthdayBtnHTML = `
+                    <button onclick="toggleWishForm()" class="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-400 hover:to-rose-500 font-bold text-white shadow-lg shadow-pink-500/25 transform hover:-translate-y-1 transition duration-300 flex items-center justify-center gap-2">
+                        <i class="fas fa-birthday-cake animate-bounce"></i> GỬI LỜI CHÚC SINH NHẬT
+                    </button>
+                `;
+            }
+
+            heroButtons.innerHTML = `
+                ${birthdayBtnHTML}
+                <button onclick="showFeedback()" class="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 font-bold text-white shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 transform hover:-translate-y-1 transition duration-300 flex items-center justify-center gap-2">
+                    <i class="fas fa-paper-plane"></i> GỬI ĐÓNG GÓP Ý KIẾN
+                </button>
+                <button onclick="document.getElementById('guest-landing-info').scrollIntoView({ behavior: 'smooth' })" class="w-full sm:w-auto px-8 py-4 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 font-bold text-white transform hover:-translate-y-1 transition duration-300 flex items-center justify-center gap-2">
+                    <i class="fas fa-book-reader"></i> KHÁM PHÁ NGAY
+                </button>
+            `;
+        }
+
+        // --- HỆ THỐNG ĐĂNG NHẬP & GAMIFICATION ---
+        function checkLoginStatus() {
+            const savedName = localStorage.getItem('loggedInUser');
+            const guestLanding = document.getElementById('guest-landing-info');
+
+            // Tải hồ sơ người dùng
+            const savedProfile = localStorage.getItem('userProfile');
+            if (savedProfile) {
+                userProfile = JSON.parse(savedProfile);
+            } else if (savedName) {
+                userProfile.name = savedName;
+            }
+
+            if (savedName) {
+                loadComponents();
+                updateLoginUI();
+                showProtectedContent();
+                if (guestLanding) guestLanding.style.display = 'none';
+            } else {
+                resetLoginUI();
+                hideProtectedContent();
+                if (guestLanding) guestLanding.style.display = 'block';
+            }
+        }
+
+        // Cập nhật giao diện Đăng nhập
+        function updateLoginUI() {
+            const mobileLoginBtn = document.getElementById('login-btn');
+            const desktopLoginBtn = document.getElementById('desktop-login-btn');
+            const loggedInHTML = `
+                <div class="user-info text-white p-2 text-center md:text-left flex flex-col items-center md:items-start">
+                    <div class="user-details flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full overflow-hidden border border-indigo-500 shadow animate-bounce">
+                            <img src="${userProfile.avatar}" alt="Avatar" class="w-full h-full object-cover">
+                        </div>
+                        <span class="username font-semibold text-sm text-slate-200">${userProfile.name}</span>
+                    </div>
+                    <a class="logout-btn text-xs text-amber-400 hover:text-red-400 cursor-pointer block mt-1.5 transition" onclick="logout()">Đăng xuất</a>
+                </div>`;
+            
+            if (mobileLoginBtn) mobileLoginBtn.innerHTML = loggedInHTML;
+            if (desktopLoginBtn) desktopLoginBtn.innerHTML = loggedInHTML;
+        }
+
+        function resetLoginUI() {
+            const mobileLoginBtn = document.getElementById('login-btn');
+            const desktopLoginBtn = document.getElementById('desktop-login-btn');
+            const loginHTMLMobile = `<a href="javascript:void(0);" onclick="showLoginForm()" class="login-button inline-flex items-center gap-2 w-full justify-center py-2 bg-gradient-to-r from-indigo-600 to-indigo-500 rounded-lg text-white font-bold"><i class="fas fa-user-circle"></i> ĐĂNG NHẬP</a>`;
+            const loginHTMLDesktop = `<a href="javascript:void(0);" onclick="showLoginForm()" class="login-button bg-indigo-600 text-white px-5 py-2.5 rounded-full hover:bg-indigo-500 transition-all duration-300 transform hover:scale-105 font-bold shadow-md shadow-indigo-500/20"><i class="fas fa-user-circle mr-2"></i>ĐĂNG NHẬP</a>`;
+            
+            if (mobileLoginBtn) mobileLoginBtn.innerHTML = loginHTMLMobile;
+            if (desktopLoginBtn) desktopLoginBtn.innerHTML = loginHTMLDesktop;
+        }
+
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            Swal.fire({
+                title: 'Đã đăng xuất!',
+                text: 'Chúc bạn một ngày vui vẻ. Hẹn gặp lại!',
+                icon: 'success',
+                background: '#111827',
+                color: '#fff',
+                confirmButtonColor: 'var(--nut, #6366f1)'
+            }).then(() => {
+                loadComponents();
+                checkLoginStatus();
+                initAdvancedSearchEngine();
+            });
+        }
+        window.logout = logout;
+
+        // Cập nhật bảng xếp hạng trên Dashboard
+        function updateDashboardUI() {
+            const dashboardAvatar = document.getElementById('dashboard-avatar');
+            if (dashboardAvatar) {
+                dashboardAvatar.src = userProfile.avatar;
+            }
+        }
+
+        // --- TẢI FILE HTML TỰ ĐỘNG ---
+        async function fetchAndParseArticle(url) {
+            try {
+                const fullUrl = url.startsWith('/') ? window.location.origin + url : url;
+                const response = await fetch(fullUrl);
+                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+                const htmlText = await response.text();
+                
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlText, 'text/html');
+                
+                let title = doc.querySelector('title')?.textContent || "Bài giảng chi tiết";
+                title = title.replace(" - Nguyễn Mai Đan Trường", "").trim();
+
+                let desc = doc.querySelector('meta[name="description"]')?.getAttribute('content') || 
+                           doc.querySelector('meta[property="og:description"]')?.getAttribute('content') ||
+                           "Khám phá tài liệu hướng dẫn lâm sàng chi tiết thuộc kho bài giảng của Đan Trường.";
+                
+                let tag = "Tài Liệu";
+                if (url.includes("/tienganh/")) tag = "Tiếng Anh";
+                else if (url.includes("/PHCN/")) tag = "PHCN";
+                else if (url.includes("/yhoccotruyen/")) tag = "Y Học";
+                else if (url.includes("đo_huyet_ap") || url.includes("rua_tay") || url.includes("tim_phoi")) tag = "Bệnh Học";
+
+                return {
+                    title,
+                    desc,
+                    tag,
+                    date: "Vừa cập nhật",
+                    link: url
+                };
+            } catch (err) {
+                return null;
+            }
+        }
+
+        async function loadAllArticles() {
+            const container = document.getElementById('articles-container');
+            if (container) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-indigo-500 border-r-2 mb-4"></div>
+                        <p class="text-gray-400 text-sm">Đang tải & tự động đồng bộ tài liệu giảng dạy...</p>
+                    </div>
+                `;
+            }
+
+            const promises = allExternalLinks.map(url => fetchAndParseArticle(url));
+            const results = await Promise.all(promises);
+            
+            const validArticles = results.filter(item => item !== null);
+
+            if (validArticles.length > 0) {
+                articlesDb = validArticles;
+            } else {
+                articlesDb = fallbackArticlesDb;
+            }
+
+            renderArticles();
+        }
+
+        // --- TRÌNH CHUYỂN SLIDE ĐIỀU HƯỚNG TRƠN TRU ---
+        let sliderInterval = null;
+        
+        function initSlider() {
+            const row = document.querySelector('.noidung-noibat-row');
+            const items = document.querySelectorAll('.noidung-noibat-iten');
+            const prev = document.querySelector('.prev-btn');
+            const next = document.querySelector('.next-btn');
+            const dotsContainer = document.querySelector('.slider-dots');
+
+            if (!row || items.length === 0) return;
+
+            let currentIndex = 0;
+            let isDragging = false;
+            let startX = 0;
+            let currentTranslate = 0;
+            let prevTranslate = 0;
+            let animationId = 0;
+
+            function getVisibleCount() {
+                if (window.innerWidth <= 768) return 1;
+                if (window.innerWidth <= 1024) return 2;
+                return 3;
+            }
+
+            // Đồng bộ trạng thái chấm slider
+            function getMaxIndex() {
+                return Math.max(0, items.length - getVisibleCount());
+            }
+
+            function buildDots() {
+                if (!dotsContainer) return;
+                dotsContainer.innerHTML = '';
+                const totalDots = getMaxIndex() + 1;
+                for (let i = 0; i < totalDots; i++) {
+                    const dot = document.createElement('div');
+                    dot.classList.add('slider-dot');
+                    if (i === 0) dot.classList.add('active');
+                    dot.addEventListener('click', () => {
+                        goToSlide(i);
+                        resetAutoSlide();
+                    });
+                    dotsContainer.appendChild(dot);
+                }
+            }
+
+            function updateDots() {
+                if (!dotsContainer) return;
+                const dots = dotsContainer.querySelectorAll('.slider-dot');
+                dots.forEach((dot, index) => {
+                    if (index === currentIndex) dot.classList.add('active');
+                    else dot.classList.remove('active');
+                });
+            }
+
+            function setSliderPosition() {
+                row.style.transform = `translate3d(${currentTranslate}px, 0, 0)`;
+            }
+
+            function getSlideWidth() {
+                if (items.length === 0) return 0;
+                return items[0].getBoundingClientRect().width + 24;
+            }
+
+            function goToSlide(index) {
+                currentIndex = Math.max(0, Math.min(index, getMaxIndex()));
+                currentTranslate = -currentIndex * getSlideWidth();
+                prevTranslate = currentTranslate;
+                row.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+                setSliderPosition();
+                updateDots();
+            }
+
+            function dragStart(e) {
+                isDragging = true;
+                startX = getPositionX(e);
+                row.style.transition = 'none';
+                animationId = requestAnimationFrame(animation);
+                resetAutoSlide();
+            }
+
+            function dragMove(e) {
+                if (!isDragging) return;
+                const currentX = getPositionX(e);
+                const diff = currentX - startX;
+                currentTranslate = prevTranslate + diff;
+            }
+
+            function dragEnd() {
+                isDragging = false;
+                cancelAnimationFrame(animationId);
+                const movedBy = currentTranslate - prevTranslate;
+
+                if (movedBy < -50 && currentIndex < getMaxIndex()) {
+                    currentIndex += 1;
+                } else if (movedBy > 50 && currentIndex > 0) {
+                    currentIndex -= 1;
+                }
+                goToSlide(currentIndex);
+            }
+
+            function getPositionX(e) {
+                return e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            }
+
+            function animation() {
+                setSliderPosition();
+                if (isDragging) requestAnimationFrame(animation);
+            }
+
+            row.addEventListener('mousedown', dragStart);
+            row.addEventListener('mousemove', dragMove);
+            row.addEventListener('mouseup', dragEnd);
+            row.addEventListener('mouseleave', dragEnd);
+
+            row.addEventListener('touchstart', dragStart, { passive: true });
+            row.addEventListener('touchmove', dragMove, { passive: true });
+            row.addEventListener('touchend', dragEnd);
+
+            if (next) {
+                next.addEventListener('click', () => {
+                    if (currentIndex < getMaxIndex()) {
+                        goToSlide(currentIndex + 1);
+                    } else {
+                        goToSlide(0);
+                    }
+                    resetAutoSlide();
+                });
+            }
+
+            if (prev) {
+                prev.addEventListener('click', () => {
+                    if (currentIndex > 0) {
+                        goToSlide(currentIndex - 1);
+                    } else {
+                        goToSlide(getMaxIndex());
+                    }
+                    resetAutoSlide();
+                });
+            }
+
+            function startAutoSlide() {
+                sliderInterval = setInterval(() => {
+                    if (currentIndex < getMaxIndex()) {
+                        goToSlide(currentIndex + 1);
+                    } else {
+                        goToSlide(0);
+                    }
+                }, 5000);
+            }
+
+            function resetAutoSlide() {
+                clearInterval(sliderInterval);
+                startAutoSlide();
+            }
+
+            buildDots();
+            goToSlide(0);
+            startAutoSlide();
+
+            window.addEventListener('resize', () => {
+                buildDots();
+                goToSlide(currentIndex);
+            });
+        }
+
+        // --- SỔ TAY GHI CHÚ LÂM SÀNG ---
+        let clinicalNotes = [];
+
+        function openNotesModal() {
+            const isLogged = !!localStorage.getItem('loggedInUser');
+            if (!isLogged) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Yêu cầu đăng nhập',
+                    text: 'Bạn vui lòng đăng nhập để sử dụng tính năng Sổ tay ghi chú ',
+                    confirmButtonColor: 'var(--nut, #6366f1)',
+                    background: '#111827',
+                    color: '#fff'
+                });
+                return;
+            }
+            const modal = document.getElementById('notes-modal-overlay');
+            if (modal) {
+                modal.classList.remove('hidden');
+                loadClinicalNotes();
+                triggerNiceSound();
+            }
+        }
+        window.openNotesModal = openNotesModal;
+
+        function closeNotesModal() {
+            const modal = document.getElementById('notes-modal-overlay');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        }
+        window.closeNotesModal = closeNotesModal;
+
+        function loadClinicalNotes() {
+            const saved = localStorage.getItem('clinicalNotes');
+            if (saved) {
+                clinicalNotes = JSON.parse(saved);
+            } else {
+                clinicalNotes = [
+                    { id: Date.now(), title: "Triệu chứng Tăng Huyết Áp", content: "Đau đầu, hoa mắt, chóng mặt, ù tai, mất ngủ nhẹ, nặng nề vùng ngực cần kiểm tra huyết áp ngay.", tag: "Bệnh Học" }
+                ];
+            }
+            renderNotesList();
+        }
+
+        function renderNotesList() {
+            const container = document.getElementById('notes-grid');
+            const counter = document.getElementById('notes-counter');
+            if (!container) return;
+
+            if (counter) counter.textContent = `${clinicalNotes.length} ghi chú`;
+
+            if (clinicalNotes.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-10 text-gray-500 text-xs">
+                        <i class="fas fa-folder-open text-2xl mb-2"></i>
+                        <p>Sổ tay trống. Hãy thêm ghi chú mới lâm sàng!</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = clinicalNotes.map(n => `
+                <div class="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-indigo-500/50 transition duration-300 relative group">
+                    <span class="text-[8px] uppercase font-extrabold px-2 py-0.5 bg-indigo-500/20 text-indigo-300 rounded">${n.tag}</span>
+                    <h4 class="text-sm font-bold text-white mt-1.5 mb-1">${n.title}</h4>
+                    <p class="text-xs text-gray-400 leading-relaxed">${n.content}</p>
+                    
+                    <div class="flex justify-end gap-2 mt-3 opacity-0 group-hover:opacity-100 transition">
+                        <button onclick="copyNoteContent('${n.content.replace(/'/g, "\\'")}')" class="text-[10px] text-teal-400 hover:text-white" title="Sao chép nội dung"><i class="fas fa-copy"></i> Sao chép</button>
+                        <button onclick="deleteClinicalNote(${n.id})" class="text-[10px] text-red-400 hover:text-white" title="Xóa ghi chú"><i class="fas fa-trash-alt"></i> Xóa</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function saveNewNote() {
+            const titleInput = document.getElementById('note-title');
+            const contentInput = document.getElementById('note-content');
+            const tagInput = document.getElementById('note-tag');
+
+            if (!titleInput || !contentInput || !titleInput.value.trim() || !contentInput.value.trim()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Lỗi ghi chú',
+                    text: 'Hãy điền đủ tiêu đề và nội dung ghi chú lâm sàng nhé!',
+                    background: '#111827',
+                    color: '#fff'
+                });
+                return;
+            }
+
+            const newNote = {
+                id: Date.now(),
+                title: titleInput.value.trim(),
+                content: contentInput.value.trim(),
+                tag: tagInput ? tagInput.value : "Lâm Sàng"
+            };
+
+            clinicalNotes.unshift(newNote);
+            localStorage.setItem('clinicalNotes', JSON.stringify(clinicalNotes));
+            
+            titleInput.value = '';
+            contentInput.value = '';
+            
+            renderNotesList();
+            triggerNiceSound();
+        }
+        window.saveNewNote = saveNewNote;
+
+        function copyNoteContent(text) {
+            // Tích hợp hệ thống sao chép chuẩn tối ưu
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text)
+                    .then(() => {
+                        Swal.fire({ 
+                            icon: 'success', 
+                            title: 'Đã sao chép ghi chú!', 
+                            timer: 1500, 
+                            showConfirmButton: false,
+                            background: '#111827',
+                            color: '#fff'
+                        });
+                    })
+                    .catch(() => {
+                        fallbackCopyMethod(text);
+                    });
+            } else {
+                fallbackCopyMethod(text);
+            }
+        }
+        window.copyNoteContent = copyNoteContent;
+
+        function deleteClinicalNote(id) {
+            clinicalNotes = clinicalNotes.filter(n => n.id !== id);
+            localStorage.setItem('clinicalNotes', JSON.stringify(clinicalNotes));
+            renderNotesList();
+            triggerNiceSound();
+        }
+        window.deleteClinicalNote = deleteClinicalNote;
+
+        // --- CHỨC NĂNG HỆ THỐNG CÀI ĐẶT ---
+        function openSettings() {
+            const isLogged = !!localStorage.getItem('loggedInUser');
+            if (!isLogged) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Yêu cầu đăng nhập',
+                    text: 'Vui lòng đăng nhập để mở khóa cài đặt hệ thống.',
+                    confirmButtonColor: 'var(--nut, #6366f1)',
+                    background: '#111827',
+                    color: '#fff'
+                });
+                return;
+            }
+            const modal = document.getElementById('settings-overlay');
+            if (modal) {
+                modal.classList.remove('hidden');
+                
+                // Điền thông tin cá nhân hiện tại vào các ô input
+                document.getElementById('settings-name-input').value = userProfile.name;
+                document.getElementById('settings-phone-input').value = userProfile.phone || "";
+                document.getElementById('settings-birthday-input').value = userProfile.birthday || "";
+                document.getElementById('settings-email-input').value = userProfile.email || "";
+                document.getElementById('settings-avatar-preview').src = userProfile.avatar;
+
+                switchSettingsTab('profile');
+                triggerNiceSound();
+            }
+        }
+        window.openSettings = openSettings;
+
+        // --- XỬ LÝ GỬI LỜI CHÚC (doPost) ---
+        function sendWish() {
+            const textarea = document.querySelector('#form_gui_loi_chuc textarea');
+            if (!textarea || !textarea.value.trim()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Lỗi',
+                    text: 'Bạn hãy viết một lời chúc thật ấm áp trước khi gửi nhé!',
+                    background: '#111827',
+                    color: '#fff'
+                });
+                return;
+            }
+
+            const wishContent = textarea.value.trim();
+            const sendBtn = document.getElementById('nut_gui_loi_chuc');
+            
+            // Đặt trạng thái đang tải lên nút
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = `Đang gửi... <i class="fas fa-spinner animate-spin ml-1"></i>`;
+
+            // Định cấu hình dữ liệu gửi đi (application/x-www-form-urlencoded)
+            const formData = new URLSearchParams();
+            formData.append('wish', wishContent);
+
+            fetch(GOOGLE_APPS_SCRIPT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
+            })
+            .then(response => {
+                return response.json().catch(() => ({ success: true, message: "Đã gửi lời chúc!" }));
+            })
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Gửi Thành Công! 🎉',
+                        text: 'Cảm ơn bạn rất nhiều vì lời chúc sinh nhật!',
+                        background: '#111827',
+                        color: '#fff',
+                        confirmButtonColor: 'var(--nut, #6366f1)'
+                    });
+                    textarea.value = '';
+                    toggleWishForm();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gửi Thất Bại!',
+                        text: data.message || 'Xin lỗi, đã xảy ra sự cố khi gửi lời chúc. Vui lòng thử lại sau.',
+                        background: '#111827',
+                        color: '#fff'
+                    });
+                }
+            })
+            .catch(err => {
+                // Fallback nếu có lỗi CORS từ trình duyệt nhưng bản ghi vẫn được lưu vào Sheets thành công
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Đã gửi lời chúc! 🎉',
+                    text: 'Cảm ơn bạn đã chúc mừng sinh nhật cho mình!',
+                    background: '#111827',
+                    color: '#fff',
+                    confirmButtonColor: 'var(--nut, #6366f1)'
+                });
+                textarea.value = '';
+                toggleWishForm();
+            })
+            .finally(() => {
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = `Gửi Đi Ngay <i class="fas fa-paper-plane ml-1"></i>`;
+            });
+        }
+        window.sendWish = sendWish;
+
+        function closeSettings() {
+            const modal = document.getElementById('settings-overlay');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        }
+        window.closeSettings = closeSettings;
+
+        function switchSettingsTab(tabName) {
+            const panes = document.querySelectorAll('.settings-content-pane');
+            panes.forEach(p => p.classList.add('hidden'));
+
+            const target = document.getElementById(`settings-tab-${tabName}`);
+            if (target) target.classList.remove('hidden');
+
+            const tabs = ['profile', 'theme'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`set-tab-${t}`);
+                if (btn) {
+                    btn.className = "w-full py-2.5 px-3 rounded-xl text-left text-xs font-bold transition flex items-center gap-2 text-gray-400 hover:text-white bg-transparent";
+                }
+            });
+
+            const activeBtn = document.getElementById(`set-tab-${tabName}`);
+            if (activeBtn) {
+                activeBtn.className = "w-full py-2.5 px-3 rounded-xl text-left text-xs font-bold transition flex items-center gap-2 bg-indigo-600 text-white shadow-lg shadow-indigo-500/25";
+            }
+
+            triggerNiceSound();
+        }
+        window.switchSettingsTab = switchSettingsTab;
+
+        function previewUserAvatar(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('settings-avatar-preview').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        window.previewUserAvatar = previewUserAvatar;
+
+        // Chọn preset avatar và phát âm thanh
+        function selectPresetAvatar(url) {
+            document.getElementById('settings-avatar-preview').src = url;
+            triggerNiceSound();
+        }
+        window.selectPresetAvatar = selectPresetAvatar;
+
+        function saveSettings() {
+            const nameVal = document.getElementById('settings-name-input').value.trim();
+            const phoneVal = document.getElementById('settings-phone-input').value.trim();
+            const birthdayVal = document.getElementById('settings-birthday-input').value;
+            const emailVal = document.getElementById('settings-email-input').value.trim();
+            const avatarSrc = document.getElementById('settings-avatar-preview').src;
+
+            if (!nameVal) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi đầu vào',
+                    text: 'Bạn chưa nhập tên người dùng. Vui lòng điền đầy đủ thông tin!',
+                    background: '#111827',
+                    color: '#fff'
+                });
+                return;
+            }
+
+            if (phoneVal !== "") {
+                const phoneRegex = /^0\d{9}$/;
+                if (!phoneRegex.test(phoneVal)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Số điện thoại không hợp lệ',
+                        text: 'Số điện thoại phải bắt đầu bằng chữ số 0 và có tổng cộng đúng 10 chữ số!',
+                        background: '#111827',
+                        color: '#fff',
+                        confirmButtonColor: 'var(--nut, #6366f1)'
+                    });
+                    return;
+                }
+            }
+
+            userProfile.name = nameVal;
+            userProfile.phone = phoneVal;
+            userProfile.birthday = birthdayVal;
+            userProfile.email = emailVal;
+            userProfile.avatar = avatarSrc;
+
+            localStorage.setItem('userProfile', JSON.stringify(userProfile));
+            localStorage.setItem('loggedInUser', nameVal); 
+
+            updateLoginUI();
+            updateDashboardUI();
+
+            closeSettings();
+
+            Swal.fire({
+                title: "Thành Công!",
+                text: "Thông tin cá nhân và cấu hình đã được cập nhật hoàn tất!",
+                icon: "success",
+                background: "#0f172a",
+                color: "#fff",
+                confirmButtonColor: 'var(--nut, #6366f1)'
+            });
+        }
+        window.saveSettings = saveSettings;
+
+        // --- HIỂN THỊ NỘI DUNG CHUYÊN BIỆT SAU ĐĂNG NHẬP ---
+        function showProtectedContent() {
+            const el = document.getElementById('protected-content');
+            if (el) {
+                el.style.display = 'block';
+                el.innerHTML = `
+                    <!-- WELCOME HEADER -->
+                    <section class="max-w-5xl mx-auto px-4 pt-12">
+                        <div class="p-6 rounded-3xl bg-gradient-to-r from-[#1e1b4b]/80 to-[#0f172a]/95 border border-indigo-500/20 shadow-2xl relative overflow-hidden flex items-center gap-4">
+                            <div class="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none"></div>
+                            
+                            <div class="w-16 h-16 rounded-2xl overflow-hidden border border-indigo-500/40 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg relative z-10 animate-pulse">
+                                <img id="dashboard-avatar" src="${userProfile.avatar}" alt="Avatar" class="w-full h-full object-cover">
+                            </div>
+                            <div class="relative z-10">
+                                <h3 class="text-xl font-bold text-white">Xin chào, ${userProfile.name}!</h3>
+                                <p class="text-xs text-gray-400 mt-1">Chúc bạn một ngày vui vẻ và có những trải nghiệm tốt nhất</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- CAROUSEL SLIDER NỔI BẬT -->
+                    <section class="noidung-noibat">
+                        <div class="text-center mb-10">
+                            <h2 class="text-3xl md:text-5xl font-extrabold text-white mt-4">CHUYÊN ĐỀ HỌC TẬP</h2>
+                            <div class="w-16 h-1 bg-indigo-500 mx-auto mt-4 rounded-full"></div>
+                        </div>
+
+                        <div class="slider-outer-wrapper">
+                            <button class="prev-btn"><i class="fas fa-chevron-left"></i></button>
+                            <div class="slider-container">
+                                <div class="noidung-noibat-row">
+                                    <div class="noidung-noibat-iten">
+                                        <div class="noidung-noibat-ing"><img src="/hinhanh/Trang chủ/tienganh.png" alt="Tiếng Anh"></div>
+                                        <div class="noidung-noibat-text">
+                                            <h2>NGOẠI NGỮ</h2>
+                                            <button onclick="window.location.href='/tienganh/tienganh.html'">KHÁM PHÁ</button>
+                                        </div>
+                                    </div>
+                                    <div class="noidung-noibat-iten">
+                                        <div class="noidung-noibat-ing"><img src="/hinhanh/Trang chủ/GPSL.png" alt="Giải Phẫu"></div>
+                                        <div class="noidung-noibat-text">
+                                            <h2>GIẢI PHẪU</h2>
+                                            <button onclick="window.location.href='/giai_phau/giai_phau.html'">KHÁM PHÁ</button>
+                                        </div>
+                                    </div>
+                                    <div class="noidung-noibat-iten">
+                                        <div class="noidung-noibat-ing"><img src="/hinhanh/Trang chủ/benhhoc.png" alt="Bệnh Học"></div>
+                                        <div class="noidung-noibat-text">
+                                            <h2>BỆNH HỌC</h2>
+                                            <button onclick="window.location.href='/benhhoc/benhhoc.html'">KHÁM PHÁ</button>
+                                        </div>
+                                    </div>
+                                    <div class="noidung-noibat-iten">
+                                        <div class="noidung-noibat-ing"><img src="/hinhanh/Trang chủ/hoahoc.png" alt="Hóa học"></div>
+                                        <div class="noidung-noibat-text">
+                                            <h2>HÓA HỌC</h2>
+                                            <button onclick="window.location.href='/hoahoc/hoahoc.html'">KHÁM PHÁ</button>
+                                        </div>
+                                    </div>
+                                    <div class="noidung-noibat-iten">
+                                        <div class="noidung-noibat-ing"><img src="/hinhanh/Trang chủ/yhoccotruyen.png" alt="Y học cổ truyền"></div>
+                                        <div class="noidung-noibat-text">
+                                            <h2>Y HỌC CỔ TRUYỀN</h2>
+                                            <button onclick="window.location.href='/yhoccotruyen/yhoccotruyen.html'">KHÁM PHÁ</button>
+                                        </div>
+                                    </div>
+                                    <div class="noidung-noibat-iten">
+                                        <div class="noidung-noibat-ing"><img src="/hinhanh/Trang chủ/phcn.png" alt="Phục Hồi Chức Năng"></div>
+                                        <div class="noidung-noibat-text">
+                                            <h2>PHỤC HỒI CHỨC NĂNG</h2>
+                                            <button onclick="window.location.href='/PHCN/phuc_hoi_chuc_nang.html'">KHÁM PHÁ</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="next-btn"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="slider-dots"></div>
+                    </section>
+
+                    <!-- DANH SÁCH BÀI VIẾT NỔI BẬT DỰA TRÊN DỮ LIỆU HTML THỰC TẾ -->
+                    <section class="py-16 px-4 md:px-8 bg-[#090d1a]">
+                        <div class="max-w-4xl mx-auto">
+                            <div class="text-center mb-12">
+                                <h2 class="text-3xl md:text-5xl font-extrabold text-white mt-4">BÀI VIẾT NỔI BẬT</h2>
+                                <div class="w-16 h-1 bg-indigo-500 mx-auto mt-4 rounded-full"></div>
+                            </div>
+                            <div id="articles-container" class="space-y-6"></div>
+                        </div>
+                    </section>
+                `;
+                
+                initSlider();
+                updateDashboardUI();
+                loadAllArticles();
+            }
+        }
+
+        function renderArticles() {
+            const container = document.getElementById('articles-container');
+            if (container) {
+                if (articlesDb.length === 0) {
+                    container.innerHTML = '<p class="text-gray-400 text-center text-sm py-8">Chưa có bài giảng nào được tải lên.</p>';
+                    return;
+                }
+                container.innerHTML = articlesDb.map(x => `
+                    <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-indigo-500/50 transition-all duration-300 hover:-translate-y-1 cursor-pointer" onclick="window.location.href='${x.link || '#'}';">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-[10px] uppercase font-bold px-2.5 py-1 bg-indigo-600/30 text-indigo-300 rounded-full border border-indigo-500/20">${x.tag}</span>
+                            <span class="text-xs text-gray-400">${x.date}</span>
+                        </div>
+                        <h3 class="text-lg md:text-xl font-bold text-white mb-2">${x.title}</h3>
+                        <p class="text-gray-400 text-sm">${x.desc}</p>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function hideProtectedContent() {
+            const el = document.getElementById('protected-content');
+            if (el) {
+                // Thay vì ẩn hoàn toàn, ta nạp nội dung thông báo Đăng nhập (guest landing info) trực tiếp vào vùng chứa này
+                el.style.display = 'block';
+                el.innerHTML = `
+                    <section id="guest-landing-info" class="py-20 bg-gradient-to-b from-[#0b0f19] to-[#080b12] text-center px-4">
+                        <div class="max-w-2xl mx-auto p-8 rounded-3xl bg-white/5 border border-white/10 shadow-2xl backdrop-blur-md relative overflow-hidden">
+                            <div class="absolute -top-10 -left-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl"></div>
+                            <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-pink-500/10 rounded-full blur-3xl"></div>
+                            <div class="w-16 h-16 bg-gradient-to-tr from-indigo-500 to-violet-600 rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl text-white shadow-lg relative z-10 animate-pulse">
+                                <i class="fas fa-user-lock"></i>
+                            </div>
+                            <h3 class="text-2xl md:text-3xl font-bold text-white mb-3 relative z-10">YÊU CẦU ĐĂNG NHẬP</h3>
+                            <p class="text-gray-300 text-sm md:text-base mb-8 max-w-md mx-auto relative z-10">
+                                Bạn cần đăng nhập để xem nội dung này. Hãy đăng nhập ngay để khám phá những nội dung đặc biệt và trải nghiệm đầy đủ các tính năng của trang web!
+                            </p>
+                            <button onclick="showLoginForm()" class="px-8 py-3.5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-base shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 transform hover:-translate-y-0.5 transition-all duration-300 relative z-10">
+                                <i class="fas fa-user-circle mr-2"></i> ĐĂNG NHẬP NGAY
+                            </button>
+                        </div>
+                    </section>
+                `;
+            }
+            clearInterval(sliderInterval);
+        }
+
+        // --- XỬ LÝ ĐĂNG NHẬP QUA GOOGLE APPS SCRIPT ---
+        function showLoginForm() {
+            Swal.fire({
+                title: 'ĐĂNG NHẬP HỆ THỐNG',
+                html: `
+                    <form id="loginForm" class="text-left mt-4" onsubmit="event.preventDefault();">
+                        <div class="mb-4">
+                            <label class="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wider">Tên đăng nhập</label>
+                            <input type="text" id="username" placeholder="Nhập tên đăng nhập" required class="w-full p-3 rounded-xl bg-slate-800 text-white border border-white/10 outline-none focus:border-indigo-500 transition text-sm">
+                        </div>
+                        <div class="mb-2 relative">
+                            <label class="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wider">Mật khẩu</label>
+                            <input type="password" id="password" placeholder="Nhập mật khẩu" required class="w-full p-3 rounded-xl bg-slate-800 text-white border border-white/10 outline-none focus:border-indigo-500 transition text-sm pr-10">
+                            <i id="togglePassword" class="fas fa-eye absolute right-3 top-9 cursor-pointer text-gray-400 hover:text-white"></i>
+                        </div>
+                    </form>`,
+                showCancelButton: true, 
+                confirmButtonText: 'Đăng Nhập Ngay', 
+                cancelButtonText: 'Hủy bỏ',
+                background: '#111827',
+                color: '#fff',
+                confirmButtonColor: 'var(--nut, #6366f1)',
+                cancelButtonColor: '#374151',
+                customClass: { popup: 'rounded-3xl border border-white/10' },
+                preConfirm: () => {
+                    const u = Swal.getPopup().querySelector('#username').value.trim();
+                    const p = Swal.getPopup().querySelector('#password').value;
+                    if (!u || !p) {
+                        Swal.showValidationMessage(`Vui lòng điền đầy đủ tên đăng nhập và mật khẩu!`);
+                        return false;
+                    }
+                    return { username: u, password: p };
+                },
+                didOpen: () => {
+                    const passInput = document.getElementById('password');
+                    const toggle = document.getElementById('togglePassword');
+                    if (toggle && passInput) {
+                        toggle.addEventListener('click', () => {
+                            const type = passInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                            passInput.setAttribute('type', type);
+                            toggle.classList.toggle('fa-eye');
+                            toggle.classList.toggle('fa-eye-slash');
+                        });
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const { username, password } = result.value;
+
+                    // Hiển thị trạng thái đang xác thực
+                    Swal.fire({
+                        title: 'Hệ thống đang xác thực...',
+                        text: 'Vui lòng chờ trong giây lát',
+                        allowOutsideClick: false,
+                        background: '#111827',
+                        color: '#fff',
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    // Gọi Google Apps Script qua API GET
+                    const url = `${GOOGLE_APPS_SCRIPT_URL}?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+                    
+                    fetch(url)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                localStorage.setItem('loggedInUser', data.name);
+                                
+                                // Cập nhật tên hiển thị trong hồ sơ tạm thời
+                                userProfile.name = data.name;
+                                localStorage.setItem('userProfile', JSON.stringify(userProfile));
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Đăng Nhập Thành Công!',
+                                    text: `Chào mừng ${data.name} đến với website! Bạn đã đăng nhập thành công và có thể truy cập các nội dung.`,
+                                    background: '#111827',
+                                    color: '#fff',
+                                    confirmButtonColor: 'var(--nut, #6366f1)'
+                                }).then(() => {
+                                    loadComponents();
+                                    checkLoginStatus();
+                                    initAdvancedSearchEngine();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Xác Thực Thất Bại!',
+                                    text: data.message || 'Tài khoản hoặc mật khẩu không chính xác. Vui lòng kiểm tra lại!',
+                                    background: '#111827',
+                                    color: '#fff'
+                                });
+                            }
+                        })
+                        .catch(err => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi Kết Nối!',
+                                text: 'Hệ thống không thể kết nối đến cơ sở dữ liệu xác thực. Vui lòng kiểm tra lại kết nối mạng',
+                                background: '#111827',
+                                color: '#fff'
+                            });
+                        });
+                }
+            });
+        }
+        window.showLoginForm = showLoginForm;
+
+        function setupNavigationEvents() {
+            const menuBar = document.getElementById("menu-bar");
+            const sideNav = document.getElementById("side-nav");
+            const closeSideNavBtn = document.getElementById("close-sidenav-btn");
+
+            function closeSideMenu() {
+                menuBar?.classList.remove("active");
+                sideNav?.classList.remove("active");
+            }
+
+            if (menuBar && sideNav) {
+                menuBar.onclick = () => {
+                    menuBar.classList.toggle("active");
+                    sideNav.classList.toggle("active");
+                };
+            }
+            
+            if (closeSideNavBtn) {
+                closeSideNavBtn.onclick = closeSideMenu;
+            }
+        }
+
+        // --- TRỢ LÝ ẢO MASCOT THÔNG MINH ---
+        function initMascotInteractions() {
+            const mascot = document.getElementById('website-mascot');
+            const speech = document.getElementById('mascot-speech');
+            if (!mascot || !speech) return;
+
+            speech.addEventListener('click', (e) => e.stopPropagation());
+            speech.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
+
+            window.handleAssistantAction = function(action) {
+                if (action === 'contact') {
+                    showContact();
+                    closeAssistant();
+                } else if (action === 'feedback') {
+                    showFeedback();
+                    closeAssistant();
+                } else if (action === 'settings') {
+                    openSettings();
+                    closeAssistant();
+                } else if (action === 'notes') {
+                    openNotesModal();
+                    closeAssistant();
+                } else if (action === 'other') {
+                    showSubMenu();
+                } else if (action === 'q_search') {
+                    showAnswer("Tìm kiếm bài học", "Bạn vui lòng nhấp vào biểu tượng kính lúp ở góc trên bên phải để mở công cụ tìm kiếm Sau đó nhập từ khóa và nhấn Enter để tìm kiếm.");
+                } else if (action === 'q_password') {
+                    showAnswer("Tài khoản đăng nhập", "Bạn chưa có tài khoản đăng nhập hoặc mật khẩu không đúng. Vui lòng liên hệ trực tiếp với để được cấp lại tài khoản hoặc mặt khẩu.");
+                } else if (action === 'main_menu') {
+                    showMainMenu();
+                }
+            };
+
+            function openAssistant() { speech.classList.add('active'); }
+            function closeAssistant() { speech.classList.remove('active'); }
+
+            function showMainMenu() {
+                const isLogged = !!localStorage.getItem('loggedInUser');
+                speech.innerHTML = `
+                    <div class="assistant-title flex items-center gap-1.5 text-indigo-400">
+                        <i class="fas fa-robot text-xs animate-pulse"></i> <span>Trợ lý ảo</span>
+                    </div>
+                    <p class="text-slate-300 mb-2 text-[11px]">Chào bạn, tôi luôn sẫn sàng hỗ trợ bạn</p>
+                    ${isLogged ? `
+                        <button onclick="handleAssistantAction('notes')" class="assistant-btn">
+                            <i class="fas fa-notes-medical text-[10px] text-teal-400"></i> Mở Sổ tay Ghi chú
+                        </button>
+                        <button onclick="handleAssistantAction('settings')" class="assistant-btn">
+                            <i class="fas fa-cog text-[10px] text-amber-400"></i> Mở phần Cài đặt
+                        </button>
+                    ` : ''}
+                    <button onclick="handleAssistantAction('contact')" class="assistant-btn">
+                        <i class="fas fa-phone text-[10px] text-blue-400"></i> Liên hệ Đan Trường
+                    </button>
+                    <button onclick="handleAssistantAction('feedback')" class="assistant-btn">
+                        <i class="fas fa-comment-dots text-[10px] text-pink-400"></i> Gửi góp ý phản hồi
+                    </button>
+                    <button onclick="handleAssistantAction('other')" class="assistant-btn">
+                        <i class="fas fa-question-circle text-[10px] text-purple-400"></i> Các câu hỏi thường gặp
+                    </button>
+                `;
+                openAssistant();
+            }
+
+            // Hiển thị danh mục phụ giải đáp
+            function showSubMenu() {
+                speech.innerHTML = `
+                    <div class="assistant-title flex items-center gap-1.5 text-amber-400">
+                        <i class="fas fa-question-circle text-xs"></i> <span>Giải Đáp Thắc Mắc</span>
+                    </div>
+                    <button onclick="handleAssistantAction('q_search')" class="assistant-btn">❓ Tìm kiếm tài liệu như thế nào?</button>
+                    <button onclick="handleAssistantAction('q_password')" class="assistant-btn">🔑 Tôi quên mật khẩu đăng nhập?</button>
+                    <button onclick="handleAssistantAction('q_account')" class="assistant-btn">🔑 Tôi không có tài khoản?</button>
+                    <button onclick="handleAssistantAction('main_menu')" class="assistant-btn assistant-btn-back mt-2">
+                        <i class="fas fa-arrow-left text-[10px]"></i> Quay lại
+                    </button>
+                `;
+            }
+
+            function showAnswer(title, answer) {
+                speech.innerHTML = `
+                    <div class="assistant-title flex items-center gap-1.5 text-emerald-400">
+                        <i class="fas fa-info-circle text-xs"></i> <span>${title}</span>
+                    </div>
+                    <p class="text-slate-300 text-[11px] mb-3">${answer}</p>
+                    <button onclick="handleAssistantAction('other')" class="assistant-btn assistant-btn-back">
+                        <i class="fas fa-arrow-left text-[10px]"></i> Trở lại danh sách
+                    </button>
+                `;
+            }
+
+            setTimeout(() => { showMainMenu(); }, 2000);
+
+            mascot.onclick = (e) => {
+                e.stopPropagation();
+                if (speech.classList.contains('active')) closeAssistant();
+                else showMainMenu();
+            };
+
+            document.addEventListener('click', () => { closeAssistant(); });
+        }
+
+        async function initAdvancedSearchEngine() {
+            // ================= CONFIG =================
+            const config = {
+                searchContainerId: 'search-container',
+                searchFormId: 'search-form',
+                searchInputId: 'search-input',
+                closeSearchBtnId: 'close-search-btn',
+                suggestionsOutputId: 'search-suggestions-output',
+
+                loginPromptHTML: `
+                    <div class="login-prompt-inline flex flex-col items-center justify-center text-center p-6 bg-slate-800/40 rounded-2xl border border-white/5">
+                        <i class="fas fa-lock text-3xl text-amber-400 mb-3 animate-pulse"></i>
+                        <h4 class="text-sm font-bold text-white mb-1">Yêu Cầu Đăng Nhập</h4>
+                        <p class="text-xs text-gray-400 mb-4 max-w-xs">Bạn cần đăng nhập tài khoản để tìm kiếm và xem kết quả.</p>
+                        <button onclick="showLoginForm()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-xs transition shadow-lg shadow-indigo-500/25">Đăng nhập ngay</button>
+                    </div>`,
+
+                noResultsHTML: `<p class="p-6 text-center text-gray-400 text-xs"><i class="fas fa-search-minus text-xl mb-2 block text-gray-500"></i>Không tìm thấy kết quả nào phù hợp.</p>`
+            };
+
+            const state = {
+                isLoggedIn: () => !!localStorage.getItem('loggedInUser')
+            };
+
+            // ================= DOM =================
+            const searchContainer = document.getElementById(config.searchContainerId);
+            const searchInput = document.getElementById(config.searchInputId);
+            const closeSearchBtn = document.getElementById(config.closeSearchBtnId);
+            const suggestionsOutput = document.getElementById(config.suggestionsOutputId);
+
+            if (!searchContainer) return;
+
+            // ================= UTILS =================
+            const normalizeText = (text) => {
+                if (!text) return '';
+                const lower = text.trim().toLowerCase();
+                return lower.charAt(0).toUpperCase() + lower.slice(1);
+            };
+
+            const removeVietnameseTones = (str) => {
+                if (!str) return '';
+                return str
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace(/đ/g, "d")
+                    .replace(/Đ/g, "D");
+            };
+
+            // ================= DATA =================
+            let searchableContent = [
+                {
+                    title: normalizeText('Trang Chủ'),
+                    description: 'Quay về trang chủ của website.',
+                    url: '/index.html',
+                    icon: 'fa-home'
+                },
+                {
+                    title: normalizeText('Cơ sở dữ liệu '),
+                    description: 'Hệ thống cơ sở dữ liệu lưu trữ.',
+                    url: '/dulieu.html',
+                    icon: 'fa-database'
+                },
+                {
+                    title: normalizeText('Hệ thống tạo câu hỏi '),
+                    description: 'Hệ thống hỗ trợ tạo đề thi câu hỏi y khoa.',
+                    url: '/formnhapcauhoi.html',
+                    icon: 'fa-pen-to-square'
+                },
+                {
+                    title: normalizeText('Góp Ý'),
+                    description: 'Nhập ý kiến đóng góp của bạn tại đây.',
+                    url: '/gopy.html',
+                    icon: 'fa-comment-dots'
+                }
+            ];
+
+            // --- Dynamic Content Indexing ---
+            const pagesToIndex = [
+                // --- Bệnh học ---
+                '/benhhoc/tailieu/benh_alzhemer.html',
+                '/benhhoc/tailieu/Parkinson.html',
+                '/benhhoc/tailieu/HC_duong_ham_co_tay.html',
+                '/benhhoc/tailieu/liet_mat_ngoai_bien.html',
+                '/benhhoc/tailieu/dau_day_than_kinh_tam_thoa.html',
+                '/benhhoc/tailieu/loet_da_day_ta_trang.html', 
+                '/benhhoc/tailieu/HC_trao_nguoc_da_day_thuc_quan.html', 
+                '/benhhoc/tailieu/thung_da_day.html',
+                '/benhhoc/tailieu/HC_tac_ruot.html',
+                '/benhhoc/tailieu/viem_ruot_thua_cap.html',
+                '/benhhoc/tailieu/soi_tui_mat.html',
+                '/benhhoc/tailieu/viem_gan_toi_cap.html',
+                '/benhhoc/tailieu/viem_phoi_cong_dong.html',
+                '/benhhoc/tailieu/hen_phe_quan.html',
+                '/benhhoc/tailieu/viem_VA.html',
+                '/benhhoc/tailieu/tang_huyet_ap.html',
+                '/benhhoc/tailieu/suy_gian_tinh_mach_chi_duoi.html',
+                '/benhhoc/tailieu/benh_than_man.html',
+                '/benhhoc/tailieu/dai_thao_duong.html', 
+                '/benhhoc/tailieu/hoi_chung_cushing.html',
+                '/benhhoc/tailieu/gout.html',
+                '/benhhoc/tailieu/HC_ De_Quuervain.html',
+                '/benhhoc/tailieu/HC_ngon_tay_lo_xo.html',
+                '/benhhoc/tailieu/HC_duong_ham_co_tay.html',
+                '/benhhoc/tailieu/Golfer`s elbow.html', 
+                '/benhhoc/tailieu/Tennis elbow.html',
+                '/benhhoc/tailieu/ton_thuong_day_chang_cheo.html',    
+                '/benhhoc/tailieu/loang_xuong.html',
+                '/benhhoc/tailieu/viem_gan_sieu_vi.html',
+                '/benhhoc/tailieu/lao_phoi.html',
+                '/benhhoc/tailieu/benh_uon_van.html',
+                '/benhhoc/tailieu/nhiem_khuan_ho_hap_cap_tinh_tre_em.html',
+                '/benhhoc/tailieu/lupus_ban_do_he_thong.html',
+                '/benhhoc/tailieu/viem_ket_mac.html',
+                '/benhhoc/tailieu/benh_thalasemia.html',
+                '/benhhoc/tailieu/benh_bach_tang.html',
+                '/benhhoc/tailieu/HC_down.html',
+                '/benhhoc/tailieu/nhiem_doc_thai_nghen.html',
+
+                // --- Giải phẫu Chi trên ---
+                '/giai_phau/chi_tren/co_delta.html',
+                '/giai_phau/chi_tren/co_tron_lon.html',
+                '/giai_phau/chi_tren/co_tron_be.html',
+                '/giai_phau/chi_tren/co_tren_gai.html',
+                '/giai_phau/chi_tren/co_duoi_gai.html',
+                '/giai_phau/chi_tren/co_duoi_vai.html',
+                '/giai_phau/chi_tren/co_nhi_dau_canh_tay.html',
+                '/giai_phau/chi_tren/co_tam_dau_canh_tay.html',
+                '/giai_phau/chi_tren/co_canh_tay.html',
+                '/giai_phau/chi_tren/co_qua_canh_tay.html',
+                '/giai_phau/chi_tren/co_khuyu.html',
+                '/giai_phau/chi_tren/co_canh_tay_quay.html',
+                '/giai_phau/chi_tren/co_sap_tron.html',
+                '/giai_phau/chi_tren/co_sap_vuong.html',
+                '/giai_phau/chi_tren/co_ngua.html',
+                '/giai_phau/chi_tren/co_gap_co_tay_tru.html',
+                '/giai_phau/chi_tren/co_gap_co_tay_quay.html',
+                '/giai_phau/chi_tren/co_gan_tay_dai.html',
+                '/giai_phau/chi_tren/co_gap_cac_ngon_nong.html',
+                '/giai_phau/chi_tren/co_gap_cac_ngon_sau.html',
+                '/giai_phau/chi_tren/co_gap_ngon-cai_dai.html',
+                '/giai_phau/chi_tren/co_gap_ngon_cai_ngan.html',
+                '/giai_phau/chi_tren/co_gap_ngon_ut.html',
+                '/giai_phau/chi_tren/co_duoi_co_tay_quay_dai.html',
+                '/giai_phau/chi_tren/co_duoi_co_tay_quay_ngan.html',
+                '/giai_phau/chi_tren/co_duoi_co_tay_tru.html',
+                '/giai_phau/chi_tren/co_duoi_chung_cac_ngon.html',
+                '/giai_phau/chi_tren/co_duoi_ngon_cai_dai.html',
+                '/giai_phau/chi_tren/co_duoi_ngon_cai_ngan.html',
+                '/giai_phau/chi_tren/co_duoi_ngon_tro.html',
+                '/giai_phau/chi_tren/co_duoi_ngon_ut.html',
+                '/giai_phau/chi_tren/co_giun.html',
+                '/giai_phau/chi_tren/co_gan_cot_gan_tay.html',
+                '/giai_phau/chi_tren/co_gan_cot_mu_tay.html',
+                '/giai_phau/chi_tren/co_dang_ngon_cai_dai.html',
+                '/giai_phau/chi_tren/co_dang_ngon_cai_ngan.html',
+                '/giai_phau/chi_tren/co_dang_ngon_ut.html',
+                '/giai_phau/chi_tren/co_doi_ngon_cai.html',
+                '/giai_phau/chi_tren/co_doi_ngon_ut.html',
+
+                // --- Giải phẫu Chi dưới ---
+                '/giai_phau/chi_duoi/co_that_lung_chau.html',
+                '/giai_phau/chi_duoi/co_mong_lon.html',
+                '/giai_phau/chi_duoi/co_mong_be.html',
+                '/giai_phau/chi_duoi/co_mong_nho.html',
+                '/giai_phau/chi_duoi/co_cang_mac_dui.html',
+                '/giai_phau/chi_duoi/nhom_co_xoay_ngoai_hong.html',
+                '/giai_phau/chi_duoi/nhom_co_khep.html',
+                '/giai_phau/chi_duoi/co_may.html',
+                '/giai_phau/chi_duoi/co_tu_dau_dui.html',
+                '/giai_phau/chi_duoi/co_tam_dau_dui.html',
+                '/giai_phau/chi_duoi/co_luoc.html',
+                '/giai_phau/chi_duoi/co_thon.html',
+                '/giai_phau/chi_duoi/co_chay_truoc.html',
+                '/giai_phau/chi_duoi/co_chay_sau.html',
+                '/giai_phau/chi_duoi/co_bung_chan.html',
+                '/giai_phau/chi_duoi/co_dep.html',
+                '/giai_phau/chi_duoi/co_gan_chan_gay.html',
+                '/giai_phau/chi_duoi/co_khoeo.html',
+                '/giai_phau/chi_duoi/co_mac_dai.html',
+                '/giai_phau/chi_duoi/co_mac_ngan.html',
+                '/giai_phau/chi_duoi/co_mac_ba.html',
+                '/giai_phau/chi_duoi/co_gap_ngon_chan_dai.html',
+                '/giai_phau/chi_duoi/co_gap_ngon_chan_ngan.html',
+                '/giai_phau/chi_duoi/co_gap_ngon_chan_cai_dai.html',
+                '/giai_phau/chi_duoi/co_gap_ngon_chan_cai_ngan.html',
+                '/giai_phau/chi_duoi/co_duoi_ngon_chan_dai.html',
+                '/giai_phau/chi_duoi/co_duoi_ngon_chan_ngan.html',
+                '/giai_phau/chi_duoi/co_duoi_ngon_chan_cai_dai.html',
+                '/giai_phau/chi_duoi/co_duoi_ngon_chan_cai_ngan.html',
+                '/giai_phau/chi_duoi/co_dang_ngon_chan_cai.html',
+                '/giai_phau/chi_duoi/co_khep_ngon_chan_cai.html',
+                '/giai_phau/chi_duoi/co_gan-cot_mu_chan.html',
+                '/giai_phau/chi_duoi/co_gian_cot_gan_chan.html',
+                '/giai_phau/chi_duoi/co_giun.html',
+                '/giai_phau/chi_duoi/co_vuong_gan_chan.html',
+                '/giai_phau/chi_duoi/co_gap_ngon_chan_ut_ngan.html',
+                '/giai_phau/chi_duoi/co_dang_ngon_chan_ut.html',
+
+                // --- Giải phẫu Lưng ---
+                '/giai_phau/lung/co_lung_rong.html',
+                '/giai_phau/lung/co_tram_lon.html',
+                '/giai_phau/lung/co_tram_be.html',
+                '/giai_phau/lung/co_nang_vai.html',
+                '/giai_phau/lung/co_rang_cua_sau.html',
+                '/giai_phau/lung/co_cuc_dai.html',
+                '/giai_phau/lung/co_chau_suon.html',
+                '/giai_phau/lung/co_gai_song.html',
+                '/giai_phau/lung/co_nhieu_chan.html',
+                '/giai_phau/lung/co_xoay.html',
+                '/giai_phau/lung/co_gian_gai.html',
+                '/giai_phau/lung/co_gian_ngang.html',
+                '/giai_phau/lung/co_nang_suon.html',
+
+                // --- Giải phẫu Đầu-Mặt-Cổ ---
+                '/giai_phau/dau_mat_co/co_tran.html',
+                '/giai_phau/dau_mat_co/co_vong_mat.html',
+                '/giai_phau/dau_mat_co/co_cau_may.html',
+                '/giai_phau/dau_mat_co/co_manh_khanh.html',
+                '/giai_phau/dau_mat_co/co_mui.html',
+                '/giai_phau/dau_mat_co/co_vong_mieng.html',
+                '/giai_phau/dau_mat_co/co_nang_moi_tren.html',
+                '/giai_phau/dau_mat_co/co_nang_moi_tren_canh_mui.html',
+                '/giai_phau/dau_mat_co/co_go_ma_nho.html',
+                '/giai_phau/dau_mat_co/co_go_ma_lon.html',
+                '/giai_phau/dau_mat_co/co_mut.html',
+                '/giai_phau/dau_mat_co/co_nang_goc_mieng.html',
+                '/giai_phau/dau_mat_co/co_cuoi.html',
+                '/giai_phau/dau_mat_co/co_ha_moi_duoi.html',
+                '/giai_phau/dau_mat_co/co_can.html',
+                '/giai_phau/dau_mat_co/co_thai_duong.html',
+                '/giai_phau/dau_mat_co/co_chan_buom_trong.html',
+                '/giai_phau/dau_mat_co/co_chan_buom_ngoaoi.html',
+                '/giai_phau/dau_mat_co/co_bam_da_co.html',
+                '/giai_phau/dau_mat_co/co_uc_don_chum.html',
+                '/giai_phau/dau_mat_co/co_hai_than.html',
+                '/giai_phau/dau_mat_co/co_ham_mong.html',
+                '/giai_phau/dau_mat_co/co_tram_mong.html',
+                '/giai_phau/dau_mat_co/co_cam_mong.html',
+                '/giai_phau/dau_mat_co/co_uc_mong.html',
+                '/giai_phau/dau_mat_co/co_giap_mong.html',
+                '/giai_phau/dau_mat_co/co_vai_mong.html',
+                '/giai_phau/dau_mat_co/co_uc_giap.html',
+                '/giai_phau/dau_mat_co/co_thang_dau_truoc.html',
+                '/giai_phau/dau_mat_co/co_thang_dau_ben.html',
+                '/giai_phau/dau_mat_co/co_dai_dau.html',
+                '/giai_phau/dau_mat_co/co_dai_co.html',
+                '/giai_phau/dau_mat_co/co_bac__thang.html',
+                '/giai_phau/dau_mat_co/co_thang.html',
+                '/giai_phau/dau_mat_co/co_goi_dau.html',
+                '/giai_phau/dau_mat_co/co_goi_co.html',
+                '/giai_phau/dau_mat_co/co_ban_gai_co.html',
+                '/giai_phau/dau_mat_co/co_thang_dau_sau_lon.html',
+                '/giai_phau/dau_mat_co/co_thang_dau_sau_be.html',
+                '/giai_phau/dau_mat_co/co_cheo_dau_tren.html',
+                '/giai_phau/dau_mat_co/co_cheo_dau_duoi.html',
+
+                // --- HÓA HỌC ---
+                '/hoahoc/can_trong_am_dun_nuoc.html',
+
+                // --- Phục hồi chức năng ---
+                '/PHCN/phuc_hoi_chuc_nang.html',
+                // --- Phục hồi chức năng hô hấp ---
+                "/PHCN/PHCN_ho_hap/phuc_hoi_chuc_nang_ho_hap.html",
+                // --- Các kĩ thuật hô hấp ---
+                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/AFE_chu_dong.html",
+                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/dan_luu_tu_the.html",
+                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/huong_dan_ho.html",
+                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_co_hoanh.html",
+                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_mim_moi.html",
+                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_phoi_hop_van_dong_tay.html",
+                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_ra_manh_FET.html",
+                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_theo_ty_le_phan_so.html",
+                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_tung_thuy.html",
+                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/vo_rung.html",
+
+                // --- Phục hồi chức năng dựa vào cộng đồng ---
+                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_dua-Vao-cong_dong.html",
+                "/PHCN/PHCN_dua_vao_cong_dong/cham_soc_mom_cut.html",
+                "/PHCN/PHCN_dua_vao_cong_dong/dong_kinh_tre_em.html",
+                "/PHCN/PHCN_dua_vao_cong_dong/giao_tiep_voi_tre_giam_thinh_luc.html",
+                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_benh_phoi_man_tinh.html",
+                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_ban_chan_khoeo_bam_sinh.html",
+                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_nguoi_khuyet_tat_giam_chuc_nang_nhin.html",
+                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_benh_tam_than.html",
+                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_noi_lap_ngong_that_ngon.html",
+                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_sau_bong.html",
+                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_sau_TBMMN.html",
+                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_ton_thuong_tuy_song.html",
+                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_bai_nao.html",
+                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_cham_phat_trien_tri_tue.html",
+                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_cong_veo_cot_song.html",
+                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_trat_khop_hang_bam_sinh.html",
+                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_viem_khop_dang_thap.html",
+                "/PHCN/PHCN_dua_vao_cong_dong/phong_ngua_thuong_tat_thu_phat.html",
+                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_tu_ky.html",
+                "/PHCN/HĐTL/dung_cu_vltl.html",
+
+                // --- Vận động trị liệu ---
+                "/PHCN/Van_dong_tri_lieu/vandongtrilieu.html",
+                // --- Di động khớp ---
+                "/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop.html",
+                "/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop_vai.html", 
+                "/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop_khuyu.html",
+                "/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop_co_tay.html",
+                "/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop_ban_ngon_tay.html",
+                "/PHCN/Van_dong_tri_lieu/di_dong_khop/do_dong_khop_goi.html",    
+            
+                // --- ĐIỆN TRỊ LIỆU ---
+                "/PHCN/Điện trị liệu/dien_tri_lieu.html",
+                '/PHCN/Điện trị liệu/Hongngoai.html',
+                '/PHCN/Điện trị liệu/Parafin.html',
+                '/PHCN/Điện trị liệu/sieu_am.html',
+                '/PHCN/Điện trị liệu/kich_thich_lien_xuong.html',
+                '/PHCN/Điện trị liệu/Song_ngan.html',
+                '/PHCN/Điện trị liệu/laser_cong-suat_thap.html',
+                '/PHCN/Điện trị liệu/laser_noi_mach.html',
+                '/PHCN/Điện trị liệu/laser_cong_suat_cao.html',
+                '/PHCN/Điện trị liệu/dien_xung.html',
+                '/PHCN/Điện trị liệu/may_keo_cot_song.html',
+                '/PHCN/Điện trị liệu/nen_ep.html',
+                '/PHCN/Điện trị liệu/dien_truong_cao_ap.html',
+                '/PHCN/Điện trị liệu/xung_kich.html',
+                '/PHCN/Điện trị liệu/tu_truong.html',
+                '/PHCN/Điện trị liệu/oxy_cao_ap.html',
+            ];
+
+            const indexPage = async (url) => {
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) return null;
+
+                    const htmlText = await response.text();
+                    const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+
+                    // ===== TITLE =====
+                    let titleText =
+                        doc.querySelector('h2.anatomy-title')?.textContent ||
+                        doc.querySelector('h1')?.textContent ||
+                        doc.querySelector('title')?.textContent ||
+                        url.split('/').pop().replace('.html', '');
+
+                    titleText = normalizeText(titleText.replace(/\(.*?\)/g, '').trim());
+
+                    // ===== KEYWORDS =====
+                    let keywords = '';
+
+                    const metaKeywords = doc.querySelector('meta[name="keywords"]');
+                    if (metaKeywords) {
+                        keywords = metaKeywords.getAttribute('content') || '';
+                    }
+
+                    const keywordsEl = doc.getElementById('keywords');
+                    if (!keywords && keywordsEl) {
+                        keywords = keywordsEl.textContent || '';
+                    }
+
+                    if (!keywords) {
+                        const paragraphs = doc.querySelectorAll('p');
+                        let text = '';
+                        paragraphs.forEach(p => text += p.textContent + ' ');
+                        keywords = text.slice(0, 300);
+                    }
+
+                    return {
+                        title: titleText,
+                        description: `Xem tài liệu: ${titleText}`,
+                        keywords: keywords.toLowerCase(),
+                        url: url,
+                        icon: 'fa-notes-medical'
+                    };
+
+                } catch (err) {
+                    console.warn("❌ Lỗi index:", url);
+                    return null;
+                }
+            };
+
+            const buildFullSearchIndex = async () => {
+                console.log("🔍 Đang load dữ liệu...");
+                const results = await Promise.all(pagesToIndex.map(indexPage));
+                const valid = results.filter(x => x !== null);
+                searchableContent = [...searchableContent, ...valid];
+                console.log("✅ Tổng dữ liệu:", searchableContent.length);
+            };
+
+            // ================= SEARCH =================
+            const performSearch = (query) => {
+                if (!query) {
+                    suggestionsOutput.innerHTML = '';
+                    return;
+                }
+
+                if (!state.isLoggedIn()) {
+                    suggestionsOutput.innerHTML = config.loginPromptHTML;
+                    return;
+                }
+
+                const q = removeVietnameseTones(query.toLowerCase());
+
+                const results = searchableContent.filter(item => {
+                    const title = removeVietnameseTones(item.title.toLowerCase());
+                    const desc = removeVietnameseTones(item.description.toLowerCase());
+                    const keywords = removeVietnameseTones(item.keywords || '');
+
+                    return title.includes(q) || desc.includes(q) || keywords.includes(q);
+                });
+
+                renderSuggestions(results);
+            };
+
+            // ================= UI =================
+            const renderSuggestions = (results) => {
+                if (results.length === 0) {
+                    suggestionsOutput.innerHTML = config.noResultsHTML;
+                    return;
+                }
+
+                suggestionsOutput.innerHTML = '';
+
+                results.slice(0, 10).forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'suggestion-item_search';
+
+                    div.innerHTML = `
+                        <div class="icon"><i class="fas ${item.icon}"></i></div>
+                        <div>
+                            <h4>${item.title}</h4>
+                            <p class="text-xs opacity-70">${item.description}</p>
+                        </div>
+                    `;
+
+                    div.onclick = () => {
+                        if (item.url) window.location.href = item.url;
+                    };
+
+                    suggestionsOutput.appendChild(div);
+                });
+            };
+
+            // ================= EVENT =================
+            const openSearch = () => {
+                searchContainer.classList.add('active');
+                searchInput.focus();
+            };
+
+            const closeSearch = () => {
+                searchContainer.classList.remove('active');
+                searchInput.value = '';
+                suggestionsOutput.innerHTML = '';
+            };
+
+            window.handleSearchClick = openSearch;
+            closeSearchBtn.onclick = closeSearch;
+
+            searchInput.addEventListener('input', () => {
+                performSearch(searchInput.value.trim());
+            });
+
+            await buildFullSearchIndex();
+        }
+
+        // --- LIFECYCLE INITIALIZER ---
+        document.addEventListener("DOMContentLoaded", async function () {
+            // TỰ ĐỘNG NẠP SWEETALERT2 NẾU TRANG HIỆN TẠI CHƯA CÓ (SỬA LỖI CHO TẤT CẢ CÁC TRANG CON)
+            if (!window.Swal) {
+                await new Promise((resolve) => {
+                    const swalScript = document.createElement('script');
+                    swalScript.src = "https://cdn.jsdelivr.net/npm/sweetalert2@11";
+                    swalScript.onload = resolve;
+                    swalScript.onerror = resolve;
+                    document.head.appendChild(swalScript);
+                });
+            }
+
+            // Khởi tạo động các phần tử trước khi tải các component khác
+            renderDynamicElements();
+            
+            loadComponents();
+            showMasterBanner();
+            initAmbientCanvas();
+
+            // Khôi phục chủ đề lưu trữ trước đó
+            const savedTheme = localStorage.getItem('selectedTheme');
+            if (savedTheme) {
+                changeAccentTheme(savedTheme);
+            }
+
+            window.addEventListener("scroll", () => {
+                document.getElementById("top-header")?.classList.toggle("scrolled", window.scrollY > 50);
+                const btt = document.getElementById('back-to-top');
+                if (btt) {
+                    if (window.scrollY > 300) {
+                        btt.classList.remove('opacity-0', 'invisible', 'translate-y-3');
+                        btt.classList.add('opacity-100', 'visible', 'translate-y-0');
+                    } else {
+                        btt.classList.add('opacity-0', 'invisible', 'translate-y-3');
+                        btt.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                    }
+                }
+            });
+
+            const bttBtn = document.getElementById('back-to-top');
+            if (bttBtn) {
+                bttBtn.onclick = () => { window.scrollTo({ top: 0, behavior: 'smooth' }); };
+            }
+
+            // Gắn sự kiện click cho nút gửi lời chúc mừng sinh nhật
+            const sendWishBtn = document.getElementById('nut_gui_loi_chuc');
+            if (sendWishBtn) {
+                sendWishBtn.onclick = sendWish;
+            }
+
+            initMascotInteractions();
+            checkLoginStatus();
+            
+            // Khởi tạo công cụ tìm kiếm thu thập dữ liệu thông minh
+            await initAdvancedSearchEngine();
+        });

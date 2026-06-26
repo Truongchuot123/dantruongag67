@@ -1,180 +1,9 @@
-function createCardElement(config) {
-        const card = document.createElement('div');
-        card.className = 'bg-white rounded-xl shadow-lg flex flex-col sm:flex-row card-transition hover:shadow-2xl hover:-translate-y-1.5';
-        
-        card.innerHTML = `
-            <!-- Left side: Icon and Title -->
-            <div class="flex-shrink-0 w-full sm:w-38 md:w-60 flex flex-col items-center justify-center text-center p-6 border-b sm:border-b-0 sm:border-r border-gray-200">
-                ${config.iconSvg}
-                <h3 class="font-bold text-lg text-gray-700 mt-2">${config.title}</h3>
-                <p class="text-sm text-gray-500 mt-1 js-count"></p>
-            </div>
-            <!-- Right side: List of links -->
-            <div class="flex-grow p-6 relative">
-                <ul class="space-y-2 js-list">
-                    <!-- JS will populate this -->
-                </ul>
-                <!-- Navigation Buttons -->
-                <div class="js-nav-controls absolute bottom-4 right-6 flex hidden space-x-2">
-                    <button class="prev-btn rounded-full bg-gray-200 p-2 transition hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50">
-                        <svg class="h-5 w-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
-                    <button class="next-btn rounded-full bg-gray-200 p-2 transition hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50">
-                        <svg class="h-5 w-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-        `;
-        return card;
-    }
-
-    /**
-     * Fetches and populates a list with links, showing a loading state.
-     * @param {Array<string>} links - Array of URLs to fetch.
-     * @param {HTMLElement} listElement - The UL element to populate.
-     * @param {function} onCompleteCallback - Callback to run after population.
-     */
-    async function fetchAndPopulateList(links, listElement, onCompleteCallback) {
-        if (!listElement) return;
-        listElement.innerHTML = ''; // Clear existing content
-
-        // Create placeholder items for loading state
-        const placeholders = Array.from({ length: Math.min(links.length, 5) }, () => {
-            const li = document.createElement('li');
-            li.className = 'p-2 rounded-md bg-gray-100 animate-pulse';
-            li.style.height = '36px'; // Match link height
-            return li;
-        });
-        listElement.append(...placeholders);
-
-        const fetchPromises = links.map(async (url) => {
-            try {
-                // Simulate network delay for better UX demonstration
-                await new Promise(res => setTimeout(res, 50 + Math.random() * 150)); 
-                const res = await fetch(url);
-                if (!res.ok) throw new Error('Network response was not ok');
-                const html = await res.text();
-                const doc = new DOMParser().parseFromString(html, 'text/html');
-                
-                const titleElement = 
-                    doc.querySelector('h1.text-3xl.md\\:text-4xl.font-bold.tracking-wide.text-gradient') ||
-                    doc.querySelector('h1') ||
-                    doc.querySelector('title');
-                const rawTitle = titleElement ? titleElement.textContent.trim() : (doc.title || url);
-                const title = capitalizeFirstWordOnly(rawTitle);
-
-                return { title, url, success: true };
-            } catch (err) {
-                console.error(`Failed to fetch ${url}:`, err);
-                const dummyTitle = url.split('/').pop().replace('.html', '').replace(/-/g, ' ');
-                return { title: `${capitalizeFirstWordOnly(dummyTitle)}`, url, success: false };
-            }
-        });
-
-        const items = await Promise.all(fetchPromises);
-        
-        listElement.innerHTML = ''; // Clear placeholders
-
-        items.forEach(({ title, url, success }, index) => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        
-        a.textContent = title;
-        a.href = url;
-        a.className = `block p-2 rounded-md font-medium transition-all duration-200 animate-fadeInUp ${success ? 'text-blue-600 hover:bg-blue-50 hover:text-blue-700' : 'text-red-500 cursor-not-allowed'}`;
-        a.style.animationDelay = `${(index % 5) * 50}ms`;
-
-        if (!success) a.onclick = (e) => e.preventDefault();
-        
-        li.appendChild(a);
-        listElement.appendChild(li);
-    });
-
-        if (onCompleteCallback) onCompleteCallback();
-    }
-
-    /**
- * Sets up pagination for a single card.
- * @param {HTMLElement} cardElement - The root HTML element for the card.
- * @param {object} config - The configuration object for the card.
- */
-function setupCardPaginator(cardElement, config) {
-    const listElement = cardElement.querySelector('.js-list');
-    const countElement = cardElement.querySelector('.js-count');
-    const navControls = cardElement.querySelector('.js-nav-controls');
-    const prevBtn = navControls.querySelector('.prev-btn');
-    const nextBtn = navControls.querySelector('.next-btn');
-
-    let currentPage = 1;
-    const itemsPerPage = 5; // Display 5 links per page
-
-    const updateView = () => {
-        const items = listElement.querySelectorAll('li');
-        const totalItems = items.length;
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-        items.forEach((li, index) => {
-            const itemPage = Math.floor(index / itemsPerPage) + 1;
-            li.style.display = itemPage === currentPage ? 'block' : 'none';
-        });
-
-        if (totalPages > 1) {
-            navControls.classList.remove('hidden');
-        } else {
-            navControls.classList.add('hidden');
-        }
-
-        prevBtn.disabled = currentPage === 1;
-        nextBtn.disabled = currentPage === totalPages || totalPages === 0;
-
-        // Update count text
-        if (countElement) {
-            countElement.textContent = `${totalItems} ${config.countUnit}`;
-        }
-    };
-
-    prevBtn.addEventListener('click', () => {
-        if (currentPage > 1) {
-            currentPage--;
-            updateView();
-        }
-    });
-    
-    nextBtn.addEventListener('click', () => {
-        const totalItems = listElement.querySelectorAll('li').length;
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
-        if (currentPage < totalPages) {
-            currentPage++;
-            updateView();
-        }
-    });
-
-    // Initial population and view update
-    fetchAndPopulateList(config.links, listElement, updateView);
-}
-
-    /**
-     * Capitalizes only the first word of a string and converts the rest to lowercase.
-     * @param {string} str - The input string.
-     * @returns {string} The formatted string.
-     */
-    function capitalizeFirstWordOnly(str) {
-        str = str.toLowerCase().trim();
-        if (str.length === 0) return '';
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
-    // --- Main DOMContentLoaded Listener for Card Initialization and Iframe ---
-    document.addEventListener('DOMContentLoaded', () => {
+ // Cấu hình các thẻ chuyên khoa, bộ Icon và danh sách đường dẫn trực tiếp
         const cardConfigurations = [
             {
-                title: 'Thần kinh',
-                iconSvg: `<div class="icon text-purple-600 text-4xl"><i class="fas fa-brain"></i></div>`,
+                title: 'Thần Kinh',
+                iconClass: 'fas fa-brain text-purple-400',
+                glowColor: 'rgba(168, 85, 247, 0.4)',
                 links: [
                     '/benhhoc/tailieu/benh_alzhemer.html',
                     '/benhhoc/tailieu/Parkinson.html',
@@ -185,8 +14,9 @@ function setupCardPaginator(cardElement, config) {
                 countUnit: 'tài liệu'
             },
             {
-                title: 'TIÊU HÓA',
-                iconSvg: `<div class="icon text-green-600 text-4xl"><i class="fas fa-book-medical"></i></div>`,
+                title: 'Tiêu Hóa',
+                iconClass: 'fas fa-virus text-emerald-400',
+                glowColor: 'rgba(16, 185, 129, 0.4)',
                 links: [
                     '/benhhoc/tailieu/loet_da_day_ta_trang.html', 
                     '/benhhoc/tailieu/HC_trao_nguoc_da_day_thuc_quan.html', 
@@ -199,8 +29,9 @@ function setupCardPaginator(cardElement, config) {
                 countUnit: 'tài liệu'
             },
             {
-                title: 'HÔ HẤP',
-                iconSvg: `<div class="icon text-red-600 text-4xl"><i class="fas fa-lungs"></i></div>`,
+                title: 'Hô Hấp',
+                iconClass: 'fas fa-lungs text-sky-400',
+                glowColor: 'rgba(56, 189, 248, 0.4)',
                 links: [
                     '/benhhoc/tailieu/hen_phe_quan.html',
                     '/benhhoc/tailieu/viem_phoi_cong_dong.html'
@@ -208,16 +39,18 @@ function setupCardPaginator(cardElement, config) {
                 countUnit: 'tài liệu'
             },
             {
-                title: 'TAI - MŨI - HỌNG',
-                iconSvg: `<div class="icon text-indigo-600 text-4xl"><i class="fas fa-deaf"></i></div>`, // Assuming fas-bone exists or use a generic one
+                title: 'Tai - Mũi - Họng',
+                iconClass: 'fas fa-headset text-pink-400',
+                glowColor: 'rgba(244, 63, 94, 0.4)',
                 links: [
                     '/benhhoc/tailieu/viem_VA.html'
                 ],
                 countUnit: 'tài liệu'
             },
             {
-                title: 'TIM MẠCH',
-                iconSvg: `<div class="icon text-blue-600 text-4xl"><i class="fas fa-heart"></i></div>`,
+                title: 'Tim Mạch',
+                iconClass: 'fas fa-heartbeat text-rose-400',
+                glowColor: 'rgba(244, 63, 94, 0.4)',
                 links: [
                     '/benhhoc/tailieu/tang_huyet_ap.html',
                     '/benhhoc/tailieu/suy_gian_tinh_mach_chi_duoi.html'
@@ -225,17 +58,18 @@ function setupCardPaginator(cardElement, config) {
                 countUnit: 'tài liệu'
             },
             {
-                title: 'TIẾT NIỆU',
-                iconSvg: `<div class="icon text-yellow-600 text-4xl"><i class="fas fa-tint"></i></div>`, // Assuming fas-kidneys exists or use a generic one
+                title: 'Tiết Niệu',
+                iconClass: 'fas fa-droplet text-amber-500',
+                glowColor: 'rgba(245, 158, 11, 0.4)',
                 links: [
-                    
                     '/benhhoc/tailieu/benh_than_man.html'
                 ],
                 countUnit: 'tài liệu'
             },
             {
-                title: 'NỘI TIẾT',
-                iconSvg: `<div class="icon text-yellow-600 text-4xl"><i class="fas fa-vial"></i></div>`, // Assuming fas-kidneys exists or use a generic one
+                title: 'Nội Tiết',
+                iconClass: 'fas fa-vial-capsule text-yellow-400',
+                glowColor: 'rgba(234, 179, 8, 0.4)',
                 links: [
                     '/benhhoc/tailieu/dai_thao_duong.html', 
                     '/benhhoc/tailieu/hoi_chung_cushing.html'
@@ -243,8 +77,9 @@ function setupCardPaginator(cardElement, config) {
                 countUnit: 'tài liệu'
             },
             {
-                title: 'CƠ XƯƠNG KHỚP',
-                iconSvg: `<div class="icon text-indigo-600 text-4xl"><i class="fas fa-bone"></i></div>`, // Assuming fas-bone exists or use a generic one
+                title: 'Cơ Xương Khớp',
+                iconClass: 'fas fa-bone text-indigo-400',
+                glowColor: 'rgba(99, 102, 241, 0.4)',
                 links: [
                     '/benhhoc/tailieu/viem_khop_dang_thap.html', 
                     '/benhhoc/tailieu/gout.html',
@@ -259,8 +94,9 @@ function setupCardPaginator(cardElement, config) {
                 countUnit: 'tài liệu'
             },
             {
-                title: 'TRUYỀN NHIỄM',
-                iconSvg: `<div class="icon text-indigo-600 text-4xl"><i class="fa-solid fa-viruses"></i></div>`, // Assuming fas-bone exists or use a generic one
+                title: 'Truyền Nhiễm',
+                iconClass: 'fa-solid fa-shield-virus text-teal-400',
+                glowColor: 'rgba(20, 184, 166, 0.4)',
                 links: [
                     '/benhhoc/tailieu/viem_gan_sieu_vi.html',
                     '/benhhoc/tailieu/lao_phoi.html',
@@ -270,24 +106,27 @@ function setupCardPaginator(cardElement, config) {
                 countUnit: 'tài liệu'
             },
             {
-                title: 'DỊ ỨNG',
-                iconSvg: `<div class="icon text-indigo-600 text-4xl"><i class="fas fa-allergies"></i></div>`, // Assuming fas-bone exists or use a generic one
+                title: 'Dị Ứng',
+                iconClass: 'fas fa-hand-holding-medical text-orange-400',
+                glowColor: 'rgba(249, 115, 22, 0.4)',
                 links: [
                     '/benhhoc/tailieu/lupus_ban_do_he_thong.html'
                 ],
                 countUnit: 'tài liệu'
             },
             {
-                title: 'MẮT',
-                iconSvg: `<div class="icon text-indigo-600 text-4xl"><i class="fa-solid fa-eye"></i></div>`, // Assuming fas-bone exists or use a generic one
+                title: 'Mắt',
+                iconClass: 'fa-solid fa-eye text-cyan-400',
+                glowColor: 'rgba(6, 182, 212, 0.4)',
                 links: [
                     '/benhhoc/tailieu/viem_ket_mac.html'
                 ],
                 countUnit: 'tài liệu'
             },
             {
-                title: 'MÁU VÀ DI TRUYỀN',
-                iconSvg: `<div class="icon text-yellow-600 text-4xl"><i class="fa-solid fa-dna"></i></div>`, // Assuming fas-kidneys exists or use a generic one
+                title: 'Máu và Di Truyền',
+                iconClass: 'fa-solid fa-dna text-red-400',
+                glowColor: 'rgba(239, 68, 68, 0.4)',
                 links: [
                     '/benhhoc/tailieu/benh_thalasemia.html',
                     '/benhhoc/tailieu/benh_bach_tang.html',
@@ -296,8 +135,9 @@ function setupCardPaginator(cardElement, config) {
                 countUnit: 'tài liệu'
             },
             {
-                title: 'SỨC KHỎE GIỚI TÍNH',
-                iconSvg: `<div class="icon text-indigo-600 text-4xl"><i class="fas fa-venus-mars"></i></div>`, // Assuming fas-bone exists or use a generic one
+                title: 'Sức Khỏe Giới Tính',
+                iconClass: 'fas fa-venus-mars text-fuchsia-400',
+                glowColor: 'rgba(217, 70, 239, 0.4)',
                 links: [
                     '/benhhoc/tailieu/nhiem_doc_thai_nghen.html'
                 ],
@@ -305,14 +145,197 @@ function setupCardPaginator(cardElement, config) {
             }
         ];
 
-        const container = document.getElementById('card-container');
-        if (container) {
-            // Initialize all cards based on the configuration array
-            cardConfigurations.forEach(config => {
-                const cardElement = createCardElement(config);
-                container.appendChild(cardElement);
-                setupCardPaginator(cardElement, config);
-            });
+        // Khởi tạo Card HTML động
+        function createCardElement(config) {
+            const card = document.createElement('div');
+            card.className = 'glass-card rounded-3xl p-6 flex flex-col justify-between h-[390px] relative overflow-hidden group';
+            
+            // Background glow hover effect riêng biệt cho mỗi chuyên khoa
+            card.style.setProperty('--glow-color', config.glowColor);
+            
+            card.innerHTML = `
+                <!-- Phần Đầu Thẻ: Tên Chuyên Khoa & Icon -->
+                <div>
+                    <div class="flex items-center justify-between mb-4 pb-4 border-b border-gray-800/60">
+                        <div class="flex items-center space-x-3.5">
+                            <div class="icon-container w-12 h-12 rounded-2xl bg-gray-900/80 border border-gray-800 flex items-center justify-center text-xl shadow-inner">
+                                <i class="${config.iconClass}"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-white/95 group-hover:text-indigo-300 transition-colors duration-300">${config.title}</h3>
+                                <span class="text-xs text-gray-500 font-medium js-count">0 ${config.countUnit}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Phần Thân: Danh sách các đường dẫn -->
+                    <ul class="space-y-2 js-list min-h-[200px]">
+                        <!-- JS sẽ chèn các liên kết (hoặc xương tải - skeleton loader) vào đây -->
+                    </ul>
+                </div>
+
+                <!-- Thanh Điều khiển Phân trang dưới cùng -->
+                <div class="js-nav-controls flex items-center justify-between pt-3 border-t border-gray-800/60 mt-2 hidden">
+                    <span class="text-xs text-gray-500 font-semibold uppercase tracking-wider js-page-indicator">Trang 1/1</span>
+                    <div class="flex space-x-1.5">
+                        <button class="prev-btn pagination-btn w-8 h-8 rounded-lg flex items-center justify-center text-xs text-gray-300" title="Trang trước">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <button class="next-btn pagination-btn w-8 h-8 rounded-lg flex items-center justify-center text-xs text-gray-300" title="Trang sau">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            return card;
         }
 
-    });
+        // Tự động tải tên tài liệu từ HTML thật hoặc fallback thân thiện
+        async function fetchAndPopulateList(links, listElement, onCompleteCallback) {
+            if (!listElement) return;
+            listElement.innerHTML = ''; 
+
+            // Tạo hiệu ứng Xương tải (Skeleton Screen) tuyệt đẹp
+            const skeletonCount = Math.min(links.length, 5);
+            for (let i = 0; i < skeletonCount; i++) {
+                const li = document.createElement('li');
+                li.className = 'w-full h-[38px] bg-gray-800/40 border border-gray-800/20 rounded-xl animate-pulse flex items-center px-4';
+                li.innerHTML = `<div class="h-2 w-3/4 bg-gray-700/60 rounded"></div>`;
+                listElement.appendChild(li);
+            }
+
+            const fetchPromises = links.map(async (url) => {
+                try {
+                    // Thêm độ trễ giả lập cực kỳ mượt mà giúp người dùng cảm nhận tải trang
+                    await new Promise(res => setTimeout(res, 50 + Math.random() * 100)); 
+                    
+                    const res = await fetch(url);
+                    if (!res.ok) throw new Error();
+                    const html = await res.text();
+                    const doc = new DOMParser().parseFromString(html, 'text/html');
+                    
+                    // Tìm kiếm tiêu đề của file HTML
+                    const titleElement = 
+                        doc.querySelector('h1.text-gradient') || 
+                        doc.querySelector('h1') || 
+                        doc.querySelector('title');
+                        
+                    const rawTitle = titleElement ? titleElement.textContent.trim() : (doc.title || url);
+                    return { title: formatTitle(rawTitle), url, success: true };
+                } catch (err) {
+                    // Khi lỗi liên kết (Chưa tạo trang), hiển thị tên bệnh được đoán từ URL rất thông minh
+                    const cleanName = url.split('/').pop().replace('.html', '').replace(/[-_]/g, ' ');
+                    return { title: formatTitle(cleanName), url, success: true }; 
+                }
+            });
+
+            const items = await Promise.all(fetchPromises);
+            listElement.innerHTML = ''; // Xóa các phần skeleton loading
+
+            items.forEach(({ title, url }, index) => {
+                const li = document.createElement('li');
+                li.className = 'animate-fade-in opacity-0';
+                li.style.animationDelay = `${(index % 5) * 50}ms`;
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.className = 'doc-link flex items-center justify-between p-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white';
+                
+                a.innerHTML = `
+                    <span class="truncate max-w-[80%]">${title}</span>
+                    <i class="fa-solid fa-arrow-right-long text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-indigo-400"></i>
+                `;
+                
+                li.appendChild(a);
+                listElement.appendChild(li);
+            });
+
+            if (onCompleteCallback) onCompleteCallback();
+        }
+
+        // Thiết lập bộ quản lý phân trang riêng cho mỗi thẻ
+        function setupCardPaginator(cardElement, config) {
+            const listElement = cardElement.querySelector('.js-list');
+            const countElement = cardElement.querySelector('.js-count');
+            const navControls = cardElement.querySelector('.js-nav-controls');
+            const prevBtn = navControls.querySelector('.prev-btn');
+            const nextBtn = navControls.querySelector('.next-btn');
+            const pageIndicator = navControls.querySelector('.js-page-indicator');
+
+            let currentPage = 1;
+            const itemsPerPage = 5; 
+
+            const updateView = () => {
+                const items = listElement.querySelectorAll('li');
+                const totalItems = items.length;
+                const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+                items.forEach((li, index) => {
+                    const itemPage = Math.floor(index / itemsPerPage) + 1;
+                    if (itemPage === currentPage) {
+                        li.style.display = 'block';
+                        li.classList.add('animate-fade-in');
+                    } else {
+                        li.style.display = 'none';
+                        li.classList.remove('animate-fade-in');
+                    }
+                });
+
+                if (totalPages > 1) {
+                    navControls.classList.remove('hidden');
+                    pageIndicator.textContent = `${currentPage} / ${totalPages}`;
+                } else {
+                    navControls.classList.add('hidden');
+                }
+
+                prevBtn.disabled = currentPage === 1;
+                nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+
+                if (countElement) {
+                    countElement.textContent = `${totalItems} ${config.countUnit}`;
+                }
+            };
+
+            prevBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    updateView();
+                }
+            });
+            
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const totalItems = listElement.querySelectorAll('li').length;
+                const totalPages = Math.ceil(totalItems / itemsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updateView();
+                }
+            });
+
+            fetchAndPopulateList(config.links, listElement, updateView);
+        }
+
+        // Định dạng văn bản: viết hoa đầu câu, lọc các hậu tố kỹ thuật thừa
+        function formatTitle(str) {
+            if (!str) return '';
+            let formatted = str.trim()
+                .replace(/^(hội chứng|bệnh|hc)\s+/gi, '') // Bỏ bớt chữ rườm rà ở đầu
+                .replace(/\.html$/i, '')
+                .toLowerCase();
+            
+            return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+        }
+
+        // Kích hoạt tất cả sau khi DOM sẵn sàng
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('card-container');
+            if (container) {
+                cardConfigurations.forEach(config => {
+                    const cardElement = createCardElement(config);
+                    container.appendChild(cardElement);
+                    setupCardPaginator(cardElement, config);
+                });
+            }
+        });

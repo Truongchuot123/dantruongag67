@@ -12,6 +12,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/banner_trang_con.css">
     <link rel="stylesheet" href="/giai_phau/giai_phau.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,19 +28,19 @@
     <div id="header-placeholder"></div>
     <div id="search-placeholder"></div>
 <!-- giới thiệu khi đăng nhập -->
-<section class="banner_trangcon">
-    <div class="banner_trangcon_header">
-        <h1>GIẢI PHẨU CƠ</h1>
-        <div class="banner_trangcon_header_underline"></div>
-        <p>
-        <a href="gopy.html">
-          <button class="banner_trangcon_btn btn">GÓP Ý</button>
-        </a>
-        </p>            
-    </div>
-</section>
-        <section class="noidung_kham_pha_them">
+    <header class="main-banner_trang_con">
+        <div class="banner_trang_con-overlay"></div>
+        <div class="hbanner_trang_con-image-bg"></div>
 
+        <div class="hbanner_trang_con-content">
+            <h1 class="main-title">GIẢI PHẨU CƠ</h1>
+            <p class="sub-text">Khám phá cấu trúc và chức năng của các cơ trong cơ thể người</p>
+            <div class="hbanner_trang_con-tabs-wrap">
+                <div id="category-tabs" class="category-scroll" aria-label="Danh mục bài viết"></div>
+            </div>
+        </div>
+    </header>
+        <section class="noidung_kham_pha_them">
             <div class="limb-section">
                 <h4>Chi trên</h4>
                 <div class="card_kha_meht_ahpm"> <button id="upper-scroll-left" class="scroll-btn left hidden">&#10094;</button>
@@ -79,7 +80,8 @@
     <div id="footer-placeholder"></div>
     
     <script src="/script.js"></script>
-        <script src="/search.js"></script>
+    <script src="/search.js"></script>
     <script src="/giai_phau/giai_phau.js"></script>
+    <script src="/banner_trang_con.js"></script>
 </body>
 </html>

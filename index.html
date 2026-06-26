@@ -3,143 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nguyễn Mai Đan Trường</title>
+    <title>Trang chủ - Nguyễn Mai Đan Trường</title>
     
-     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
     <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:image" content="/hinhanh/logo_web.png">
+    <meta property="og:image" content="https://placehold.co/600x400/0f172a/3b82f6?text=Dan+Truong">
     <meta property="og:url" content="https://dantruongag.id.vn">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" href="/hinhanh/logo_web.png" type="">
+    <link class="js-favicon" rel="icon" href="/hinhanh/logo_web.png" type="">
     <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- Tailwind CSS & FontAwesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
-
+    <!-- Thư viện Font chữ hiện đại -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     </head>
-    <body class="bg-gray-900">
+<body class="theme-indigo bg-[#0b0f19] text-gray-100 overflow-x-hidden selection:bg-indigo-500 selection:text-white">
+    <!-- Nút quay lại đầu trang / Back to top -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 p-3 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-indigo-500/30 opacity-0 invisible translate-y-3 transition-all duration-300 z-50 hover:scale-110 animate-bounce">
+        <i class="fas fa-arrow-up text-lg"></i>
+    </button>
+
+    <!-- Nền hạt chuyển động nhẹ nhàng -->
+    <canvas id="ambient-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-45"></canvas>
+
+    <!-- Header Placeholder -->
     <div id="header-placeholder"></div>
     <div id="search-placeholder"></div>
 
     <!-- Main Content -->
-    <main id="main-content">
-        <!-- Default Banner -->
-        <section class="banner_trangcon event-banner">
-            <div class="banner_trangcon_header">
-                <h1>CHÀO MỪNG BẠN ĐẾN VỚI WEBSITE CỦA ĐAN TRƯỜNG</h1>
-                <div class="banner_trangcon_header_underline"></div>
-                <p>
-                    <a href="/gopy.html">
-                        <button class="banner_trangcon_btn btn">GÓP Ý</button>
-                    </a>
-                </p>
+    <main id="main-content" class="pt-0 relative z-10">
+        <section id="hero-banner" class="relative min-h-screen flex items-center justify-center overflow-hidden transition-all duration-1000">
+            <div id="hero-bg" class="absolute inset-0 transition-all duration-1000 z-0 bg-cover bg-center"></div>
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,#1f2937_1px,transparent_1px),linear-gradient(to_bottom,#1f2937_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-20 z-10"></div>
+            <!-- Lớp phủ tối mượt mà -->
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#0b0f19]/80 to-[#0b0f19] z-10"></div>
+            
+            <div class="relative z-20 max-w-5xl mx-auto px-4 text-center mt-12">
+                <h1 id="hero-title" class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight">
+                    <!-- Được cập nhật tự động bằng JS -->
+                </h1>
+                <div class="w-24 h-1.5 bg-gradient-to-r from-amber-400 to-indigo-500 mx-auto my-8 rounded-full shadow-lg shadow-indigo-500/50"></div>
+                <div id="hero-desc" class="text-base md:text-xl text-gray-300 max-w-2xl mx-auto mb-10 font-light leading-relaxed">
                 </div>
-        </section>
+                <div id="hero-buttons" class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                </div>
 
-        <!-- Giỗ Tổ Hùng Vương -->
-        <section class="ngay_gio_to_hung_vuong event-banner">
-            <div class="title_ngay_gio_to_hung_vuong">
-                <h1>GIỖ TỔ</h1>
-                <h2>HÙNG VƯƠNG</h2>
-                <div class="noidung_ngay_gio_to_hung_vuong">
-                    <p class="text_ngay_gio_to_hung_vuong">
-                        “Dù ai đi ngược về xuôi<br>
-                        Nhớ ngày Giỗ Tổ mồng mười tháng Ba”
-                    </p>
-                </div>
-                </div>
-        </section>
-
-        <!-- Giải phóng miền Nam -->
-        <section class="banner_giai_phong_mien_nam_30-4 event-banner">
-            <div class="noidung_giai_phong_mien_nam_30-4">
-                <div class="title_giai_phong_mien_nam_30-4">KỶ NIỆM</div>
-                <h2>NGÀY GIẢI PHÓNG MIỀN NAM<br>THỐNG NHẤT ĐẤT NƯỚC</h2>
-                <p class="time_giai_phong_mien_nam_30-4">30/4/1975 - 30/4/2026</p>
-                </div>
-        </section>
-
-        <!-- Chiến thắng Điện Biên Phủ -->
-        <section class="banner_chien_thang_dien_bien_phu event-banner">
-            <div class="banner-content-inner">
-                <div class="title">KỶ NIỆM</div>
-                <h1>CHIẾN THẮNG ĐIỆN BIÊN PHỦ</h1>
-                <h2>07/05/1954 - 07/05/2026</h2>
-                </div>
-        </section>
-        <!-- Sinh nhật -->
-        <section class="banner_ngay_sinh_nhat_1807 event-banner">
-            <div class="noidung_ngay_sinh_nhat_1807">
-                <img src="/hinhanh/Trang chủ/HAPPY BIRTHDAY.png" alt="" class="ing_happybirthday" />
-                <div class="text_ngay_sinh_nhat_1807">ĐAN TRƯỜNG</div>
-                <div class="date_ngay_sinh_nhat_1807">18 - 07 - 2026</div>
-                <button id="nut_form_gui_loi_chuc">💌 Gửi lời chúc</button>
-                <div id="form_gui_loi_chuc">
-                    <div class="card_form_gui_loi_chuc">
-                        <div class="title_form_gui_loi_chuc">
-                            <img src="/hinhanh/Trang chủ/HAPPY BIRTHDAY.png" alt="" />
-                        </div>
-                        <div class="noidung_loi_chuc">
-                            <textarea placeholder="Viết lời chúc của bạn vào đây."></textarea>
-                        </div>
-                        <div class="form_actions">
-                            <button id="nut_gui_loi_chuc">Gửi đi</button>
+                <!-- Form chúc mừng sinh nhật -->
+                <div id="form_gui_loi_chuc" class="w-full max-w-md mx-auto mt-8 overflow-hidden max-h-0 transition-all duration-500 ease-in-out">
+                    <div class="card_form_gui_loi_chuc bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-2xl">
+                        <textarea placeholder="Nhập lời chúc tốt đẹp nhất của bạn dành cho Đan Trường..." class="w-full h-28 p-4 rounded-xl bg-black/40 text-white border border-white/10 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none resize-none text-sm transition"></textarea>
+                        <div class="mt-4 flex justify-end">
+                            <button id="nut_gui_loi_chuc" class="px-6 py-2.5 rounded-full bg-gradient-to-r from-pink-500 to-violet-600 text-white font-bold text-sm hover:scale-105 transition duration-300">
+                                Gửi Đi Ngay <i class="fas fa-paper-plane ml-1"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
-               </div>
-        </section>
-        <!-- Quốc Khánh -->
-        <section class="banner_ngay_quoc_khanh event-banner">
-            <div class="banner-content-inner">
-                <div class="title">KỈ NIỆM</div>
-                <h1>QUỐC KHÁNH NƯỚC CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h1>
-                <h2>2/9/1945 - 2/9/2026</h2>
-                </div>
-        </section>
-   
-
-        <!--Nội dung -->
-        <section class="banner_mxh">
-            <div class="swiper">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <img src="/hinhanh/banner fb.jpg" alt="" class="profile-image">
-                        <div class="profile-text">
-                            <h2>Trang Facebook</h2>
-                            <a href="https://web.facebook.com/dantruongag/" target="_blank">Xem ngay</a>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="/hinhanh/banner titok.PNG" alt="" class="profile-image">
-                        <div class="profile-text">
-                            <h2>Trang TikTok</h2>
-                            <a href="https://www.tiktok.com/@dantruongag?_t=ZS-8x5Kf6XKVAz&_r=1" target="_blank">Xem ngay</a>
-                        </div>
-                        </div>
-                    <div class="swiper-slide">
-                        <img src="/hinhanh/banner ins.PNG" alt="" class="profile-image">
-                        <div class="profile-text">
-                            <h2>Trang Instagram</h2>
-                            <a href="https://www.instagram.com/dantruongag/" target="_blank">Theo dõi</a>
-                        </div>
-                        </div>
-                </div>
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
-                <div class="swiper-pagination"></div>
             </div>
         </section>
+
         <div id="protected-content" class="hidden">
-       </div>
+        </div>
     </main>
+
     <div id="footer-placeholder"></div>
 
-        <script src="/script.js"></script>
-        <script src="/search.js"></script>
-        <script src="/baiviet_trang_chu.js"></script>
+          <script src="/script.js"></script>
 </body>
 </html>
