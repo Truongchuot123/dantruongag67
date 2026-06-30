@@ -1,4 +1,4 @@
-        :root {
+:root {
             --menu-color: #6366f1;
             --background-dark: #0b0f19;
             --text-header: #f8fafc;
@@ -140,7 +140,7 @@
         .menu-bar.active span::before { transform: translateY(0) rotate(-45deg); }
         .menu-bar.active span::after { transform: translateY(0) rotate(45deg); }
 
-        /* Side Navigation Panel */
+        /* Side Navigation Panel - Tối ưu hóa mượt mà di động */
         .side-nav {
             position: fixed;
             top: 0;
@@ -148,20 +148,30 @@
             width: 300px;
             height: 100vh;
             background: linear-gradient(180deg, #111827 0%, #030712 100%);
-            transform: translateX(100%);
+            transform: translate3d(100%, 0, 0); /* Tận dụng GPU tăng tốc mượt mà */
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             z-index: 999;
-            padding-top: 100px;
+            padding-top: 80px; /* Giảm nhẹ để vừa vặn hơn */
+            padding-bottom: 80px; /* Đệm chân menu */
             display: flex;
             flex-direction: column;
             box-shadow: -10px 0 30px rgba(0,0,0,0.5);
             border-left: 1px solid rgba(255,255,255,0.05);
+            overflow-y: auto; /* Cho phép cuộn khi danh sách môn học dài */
+            scrollbar-width: none; /* Ẩn thanh cuộn Firefox */
+            -ms-overflow-style: none; /* Ẩn thanh cuộn IE/Edge */
+            will-change: transform;
         }
-        .side-nav.active { transform: translateX(0); }
+        .side-nav::-webkit-scrollbar {
+            display: none; /* Ẩn thanh cuộn Chrome/Safari */
+        }
+        .side-nav.active { 
+            transform: translate3d(0, 0, 0); 
+        }
         .side-nav a {
             color: #e2e8f0;
             font-size: 1rem;
-            padding: 15px 30px;
+            padding: 14px 28px;
             width: 100%;
             text-align: left;
             transition: all 0.3s ease;
@@ -169,6 +179,7 @@
             display: flex;
             align-items: center;
             border-left: 3px solid transparent;
+            box-sizing: border-box;
         }
         .side-nav a:hover {
             background-color: rgba(99, 102, 241, 0.1);
@@ -180,6 +191,24 @@
             margin-right: 15px;
             text-align: center;
             color: var(--text-menu-icon);
+        }
+
+        /* Lớp phủ nền mờ cho Menu di động */
+        .side-nav-backdrop {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(3, 7, 18, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 998;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity;
+        }
+        .side-nav-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         /* Mascot Linh vật của website */
@@ -744,47 +773,176 @@
         }
 
         /* Footer & Nav di động */
-        .main-footer {
-            background: #080c14;
-            color: #94a3b8;
-            text-align: center;
-            padding: 40px 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        /* Footer & Nav di động - Thích ứng đa thiết bị mượt mà */
+    .main-footer {
+        background: linear-gradient(180deg, #090d16 0%, #05070c 100%);
+        color: #94a3b8;
+        padding: 60px 24px 40px 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        position: relative;
+    }
+    
+    .footer-content {
+        display: grid;
+        grid-template-columns: 1.2fr 1.5fr 1fr;
+        gap: 40px;
+        max-width: 1200px;
+        margin: auto;
+        text-align: left;
+    }
+
+    .footer-brand {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .footer-logo img { 
+        max-width: 65px; 
+        border-radius: 50%; 
+        border: 2px solid rgba(255, 255, 255, 0.08);
+        transition: all 0.4s ease;
+    }
+    
+    .footer-logo img:hover {
+        transform: scale(1.08) rotate(8deg);
+        border-color: var(--nut);
+    }
+
+    .footer-brand p {
+        font-size: 0.85rem;
+        line-height: 1.6;
+        color: #64748b;
+    }
+
+    .footer-column-title {
+        color: #ffffff;
+        font-weight: 800;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+    }
+
+    .footer-links {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px 20px;
+    }
+
+    .footer-links a {
+        color: #94a3b8;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.25s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .footer-links a:hover {
+        color: #ffffff;
+        transform: translateX(4px);
+    }
+
+    .footer-social-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .footer-social {
+        display: flex;
+        gap: 12px;
+    }
+
+    .footer-social a {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        font-size: 1.1rem;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .footer-social a:hover {
+        background: var(--nut);
+        color: #ffffff;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px var(--accent-glow);
+    }
+
+    .footer-bottom {
+        max-width: 1200px;
+        margin: 40px auto 0 auto;
+        padding-top: 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: #64748b;
+    }
+
+    /* Responsive di động tối ưu */
+    @media (max-width: 768px) {
+        .main-footer { 
+            padding: 40px 16px 110px 16px; /* Chừa 110px trống phía dưới để không bị Bottom Nav đè lên */
+            margin-bottom: 0px !important; 
         }
+        
         .footer-content {
-            display: flex;
-            justify-content: space-around;
+            grid-template-columns: 1fr;
+            gap: 36px;
+            text-align: center;
+        }
+
+        .footer-brand {
             align-items: center;
-            flex-wrap: wrap;
-            padding: 20px;
-            max-width: 1100px;
+        }
+
+        .footer-links {
+            grid-template-columns: repeat(2, 1fr);
+            max-width: 320px;
             margin: auto;
+            gap: 16px;
         }
-        .footer-logo img { max-width: 70px; border-radius: 50%; }
+
         .footer-links a {
-            color: #94a3b8;
-            text-decoration: none;
-            display: block;
-            margin: 8px 0;
-            padding: 4px 10px;
-            border-radius: 6px;
-            transition: all 0.3s;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
         }
+
         .footer-links a:hover {
-            color: white;
-            background-color: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
+            transform: none;
         }
-        .footer-social a {
-            font-size: 20px;
-            color: #94a3b8;
-            margin: 0 12px;
-            transition: all 0.3s;
-            display: inline-block;
+
+        .footer-social-wrapper {
+            align-items: center;
         }
-        .footer-social a:hover {
-            color: white;
-            transform: scale(1.2);
+
+        .footer-social {
+            justify-content: center;
         }
+
+        .footer-bottom {
+            flex-direction: column;
+            gap: 12px;
+            text-align: center;
+            margin-top: 36px;
+        }
+    }
 
         .mobile-bottom-nav {
             position: fixed;

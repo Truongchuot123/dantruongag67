@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bản điều khiển Quản trị - Nguyễn Mai Đan Trường</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDKs (v11.6.1 Compatibility mode) -->
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #080c14;
+            color: #f1f5f9;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        /* Glassmorphic elements */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            background: rgba(15, 23, 42, 0.6);
+            border-color: rgba(56, 189, 248, 0.15);
+        }
+
+        /* Glow effects */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden min-h-screen flex flex-col selection:bg-cyan-500 selection:text-slate-900 relative">
+
+    <!-- Ambient background glows -->
+    <div class="glow-orb w-[400px] h-[400px] bg-cyan-500 top-0 left-1/4"></div>
+    <div class="glow-orb w-[500px] h-[500px] bg-indigo-500 bottom-0 right-1/4"></div>
+
+    <!-- TOAST NOTIFICATION SYSTEM -->
+    <div id="toast" class="fixed top-5 right-5 z-50 transform translate-y-[-100px] opacity-0 transition-all duration-300 max-w-sm w-full bg-slate-900/95 border border-slate-800 rounded-2xl p-4 shadow-2xl flex items-start gap-3">
+        <div id="toast-icon" class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"></div>
+        <div class="flex-grow">
+            <h5 id="toast-title" class="text-sm font-bold text-white">Thông báo</h5>
+            <p id="toast-desc" class="text-xs text-slate-400 mt-0.5">Nội dung...</p>
+        </div>
+        <button onclick="hideToast()" class="text-slate-500 hover:text-white transition-colors">
+            <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+    </div>
+
+    <!-- LOCK SCREEN (GATEKEEPER SECURITY) -->
+    <div id="gate-lock" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4">
+        <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 text-center shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl"></div>
+            
+            <div class="w-16 h-16 bg-cyan-500/10 text-cyan-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            
+            <h2 class="text-xl font-black text-white mb-2">Trình Xác Thực Đan Trường</h2>
+            <p class="text-xs text-slate-400 mb-6 leading-relaxed">Hãy nhập mã PIN bảo mật để kích hoạt quyền can thiệp hệ thống dữ liệu Cloud Firestore.</p>
+            
+            <div class="space-y-4">
+                <input type="password" id="passcode-input" placeholder="•••••" 
+                       class="w-full text-center tracking-widest bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3.5 text-white placeholder:text-slate-700 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all text-2xl font-mono">
+                <button onclick="validateAccess()" class="w-full py-3.5 bg-gradient-to-r from-cyan-500 to-indigo-500 text-slate-950 font-bold rounded-2xl hover:opacity-95 transition-all text-sm flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/10">
+                    <i class="fa-solid fa-unlock"></i> Xác nhận đăng nhập
+                </button>
+                <p class="text-[10px] text-slate-500 font-mono">Mã mặc định khuyên dùng: 12345</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CENTRALIZED CONTAINER -->
+    <main class="flex-grow max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8 relative z-10">
+        
+        <!-- ================= SECTION 1: ARTICLES LIST ================= -->
+        <section id="sec-list" class="space-y-6">
+            <!-- Dynamic Action Bar -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800/80 pb-6">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-base"><i class="fa-solid fa-folder-open"></i></span>
+                        Quản Lý Bài Viết
+                    </h1>
+                    <p class="text-xs text-slate-400 mt-1">Đồng bộ trực tiếp Cloud Firestore • <span id="stat-counter" class="text-cyan-400 font-bold">0</span> bài viết</p>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                    <!-- Search Input -->
+                    <div class="relative w-full sm:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-500 text-xs"></i>
+                        <input type="text" id="admin-search-input" oninput="filterAdminTable(this.value)" placeholder="Tìm kiếm tên kỹ thuật..." 
+                               class="w-full text-xs bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:border-cyan-500 transition-all">
+                    </div>
+
+                    <!-- Add New Button -->
+                    <button onclick="switchView('editor')" class="px-5 py-3 bg-cyan-400 hover:bg-cyan-300 text-slate-950 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-cyan-400/15 shrink-0">
+                        <i class="fa-solid fa-circle-plus text-sm"></i> Viết bài mới
+                    </button>
+                </div>
+            </div>
+
+            <!-- Interactive Table -->
+            <div class="glass-card rounded-3xl overflow-hidden border border-slate-800 shadow-2xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-950/60 text-slate-400 border-b border-slate-800">
+                                <th class="p-4 font-bold uppercase tracking-wider">Tên Kỹ Thuật / Bài Viết</th>
+                                <th class="p-4 font-bold uppercase tracking-wider">Phân Phối Chuyên Đề</th>
+                                <th class="p-4 font-bold uppercase tracking-wider">Phương Tiện</th>
+                                <th class="p-4 font-bold uppercase tracking-wider text-right">Tác Vụ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="articles-table-body" class="divide-y divide-slate-800/40">
+                            <tr>
+                                <td colspan="4" class="p-8 text-center text-slate-500 animate-pulse">Đang đồng bộ dữ liệu của bạn...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 2: CREATION & EDITING FORM ================= -->
+        <section id="sec-editor" class="space-y-6 hidden">
+            <!-- Editor Title bar -->
+            <div class="border-b border-slate-800 pb-5 flex items-center justify-between">
+                <div>
+                    <h2 id="editor-heading" class="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-base"><i class="fa-solid fa-pen-nib"></i></span>
+                        Soạn Thảo Bài Viết Mới
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">Cập nhật ngay lập tức sang giao diện người dùng.</p>
+                </div>
+                <button onclick="switchView('list')" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border border-slate-800 shadow-sm">
+                    <i class="fa-solid fa-angle-left"></i> Trở về danh sách
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                <!-- Input Fields Block -->
+                <div class="lg:col-span-7 bg-slate-900/40 border border-slate-800/80 rounded-3xl p-6 space-y-4 shadow-xl">
+                    <input type="hidden" id="form-id">
+                    
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Chọn Phân Mục Chuyên Đề</label>
+                        <select id="form-category" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-cyan-500">
+                            <option value="tab_1">Kỹ Thuật Xoa Bóp</option>
+                            <option value="tab_2">Kỹ Thuật Tập Vận Động</option>
+                            <option value="tab_3">Kỹ Thuật Tạo Thuận Thần Kinh Cơ (PNF)</option>
+                            <option value="tab_4">Kỹ Thuật Kéo Giãn (Stretching)</option>
+                            <option value="tab_5">Kỹ Thuật Di Động Khớp</option>
+                            <option value="tab_6">Kỹ Thuật Với Dụng Cụ</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Tên Kỹ Thuật / Bài viết</label>
+                        <input type="text" id="form-title" placeholder="Ví dụ: Kỹ thuật di động khớp vai Maitland độ III" 
+                               class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white placeholder:text-slate-700 focus:outline-none focus:border-cyan-500">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex justify-between">
+                                <span>URL Video Nhúng (YouTube)</span>
+                                <span class="text-slate-500 text-[8px] normal-case">Tùy chọn</span>
+                            </label>
+                            <input type="text" id="form-video" placeholder="https://www.youtube.com/embed/..." 
+                                   class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white placeholder:text-slate-700 focus:outline-none focus:border-cyan-500">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex justify-between">
+                                <span>URL Tài Liệu PDF Đính Kèm</span>
+                                <span class="text-slate-500 text-[8px] normal-case">Tùy chọn</span>
+                            </label>
+                            <input type="text" id="form-pdf" placeholder="https://..." 
+                                   class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white placeholder:text-slate-700 focus:outline-none focus:border-cyan-500">
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nội Dung Chi Tiết (HTML)</label>
+                            <button onclick="insertHtmlTemplate()" type="button" class="text-[10px] text-cyan-400 hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-code"></i> Chèn sườn HTML mẫu
+                            </button>
+                        </div>
+                        <textarea id="form-content" rows="12" oninput="updateLivePreview(this.value)" placeholder="Sử dụng mã HTML hoặc các thẻ văn bản để cấu trúc bài giảng..." 
+                                  class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs text-white placeholder:text-slate-700 focus:outline-none focus:border-cyan-500 font-mono"></textarea>
+                    </div>
+
+                    <!-- Action buttons -->
+                    <div class="flex items-center gap-3 pt-2">
+                        <button onclick="resetForm(); switchView('list');" class="px-5 py-3.5 bg-slate-950 hover:bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-bold transition-all border border-slate-800">
+                            Hủy
+                        </button>
+                        <button onclick="saveArticle()" class="flex-grow py-3.5 bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold rounded-xl transition-all text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-400/15">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Lưu thông tin lên đám mây
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Preview Block -->
+                <div class="lg:col-span-5 space-y-4 lg:sticky lg:top-6">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-1 flex items-center gap-1.5">
+                        <span class="flex h-1.5 w-1.5 rounded-full bg-cyan-400"></span>
+                        Khung xem trước trực tiếp (Live Preview)
+                    </p>
+                    <div class="glass-card rounded-3xl p-6 border border-slate-800 max-h-[520px] overflow-y-auto shadow-xl">
+                        <div id="live-preview-title" class="text-base font-extrabold text-white pb-3 border-b border-slate-800 mb-4">Xem trước tiêu đề</div>
+                        <div id="live-preview-body" class="text-xs text-slate-300 space-y-4 leading-relaxed font-sans">
+                            <p class="text-slate-500 italic">Vui lòng nhập nội dung để xem trước kết quả định dạng...</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- INTERACTIVE JAVASCRIPT SYSTEM WITH CLOUD FIRESTORE -->
+    <script>
+        // FIREBASE INITIALIZATION CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
+            authDomain: "dulieuweb-6541e.firebaseapp.com",
+            projectId: "dulieuweb-6541e",
+            storageBucket: "dulieuweb-6541e.firebasestorage.app",
+            messagingSenderId: "215480268517",
+            appId: "1:215480268517:web:16600eafd6839fee5dc60c"
+        };
+
+        // Initialize Firebase app and services
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // App ID and strict collection path configuration (Rule 1)
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'dulieuweb-6541e';
+        
+        function getArticlesCollection() {
+            return db.collection('artifacts/' + appId + '/public/data/articles');
+        }
+
+        // Tab Meta Definitions
+        const tabMeta = {
+            tab_1: 'Kỹ Thuật Xoa Bóp',
+            tab_2: 'Kỹ Thuật Tập Vận Động',
+            tab_3: 'Kỹ Thuật Tạo Thuận Thần Kinh Cơ (PNF)',
+            tab_4: 'Kỹ Thuật Kéo Giãn (Stretching)',
+            tab_5: 'Kỹ Thuật Di Động Khớp',
+            tab_6: 'Kỹ Thuật Với Dụng Cụ'
+        };
+
+        let localArticles = [];
+
+        /* ====================================
+           TOAST NOTIFICATION ACTIONS
+           ==================================== */
+        function showToast(title, message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            const titleEl = document.getElementById('toast-title');
+            const descEl = document.getElementById('toast-desc');
+
+            if (!toast) return;
+
+            titleEl.innerText = title;
+            descEl.innerText = message;
+
+            if (type === 'success') {
+                icon.className = "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-cyan-500/10 text-cyan-400";
+                icon.innerHTML = `<i class="fa-solid fa-circle-check"></i>`;
+            } else if (type === 'error') {
+                icon.className = "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-rose-500/10 text-rose-400";
+                icon.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i>`;
+            } else {
+                icon.className = "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-indigo-500/10 text-indigo-400";
+                icon.innerHTML = `<i class="fa-solid fa-bell"></i>`;
+            }
+
+            toast.classList.remove('opacity-0', 'translate-y-[-100px]');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                hideToast();
+            }, 3000);
+        }
+
+        function hideToast() {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.classList.add('opacity-0', 'translate-y-[-100px]');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }
+        }
+
+        /* ====================================
+           GATE LOCK ACCESS SYSTEM
+           ==================================== */
+        function validateAccess() {
+            const pin = document.getElementById('passcode-input').value;
+            if (pin === '12345') {
+                document.getElementById('gate-lock').classList.add('hidden');
+                showToast("Truy cập thành công", "Cơ sở dữ liệu trực tuyến sẵn sàng.");
+            } else {
+                showToast("Sai mã khóa", "Vui lòng nhập lại đúng mã PIN bảo vệ.", "error");
+            }
+        }
+
+        /* ====================================
+           FIRESTORE SYNC (Rule 3)
+           ==================================== */
+        function setupRealtimeSync() {
+            if (!auth.currentUser) return;
+
+            const collectionRef = getArticlesCollection();
+
+            collectionRef.onSnapshot((querySnapshot) => {
+                const tempArticles = [];
+                querySnapshot.forEach((doc) => {
+                    tempArticles.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+
+                localArticles = tempArticles;
+                document.getElementById('stat-counter').innerText = localArticles.length;
+                renderAdminTable(localArticles);
+            }, (error) => {
+                console.error("Lỗi Firestore: ", error);
+                showToast("Lỗi dữ liệu", "Hệ thống không được phân quyền truy cập.", "error");
+            });
+        }
+
+        /* ====================================
+           UI VIEW NAVIGATION
+           ==================================== */
+        function switchView(viewName) {
+            const listSec = document.getElementById('sec-list');
+            const editorSec = document.getElementById('sec-editor');
+            
+            if (viewName === 'list') {
+                listSec.classList.remove('hidden');
+                editorSec.classList.add('hidden');
+            } else if (viewName === 'editor') {
+                listSec.classList.add('hidden');
+                editorSec.classList.remove('hidden');
+            }
+        }
+
+        /* ====================================
+           TABLE RENDER & SEARCH
+           ==================================== */
+        function renderAdminTable(dataArray) {
+            const tbody = document.getElementById('articles-table-body');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+
+            if (dataArray.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-500">Không tìm thấy bài viết nào tương ứng hoặc cơ sở dữ liệu trống.</td></tr>`;
+                return;
+            }
+
+            // Sort by category
+            const sortedData = [...dataArray].sort((a, b) => (a.categoryKey || '').localeCompare(b.categoryKey || ''));
+
+            sortedData.forEach(art => {
+                const catName = tabMeta[art.categoryKey] || 'Chưa định danh';
+                
+                let mediaStatus = '<span class="text-slate-600">Lý thuyết</span>';
+                if (art.videoUrl && art.pdfUrl) {
+                    mediaStatus = '<span class="text-cyan-400 font-bold">Video & PDF</span>';
+                } else if (art.videoUrl) {
+                    mediaStatus = '<span class="text-red-400 font-bold">Chỉ Video</span>';
+                } else if (art.pdfUrl) {
+                    mediaStatus = '<span class="text-emerald-400 font-bold">Chỉ PDF</span>';
+                }
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/40 transition-all border-b border-slate-800/20";
+                tr.innerHTML = `
+                    <td class="p-4 font-bold text-slate-200 max-w-[240px] truncate" title="${art.title}">${art.title}</td>
+                    <td class="p-4 text-slate-400">${catName}</td>
+                    <td class="p-4">${mediaStatus}</td>
+                    <td class="p-4 text-right space-x-2 whitespace-nowrap">
+                        <button onclick="editArticle('${art.id}')" class="px-3 py-1.5 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 rounded-xl border border-cyan-500/20 transition-all">
+                            <i class="fa-solid fa-pen-to-square"></i> Sửa
+                        </button>
+                        <button onclick="deleteArticle('${art.id}')" class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-xl border border-rose-500/20 transition-all">
+                            <i class="fa-solid fa-trash-can"></i> Xóa
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterAdminTable(query) {
+            const filtered = localArticles.filter(art => 
+                (art.title || '').toLowerCase().includes(query.toLowerCase())
+            );
+            renderAdminTable(filtered);
+        }
+
+        /* ====================================
+           FORM AND LIVE PREVIEW
+           ==================================== */
+        function updateLivePreview(val) {
+            const previewBody = document.getElementById('live-preview-body');
+            const previewTitle = document.getElementById('live-preview-title');
+            const titleInput = document.getElementById('form-title').value;
+
+            previewTitle.innerText = titleInput ? titleInput : "Xem trước tiêu đề";
+            if (val && val.trim() !== '') {
+                previewBody.innerHTML = val;
+            } else {
+                previewBody.innerHTML = `<p class="text-slate-500 italic">Vui lòng nhập nội dung để xem trước...</p>`;
+            }
+        }
+
+        function insertHtmlTemplate() {
+            const template = `<p class="font-semibold text-white">1. Chỉ định & vai trò lâm sàng:</p>
+<p>Nhập mô tả chi tiết tại đây...</p>
+
+<p class="font-semibold text-white mt-4">2. Quy trình thực hành từng bước:</p>
+<ul class="list-disc list-inside space-y-2 pl-2">
+    <li><strong class="text-cyan-400">Bước 1:</strong> Chuẩn bị tư thế người bệnh và KTV.</li>
+    <li><strong class="text-cyan-400">Bước 2:</strong> Thực hiện các thao tác trị liệu...</li>
+</ul>
+
+<p class="font-semibold text-white mt-4">3. Chống chỉ định:</p>
+<p>Không thực hiện khi có chấn thương hở...</p>`;
+
+            document.getElementById('form-content').value = template;
+            updateLivePreview(template);
+            showToast("Mẫu chuẩn", "Đã nạp bộ cấu trúc sườn HTML mẫu.", "info");
+        }
+
+        function resetForm() {
+            document.getElementById('form-id').value = '';
+            document.getElementById('form-category').value = 'tab_1';
+            document.getElementById('form-title').value = '';
+            document.getElementById('form-video').value = '';
+            document.getElementById('form-pdf').value = '';
+            document.getElementById('form-content').value = '';
+            
+            document.getElementById('editor-heading').innerText = "Soạn Thảo Bài Viết Mới";
+            updateLivePreview('');
+        }
+
+        /* ====================================
+           CRUD OPERATIONS (Rule 3)
+           ==================================== */
+        function editArticle(id) {
+            const art = localArticles.find(a => a.id === id);
+            if (!art) return;
+
+            document.getElementById('form-id').value = art.id;
+            document.getElementById('form-category').value = art.categoryKey || 'tab_1';
+            document.getElementById('form-title').value = art.title || '';
+            document.getElementById('form-video').value = art.videoUrl || '';
+            document.getElementById('form-pdf').value = art.pdfUrl || '';
+            document.getElementById('form-content').value = art.content || '';
+
+            document.getElementById('editor-heading').innerText = "Chỉnh Sửa Kỹ Thuật";
+            updateLivePreview(art.content || '');
+            
+            switchView('editor');
+        }
+
+        async function saveArticle() {
+            if (!auth.currentUser) return;
+
+            const id = document.getElementById('form-id').value;
+            const categoryKey = document.getElementById('form-category').value;
+            const title = document.getElementById('form-title').value.trim();
+            const videoUrl = document.getElementById('form-video').value.trim();
+            const pdfUrl = document.getElementById('form-pdf').value.trim();
+            const content = document.getElementById('form-content').value.trim();
+
+            if (!title) {
+                showToast("Lỗi nhập liệu", "Tên bài viết không được để trống.", "error");
+                return;
+            }
+
+            const payload = {
+                categoryKey: categoryKey,
+                title: title,
+                videoUrl: videoUrl,
+                pdfUrl: pdfUrl,
+                content: content,
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            showToast("Đang đồng bộ", "Đang tải dữ liệu lên đám mây...", "info");
+
+            try {
+                if (id) {
+                    await getArticlesCollection().doc(id).update(payload);
+                    showToast("Đã cập nhật", `Kỹ thuật "${title}" đã sửa thành công.`);
+                } else {
+                    payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await getArticlesCollection().add(payload);
+                    showToast("Đã lưu mới", `Kỹ thuật "${title}" đã được thêm.`);
+                }
+                resetForm();
+                switchView('list');
+            } catch (err) {
+                console.error(err);
+                showToast("Lỗi kết nối", "Không thể hoàn thành hành động đồng bộ.", "error");
+            }
+        }
+
+        async function deleteArticle(id) {
+            if (!auth.currentUser) return;
+            const art = localArticles.find(a => a.id === id);
+            if (!art) return;
+
+            if (!confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn kỹ thuật: "${art.title}"?`)) return;
+
+            showToast("Đang xóa", "Yêu cầu xóa đang xử lý trên máy chủ...", "info");
+
+            try {
+                await getArticlesCollection().doc(id).delete();
+                showToast("Đã xóa", `Đã xóa kỹ thuật khỏi Firestore.`);
+                resetForm();
+            } catch (err) {
+                console.error(err);
+                showToast("Thất bại", "Không thể hoàn tất yêu cầu xóa.", "error");
+            }
+        }
+
+        /* ====================================
+           INITIALIZATION
+           ==================================== */
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Secure auth state initiation (Rule 3)
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await auth.signInWithCustomToken(__initial_auth_token);
+                } else {
+                    await auth.signInAnonymously();
+                }
+            } catch (e) {
+                console.warn("Lỗi token tùy chỉnh, chuyển đăng nhập ẩn danh...", e);
+                await auth.signInAnonymously();
+            }
+        });
+
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                console.log("Xác thực đám mây thành công.");
+                setupRealtimeSync();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 // ================= GOOGLE APPS SCRIPT CONFIGURATION =================
         const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPan-KQDfgVodlpBL06ZjkSrIKUTgS3syVxJCZ67JhJaMktXfjz_99c6WptPuzjzLN_g/exec";
 
-        // Danh sách liên kết học tập thực tế
+        // Danh sách liên kết học tập thực tế dùng cho trang chủ
         const allExternalLinks = [
             "/đo_huyet_ap.html",
             "/rua_tay.html",
@@ -39,7 +39,7 @@
             avatar: "https://placehold.co/150x150/4f46e5/ffffff?text=Dan+Truong"
         };
 
-        // --- KHỞI TẠO ĐỘNG CÁC PHẦN TỬ GIAO DIỆN (CHUYỂN TỪ HTML SANG JS) ---
+        // --- KHỞI TẠO ĐỘNG CÁC PHẦN TỬ GIAO DIỆN ---
         function renderDynamicElements() {
             // 1. Tạo Mascot Linh vật nếu chưa tồn tại
             if (!document.getElementById('website-mascot')) {
@@ -48,7 +48,7 @@
                 mascotDiv.className = 'select-none group';
                 mascotDiv.innerHTML = `
                     <div id="mascot-speech" class="absolute bottom-full left-0 mb-3 w-52 p-3.5 rounded-2xl bg-slate-800 text-white border border-indigo-500/40 shadow-2xl text-xs font-semibold leading-relaxed scale-0 opacity-0 origin-bottom-left transition-all duration-300 pointer-events-none">
-                       Chào bạn, tôi luôn sẫn sàng hỗ trợ bạn 🩺📖
+                       Chào bạn, tôi luôn sẵn sàng hỗ trợ bạn 🩺📖
                     </div>
                     <div class="w-24 h-24 rounded-2xl overflow-hidden shadow-2xl border border-white/10 transform hover:scale-110 active:scale-95 transition-all cursor-pointer">
                         <img src="/hinhanh/linh_vat.png" alt="" onerror="this.onerror=null; this.src='https://placehold.co/150x150/4f46e5/ffffff?text=Dan+Truong'">
@@ -57,14 +57,21 @@
                 document.body.appendChild(mascotDiv);
             }
 
-            // 2. Tạo Panel Cài đặt hệ thống nếu chưa tồn tại
+            // 2. Tạo Backdrop cho Side Nav nếu chưa tồn tại
+            if (!document.getElementById('side-nav-backdrop')) {
+                const backdrop = document.createElement('div');
+                backdrop.id = 'side-nav-backdrop';
+                backdrop.className = 'side-nav-backdrop';
+                document.body.appendChild(backdrop);
+            }
+
+            // 3. Tạo Panel Cài đặt hệ thống nếu chưa tồn tại
             if (!document.getElementById('settings-overlay')) {
                 const settingsOverlay = document.createElement('div');
                 settingsOverlay.id = 'settings-overlay';
                 settingsOverlay.className = 'fixed inset-0 z-[1200] hidden bg-black/85 backdrop-blur-2xl flex items-center justify-center p-4';
                 settingsOverlay.innerHTML = `
                     <div class="bg-gradient-to-b from-[#111827] to-[#0f172a] border border-white/10 shadow-2xl rounded-3xl w-full max-w-2xl overflow-hidden transform scale-95 transition-all duration-300">
-                        <!-- Header Cài đặt -->
                         <div class="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-lg shadow-inner">
@@ -80,9 +87,7 @@
                             </button>
                         </div>
 
-                        <!-- Body Cài đặt dạng Tab -->
                         <div class="grid grid-cols-1 md:grid-cols-4 min-h-[400px]">
-                            <!-- Sidenav nội bộ cài đặt -->
                             <div class="md:col-span-1 border-r border-white/10 p-4 space-y-2 bg-black/20">
                                 <button onclick="switchSettingsTab('profile')" id="set-tab-profile" class="w-full py-2.5 px-3 rounded-xl text-left text-xs font-bold transition flex items-center gap-2">
                                     <i class="fas fa-user-edit"></i> Giới thiệu & Hồ sơ
@@ -92,9 +97,7 @@
                                 </button>
                             </div>
 
-                            <!-- Content chính cài đặt -->
                             <div class="md:col-span-3 p-6 max-h-[450px] overflow-y-auto">
-                                <!-- Tab Giới thiệu & Hồ sơ -->
                                 <div id="settings-tab-profile" class="settings-content-pane space-y-5">
                                     <div class="flex flex-col sm:flex-row items-center gap-4 border-b border-white/5 pb-4">
                                         <div class="relative group">
@@ -113,7 +116,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Form dữ liệu người dùng -->
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
                                             <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Họ và tên thành viên</label>
@@ -134,7 +136,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Tab Màu sắc chủ đề -->
                                 <div id="settings-tab-theme" class="settings-content-pane hidden space-y-6">
                                     <div>
                                         <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-1.5">
@@ -177,7 +178,6 @@
                             </div>
                         </div>
 
-                        <!-- Footer hành động Cài đặt -->
                         <div class="p-5 border-t border-white/10 bg-black/40 flex justify-end gap-3">
                             <button onclick="closeSettings()" class="px-5 py-2 rounded-xl bg-slate-800 text-gray-300 hover:text-white font-bold text-xs transition">Hủy bỏ</button>
                             <button onclick="saveSettings()" class="px-6 py-2 rounded-xl bg-gradient-to-r from-[#6366f1] to-[#4f46e5] text-white font-bold text-xs shadow-lg transition transform hover:-translate-y-0.5">Lưu cấu hình</button>
@@ -187,14 +187,13 @@
                 document.body.appendChild(settingsOverlay);
             }
 
-            // 3. Tạo Modal Sổ tay ghi chú lâm sàng nếu chưa tồn tại
+            // 4. Tạo Modal Sổ tay ghi chú lâm sàng nếu chưa tồn tại
             if (!document.getElementById('notes-modal-overlay')) {
                 const notesOverlay = document.createElement('div');
                 notesOverlay.id = 'notes-modal-overlay';
                 notesOverlay.className = 'fixed inset-0 z-[1200] hidden bg-black/85 backdrop-blur-2xl flex items-center justify-center p-4';
                 notesOverlay.innerHTML = `
                     <div class="bg-gradient-to-b from-[#0f172a] to-[#0b0f19] border border-white/10 shadow-2xl rounded-3xl w-full max-w-4xl overflow-hidden transform scale-95 transition-all duration-300">
-                        <!-- Header Modal -->
                         <div class="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-lg">
@@ -210,9 +209,7 @@
                             </button>
                         </div>
 
-                        <!-- Body Modal -->
                         <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 max-h-[500px] overflow-y-auto">
-                            <!-- Form điền ghi chú mới -->
                             <div class="lg:col-span-1 p-5 rounded-2xl bg-white/5 border border-white/10 flex flex-col gap-4">
                                 <h3 class="text-sm font-bold text-white border-b border-white/10 pb-2 flex items-center gap-2">
                                     <i class="fas fa-pen-nib text-indigo-400"></i> Thêm Ghi Chú Mới
@@ -231,13 +228,12 @@
                                         <option value="Bệnh Học">Bệnh Học</option>
                                         <option value="Ngoại Ngữ">Ngoại Ngữ</option>
                                         <option value="Y học cổ truyền">Y học cổ truyền</option>
-                                        <option value="Lâm Sàng">Phục hồi chức năng</option>
+                                        <option value="Phục hồi chức năng">Phục hồi chức năng</option>
                                     </select>
                                 </div>
                                 <button onclick="saveNewNote()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-xs transition shadow-lg shadow-indigo-500/25">+ Thêm Ghi Chú</button>
                             </div>
 
-                            <!-- Grid danh sách các ghi chú đã lưu -->
                             <div class="lg:col-span-2 flex flex-col">
                                 <div class="flex justify-between items-center mb-4">
                                     <h3 class="text-sm font-bold text-white flex items-center gap-2">
@@ -255,7 +251,7 @@
                 document.body.appendChild(notesOverlay);
             }
 
-            // 4. Tạo Thanh điều hướng dưới Mobile nếu chưa tồn tại
+            // 5. Tạo Thanh điều hướng dưới Mobile nếu chưa tồn tại
             if (!document.querySelector('.mobile-bottom-nav')) {
                 const mobileNav = document.createElement('div');
                 mobileNav.className = 'mobile-bottom-nav';
@@ -296,9 +292,8 @@
             };
             document.documentElement.style.setProperty('--nut', themeColors[themeName] || '#6366f1');
             
-            // Lưu cấu hình
             localStorage.setItem('selectedTheme', themeName);
-            triggerNiceSound(); // Phát âm thanh phản hồi thông minh tăng dần
+            triggerNiceSound();
         }
 
         // --- ÂM THANH THÔNG BÁO WEB AUDIO API ---
@@ -328,8 +323,6 @@
                 }
 
                 const now = ctx.currentTime;
-
-                // 3 nốt tăng dần dễ chịu
                 playTone(523.25, now, 0.12);      // C5
                 playTone(659.25, now + 0.08, 0.12); // E5
                 playTone(783.99, now + 0.16, 0.15); // G5
@@ -462,7 +455,6 @@
                 btnText.style.display = "none";
                 loader.style.display = "inline-block";
 
-                // Gộp thông tin liên hệ gửi lên Google Sheets thông qua API POST
                 const fullFeedbackMsg = `[GÓP Ý - LIÊN HỆ] Người gửi: ${nameVal} (${emailVal}) | Nội dung: ${feedbackVal}`;
                 const formData = new URLSearchParams();
                 formData.append('wish', fullFeedbackMsg);
@@ -586,9 +578,7 @@
 
         // --- SỬA LỖI SAO CHÉP EMAIL HOẠT ĐỘNG HOÀN HẢO Ở MỌI TRANG ---
         function copyEmail() {
-            const emailStr = "dantruong6904@gmail.com";
-            
-            // Ưu tiên sử dụng Clipboard API hiện đại của trình duyệt
+            const emailStr = "dantruongag.phcn@gmail.com";
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(emailStr)
                     .then(() => {
@@ -603,12 +593,10 @@
         }
         window.copyEmail = copyEmail;
 
-        // Hàm fallback phòng hờ thiết bị cũ / iframe chặn quyền clipboard
         function fallbackCopyMethod(text) {
             try {
                 const el = document.createElement('textarea');
                 el.value = text;
-                // Tránh lỗi scroll trang khi focus vào phần tử tạm
                 el.style.position = 'fixed';
                 el.style.top = '0';
                 el.style.left = '0';
@@ -713,12 +701,14 @@
                     <div id="login-btn" class="w-full mt-8 mb-4 px-6 border-b border-gray-800 pb-4"></div>
                     <a href="/index.html"><i class="fas fa-home"></i> TRANG CHỦ</a>
                     ${isLoggedIn ? `
-                        <div class="px-6 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest">Môn Học Thành Viên</div>
-                        <a href="/tienganh/tienganh.html"><i class="fas fa-language"></i> Tiếng Anh</a>
+                        <div class="px-6 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest">Môn Học nổi bật</div>
+                        <a href="/tienganh/tienganh.html"><i class="fas fa-language"></i> Ngoại ngữ</a>
                         <a href="/giai_phau/giai_phau.html"><i class="fas fa-dna"></i> Giải Phẫu</a>
                         <a href="/benhhoc/benhhoc.html"><i class="fas fa-stethoscope"></i> Bệnh Học</a>
+                        <a href="/PHCN/phuc_hoi_chuc_nang.html"><i class="fas fa-stethoscope"></i> Phục Hồi Chức Năng</a>
                         <div class="px-6 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest">Công cụ</div>
                         <a href="javascript:void(0);" onclick="openNotesModal()"><i class="fas fa-notes-medical"></i> Sổ tay ghi chú</a>
+                        <a href="/yhoccotruyen/tra_cuu_huyet.html"><i class="fas fa-hand-sparkles"></i> Hệ thống tra cứu huyệt</a>
                         <a href="javascript:void(0);" onclick="openSettings()"><i class="fas fa-cog"></i> Cài đặt hệ thống</a>
                     ` : ''}
                     <a href="javascript:void(0);" onclick="showContact()"><i class="fas fa-phone"></i> LIÊN HỆ</a>
@@ -740,27 +730,40 @@
                 </div>
             `;
 
+            // STREAMING_CHUNK: Khởi tạo mã nguồn Footer tương thích tốt hơn với di động...
             const footerHTML = `
                 <footer class="main-footer">
                     <div class="footer-content">
-                        <div class="footer-logo">
-                            <a href="/index.html">
-                                <img src="/hinhanh/logo_web.png" alt="Logo" onerror="this.onerror=null; this.src='https://placehold.co/150x150/4f46e5/ffffff?text=DT'"/>
-                            </a>
+                        <div class="footer-brand">
+                            <div class="footer-logo">
+                                <a href="/index.html">
+                                    <img src="/hinhanh/logo_web.png" alt="Logo" onerror="this.onerror=null; this.src='https://placehold.co/150x150/4f46e5/ffffff?text=DT'"/>
+                                </a>
+                            </div>
+                            <p><b>dantruongag.id.vn</b></p>
                         </div>
-                        <div class="footer-links">
-                            <a href="/index.html">Trang chủ</a>
-                            ${isLoggedIn ? `
-                                <a href="javascript:void(0);" onclick="openNotesModal()">Sổ tay ghi chú</a>
-                                <a href="javascript:void(0);" onclick="openSettings()">Cài đặt hệ thống</a>
-                            ` : ''}
-                            <a href="javascript:void(0);" onclick="showContact()">Liên hệ</a>
-                            <a href="javascript:void(0);" onclick="showFeedback()">Góp ý</a>
+                        
+                        <div>
+                            <h3 class="footer-column-title">Liên Kết Nhanh</h3>
+                            <div class="footer-links">
+                                <a href="/index.html"><i class="fas fa-home text-indigo-400"></i> Trang chủ</a>
+                                ${isLoggedIn ? `
+                                    <a href="javascript:void(0);" onclick="openNotesModal()"><i class="fas fa-edit text-teal-400"></i> Ghi chú</a>
+                                    <a href="/yhoccotruyen/tra_cuu_huyet.html"><i class="fas fa-search-plus text-emerald-400"></i> Tra cứu huyệt</a>
+                                    <a href="javascript:void(0);" onclick="openSettings()"><i class="fas fa-cog text-amber-400"></i> Cài đặt</a>
+                                ` : ''}
+                                <a href="javascript:void(0);" onclick="showContact()"><i class="fas fa-address-book text-blue-400"></i> Liên hệ</a>
+                                <a href="javascript:void(0);" onclick="showFeedback()"><i class="fas fa-comment-dots text-pink-400"></i> Góp ý</a>
+                            </div>
                         </div>
-                        <div class="footer-social">
-                            <a href="https://web.facebook.com/dantruongag/" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                            <a href="https://www.instagram.com/dantruongag/" target="_blank"><i class="fab fa-instagram"></i></a>
-                            <a href="https://www.tiktok.com/@dantruongag" target="_blank"><i class="fab fa-tiktok"></i></a>
+
+                        <div class="footer-social-wrapper">
+                            <h3 class="footer-column-title">Liên Kết Mạng Xã Hội</h3>
+                            <div class="footer-social">
+                                <a href="https://web.facebook.com/dantruongag/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                                <a href="https://www.instagram.com/dantruongag/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                                <a href="https://www.tiktok.com/@dantruongag" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                            </div>
                         </div>
                     </div>
                 </footer>
@@ -804,9 +807,8 @@
                 </span>
             `;
 
-            // Kiểm tra thời gian thực: chỉ hiển thị nút sinh nhật vào ngày 18 tháng 07 hàng năm
             const today = new Date();
-            const isBirthday = (today.getDate() === 18 && today.getMonth() === 6); // Ngày 18, tháng 7 (Tháng 7 có index là 6 trong JS)
+            const isBirthday = (today.getDate() === 18 && today.getMonth() === 6); 
             
             let birthdayBtnHTML = '';
             if (isBirthday) {
@@ -833,7 +835,6 @@
             const savedName = localStorage.getItem('loggedInUser');
             const guestLanding = document.getElementById('guest-landing-info');
 
-            // Tải hồ sơ người dùng
             const savedProfile = localStorage.getItem('userProfile');
             if (savedProfile) {
                 userProfile = JSON.parse(savedProfile);
@@ -853,7 +854,6 @@
             }
         }
 
-        // Cập nhật giao diện Đăng nhập
         function updateLoginUI() {
             const mobileLoginBtn = document.getElementById('login-btn');
             const desktopLoginBtn = document.getElementById('desktop-login-btn');
@@ -899,7 +899,6 @@
         }
         window.logout = logout;
 
-        // Cập nhật bảng xếp hạng trên Dashboard
         function updateDashboardUI() {
             const dashboardAvatar = document.getElementById('dashboard-avatar');
             if (dashboardAvatar) {
@@ -993,7 +992,6 @@
                 return 3;
             }
 
-            // Đồng bộ trạng thái chấm slider
             function getMaxIndex() {
                 return Math.max(0, items.length - getVisibleCount());
             }
@@ -1027,6 +1025,7 @@
                 row.style.transform = `translate3d(${currentTranslate}px, 0, 0)`;
             }
 
+            // Fix kích thước slider di động chuẩn xác hơn
             function getSlideWidth() {
                 if (items.length === 0) return 0;
                 return items[0].getBoundingClientRect().width + 24;
@@ -1244,7 +1243,6 @@
         window.saveNewNote = saveNewNote;
 
         function copyNoteContent(text) {
-            // Tích hợp hệ thống sao chép chuẩn tối ưu
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text)
                     .then(() => {
@@ -1292,7 +1290,6 @@
             if (modal) {
                 modal.classList.remove('hidden');
                 
-                // Điền thông tin cá nhân hiện tại vào các ô input
                 document.getElementById('settings-name-input').value = userProfile.name;
                 document.getElementById('settings-phone-input').value = userProfile.phone || "";
                 document.getElementById('settings-birthday-input').value = userProfile.birthday || "";
@@ -1322,11 +1319,9 @@
             const wishContent = textarea.value.trim();
             const sendBtn = document.getElementById('nut_gui_loi_chuc');
             
-            // Đặt trạng thái đang tải lên nút
             sendBtn.disabled = true;
             sendBtn.innerHTML = `Đang gửi... <i class="fas fa-spinner animate-spin ml-1"></i>`;
 
-            // Định cấu hình dữ liệu gửi đi (application/x-www-form-urlencoded)
             const formData = new URLSearchParams();
             formData.append('wish', wishContent);
 
@@ -1363,7 +1358,6 @@
                 }
             })
             .catch(err => {
-                // Fallback nếu có lỗi CORS từ trình duyệt nhưng bản ghi vẫn được lưu vào Sheets thành công
                 Swal.fire({
                     icon: 'success',
                     title: 'Đã gửi lời chúc! 🎉',
@@ -1425,7 +1419,6 @@
         }
         window.previewUserAvatar = previewUserAvatar;
 
-        // Chọn preset avatar và phát âm thanh
         function selectPresetAvatar(url) {
             document.getElementById('settings-avatar-preview').src = url;
             triggerNiceSound();
@@ -1476,7 +1469,6 @@
 
             updateLoginUI();
             updateDashboardUI();
-
             closeSettings();
 
             Swal.fire({
@@ -1612,7 +1604,6 @@
         function hideProtectedContent() {
             const el = document.getElementById('protected-content');
             if (el) {
-                // Thay vì ẩn hoàn toàn, ta nạp nội dung thông báo Đăng nhập (guest landing info) trực tiếp vào vùng chứa này
                 el.style.display = 'block';
                 el.innerHTML = `
                     <section id="guest-landing-info" class="py-20 bg-gradient-to-b from-[#0b0f19] to-[#080b12] text-center px-4">
@@ -1685,7 +1676,6 @@
                 if (result.isConfirmed) {
                     const { username, password } = result.value;
 
-                    // Hiển thị trạng thái đang xác thực
                     Swal.fire({
                         title: 'Hệ thống đang xác thực...',
                         text: 'Vui lòng chờ trong giây lát',
@@ -1697,7 +1687,6 @@
                         }
                     });
 
-                    // Gọi Google Apps Script qua API GET
                     const url = `${GOOGLE_APPS_SCRIPT_URL}?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
                     
                     fetch(url)
@@ -1705,8 +1694,6 @@
                         .then(data => {
                             if (data.success) {
                                 localStorage.setItem('loggedInUser', data.name);
-                                
-                                // Cập nhật tên hiển thị trong hồ sơ tạm thời
                                 userProfile.name = data.name;
                                 localStorage.setItem('userProfile', JSON.stringify(userProfile));
 
@@ -1746,26 +1733,64 @@
         }
         window.showLoginForm = showLoginForm;
 
+        // --- ĐỒNG BỘ ĐÓNG/MỞ MENU VÀ BACKDROP TRÊN DI ĐỘNG ---
         function setupNavigationEvents() {
             const menuBar = document.getElementById("menu-bar");
             const sideNav = document.getElementById("side-nav");
             const closeSideNavBtn = document.getElementById("close-sidenav-btn");
+            const backdrop = document.getElementById("side-nav-backdrop");
+
+            function openSideMenu() {
+                menuBar?.classList.add("active");
+                sideNav?.classList.add("active");
+                backdrop?.classList.add("active");
+                document.body.style.overflow = "hidden"; // Ngăn cuộn phông nền trang chính
+            }
 
             function closeSideMenu() {
                 menuBar?.classList.remove("active");
                 sideNav?.classList.remove("active");
+                backdrop?.classList.remove("active");
+                document.body.style.overflow = ""; // Khôi phục cuộn trang chính
             }
 
             if (menuBar && sideNav) {
-                menuBar.onclick = () => {
-                    menuBar.classList.toggle("active");
-                    sideNav.classList.toggle("active");
+                menuBar.onclick = (e) => {
+                    e.stopPropagation();
+                    if (sideNav.classList.contains("active")) {
+                        closeSideMenu();
+                    } else {
+                        openSideMenu();
+                    }
                 };
             }
             
             if (closeSideNavBtn) {
-                closeSideNavBtn.onclick = closeSideMenu;
+                closeSideNavBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    closeSideMenu();
+                };
             }
+
+            if (backdrop) {
+                backdrop.onclick = closeSideMenu;
+            }
+
+            // TÍCH HỢP GESTURE VUỐT CHẠM (TOUCH SWIPES) ĐỂ ĐÓNG MENU DI ĐỘNG NHANH
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            sideNav?.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            sideNav?.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                // Nếu vuốt sang phải một khoảng > 60px thì đóng Menu
+                if (touchEndX - touchStartX > 60) {
+                    closeSideMenu();
+                }
+            }, { passive: true });
         }
 
         // --- TRỢ LÝ ẢO MASCOT THÔNG MINH ---
@@ -1793,9 +1818,9 @@
                 } else if (action === 'other') {
                     showSubMenu();
                 } else if (action === 'q_search') {
-                    showAnswer("Tìm kiếm bài học", "Bạn vui lòng nhấp vào biểu tượng kính lúp ở góc trên bên phải để mở công cụ tìm kiếm Sau đó nhập từ khóa và nhấn Enter để tìm kiếm.");
+                    showAnswer("Tìm kiếm bài học", "Bạn vui lòng nhấp vào biểu tượng kính lúp ở góc trên bên phải để mở công cụ tìm kiếm. Sau đó nhập từ khóa và xem các kết xuất hiện ra tức thì.");
                 } else if (action === 'q_password') {
-                    showAnswer("Tài khoản đăng nhập", "Bạn chưa có tài khoản đăng nhập hoặc mật khẩu không đúng. Vui lòng liên hệ trực tiếp với để được cấp lại tài khoản hoặc mặt khẩu.");
+                    showAnswer("Tài khoản đăng nhập", "Bạn chưa có tài khoản đăng nhập hoặc mật khẩu không đúng. Vui lòng liên hệ trực tiếp để được cấp lại tài khoản.");
                 } else if (action === 'main_menu') {
                     showMainMenu();
                 }
@@ -1810,10 +1835,14 @@
                     <div class="assistant-title flex items-center gap-1.5 text-indigo-400">
                         <i class="fas fa-robot text-xs animate-pulse"></i> <span>Trợ lý ảo</span>
                     </div>
-                    <p class="text-slate-300 mb-2 text-[11px]">Chào bạn, tôi luôn sẫn sàng hỗ trợ bạn</p>
+                    <p class="text-slate-300 mb-2 text-[11px]">Chào bạn, tôi luôn sẵn sàng hỗ trợ bạn</p>
                     ${isLogged ? `
                         <button onclick="handleAssistantAction('notes')" class="assistant-btn">
                             <i class="fas fa-notes-medical text-[10px] text-teal-400"></i> Mở Sổ tay Ghi chú
+                        </button>
+                        <button onclick="window.location.href='tracuuhuyet.html'" class="assistant-btn">
+                            <i class="fas fa-hand-sparkles text-[10px] text-red-500"></i>
+                            Mở Hệ thống tra cứu huyệt
                         </button>
                         <button onclick="handleAssistantAction('settings')" class="assistant-btn">
                             <i class="fas fa-cog text-[10px] text-amber-400"></i> Mở phần Cài đặt
@@ -1832,7 +1861,6 @@
                 openAssistant();
             }
 
-            // Hiển thị danh mục phụ giải đáp
             function showSubMenu() {
                 speech.innerHTML = `
                     <div class="assistant-title flex items-center gap-1.5 text-amber-400">
@@ -1840,7 +1868,6 @@
                     </div>
                     <button onclick="handleAssistantAction('q_search')" class="assistant-btn">❓ Tìm kiếm tài liệu như thế nào?</button>
                     <button onclick="handleAssistantAction('q_password')" class="assistant-btn">🔑 Tôi quên mật khẩu đăng nhập?</button>
-                    <button onclick="handleAssistantAction('q_account')" class="assistant-btn">🔑 Tôi không có tài khoản?</button>
                     <button onclick="handleAssistantAction('main_menu')" class="assistant-btn assistant-btn-back mt-2">
                         <i class="fas fa-arrow-left text-[10px]"></i> Quay lại
                     </button>
@@ -1870,8 +1897,9 @@
             document.addEventListener('click', () => { closeAssistant(); });
         }
 
+        // --- CÔNG CỤ TÌM KIẾM NÂNG CAO (KẾT NỐI REALTIME DATABASE QUA FIREBASE TỪ DULIEU.JS) ---
         async function initAdvancedSearchEngine() {
-            // ================= CONFIG =================
+            // ================= CONFIG & DOM SETUP =================
             const config = {
                 searchContainerId: 'search-container',
                 searchFormId: 'search-form',
@@ -1883,18 +1911,17 @@
                     <div class="login-prompt-inline flex flex-col items-center justify-center text-center p-6 bg-slate-800/40 rounded-2xl border border-white/5">
                         <i class="fas fa-lock text-3xl text-amber-400 mb-3 animate-pulse"></i>
                         <h4 class="text-sm font-bold text-white mb-1">Yêu Cầu Đăng Nhập</h4>
-                        <p class="text-xs text-gray-400 mb-4 max-w-xs">Bạn cần đăng nhập tài khoản để tìm kiếm và xem kết quả.</p>
+                        <p class="text-xs text-gray-400 mb-4 max-w-xs">Bạn cần đăng nhập tài khoản để tìm kiếm và xem kết quả học tập.</p>
                         <button onclick="showLoginForm()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-xs transition shadow-lg shadow-indigo-500/25">Đăng nhập ngay</button>
                     </div>`,
 
-                noResultsHTML: `<p class="p-6 text-center text-gray-400 text-xs"><i class="fas fa-search-minus text-xl mb-2 block text-gray-500"></i>Không tìm thấy kết quả nào phù hợp.</p>`
+                noResultsHTML: `<p class="p-6 text-center text-gray-400 text-xs"><i class="fas fa-search-minus text-xl mb-2 block text-gray-500"></i>Không tìm thấy kết quả phù hợp với từ khóa.</p>`
             };
 
             const state = {
                 isLoggedIn: () => !!localStorage.getItem('loggedInUser')
             };
 
-            // ================= DOM =================
             const searchContainer = document.getElementById(config.searchContainerId);
             const searchInput = document.getElementById(config.searchInputId);
             const closeSearchBtn = document.getElementById(config.closeSearchBtnId);
@@ -1918,344 +1945,108 @@
                     .replace(/Đ/g, "D");
             };
 
-            // ================= DATA =================
+            // Dữ liệu mặc định ban đầu
             let searchableContent = [
                 {
                     title: normalizeText('Trang Chủ'),
-                    description: 'Quay về trang chủ của website.',
+                    description: 'Quay về trang chủ của website học tập.',
                     url: '/index.html',
-                    icon: 'fa-home'
+                    icon: 'fa-home',
+                    category: 'Hệ thống'
                 },
                 {
-                    title: normalizeText('Cơ sở dữ liệu '),
-                    description: 'Hệ thống cơ sở dữ liệu lưu trữ.',
+                    title: normalizeText('Cơ sở dữ liệu'),
+                    description: 'Hệ thống cơ sở dữ liệu lưu trữ các câu hỏi và tài liệu.',
                     url: '/dulieu.html',
-                    icon: 'fa-database'
+                    icon: 'fa-database',
+                    category: 'Hệ thống'
                 },
                 {
-                    title: normalizeText('Hệ thống tạo câu hỏi '),
-                    description: 'Hệ thống hỗ trợ tạo đề thi câu hỏi y khoa.',
+                    title: normalizeText('Hệ thống tạo câu hỏi'),
+                    description: 'Công cụ hỗ trợ thêm tài liệu và đề ôn tập lâm sàng.',
                     url: '/formnhapcauhoi.html',
-                    icon: 'fa-pen-to-square'
-                },
-                {
-                    title: normalizeText('Góp Ý'),
-                    description: 'Nhập ý kiến đóng góp của bạn tại đây.',
-                    url: '/gopy.html',
-                    icon: 'fa-comment-dots'
+                    icon: 'fa-pen-to-square',
+                    category: 'Hệ thống'
                 }
             ];
 
-            // --- Dynamic Content Indexing ---
-            const pagesToIndex = [
-                // --- Bệnh học ---
-                '/benhhoc/tailieu/benh_alzhemer.html',
-                '/benhhoc/tailieu/Parkinson.html',
-                '/benhhoc/tailieu/HC_duong_ham_co_tay.html',
-                '/benhhoc/tailieu/liet_mat_ngoai_bien.html',
-                '/benhhoc/tailieu/dau_day_than_kinh_tam_thoa.html',
-                '/benhhoc/tailieu/loet_da_day_ta_trang.html', 
-                '/benhhoc/tailieu/HC_trao_nguoc_da_day_thuc_quan.html', 
-                '/benhhoc/tailieu/thung_da_day.html',
-                '/benhhoc/tailieu/HC_tac_ruot.html',
-                '/benhhoc/tailieu/viem_ruot_thua_cap.html',
-                '/benhhoc/tailieu/soi_tui_mat.html',
-                '/benhhoc/tailieu/viem_gan_toi_cap.html',
-                '/benhhoc/tailieu/viem_phoi_cong_dong.html',
-                '/benhhoc/tailieu/hen_phe_quan.html',
-                '/benhhoc/tailieu/viem_VA.html',
-                '/benhhoc/tailieu/tang_huyet_ap.html',
-                '/benhhoc/tailieu/suy_gian_tinh_mach_chi_duoi.html',
-                '/benhhoc/tailieu/benh_than_man.html',
-                '/benhhoc/tailieu/dai_thao_duong.html', 
-                '/benhhoc/tailieu/hoi_chung_cushing.html',
-                '/benhhoc/tailieu/gout.html',
-                '/benhhoc/tailieu/HC_ De_Quuervain.html',
-                '/benhhoc/tailieu/HC_ngon_tay_lo_xo.html',
-                '/benhhoc/tailieu/HC_duong_ham_co_tay.html',
-                '/benhhoc/tailieu/Golfer`s elbow.html', 
-                '/benhhoc/tailieu/Tennis elbow.html',
-                '/benhhoc/tailieu/ton_thuong_day_chang_cheo.html',    
-                '/benhhoc/tailieu/loang_xuong.html',
-                '/benhhoc/tailieu/viem_gan_sieu_vi.html',
-                '/benhhoc/tailieu/lao_phoi.html',
-                '/benhhoc/tailieu/benh_uon_van.html',
-                '/benhhoc/tailieu/nhiem_khuan_ho_hap_cap_tinh_tre_em.html',
-                '/benhhoc/tailieu/lupus_ban_do_he_thong.html',
-                '/benhhoc/tailieu/viem_ket_mac.html',
-                '/benhhoc/tailieu/benh_thalasemia.html',
-                '/benhhoc/tailieu/benh_bach_tang.html',
-                '/benhhoc/tailieu/HC_down.html',
-                '/benhhoc/tailieu/nhiem_doc_thai_nghen.html',
+            // --- TÍCH HỢP ĐỒNG BỘ REALTIME TỪ FIREBASE (LINKS) ---
+            const loadFirebaseDatabaseSync = () => {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
+                    authDomain: "dulieuweb-6541e.firebaseapp.com",
+                    projectId: "dulieuweb-6541e",
+                    storageBucket: "dulieuweb-6541e.firebasestorage.app",
+                    messagingSenderId: "215480268517",
+                    appId: "1:215480268517:web:16600eafd6839fee5dc60c"
+                };
 
-                // --- Giải phẫu Chi trên ---
-                '/giai_phau/chi_tren/co_delta.html',
-                '/giai_phau/chi_tren/co_tron_lon.html',
-                '/giai_phau/chi_tren/co_tron_be.html',
-                '/giai_phau/chi_tren/co_tren_gai.html',
-                '/giai_phau/chi_tren/co_duoi_gai.html',
-                '/giai_phau/chi_tren/co_duoi_vai.html',
-                '/giai_phau/chi_tren/co_nhi_dau_canh_tay.html',
-                '/giai_phau/chi_tren/co_tam_dau_canh_tay.html',
-                '/giai_phau/chi_tren/co_canh_tay.html',
-                '/giai_phau/chi_tren/co_qua_canh_tay.html',
-                '/giai_phau/chi_tren/co_khuyu.html',
-                '/giai_phau/chi_tren/co_canh_tay_quay.html',
-                '/giai_phau/chi_tren/co_sap_tron.html',
-                '/giai_phau/chi_tren/co_sap_vuong.html',
-                '/giai_phau/chi_tren/co_ngua.html',
-                '/giai_phau/chi_tren/co_gap_co_tay_tru.html',
-                '/giai_phau/chi_tren/co_gap_co_tay_quay.html',
-                '/giai_phau/chi_tren/co_gan_tay_dai.html',
-                '/giai_phau/chi_tren/co_gap_cac_ngon_nong.html',
-                '/giai_phau/chi_tren/co_gap_cac_ngon_sau.html',
-                '/giai_phau/chi_tren/co_gap_ngon-cai_dai.html',
-                '/giai_phau/chi_tren/co_gap_ngon_cai_ngan.html',
-                '/giai_phau/chi_tren/co_gap_ngon_ut.html',
-                '/giai_phau/chi_tren/co_duoi_co_tay_quay_dai.html',
-                '/giai_phau/chi_tren/co_duoi_co_tay_quay_ngan.html',
-                '/giai_phau/chi_tren/co_duoi_co_tay_tru.html',
-                '/giai_phau/chi_tren/co_duoi_chung_cac_ngon.html',
-                '/giai_phau/chi_tren/co_duoi_ngon_cai_dai.html',
-                '/giai_phau/chi_tren/co_duoi_ngon_cai_ngan.html',
-                '/giai_phau/chi_tren/co_duoi_ngon_tro.html',
-                '/giai_phau/chi_tren/co_duoi_ngon_ut.html',
-                '/giai_phau/chi_tren/co_giun.html',
-                '/giai_phau/chi_tren/co_gan_cot_gan_tay.html',
-                '/giai_phau/chi_tren/co_gan_cot_mu_tay.html',
-                '/giai_phau/chi_tren/co_dang_ngon_cai_dai.html',
-                '/giai_phau/chi_tren/co_dang_ngon_cai_ngan.html',
-                '/giai_phau/chi_tren/co_dang_ngon_ut.html',
-                '/giai_phau/chi_tren/co_doi_ngon_cai.html',
-                '/giai_phau/chi_tren/co_doi_ngon_ut.html',
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'v2-database-school';
 
-                // --- Giải phẫu Chi dưới ---
-                '/giai_phau/chi_duoi/co_that_lung_chau.html',
-                '/giai_phau/chi_duoi/co_mong_lon.html',
-                '/giai_phau/chi_duoi/co_mong_be.html',
-                '/giai_phau/chi_duoi/co_mong_nho.html',
-                '/giai_phau/chi_duoi/co_cang_mac_dui.html',
-                '/giai_phau/chi_duoi/nhom_co_xoay_ngoai_hong.html',
-                '/giai_phau/chi_duoi/nhom_co_khep.html',
-                '/giai_phau/chi_duoi/co_may.html',
-                '/giai_phau/chi_duoi/co_tu_dau_dui.html',
-                '/giai_phau/chi_duoi/co_tam_dau_dui.html',
-                '/giai_phau/chi_duoi/co_luoc.html',
-                '/giai_phau/chi_duoi/co_thon.html',
-                '/giai_phau/chi_duoi/co_chay_truoc.html',
-                '/giai_phau/chi_duoi/co_chay_sau.html',
-                '/giai_phau/chi_duoi/co_bung_chan.html',
-                '/giai_phau/chi_duoi/co_dep.html',
-                '/giai_phau/chi_duoi/co_gan_chan_gay.html',
-                '/giai_phau/chi_duoi/co_khoeo.html',
-                '/giai_phau/chi_duoi/co_mac_dai.html',
-                '/giai_phau/chi_duoi/co_mac_ngan.html',
-                '/giai_phau/chi_duoi/co_mac_ba.html',
-                '/giai_phau/chi_duoi/co_gap_ngon_chan_dai.html',
-                '/giai_phau/chi_duoi/co_gap_ngon_chan_ngan.html',
-                '/giai_phau/chi_duoi/co_gap_ngon_chan_cai_dai.html',
-                '/giai_phau/chi_duoi/co_gap_ngon_chan_cai_ngan.html',
-                '/giai_phau/chi_duoi/co_duoi_ngon_chan_dai.html',
-                '/giai_phau/chi_duoi/co_duoi_ngon_chan_ngan.html',
-                '/giai_phau/chi_duoi/co_duoi_ngon_chan_cai_dai.html',
-                '/giai_phau/chi_duoi/co_duoi_ngon_chan_cai_ngan.html',
-                '/giai_phau/chi_duoi/co_dang_ngon_chan_cai.html',
-                '/giai_phau/chi_duoi/co_khep_ngon_chan_cai.html',
-                '/giai_phau/chi_duoi/co_gan-cot_mu_chan.html',
-                '/giai_phau/chi_duoi/co_gian_cot_gan_chan.html',
-                '/giai_phau/chi_duoi/co_giun.html',
-                '/giai_phau/chi_duoi/co_vuong_gan_chan.html',
-                '/giai_phau/chi_duoi/co_gap_ngon_chan_ut_ngan.html',
-                '/giai_phau/chi_duoi/co_dang_ngon_chan_ut.html',
+                // Nạp động thư viện Firebase
+                import("https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js")
+                    .then(({ initializeApp }) => {
+                        const app = initializeApp(firebaseConfig);
+                        return Promise.all([
+                            import("https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"),
+                            import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js")
+                        ]);
+                    })
+                    .then(([{ getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken }, { getFirestore, collection, onSnapshot }]) => {
+                        const auth = getAuth();
+                        const db = getFirestore();
 
-                // --- Giải phẫu Lưng ---
-                '/giai_phau/lung/co_lung_rong.html',
-                '/giai_phau/lung/co_tram_lon.html',
-                '/giai_phau/lung/co_tram_be.html',
-                '/giai_phau/lung/co_nang_vai.html',
-                '/giai_phau/lung/co_rang_cua_sau.html',
-                '/giai_phau/lung/co_cuc_dai.html',
-                '/giai_phau/lung/co_chau_suon.html',
-                '/giai_phau/lung/co_gai_song.html',
-                '/giai_phau/lung/co_nhieu_chan.html',
-                '/giai_phau/lung/co_xoay.html',
-                '/giai_phau/lung/co_gian_gai.html',
-                '/giai_phau/lung/co_gian_ngang.html',
-                '/giai_phau/lung/co_nang_suon.html',
+                        const authUser = async () => {
+                            try {
+                                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                                    await signInWithCustomToken(auth, __initial_auth_token);
+                                } else {
+                                    await signInAnonymously(auth);
+                                }
+                            } catch (e) {
+                                console.warn("Lỗi kết nối Firebase Auth khi thiết lập tìm kiếm");
+                            }
+                        };
 
-                // --- Giải phẫu Đầu-Mặt-Cổ ---
-                '/giai_phau/dau_mat_co/co_tran.html',
-                '/giai_phau/dau_mat_co/co_vong_mat.html',
-                '/giai_phau/dau_mat_co/co_cau_may.html',
-                '/giai_phau/dau_mat_co/co_manh_khanh.html',
-                '/giai_phau/dau_mat_co/co_mui.html',
-                '/giai_phau/dau_mat_co/co_vong_mieng.html',
-                '/giai_phau/dau_mat_co/co_nang_moi_tren.html',
-                '/giai_phau/dau_mat_co/co_nang_moi_tren_canh_mui.html',
-                '/giai_phau/dau_mat_co/co_go_ma_nho.html',
-                '/giai_phau/dau_mat_co/co_go_ma_lon.html',
-                '/giai_phau/dau_mat_co/co_mut.html',
-                '/giai_phau/dau_mat_co/co_nang_goc_mieng.html',
-                '/giai_phau/dau_mat_co/co_cuoi.html',
-                '/giai_phau/dau_mat_co/co_ha_moi_duoi.html',
-                '/giai_phau/dau_mat_co/co_can.html',
-                '/giai_phau/dau_mat_co/co_thai_duong.html',
-                '/giai_phau/dau_mat_co/co_chan_buom_trong.html',
-                '/giai_phau/dau_mat_co/co_chan_buom_ngoaoi.html',
-                '/giai_phau/dau_mat_co/co_bam_da_co.html',
-                '/giai_phau/dau_mat_co/co_uc_don_chum.html',
-                '/giai_phau/dau_mat_co/co_hai_than.html',
-                '/giai_phau/dau_mat_co/co_ham_mong.html',
-                '/giai_phau/dau_mat_co/co_tram_mong.html',
-                '/giai_phau/dau_mat_co/co_cam_mong.html',
-                '/giai_phau/dau_mat_co/co_uc_mong.html',
-                '/giai_phau/dau_mat_co/co_giap_mong.html',
-                '/giai_phau/dau_mat_co/co_vai_mong.html',
-                '/giai_phau/dau_mat_co/co_uc_giap.html',
-                '/giai_phau/dau_mat_co/co_thang_dau_truoc.html',
-                '/giai_phau/dau_mat_co/co_thang_dau_ben.html',
-                '/giai_phau/dau_mat_co/co_dai_dau.html',
-                '/giai_phau/dau_mat_co/co_dai_co.html',
-                '/giai_phau/dau_mat_co/co_bac__thang.html',
-                '/giai_phau/dau_mat_co/co_thang.html',
-                '/giai_phau/dau_mat_co/co_goi_dau.html',
-                '/giai_phau/dau_mat_co/co_goi_co.html',
-                '/giai_phau/dau_mat_co/co_ban_gai_co.html',
-                '/giai_phau/dau_mat_co/co_thang_dau_sau_lon.html',
-                '/giai_phau/dau_mat_co/co_thang_dau_sau_be.html',
-                '/giai_phau/dau_mat_co/co_cheo_dau_tren.html',
-                '/giai_phau/dau_mat_co/co_cheo_dau_duoi.html',
+                        onAuthStateChanged(auth, (user) => {
+                            if (user) {
+                                // ĐỒNG BỘ REALTIME TÀI LIỆU HỌC TẬP (COLLECTION 'LINKS')
+                                const linksRef = collection(db, 'artifacts', appId, 'public', 'data', 'links');
+                                onSnapshot(linksRef, (snap) => {
+                                    // Xóa bỏ tài liệu cũ đã được lưu trữ trong bộ nhớ đệm
+                                    searchableContent = searchableContent.filter(item => item.source !== 'firebase_links');
 
-                // --- HÓA HỌC ---
-                '/hoahoc/can_trong_am_dun_nuoc.html',
+                                    const firebaseLinks = snap.docs.map(doc => {
+                                        const data = doc.data();
+                                        return {
+                                            title: normalizeText(data.title || 'Tài liệu lý thuyết'),
+                                            description: `Chủ đề: ${data.topic || 'Y học'}`,
+                                            keywords: `${data.title} ${data.subject} ${data.topic} tai lieu ly thuyet`.toLowerCase(),
+                                            url: data.url || '#', // Chuyển hướng trực tiếp khi người dùng click
+                                            icon: 'fa-book-open',
+                                            category: data.subject || 'Tài Liệu',
+                                            source: 'firebase_links'
+                                        };
+                                    });
 
-                // --- Phục hồi chức năng ---
-                '/PHCN/phuc_hoi_chuc_nang.html',
-                // --- Phục hồi chức năng hô hấp ---
-                "/PHCN/PHCN_ho_hap/phuc_hoi_chuc_nang_ho_hap.html",
-                // --- Các kĩ thuật hô hấp ---
-                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/AFE_chu_dong.html",
-                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/dan_luu_tu_the.html",
-                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/huong_dan_ho.html",
-                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_co_hoanh.html",
-                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_mim_moi.html",
-                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_phoi_hop_van_dong_tay.html",
-                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_ra_manh_FET.html",
-                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_theo_ty_le_phan_so.html",
-                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_tung_thuy.html",
-                "/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/vo_rung.html",
+                                    searchableContent = [...searchableContent, ...firebaseLinks];
+                                    console.log("✅ Đã cập nhật realtime " + firebaseLinks.length + " tài liệu học tập vào bộ nhớ tìm kiếm.");
+                                }, (err) => console.error("Firebase Search Links sync error:", err));
+                            }
+                        });
 
-                // --- Phục hồi chức năng dựa vào cộng đồng ---
-                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_dua-Vao-cong_dong.html",
-                "/PHCN/PHCN_dua_vao_cong_dong/cham_soc_mom_cut.html",
-                "/PHCN/PHCN_dua_vao_cong_dong/dong_kinh_tre_em.html",
-                "/PHCN/PHCN_dua_vao_cong_dong/giao_tiep_voi_tre_giam_thinh_luc.html",
-                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_benh_phoi_man_tinh.html",
-                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_ban_chan_khoeo_bam_sinh.html",
-                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_nguoi_khuyet_tat_giam_chuc_nang_nhin.html",
-                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_benh_tam_than.html",
-                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_noi_lap_ngong_that_ngon.html",
-                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_sau_bong.html",
-                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_sau_TBMMN.html",
-                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_ton_thuong_tuy_song.html",
-                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_bai_nao.html",
-                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_cham_phat_trien_tri_tue.html",
-                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_cong_veo_cot_song.html",
-                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_trat_khop_hang_bam_sinh.html",
-                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_viem_khop_dang_thap.html",
-                "/PHCN/PHCN_dua_vao_cong_dong/phong_ngua_thuong_tat_thu_phat.html",
-                "/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_tu_ky.html",
-                "/PHCN/HĐTL/dung_cu_vltl.html",
-
-                // --- Vận động trị liệu ---
-                "/PHCN/Van_dong_tri_lieu/vandongtrilieu.html",
-                // --- Di động khớp ---
-                "/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop.html",
-                "/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop_vai.html", 
-                "/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop_khuyu.html",
-                "/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop_co_tay.html",
-                "/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop_ban_ngon_tay.html",
-                "/PHCN/Van_dong_tri_lieu/di_dong_khop/do_dong_khop_goi.html",    
-            
-                // --- ĐIỆN TRỊ LIỆU ---
-                "/PHCN/Điện trị liệu/dien_tri_lieu.html",
-                '/PHCN/Điện trị liệu/Hongngoai.html',
-                '/PHCN/Điện trị liệu/Parafin.html',
-                '/PHCN/Điện trị liệu/sieu_am.html',
-                '/PHCN/Điện trị liệu/kich_thich_lien_xuong.html',
-                '/PHCN/Điện trị liệu/Song_ngan.html',
-                '/PHCN/Điện trị liệu/laser_cong-suat_thap.html',
-                '/PHCN/Điện trị liệu/laser_noi_mach.html',
-                '/PHCN/Điện trị liệu/laser_cong_suat_cao.html',
-                '/PHCN/Điện trị liệu/dien_xung.html',
-                '/PHCN/Điện trị liệu/may_keo_cot_song.html',
-                '/PHCN/Điện trị liệu/nen_ep.html',
-                '/PHCN/Điện trị liệu/dien_truong_cao_ap.html',
-                '/PHCN/Điện trị liệu/xung_kich.html',
-                '/PHCN/Điện trị liệu/tu_truong.html',
-                '/PHCN/Điện trị liệu/oxy_cao_ap.html',
-            ];
-
-            const indexPage = async (url) => {
-                try {
-                    const response = await fetch(url);
-                    if (!response.ok) return null;
-
-                    const htmlText = await response.text();
-                    const doc = new DOMParser().parseFromString(htmlText, 'text/html');
-
-                    // ===== TITLE =====
-                    let titleText =
-                        doc.querySelector('h2.anatomy-title')?.textContent ||
-                        doc.querySelector('h1')?.textContent ||
-                        doc.querySelector('title')?.textContent ||
-                        url.split('/').pop().replace('.html', '');
-
-                    titleText = normalizeText(titleText.replace(/\(.*?\)/g, '').trim());
-
-                    // ===== KEYWORDS =====
-                    let keywords = '';
-
-                    const metaKeywords = doc.querySelector('meta[name="keywords"]');
-                    if (metaKeywords) {
-                        keywords = metaKeywords.getAttribute('content') || '';
-                    }
-
-                    const keywordsEl = doc.getElementById('keywords');
-                    if (!keywords && keywordsEl) {
-                        keywords = keywordsEl.textContent || '';
-                    }
-
-                    if (!keywords) {
-                        const paragraphs = doc.querySelectorAll('p');
-                        let text = '';
-                        paragraphs.forEach(p => text += p.textContent + ' ');
-                        keywords = text.slice(0, 300);
-                    }
-
-                    return {
-                        title: titleText,
-                        description: `Xem tài liệu: ${titleText}`,
-                        keywords: keywords.toLowerCase(),
-                        url: url,
-                        icon: 'fa-notes-medical'
-                    };
-
-                } catch (err) {
-                    console.warn("❌ Lỗi index:", url);
-                    return null;
-                }
+                        authUser();
+                    })
+                    .catch(err => {
+                        console.warn("Không thể thiết lập tìm kiếm nâng cao qua Firebase:", err);
+                    });
             };
 
             const buildFullSearchIndex = async () => {
-                console.log("🔍 Đang load dữ liệu...");
-                const results = await Promise.all(pagesToIndex.map(indexPage));
-                const valid = results.filter(x => x !== null);
-                searchableContent = [...searchableContent, ...valid];
-                console.log("✅ Tổng dữ liệu:", searchableContent.length);
+                loadFirebaseDatabaseSync();
             };
 
-            // ================= SEARCH =================
+            // ================= SEARCH PROCESS =================
             const performSearch = (query) => {
                 if (!query) {
                     suggestionsOutput.innerHTML = '';
@@ -2280,7 +2071,7 @@
                 renderSuggestions(results);
             };
 
-            // ================= UI =================
+            // ================= UI SUGGESTIONS RENDERER =================
             const renderSuggestions = (results) => {
                 if (results.length === 0) {
                     suggestionsOutput.innerHTML = config.noResultsHTML;
@@ -2289,15 +2080,27 @@
 
                 suggestionsOutput.innerHTML = '';
 
-                results.slice(0, 10).forEach(item => {
+                results.slice(0, 15).forEach(item => {
                     const div = document.createElement('div');
-                    div.className = 'suggestion-item_search';
+                    div.className = 'suggestion-item_search flex items-center gap-4 p-3.5 hover:bg-slate-800/60 rounded-2xl border border-transparent hover:border-indigo-500/20 transition-all duration-300 cursor-pointer';
+
+                    const categoryBadgeColor = item.icon === 'fa-book-open' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
 
                     div.innerHTML = `
-                        <div class="icon"><i class="fas ${item.icon}"></i></div>
-                        <div>
-                            <h4>${item.title}</h4>
-                            <p class="text-xs opacity-70">${item.description}</p>
+                        <div class="icon w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-slate-300 border border-white/5 shadow-inner">
+                            <i class="fas ${item.icon}"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded border ${categoryBadgeColor}">
+                                    ${item.category}
+                                </span>
+                            </div>
+                            <h4 class="text-sm font-bold text-white truncate leading-snug">${item.title}</h4>
+                            <p class="text-xs text-gray-400 truncate mt-0.5">${item.description}</p>
+                        </div>
+                        <div class="text-gray-500 group-hover:text-white transition">
+                            <i class="fas fa-arrow-right text-xs"></i>
                         </div>
                     `;
 
@@ -2309,7 +2112,7 @@
                 });
             };
 
-            // ================= EVENT =================
+            // ================= EVENT LISTENING =================
             const openSearch = () => {
                 searchContainer.classList.add('active');
                 searchInput.focus();
@@ -2333,7 +2136,6 @@
 
         // --- LIFECYCLE INITIALIZER ---
         document.addEventListener("DOMContentLoaded", async function () {
-            // TỰ ĐỘNG NẠP SWEETALERT2 NẾU TRANG HIỆN TẠI CHƯA CÓ (SỬA LỖI CHO TẤT CẢ CÁC TRANG CON)
             if (!window.Swal) {
                 await new Promise((resolve) => {
                     const swalScript = document.createElement('script');
@@ -2344,14 +2146,11 @@
                 });
             }
 
-            // Khởi tạo động các phần tử trước khi tải các component khác
             renderDynamicElements();
-            
             loadComponents();
             showMasterBanner();
             initAmbientCanvas();
 
-            // Khôi phục chủ đề lưu trữ trước đó
             const savedTheme = localStorage.getItem('selectedTheme');
             if (savedTheme) {
                 changeAccentTheme(savedTheme);
@@ -2376,7 +2175,6 @@
                 bttBtn.onclick = () => { window.scrollTo({ top: 0, behavior: 'smooth' }); };
             }
 
-            // Gắn sự kiện click cho nút gửi lời chúc mừng sinh nhật
             const sendWishBtn = document.getElementById('nut_gui_loi_chuc');
             if (sendWishBtn) {
                 sendWishBtn.onclick = sendWish;
@@ -2385,6 +2183,5 @@
             initMascotInteractions();
             checkLoginStatus();
             
-            // Khởi tạo công cụ tìm kiếm thu thập dữ liệu thông minh
             await initAdvancedSearchEngine();
         });

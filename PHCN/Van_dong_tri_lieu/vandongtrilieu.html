@@ -1,236 +1,790 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vận động trị liệu - Nguyễn Mai Đan Trường</title>
-     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:image" content="/hinhanh/logo_web.png">
-    <meta property="og:url" content="https://dantruongag.id.vn">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" href="/hinhanh/logo_web.png" type="">
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/banner_trang_con.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <meta name="description" content="Khám phá tài liệu vận động trị liệu chuyên nghiệp.">
+    <meta property="og:description" content="Khám phá các kỹ thuật vật lý trị liệu và phục hồi chức năng chuyên sâu cùng Đan Trường.">
+    <meta property="og:image" content="https://placehold.co/1200x630/0f172a/38bdf8?text=Van+Dong+Tri+Lieu">
     
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <!-- External Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDKs (v11.6.1 Compatibility mode) -->
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+
     <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0f19;
+            color: #f1f5f9;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(56, 189, 248, 0.3);
+            box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.2);
+        }
+
+        /* Smooth Hide/Show animation */
+        .fade-in-up {
+            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Ambient background glows */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.12;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* Interactive pulse for active elements */
+        .active-pulse {
+            position: relative;
+        }
+        .active-pulse::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 4px;
+            border-radius: 2px;
+            background-color: currentColor;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
     </style>
 </head>
-    <body class="bg-gray-900">
-    <div id="header-placeholder"></div>
-    <div id="search-placeholder"></div>
-    <header class="main-banner_trang_con">
-        <div class="banner_trang_con-overlay"></div>
-        <div class="hbanner_trang_con-image-bg"></div>
+<body class="overflow-x-hidden min-h-screen flex flex-col selection:bg-cyan-500 selection:text-slate-900">
 
-        <div class="hbanner_trang_con-content">
-            <h1 class="main-title">VẬN ĐỘNG TRỊ LIỆU</h1>
-            <p class="sub-text">Vận động trị liệu là môn học áp dụng các kiến thức, kỹ năng vận động vào trong công tác phòng bệnh, điều trị và phục hồi chức năng</p>
-            <div class="hbanner_trang_con-tabs-wrap">
-                <div id="category-tabs" class="category-scroll" aria-label="Danh mục bài viết"></div>
+    <!-- Ambient background glows -->
+    <div class="glow-orb w-[500px] h-[500px] bg-cyan-500 top-[-100px] left-[-100px]"></div>
+    <div class="glow-orb w-[600px] h-[600px] bg-violet-600 bottom-[10%] right-[-150px]"></div>
+
+    <!-- MAIN HERO / INTRODUCTION SECTION -->
+    <section id="welcome" class="relative overflow-hidden pt-12 pb-8 flex items-center">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-center">
+            
+            <div class="space-y-6 fade-in-up">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/25 text-cyan-400 text-xs sm:text-sm font-semibold">
+                    <span class="flex h-2 w-2 rounded-full bg-cyan-400 animate-ping"></span>
+                    Đồng bộ hóa đám mây Firestore
+                </div>
+                
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15]">
+                    VẬN ĐỘNG <br class="hidden sm:inline">
+                    <span class="bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent">TRỊ LIỆU VẬT LÝ</span>
+                </h1>
+                
+                <p class="text-base sm:text-lg text-slate-400 max-w-xl mx-auto leading-relaxed">
+                    Khám phá kho lưu trữ tài liệu kỹ thuật y khoa và quy trình thực hành lâm sàng PHCN chuyên sâu của Nguyễn Mai Đan Trường.
+                </p>
+
+                <!-- Stats Quick view -->
+                <div class="pt-2 grid grid-cols-2 gap-4 max-w-xs mx-auto">
+                    <div class="p-3 rounded-2xl bg-slate-900/50 border border-slate-800/80 text-center">
+                        <p id="stats-tab-count" class="text-xl sm:text-2xl font-bold text-cyan-400">...</p>
+                        <p class="text-[10px] sm:text-xs text-slate-400 uppercase tracking-wider font-semibold">Chuyên Đề</p>
+                    </div>
+                    <div class="p-3 rounded-2xl bg-slate-900/50 border border-slate-800/80 text-center">
+                        <p id="stats-art-count" class="text-xl sm:text-2xl font-bold text-teal-400">...</p>
+                        <p class="text-[10px] sm:text-xs text-slate-400 uppercase tracking-wider font-semibold">Bài viết thực tế</p>
+                    </div>
+                </div>
             </div>
-        </div>
-    </header>
-    <section id="articles-section" class="content-section">
-        <div class="section-container">
-            <div id="articles-container" class="articles-container"></div>
+
         </div>
     </section>
 
+    <!-- MAIN INTERACTIVE SECTION -->
+    <main id="categories-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow relative z-10 w-full">
+        
+        <!-- Search & Filter Area -->
+        <div id="search-section" class="mb-12 max-w-xl mx-auto transition-all duration-300">
+            <div class="relative group">
+                <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-indigo-500 rounded-2xl blur opacity-30 group-focus-within:opacity-75 transition duration-300"></div>
+                <div class="relative flex items-center bg-slate-900 border border-slate-800 rounded-2xl px-4 py-3">
+                    <i class="fa-solid fa-magnifying-glass text-slate-400 mr-3 text-lg"></i>
+                    <input type="text" id="article-search" placeholder="Tìm kỹ thuật xoa bóp, PNF, kéo giãn, di động..." 
+                           class="w-full bg-transparent border-none text-slate-100 placeholder:text-slate-500 focus:outline-none text-sm sm:text-base"
+                           oninput="handleSearch(this.value)">
+                    <button onclick="clearSearch()" id="clear-search-btn" class="hidden text-slate-400 hover:text-white ml-2">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                    </button>
+                </div>
+            </div>
+            <p id="search-status" class="text-xs text-slate-500 mt-2 text-center hidden">Đang tìm kiếm trên toàn kho dữ liệu...</p>
+        </div>
+
+        <!-- Section Title -->
+        <div class="text-center mb-10 space-y-2">
+            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">HỆ THỐNG KỸ THUẬT LÝ THUYẾT & THỰC HÀNH</h2>
+            <p class="text-sm text-slate-400 max-w-lg mx-auto">Chọn danh mục chuyên đề bên dưới để lọc nhanh nội dung tài liệu học tập.</p>
+        </div>
+
+        <!-- Category Horizontal Navigation -->
+        <div class="mb-8">
+            <div class="flex overflow-x-auto pb-4 gap-3 no-scrollbar scroll-smooth snap-x snap-mandatory" id="category-tabs" role="tablist">
+                <div class="text-slate-500 text-sm animate-pulse mx-auto">Đang kết nối cơ sở dữ liệu...</div>
+            </div>
+        </div>
+
+        <!-- Dynamic Content Header/Description for current category -->
+        <div id="current-category-desc" class="p-4 sm:p-6 mb-8 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-950 border border-slate-800 flex items-center gap-4 fade-in-up">
+            <div id="cat-icon-badge" class="w-12 h-12 rounded-xl flex items-center justify-center text-white text-xl shadow-md bg-gradient-to-tr from-cyan-400 to-teal-400">
+                <i class="fa-solid fa-hands-holding-circle"></i>
+            </div>
+            <div class="flex-grow">
+                <h3 id="cat-headline" class="text-base sm:text-lg font-bold text-white">Đang tải...</h3>
+                <p id="cat-subline" class="text-xs sm:text-sm text-slate-400 font-normal">Đang đồng bộ dữ liệu đám mây của Đan Trường.</p>
+            </div>
+        </div>
+
+        <!-- ARTICLES CONTAINER -->
+        <div id="articles-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Loading Skeleton -->
+            <div class="glass-card rounded-2xl p-6 space-y-4 animate-pulse">
+                <div class="h-4 bg-slate-800 rounded w-1/3"></div>
+                <div class="h-6 bg-slate-800 rounded w-3/4"></div>
+                <div class="h-10 bg-slate-800 rounded w-full"></div>
+            </div>
+            <div class="glass-card rounded-2xl p-6 space-y-4 animate-pulse">
+                <div class="h-4 bg-slate-800 rounded w-1/3"></div>
+                <div class="h-6 bg-slate-800 rounded w-3/4"></div>
+                <div class="h-10 bg-slate-800 rounded w-full"></div>
+            </div>
+            <div class="glass-card rounded-2xl p-6 space-y-4 animate-pulse">
+                <div class="h-4 bg-slate-800 rounded w-1/3"></div>
+                <div class="h-6 bg-slate-800 rounded w-3/4"></div>
+                <div class="h-10 bg-slate-800 rounded w-full"></div>
+            </div>
+        </div>
+
+        <!-- Search Empty State -->
+        <div id="empty-state" class="hidden text-center py-16 space-y-4">
+            <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto text-slate-400 text-2xl">
+                <i class="fa-solid fa-clipboard-question"></i>
+            </div>
+            <div>
+                <h4 class="text-lg font-bold">Không tìm thấy tài liệu tương ứng</h4>
+                <p class="text-sm text-slate-500 max-w-xs mx-auto mt-1">Hãy thử nhập từ khóa khác hoặc truy cập trang quản trị để bổ sung tài liệu mới.</p>
+            </div>
+            <button onclick="clearSearch(true)" class="px-4 py-2 text-xs font-bold text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 rounded-lg hover:bg-cyan-400/20 transition-all">
+                Xem toàn bộ bài viết
+            </button>
+        </div>
+    </main>
+
+    <!-- INTERACTIVE ARTICLE PREMIUM VIEWER MODAL -->
+    <div id="article-modal" class="fixed inset-0 z-50 overflow-y-auto hidden" role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity" onclick="closeArticleModal()"></div>
+        
+        <!-- Modal Content Container -->
+        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-6">
+            <div class="relative transform overflow-hidden rounded-3xl bg-slate-900 border border-slate-800 text-left shadow-2xl transition-all w-full max-w-3xl fade-in-up">
+                
+                <!-- Modal Top Header bar -->
+                <div class="px-6 py-4 border-b border-slate-800/80 flex items-center justify-between sticky top-0 bg-slate-900/90 backdrop-blur-md z-10">
+                    <div class="flex items-center gap-2">
+                        <span id="modal-category-badge" class="px-3 py-1 rounded-full text-xs font-semibold">DANH MỤC</span>
+                    </div>
+                    <button onclick="closeArticleModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-all" aria-label="Đóng">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Rich Article Core Content -->
+                <div class="px-6 py-8 space-y-6 max-h-[75vh] overflow-y-auto">
+                    <!-- Title & Author block -->
+                    <div class="space-y-3">
+                        <h2 id="modal-title" class="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">Tiêu Đề Bài Viết</h2>
+                        <div class="flex items-center gap-3 pt-2">
+                            <div class="w-9 h-9 rounded-full bg-slate-800 border border-cyan-500/20 flex items-center justify-center text-cyan-400 font-bold text-sm">
+                                ĐT
+                            </div>
+                            <div>
+                                <p class="text-xs sm:text-sm font-semibold text-slate-200">Nguyễn Mai Đan Trường</p>
+                                <p class="text-[10px] text-slate-500">Chuyên môn Vật lý trị liệu / Phục hồi chức năng</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-800/80">
+
+                    <!-- Dynamic Media Section (Video / PDF Player) -->
+                    <div id="modal-media-container" class="hidden space-y-6">
+                        <!-- Loaded dynamically via JavaScript -->
+                    </div>
+
+                    <!-- Dynamic Body Container -->
+                    <div id="modal-body-content" class="text-slate-300 space-y-6 leading-relaxed text-sm sm:text-base">
+                        <!-- Content loaded dynamic via javascript -->
+                    </div>
+
+                    <!-- Disclaimer & Author signature -->
+                    <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/60 text-xs text-slate-400 space-y-2 mt-8">
+                        <p class="font-semibold text-slate-300"><i class="fa-solid fa-triangle-exclamation text-amber-500 mr-1"></i> Lưu ý y khoa:</p>
+                        <p>Thông tin và tài liệu này chỉ dành cho mục đích giáo dục, học tập, tham khảo quy trình thực hành lâm sàng. Bệnh nhân thực hiện trị liệu cần có sự chỉ dẫn, giám sát trực tiếp từ bác sĩ chuyên khoa PHCN hoặc kỹ thuật viên có chứng chỉ hành nghề hợp pháp.</p>
+                    </div>
+                </div>
+
+                <!-- Modal Bottom actions -->
+                <div class="px-6 py-4 border-t border-slate-800/80 bg-slate-950/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <span class="text-xs text-slate-500">Ghi chú & bản quyền thuộc về Dantruongag.id.vn</span>
+                    <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                        <button onclick="closeArticleModal()" class="w-full sm:w-auto px-6 py-2.5 text-xs font-bold bg-cyan-400 hover:bg-cyan-300 text-slate-950 rounded-xl transition-all text-center">
+                            Đã hiểu bài viết
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer System Info -->
+    <footer class="mt-auto border-t border-slate-900 bg-slate-950 py-8 text-center text-xs text-slate-500 space-y-2">
+        <p>© 2026 Nguyễn Mai Đan Trường. Tất cả quyền được bảo lưu.</p>
+        <p>Hệ thống học tập và tra cứu lâm sàng liên thông cơ sở dữ liệu Cloud Firestore.</p>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT SYSTEM WITH CLOUD FIRESTORE -->
     <script>
+        // FIREBASE INITIALIZATION CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
+            authDomain: "dulieuweb-6541e.firebaseapp.com",
+            projectId: "dulieuweb-6541e",
+            storageBucket: "dulieuweb-6541e.firebasestorage.app",
+            messagingSenderId: "215480268517",
+            appId: "1:215480268517:web:16600eafd6839fee5dc60c"
+        };
+
+        // Initialize Firebase app and services
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // App ID and strict collection path configuration (Rule 1 Alignment)
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'dulieuweb-6541e';
+        
+        function getArticlesCollection() {
+            return db.collection('artifacts/' + appId + '/public/data/articles');
+        }
+
+        // Constant metadata for Tabs / Categories 
+        const tabMeta = {
+            tab_1: { 
+                name: 'Kỹ Thuật Xoa Bóp', 
+                icon: 'fa-hands-holding-circle',
+                badgeBg: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/20',
+                themeColor: 'from-cyan-400 to-teal-400',
+                accentColor: 'shadow-cyan-500/20',
+                desc: 'Tập hợp các thủ thuật cơ học tác động lên cơ, da, mô dưới da giúp thư giãn cơ, giảm đau và tăng tuần hoàn máu ngoại biên.'
+            },
+            tab_2: { 
+                name: 'Kỹ Thuật Tập Vận Động', 
+                icon: 'fa-person-walking-rehab',
+                badgeBg: 'bg-red-500/15 text-red-400 border-red-500/20',
+                themeColor: 'from-red-400 to-orange-400',
+                accentColor: 'shadow-red-500/20',
+                desc: 'Hệ thống các bài tập cử động chủ động hoặc thụ động nhằm bảo tồn, duy trì hoặc gia tăng tầm vận động của khớp (ROM).'
+            },
+            tab_3: { 
+                name: 'Kỹ Thuật Tạo Thuận Thần Kinh Cơ (PNF)', 
+                icon: 'fa-brain',
+                badgeBg: 'bg-violet-500/15 text-violet-400 border-violet-500/20',
+                themeColor: 'from-violet-400 to-indigo-400',
+                accentColor: 'shadow-violet-500/20',
+                desc: 'Kỹ thuật tạo thuận thần kinh cơ cảm thụ bản thể - Ứng dụng kích thích phản xạ sâu của cơ gân nhằm khôi phục mẫu vận động chức năng lý tưởng.'
+            },
+            tab_4: { 
+                name: 'Kỹ Thuật Kéo Giãn (Stretching)', 
+                icon: 'fa-arrows-left-right',
+                badgeBg: 'bg-amber-500/15 text-amber-400 border-amber-500/20',
+                themeColor: 'from-amber-400 to-yellow-400',
+                accentColor: 'shadow-amber-500/20',
+                desc: 'Các thao tác kéo căng một hay nhiều nhóm cơ ngắn co thắt lại nhằm cải thiện tối ưu tính dẻo mềm dẻo của gân cơ khớp.'
+            },
+            tab_5: { 
+                name: 'Kỹ Thuật Di Động Khớp', 
+                icon: 'fa-joint',
+                badgeBg: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20',
+                themeColor: 'from-emerald-400 to-teal-400',
+                accentColor: 'shadow-emerald-500/20',
+                desc: 'Áp dụng định luật lồi - lõm để thực hiện các thao tác trượt, lăn, xoay diện khớp bị hạn chế xơ cứng dính khớp.'
+            },
+            tab_6: { 
+                name: 'Kỹ Thuật Với Dụng Cụ', 
+                icon: 'fa-crutch',
+                badgeBg: 'bg-indigo-500/15 text-indigo-400 border-indigo-500/20',
+                themeColor: 'from-indigo-400 to-violet-400',
+                accentColor: 'shadow-indigo-500/20',
+                desc: 'Các chỉ dẫn di chuyển khoa học, tập chịu lực đứng dậy đi lại bằng dụng cụ trợ giúp như nạng gỗ, khung tập đi, xe lăn.'
+            }
+        };
+
+        // Global Application State
+        let localArticles = []; 
         let currentCategory = 'tab_1';
-        const DEFAULT_IMAGE = '/hinhanh/logo_web.png';
+        let searchQuery = '';
 
-        const dataStore = {
-            tab_1: { name: 'Kỹ Thuật xoa bóp', articles: [
-                { url: '', title: 'Kỹ thuật xoa bóp chi trên' },
-                { url: '', title: 'Kỹ thuật xoa bóp chi dưới' },
-                { url: '', title: 'Kỹ thuật xoa bóp lưng' },
-                { url: '', title: 'Kỹ thuật xoa bóp cổ' }
-            ]},
-            tab_2: { name: 'Kỹ thuật tập vận động', articles: [
-                { url: '/PHCN/Van_dong_tri_lieu/tap_van_dong/van_dong_thu_dong.html', title: 'Kỹ thuật tập vận động thụ động' },
-                { url: '/PHCN/Van_dong_tri_lieu/tap_van_dong/van_dong_chu_dong_co_tro_giup.html', title: 'Kỹ thuật tập vận động có trợ giúp' },
-                { url: '/PHCN/Van_dong_tri_lieu/tap_van_dong/van_dong_chu_dong_tu_do.html', title: 'Kỹ thuật tập vận động chủ động tự do' },
-                { url: '/PHCN/Van_dong_tri_lieu/tap_van_dong/van_dong_chu_dong_co_de_khang.html', title: 'Kỹ thuật tập vận động chủ động có đề kháng' }
-            ]},
-             tab_3: { name: 'Kỹ thuật tạo thuận thần kinh cơ cảm thụ bản thể (PNF)', articles: [
-                { url: '/PHCN/Van_dong_tri_lieu/PNF/dai_cuong_PNF.html', title: 'Đại cương tạo thuận thần kinh cơ cảm thụ bản thể (PNF)' },
-                { url: '', title: '' }
-            ]},
-            tab_4: { name: 'Kỹ thuật kéo giãn', articles: [
-                { url: '/index.html', title: 'Kéo giãn cơ ngực lớn' },
-                { url: '', title: '' }
-            ]},
-            tab_5: { name: 'Kỹ thuật di động khớp', articles: [
-                { url: '/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop.html', title: 'Đại cương di động khớp' },
-                { url: '/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop_vai.html', title: 'Kỹ thuật di động khớp vai' },
-                { url: '/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop_khuyu.html', title: 'Kỹ thuật di động khớp khuỷu' },
-                { url: '/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop_co_tay.html', title: 'Kỹ thuật di động khớp cổ tay' },
-                { url: '/PHCN/Van_dong_tri_lieu/di_dong_khop/di_dong_khop_ban_ngon_tay.html', title: 'Kỹ thuật di động khớp bàn ngón tay' },
-                { url: '/PHCN/Van_dong_tri_lieu/di_dong_khop/do_dong_khop_goi.html', title: 'Kỹ thuật di động khớp gối' }
-            ]},
-            tab_6: { name: 'Kỹ thuật di chuyển với dụng cụ', articles: [
-                { url: '', title: 'Chế độ dinh dưỡng cho người bệnh phổi mạn tính' },
-                { url: '', title: 'Hoạt động thể lực phù hợp để cải thiện hô hấp' }
-            ]}
-        };
+        /* ====================================
+           TOAST NOTIFICATION SYSTEM
+           ==================================== */
+        function showToast(title, message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            const titleEl = document.getElementById('toast-title');
+            const descEl = document.getElementById('toast-desc');
 
-        const categoryColors = {
-            tab_1: { bg:'linear-gradient(90deg,#06b6d4,#3b82f6)', activeColor:'#071033', inactiveColor:'#0ea5e9' },
-            tab_2: { bg:'linear-gradient(90deg,#ef4444,#fb923c)', activeColor:'#071033', inactiveColor:'#fb923c' },
-            tab_3: { bg:'linear-gradient(90deg,#8b5cf6,#06b6d4)', activeColor:'#071033', inactiveColor:'#8b5cf6' },
-            tab_4: { bg:'linear-gradient(90deg,#f59e0b,#10b981)', activeColor:'#071033', inactiveColor:'#f59e0b' },
-            tab_5: { bg:'linear-gradient(90deg,#f59e0b,#10b981)', activeColor:'#071033', inactiveColor:'#f59e0b' },
-            tab_6: { bg:'linear-gradient(90deg,#8b5cf6,#06b6d4)', activeColor:'#071033', inactiveColor:'#8b5cf6' },
-        };
+            if (!toast) return;
 
-        const observer = new IntersectionObserver((entries, obs) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting){
-                    entry.target.classList.add('opacity-100');
-                    obs.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.08 });
+            titleEl.innerText = title;
+            descEl.innerText = message;
 
-        function resolveArticleData(url){
-            for(const k of Object.keys(dataStore)){
-                const f = dataStore[k].articles.find(a => a.url === url);
-                if(f) return { title: f.title, imageUrl: DEFAULT_IMAGE };
-            }
-            return { title: 'Đang cập nhật', imageUrl: DEFAULT_IMAGE };
-        }
-
-        /* =========================
-        CREATE ARTICLE CARD
-        ========================= */
-        function createArticleBox(targetUrl, container, index){
-            const data = resolveArticleData(targetUrl);
-            const hasUrl = targetUrl && targetUrl.trim() !== '';
-
-            const box = document.createElement(hasUrl ? 'a' : 'div');
-
-            if(hasUrl){
-                box.href = targetUrl;
+            if (type === 'success') {
+                icon.className = "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-emerald-500/10 text-emerald-400";
+                icon.innerHTML = `<i class="fa-solid fa-circle-check"></i>`;
+            } else if (type === 'error') {
+                icon.className = "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-rose-500/10 text-rose-400";
+                icon.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i>`;
             } else {
-                box.setAttribute('role', 'button');
+                icon.className = "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-cyan-500/10 text-cyan-400";
+                icon.innerHTML = `<i class="fa-solid fa-bell"></i>`;
             }
 
-            box.className = 'article-card transition-observer';
-            box.style.transitionDelay = `${index * 50}ms`;
+            toast.classList.remove('opacity-0', 'translate-y-[-100px]');
+            toast.classList.add('opacity-100', 'translate-y-0');
 
-            let categoryKey = currentCategory;
-            box.dataset.cat = categoryKey;
-
-            box.innerHTML = `
-                <div class="image-wrapper" aria-hidden="true">
-                    <img class="article-image"
-                        src="${DEFAULT_IMAGE}"
-                        alt="${data.title}"
-                        onerror="this.style.display='none'">
-                </div>
-                <div class="content-area">
-                    <span class="tag-pill">${dataStore[categoryKey].name}</span>
-                    <p class="article-title">${data.title}</p>
-                </div>
-            `;
-
-            // Chặn click nếu KHÔNG có URL
-            if(!hasUrl){
-                box.addEventListener('click', e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                });
-            }
-
-            container.appendChild(box);
-            observer.observe(box);
+            setTimeout(() => {
+                hideToast();
+            }, 3500);
         }
 
-        /* =========================
-        RENDER CATEGORY TABS
-        ========================= */
-        function renderCategories(){
-            const tabs = document.getElementById('category-tabs');
-            if(!tabs) return;
+        function hideToast() {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.classList.add('opacity-0', 'translate-y-[-100px]');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }
+        }
 
-            tabs.innerHTML = '';
-            Object.keys(dataStore).forEach(key => {
-                const btn = document.createElement('button');
-                btn.className = 'category-btn';
-                btn.dataset.key = key;
+        /* ====================================
+           FIRESTORE SYNC (Rule 3 Implemented)
+           ==================================== */
+        function setupRealtimeSync() {
+            if (!auth.currentUser) return;
 
-                const colorData = categoryColors[key] || {bg:'#374151', activeColor:'#fff', inactiveColor:'#94a3b8'};
+            // Direct connection path configuration
+            const collectionRef = getArticlesCollection();
 
-                if(key === currentCategory){
-                    btn.classList.add('active');
-                    btn.style.background = colorData.bg;
-                    btn.innerHTML = `<span style="color:${colorData.activeColor}">${dataStore[key].name}</span>
-                                    <span> (${dataStore[key].articles.length})</span>`;
-                } else {
-                    btn.classList.add('inactive');
-                    btn.innerHTML = `<span style="color:${colorData.inactiveColor}">${dataStore[key].name}</span>
-                                    <span> (${dataStore[key].articles.length})</span>`;
-                }
+            collectionRef.onSnapshot((querySnapshot) => {
+                const tempArticles = [];
+                querySnapshot.forEach((doc) => {
+                    tempArticles.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
 
-                btn.onclick = () => {
-                    if(key === currentCategory) return;
-                    currentCategory = key;
-                    renderCategories();
-                    renderArticles();
-                    btn.scrollIntoView({behavior:'smooth', inline:'center'});
+                localArticles = tempArticles;
+
+                updateDashboardStats();
+                renderCategoryTabs();
+                renderArticles();
+            }, (error) => {
+                console.error("Lỗi đồng bộ dữ liệu Firestore: ", error);
+                showToast("Lỗi kết nối", "Không thể liên thông dữ liệu đám mây. Hãy thử tải lại.", "error");
+            });
+        }
+
+        /* ====================================
+           UPDATE STATS IN UI
+           ==================================== */
+        function updateDashboardStats() {
+            const totalArts = localArticles.length;
+            const activeTabs = new Set(localArticles.map(a => a.categoryKey));
+            
+            document.getElementById('stats-tab-count').innerText = `${activeTabs.size}/6`;
+            document.getElementById('stats-art-count').innerText = totalArts;
+        }
+
+        /* ====================================
+           RENDER TABS
+           ==================================== */
+        function renderCategoryTabs() {
+            const container = document.getElementById('category-tabs');
+            if(!container) return;
+
+            container.innerHTML = '';
+            Object.keys(tabMeta).forEach(key => {
+                const item = tabMeta[key];
+                const isActive = key === currentCategory;
+
+                // Count total articles in this category
+                const count = localArticles.filter(a => a.categoryKey === key).length;
+
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = `snap-start shrink-0 px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2.5 transition-all duration-300 ${
+                    isActive 
+                        ? 'bg-slate-900 text-cyan-400 shadow-lg border border-cyan-500/30 active-pulse' 
+                        : 'bg-slate-900/40 text-slate-400 hover:text-slate-200 border border-slate-800/60 hover:bg-slate-900/70'
+                }`;
+                
+                button.innerHTML = `
+                    <i class="fa-solid ${item.icon} text-base"></i>
+                    <span>${item.name}</span>
+                    <span class="px-1.5 py-0.5 rounded-md text-[10px] bg-slate-950 font-mono text-slate-400">(${count})</span>
+                `;
+
+                button.onclick = () => {
+                    selectCategory(key);
                 };
 
-                tabs.appendChild(btn);
+                container.appendChild(button);
             });
+
+            // Update Header Meta current category
+            const currentObj = tabMeta[currentCategory];
+            const badge = document.getElementById('cat-icon-badge');
+            const headline = document.getElementById('cat-headline');
+            const subline = document.getElementById('cat-subline');
+
+            if(badge && headline && subline && currentObj) {
+                badge.className = "w-12 h-12 rounded-2xl flex items-center justify-center text-slate-950 text-xl font-bold bg-gradient-to-tr " + currentObj.themeColor + " " + currentObj.accentColor;
+                badge.innerHTML = `<i class="fa-solid ${currentObj.icon}"></i>`;
+                headline.innerText = currentObj.name;
+                subline.innerText = currentObj.desc;
+            }
         }
 
-        /* =========================
-        RENDER ARTICLES
-        ========================= */
-        function renderArticles(){
+        function selectCategory(key) {
+            currentCategory = key;
+            renderCategoryTabs();
+            renderArticles();
+        }
+
+        /* ====================================
+           RENDER ARTICLES (User View)
+           ==================================== */
+        function renderArticles() {
             const container = document.getElementById('articles-container');
-            const section = document.getElementById('articles-section');
-            if(!container || !section) return;
+            const emptyState = document.getElementById('empty-state');
+            if(!container || !emptyState) return;
 
-            Array.from(container.children).forEach(c => observer.unobserve(c));
             container.innerHTML = '';
+            
+            let matchingArticles = [];
 
-            const articles = dataStore[currentCategory]?.articles || [];
+            if(searchQuery.trim() !== '') {
+                // Search globally across all tabs
+                localArticles.forEach(art => {
+                    const lowTitle = (art.title || '').toLowerCase();
+                    const lowSearch = searchQuery.toLowerCase();
+                    if(lowTitle.includes(lowSearch)) {
+                        matchingArticles.push(art);
+                    }
+                });
+            } else {
+                // Return articles of active tab only
+                matchingArticles = localArticles.filter(art => art.categoryKey === currentCategory);
+            }
 
-            if(!articles.length){
-                container.innerHTML = `<div class="empty-state-box">
-                    Không có bài viết trong <strong>${dataStore[currentCategory].name}</strong>
-                </div>`;
+            // Empty state display
+            if(matchingArticles.length === 0) {
+                emptyState.classList.remove('hidden');
+                container.classList.add('hidden');
                 return;
             }
 
-            articles.forEach((a, i) => createArticleBox(a.url, container, i));
-            section.style.paddingBottom = '4rem';
+            emptyState.classList.add('hidden');
+            container.classList.remove('hidden');
+
+            // Populate cards
+            matchingArticles.forEach((article, index) => {
+                const categoryObj = tabMeta[article.categoryKey] || tabMeta['tab_1'];
+                const card = document.createElement('div');
+                card.className = 'glass-card rounded-2xl p-5 flex flex-col justify-between gap-5 cursor-pointer hover:border-cyan-500/30 transition-all duration-300 fade-in-up';
+                card.style.animationDelay = `${index * 30}ms`;
+                
+                card.onclick = () => openArticle(article);
+
+                // Media Indicators icons
+                let mediaIndicators = '';
+                if (article.videoUrl) {
+                    mediaIndicators += `<span class="text-red-400 text-xs flex items-center gap-1"><i class="fa-solid fa-circle-play"></i> Video</span>`;
+                }
+                if (article.pdfUrl) {
+                    mediaIndicators += `<span class="text-emerald-400 text-xs flex items-center gap-1"><i class="fa-solid fa-file-pdf"></i> PDF</span>`;
+                }
+
+                // Dynamic SVG Graphics
+                let svgIllustration = `
+                    <svg class="w-10 h-10 text-cyan-400/25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path>
+                    </svg>
+                `;
+                
+                if (article.categoryKey === 'tab_1') {
+                    svgIllustration = `
+                        <svg class="w-10 h-10 text-teal-400/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
+                        </svg>
+                    `;
+                } else if (article.categoryKey === 'tab_2') {
+                    svgIllustration = `
+                        <svg class="w-10 h-10 text-red-400/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.3 10.5l-3.3 3.3-3.3-3.3M12 3v12.5M19.5 21H4.5" />
+                        </svg>
+                    `;
+                } else if (article.categoryKey === 'tab_3') {
+                    svgIllustration = `
+                        <svg class="w-10 h-10 text-violet-400/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21m0 0l-1.813-5.096M9 21h8.125A2.875 2.875 0 0020 18.125V6.875A2.875 2.875 0 0017.125 4H9m0 17V4m0 17H3.875A2.875 2.875 0 011 18.125V6.875A2.875 2.875 0 013.875 4H9" />
+                        </svg>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div class="space-y-3.5">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full text-[9px] font-bold tracking-wide uppercase ${categoryObj.badgeBg}">
+                                ${categoryObj.name}
+                            </span>
+                            <div class="flex gap-2">
+                                ${mediaIndicators}
+                            </div>
+                        </div>
+                        <h4 class="text-base font-bold text-slate-100 line-clamp-2 hover:text-cyan-400 transition-colors">${article.title || 'Đang cập nhật'}</h4>
+                    </div>
+
+                    <div class="flex items-end justify-between border-t border-slate-800/80 pt-4">
+                        <div class="opacity-80">
+                            ${svgIllustration}
+                        </div>
+                        <span class="text-xs font-bold text-cyan-400 flex items-center gap-1 hover:underline">
+                            Đọc bài viết <i class="fa-solid fa-angle-right text-[10px] transition-transform group-hover:translate-x-1"></i>
+                        </span>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            renderCategories();
+        /* ====================================
+           SEARCH SYSTEM
+           ==================================== */
+        function handleSearch(val) {
+            searchQuery = val;
+            const clearBtn = document.getElementById('clear-search-btn');
+            const searchStatus = document.getElementById('search-status');
+
+            if(val.trim() !== '') {
+                clearBtn.classList.remove('hidden');
+                searchStatus.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+                searchStatus.classList.add('hidden');
+            }
             renderArticles();
+        }
 
-            window.addEventListener('resize', () => {
-                clearTimeout(window._rt);
-                window._rt = setTimeout(() => {
-                    document.querySelectorAll('.article-card').forEach(el => observer.observe(el));
-                }, 120);
-            });
+        function clearSearch(focus = false) {
+            const searchInput = document.getElementById('article-search');
+            if(searchInput) {
+                searchInput.value = '';
+                searchQuery = '';
+                handleSearch('');
+                if(focus) searchInput.focus();
+            }
+        }
+
+        /* ====================================
+           MODAL CONTROL (Article Preview System)
+           ==================================== */
+        function openArticle(article) {
+            const modal = document.getElementById('article-modal');
+            const title = document.getElementById('modal-title');
+            const catBadge = document.getElementById('modal-category-badge');
+            const body = document.getElementById('modal-body-content');
+            const mediaContainer = document.getElementById('modal-media-container');
+
+            if(!modal || !title || !catBadge || !body || !mediaContainer) return;
+
+            const categoryObj = tabMeta[article.categoryKey] || tabMeta['tab_1'];
+
+            // Render details
+            title.innerText = article.title;
+            catBadge.innerText = categoryObj.name.toUpperCase();
+            
+            // Apply category badge styling
+            catBadge.className = `px-3 py-1 rounded-full text-xs font-bold ${categoryObj.badgeBg}`;
+            
+            // Build Media layout
+            mediaContainer.innerHTML = '';
+            let hasMedia = false;
+
+            if (article.videoUrl && article.videoUrl.trim() !== '') {
+                hasMedia = true;
+                mediaContainer.innerHTML += `
+                    <div class="space-y-3">
+                        <p class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                            <span class="flex h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse"></span>
+                            Video hướng dẫn thực hành lâm sàng
+                        </p>
+                        <div class="relative pb-[56.25%] h-0 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                            <iframe src="${article.videoUrl}" class="absolute top-0 left-0 w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (article.pdfUrl && article.pdfUrl.trim() !== '') {
+                hasMedia = true;
+                mediaContainer.innerHTML += `
+                    <div class="space-y-3">
+                        <p class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                            <span class="flex h-2.5 w-2.5 rounded-full bg-cyan-400"></span>
+                            Tài liệu nghiên cứu chuyên ngành (PDF)
+                        </p>
+                        <div class="flex flex-col sm:flex-row items-center justify-between p-4 rounded-2xl bg-slate-950 border border-slate-800 gap-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center text-xl shrink-0">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </div>
+                                <div>
+                                    <h5 class="text-sm font-bold text-white">Tài liệu học tập chi tiết</h5>
+                                    <p class="text-[11px] text-slate-400">Đọc phiên bản PDF chính thức hoặc lưu về thiết bị cá nhân của bạn</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2 w-full sm:w-auto">
+                                <a href="${article.pdfUrl}" target="_blank" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-xs font-bold transition-all text-center flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-file-pdf"></i> Mở PDF
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (hasMedia) {
+                mediaContainer.classList.remove('hidden');
+            } else {
+                mediaContainer.classList.add('hidden');
+            }
+
+            // Format HTML contents
+            if (article.content && article.content.trim() !== '') {
+                body.innerHTML = article.content;
+            } else {
+                body.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center mx-auto text-amber-500 text-xl mb-3">
+                            <i class="fa-solid fa-hourglass-half"></i>
+                        </div>
+                        <p class="font-bold text-white text-base">Nội dung đang được biên soạn</p>
+                        <p class="text-sm text-slate-400 mt-1">Đan Trường đang tiếp tục tối ưu hóa quy trình tài liệu bài giảng này.</p>
+                    </div>
+                `;
+            }
+
+            document.body.classList.add('overflow-hidden');
+            modal.classList.remove('hidden');
+        }
+
+        function closeArticleModal() {
+            const modal = document.getElementById('article-modal');
+            if(!modal) return;
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        /* ====================================
+           INITIAL LOAD
+           ==================================== */
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Secure auth state initiation (Rule 3)
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await auth.signInWithCustomToken(__initial_auth_token);
+                } else {
+                    await auth.signInAnonymously();
+                }
+            } catch (e) {
+                console.warn("Lỗi token tùy chỉnh, chuyển đăng nhập ẩn danh...", e);
+                await auth.signInAnonymously();
+            }
         });
-        </script>
 
-        <div id="footer-placeholder"></div>
-
-        <script src="/script.js"></script>
-        <script src="/banner_trang_con.js"></script>
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                console.log("Xác thực đám mây thành công.");
+                setupRealtimeSync();
+            }
+        });
+    </script>
 </body>
 </html>
