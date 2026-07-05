@@ -147,7 +147,7 @@
                     </div>
                     <div class="p-3 rounded-2xl bg-slate-900/50 border border-slate-800/80 text-center">
                         <p id="stats-art-count" class="text-xl sm:text-2xl font-bold text-teal-400">...</p>
-                        <p class="text-[10px] sm:text-xs text-slate-400 uppercase tracking-wider font-semibold">Bài viết thực tế</p>
+                        <p class="text-[10px] sm:text-xs text-slate-400 uppercase tracking-wider font-semibold">Bài viết</p>
                     </div>
                 </div>
             </div>
@@ -351,6 +351,14 @@
                 desc: 'Hệ thống các bài tập cử động chủ động hoặc thụ động nhằm bảo tồn, duy trì hoặc gia tăng tầm vận động của khớp (ROM).'
             },
             tab_3: { 
+                name: 'Kỹ Thuật tập mạnh cơ', 
+                icon: 'fa-muscle',
+                badgeBg: 'bg-violet-500/15 text-violet-400 border-violet-500/20',
+                themeColor: 'from-violet-400 to-indigo-400',
+                accentColor: 'shadow-violet-500/20',
+                desc: 'Kỹ thuật tạo thuận thần kinh cơ cảm thụ bản thể - Ứng dụng kích thích phản xạ sâu của cơ gân nhằm khôi phục mẫu vận động chức năng lý tưởng.'
+            },
+            tab_4: { 
                 name: 'Kỹ Thuật Tạo Thuận Thần Kinh Cơ (PNF)', 
                 icon: 'fa-brain',
                 badgeBg: 'bg-violet-500/15 text-violet-400 border-violet-500/20',
@@ -358,7 +366,7 @@
                 accentColor: 'shadow-violet-500/20',
                 desc: 'Kỹ thuật tạo thuận thần kinh cơ cảm thụ bản thể - Ứng dụng kích thích phản xạ sâu của cơ gân nhằm khôi phục mẫu vận động chức năng lý tưởng.'
             },
-            tab_4: { 
+            tab_5: { 
                 name: 'Kỹ Thuật Kéo Giãn (Stretching)', 
                 icon: 'fa-arrows-left-right',
                 badgeBg: 'bg-amber-500/15 text-amber-400 border-amber-500/20',
@@ -366,7 +374,7 @@
                 accentColor: 'shadow-amber-500/20',
                 desc: 'Các thao tác kéo căng một hay nhiều nhóm cơ ngắn co thắt lại nhằm cải thiện tối ưu tính dẻo mềm dẻo của gân cơ khớp.'
             },
-            tab_5: { 
+            tab_6: { 
                 name: 'Kỹ Thuật Di Động Khớp', 
                 icon: 'fa-joint',
                 badgeBg: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20',
@@ -374,13 +382,21 @@
                 accentColor: 'shadow-emerald-500/20',
                 desc: 'Áp dụng định luật lồi - lõm để thực hiện các thao tác trượt, lăn, xoay diện khớp bị hạn chế xơ cứng dính khớp.'
             },
-            tab_6: { 
+            tab_7: { 
                 name: 'Kỹ Thuật Với Dụng Cụ', 
                 icon: 'fa-crutch',
                 badgeBg: 'bg-indigo-500/15 text-indigo-400 border-indigo-500/20',
                 themeColor: 'from-indigo-400 to-violet-400',
                 accentColor: 'shadow-indigo-500/20',
                 desc: 'Các chỉ dẫn di chuyển khoa học, tập chịu lực đứng dậy đi lại bằng dụng cụ trợ giúp như nạng gỗ, khung tập đi, xe lăn.'
+            },
+            tab_8: { 
+                name: 'Kỹ Thuật Thay Đổi Vị Thế', 
+                icon: 'fa-exchange-alt',
+                badgeBg: 'bg-rose-500/15 text-rose-400 border-rose-500/20',
+                themeColor: 'from-rose-400 to-pink-400',
+                accentColor: 'shadow-rose-500/20',
+                desc: 'Các kỹ thuật thay đổi vị thế cơ thể nhằm cải thiện chức năng vận động và giảm áp lực lên các khớp.'
             }
         };
 
@@ -390,44 +406,16 @@
         let searchQuery = '';
 
         /* ====================================
-           TOAST NOTIFICATION SYSTEM
+           YOUTUBE CONVERSION HELPER
            ==================================== */
-        function showToast(title, message, type = 'success') {
-            const toast = document.getElementById('toast');
-            const icon = document.getElementById('toast-icon');
-            const titleEl = document.getElementById('toast-title');
-            const descEl = document.getElementById('toast-desc');
-
-            if (!toast) return;
-
-            titleEl.innerText = title;
-            descEl.innerText = message;
-
-            if (type === 'success') {
-                icon.className = "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-emerald-500/10 text-emerald-400";
-                icon.innerHTML = `<i class="fa-solid fa-circle-check"></i>`;
-            } else if (type === 'error') {
-                icon.className = "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-rose-500/10 text-rose-400";
-                icon.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i>`;
-            } else {
-                icon.className = "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-cyan-500/10 text-cyan-400";
-                icon.innerHTML = `<i class="fa-solid fa-bell"></i>`;
+        function getYouTubeEmbedUrl(url) {
+            if (!url) return '';
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            if (match && match[2].length === 11) {
+                return `https://www.youtube.com/embed/${match[2]}`;
             }
-
-            toast.classList.remove('opacity-0', 'translate-y-[-100px]');
-            toast.classList.add('opacity-100', 'translate-y-0');
-
-            setTimeout(() => {
-                hideToast();
-            }, 3500);
-        }
-
-        function hideToast() {
-            const toast = document.getElementById('toast');
-            if (toast) {
-                toast.classList.add('opacity-0', 'translate-y-[-100px]');
-                toast.classList.remove('opacity-100', 'translate-y-0');
-            }
+            return url;
         }
 
         /* ====================================
@@ -455,7 +443,6 @@
                 renderArticles();
             }, (error) => {
                 console.error("Lỗi đồng bộ dữ liệu Firestore: ", error);
-                showToast("Lỗi kết nối", "Không thể liên thông dữ liệu đám mây. Hãy thử tải lại.", "error");
             });
         }
 
@@ -571,13 +558,19 @@
                 
                 card.onclick = () => openArticle(article);
 
-                // Media Indicators icons
+                // Media Indicators icons (Multiple support check)
                 let mediaIndicators = '';
-                if (article.videoUrl) {
-                    mediaIndicators += `<span class="text-red-400 text-xs flex items-center gap-1"><i class="fa-solid fa-circle-play"></i> Video</span>`;
+                const videoCount = article.videoUrls ? article.videoUrls.length : (article.videoUrl ? 1 : 0);
+                const pdfCount = article.pdfUrls ? article.pdfUrls.length : (article.pdfUrl ? 1 : 0);
+
+                if (videoCount > 0) {
+                    mediaIndicators += `<span class="text-red-400 text-[11px] flex items-center gap-1"><i class="fa-solid fa-circle-play"></i> Video (${videoCount})</span>`;
                 }
-                if (article.pdfUrl) {
-                    mediaIndicators += `<span class="text-emerald-400 text-xs flex items-center gap-1"><i class="fa-solid fa-file-pdf"></i> PDF</span>`;
+                if (pdfCount > 0) {
+                    mediaIndicators += `<span class="text-emerald-400 text-[11px] flex items-center gap-1"><i class="fa-solid fa-file-pdf"></i> PDF (${pdfCount})</span>`;
+                }
+                if (article.articleUrl) {
+                    mediaIndicators += `<span class="text-cyan-400 text-[11px] flex items-center gap-1"><i class="fa-solid fa-globe"></i> Liên kết</span>`;
                 }
 
                 // Dynamic SVG Graphics
@@ -607,6 +600,10 @@
                     `;
                 }
 
+                // Check link type for text description
+                let actionText = article.articleUrl ? 'Mở bài viết liên kết' : 'Đọc bài viết';
+                let actionIcon = article.articleUrl ? 'fa-arrow-up-right-from-square' : 'fa-angle-right';
+
                 card.innerHTML = `
                     <div class="space-y-3.5">
                         <div class="flex items-center justify-between">
@@ -624,8 +621,8 @@
                         <div class="opacity-80">
                             ${svgIllustration}
                         </div>
-                        <span class="text-xs font-bold text-cyan-400 flex items-center gap-1 hover:underline">
-                            Đọc bài viết <i class="fa-solid fa-angle-right text-[10px] transition-transform group-hover:translate-x-1"></i>
+                        <span class="text-xs font-bold text-cyan-400 flex items-center gap-1.5 hover:underline">
+                            ${actionText} <i class="fa-solid ${actionIcon} text-[10px]"></i>
                         </span>
                     </div>
                 `;
@@ -663,9 +660,16 @@
         }
 
         /* ====================================
-           MODAL CONTROL (Article Preview System)
+           MODAL & EXTERNAL NAVIGATION CONTROL
            ==================================== */
         function openArticle(article) {
+            // CRITICAL REQUIREMENT CHECK: If an external HTML URL exists, open it directly in a new window/tab
+            if (article.articleUrl && article.articleUrl.trim() !== '') {
+                window.open(article.articleUrl, '_blank');
+                return;
+            }
+
+            // Normal operation if no custom HTML URL is specified
             const modal = document.getElementById('article-modal');
             const title = document.getElementById('modal-title');
             const catBadge = document.getElementById('modal-category-badge');
@@ -683,29 +687,84 @@
             // Apply category badge styling
             catBadge.className = `px-3 py-1 rounded-full text-xs font-bold ${categoryObj.badgeBg}`;
             
-            // Build Media layout
+            // Build Media layout (Grouped dynamically)
             mediaContainer.innerHTML = '';
             let hasMedia = false;
 
-            if (article.videoUrl && article.videoUrl.trim() !== '') {
+            // RENDER MULTIPLE YOUTUBE VIDEOS (GROUPED)
+            if (article.videoUrls && Array.isArray(article.videoUrls) && article.videoUrls.length > 0) {
                 hasMedia = true;
+                article.videoUrls.forEach((video, index) => {
+                    const baseVideoUrl = getYouTubeEmbedUrl(video.url);
+                    // FORCE AUTOPLAY & MUTE (for Chrome/Safari autoplay compliance)
+                    const normalizedVideoUrl = baseVideoUrl ? (baseVideoUrl.includes('?') ? `${baseVideoUrl}&autoplay=1&mute=1` : `${baseVideoUrl}?autoplay=1&mute=1`) : '';
+
+                    mediaContainer.innerHTML += `
+                        <div class="space-y-3 p-4 rounded-2xl bg-slate-950/40 border border-slate-800/40">
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                                <span class="flex h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse"></span>
+                                ${video.label || `Video thực hành ${index + 1}`}
+                            </p>
+                            <div class="relative pb-[56.25%] h-0 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                                <iframe src="${normalizedVideoUrl}" class="absolute top-0 left-0 w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else if (article.videoUrl && article.videoUrl.trim() !== '') {
+                // Fallback for single legacy video
+                hasMedia = true;
+                const baseVideoUrl = getYouTubeEmbedUrl(article.videoUrl);
+                const normalizedVideoUrl = baseVideoUrl ? (baseVideoUrl.includes('?') ? `${baseVideoUrl}&autoplay=1&mute=1` : `${baseVideoUrl}?autoplay=1&mute=1`) : '';
+
                 mediaContainer.innerHTML += `
-                    <div class="space-y-3">
+                    <div class="space-y-3 p-4 rounded-2xl bg-slate-950/40 border border-slate-800/40">
                         <p class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                             <span class="flex h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse"></span>
                             Video hướng dẫn thực hành lâm sàng
                         </p>
                         <div class="relative pb-[56.25%] h-0 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
-                            <iframe src="${article.videoUrl}" class="absolute top-0 left-0 w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <iframe src="${normalizedVideoUrl}" class="absolute top-0 left-0 w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
                     </div>
                 `;
             }
 
-            if (article.pdfUrl && article.pdfUrl.trim() !== '') {
+            // RENDER MULTIPLE PDF FILES (GROUPED)
+            if (article.pdfUrls && Array.isArray(article.pdfUrls) && article.pdfUrls.length > 0) {
+                hasMedia = true;
+                let pdfSectionHtml = `
+                    <div class="space-y-3 p-4 rounded-2xl bg-slate-950/40 border border-slate-800/40">
+                        <p class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                            <span class="flex h-2.5 w-2.5 rounded-full bg-cyan-400"></span>
+                            Tài liệu nghiên cứu chuyên ngành (PDF)
+                        </p>
+                        <div class="grid grid-cols-1 gap-2.5">
+                `;
+
+                article.pdfUrls.forEach(pdf => {
+                    pdfSectionHtml += `
+                        <div class="flex flex-col sm:flex-row items-center justify-between p-3.5 rounded-xl bg-slate-950 border border-slate-800/60 gap-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-red-500/10 text-red-400 flex items-center justify-center text-base shrink-0">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </div>
+                                <h5 class="text-xs font-bold text-white">${pdf.label || 'Tài liệu lý thuyết'}</h5>
+                            </div>
+                            <a href="${pdf.url}" target="_blank" class="w-full sm:w-auto px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-[11px] font-bold transition-all text-center flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở PDF
+                            </a>
+                        </div>
+                    `;
+                });
+
+                pdfSectionHtml += `</div></div>`;
+                mediaContainer.innerHTML += pdfSectionHtml;
+            } else if (article.pdfUrl && article.pdfUrl.trim() !== '') {
+                // Fallback for single legacy PDF
                 hasMedia = true;
                 mediaContainer.innerHTML += `
-                    <div class="space-y-3">
+                    <div class="space-y-3 p-4 rounded-2xl bg-slate-950/40 border border-slate-800/40">
                         <p class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                             <span class="flex h-2.5 w-2.5 rounded-full bg-cyan-400"></span>
                             Tài liệu nghiên cứu chuyên ngành (PDF)
@@ -760,6 +819,12 @@
             if(!modal) return;
             modal.classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
+            
+            // RESET MEDIA TO STOP VIDEO: Clear the media container upon closing to stop the autoplaying video instantly
+            const mediaContainer = document.getElementById('modal-media-container');
+            if (mediaContainer) {
+                mediaContainer.innerHTML = '';
+            }
         }
 
         /* ====================================
