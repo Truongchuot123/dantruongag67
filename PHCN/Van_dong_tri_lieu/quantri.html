@@ -7,8 +7,10 @@
     
     <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons (Sửa lỗi hiển thị các biểu tượng ô vuông) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Sửa lỗi cú pháp tải phông chữ tiếng Việt chuẩn xác) -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- Firebase SDKs (v11.6.1 Compatibility mode) -->
     <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
@@ -20,6 +22,37 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #060913;
             color: #f1f5f9;
+        }
+
+        /* Tiêu đề lớn (Premium Headline) siêu mượt, loại bỏ text-shadow lỗi dấu */
+        .premium-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+            font-weight: 800;
+        }
+
+        /* Tiêu đề phụ sắc nét rực rỡ */
+        .gradient-subtitle {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #22d3ee 0%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.01em;
+            font-weight: 800;
+        }
+
+        /* Tiêu đề in hoa đẳng cấp cho Sidebar và Categories */
+        .section-header {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-weight: 800;
+            background: linear-gradient(180deg, #ffffff 60%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         /* Custom Scrollbar */
@@ -38,7 +71,7 @@
             background: #334155;
         }
 
-        /* Hide Scrollbar for cleaner UI on touch navigations */
+        /* Hide Scrollbar for cleaner UI */
         .scrollbar-none::-webkit-scrollbar {
             display: none;
         }
@@ -89,10 +122,11 @@
     <div id="orb-primary" class="glow-orb w-[250px] sm:w-[450px] h-[250px] sm:h-[450px] bg-cyan-500 top-0 left-1/4"></div>
     <div id="orb-secondary" class="glow-orb w-[300px] sm:w-[550px] h-[300px] sm:h-[550px] bg-indigo-500 bottom-0 right-1/4"></div>
 
+    <!-- Hộp thông báo Toast -->
     <div id="toast" class="fixed top-4 right-4 sm:top-5 sm:right-5 z-50 transform translate-y-[-100px] opacity-0 transition-all duration-300 max-w-sm w-[90%] sm:w-full bg-slate-900/95 border border-slate-800 rounded-2xl p-4 shadow-2xl flex items-start gap-3">
         <div id="toast-icon" class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"></div>
         <div class="flex-grow">
-            <h5 id="toast-title" class="text-xs sm:text-sm font-bold text-white">Thông báo</h5>
+            <h5 id="toast-title" class="text-xs sm:text-sm font-extrabold text-white tracking-wide">Thông báo</h5>
             <p id="toast-desc" class="text-[10px] sm:text-xs text-slate-400 mt-0.5">Nội dung...</p>
         </div>
         <button onclick="hideToast()" class="text-slate-500 hover:text-white transition-colors">
@@ -100,33 +134,39 @@
         </button>
     </div>
 
+    <!-- Màn hình khóa Gate Lock -->
     <div id="gate-lock" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4">
         <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 text-center shadow-2xl relative overflow-hidden">
             <div class="absolute -top-10 -right-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl"></div>
             
-            <div class="w-14 h-14 sm:w-16 sm:h-16 bg-cyan-500/10 text-cyan-400 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4">
+            <div class="w-14 h-14 sm:w-16 sm:h-16 bg-cyan-500/10 text-cyan-400 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-5">
                 <i class="fa-solid fa-user-shield"></i>
             </div>
             
-            <h2 class="text-lg sm:text-xl font-black text-white mb-2">Trình Xác Thực Đan Trường</h2>
-            <p class="text-[11px] sm:text-xs text-slate-400 mb-6 leading-relaxed">Hãy nhập mã PIN bảo mật để kích hoạt hệ thống điều trị chuyên khoa.</p>
+            <h2 class="text-xl sm:text-2xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400 uppercase mb-3 drop-shadow-md">
+                MẬT KHẨU ĐĂNG NHẬP
+            </h2>
+            <p class="text-[11px] sm:text-xs text-slate-400 mb-6 leading-relaxed px-2">
+                Hãy nhập mã PIN bảo mật để kích hoạt hệ thống điều trị chuyên khoa.
+            </p>
             
             <div class="space-y-4">
                 <input type="password" id="passcode-input" placeholder="•••••" 
                        class="w-full text-center tracking-widest bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 sm:py-3.5 text-white placeholder:text-slate-700 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all text-xl sm:text-2xl font-mono">
-                <button onclick="validateAccess()" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-cyan-500 to-indigo-500 text-slate-950 font-bold rounded-2xl hover:opacity-95 transition-all text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/10">
+                <button onclick="validateAccess()" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-cyan-500 to-indigo-500 text-slate-950 font-black rounded-2xl hover:opacity-95 transition-all text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/10">
                     <i class="fa-solid fa-unlock"></i> Xác nhận đăng nhập
                 </button>
             </div>
         </div>
     </div>
 
+    <!-- Hộp xác nhận xóa tùy chỉnh -->
     <div id="custom-confirm-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
         <div class="w-full max-w-sm bg-slate-900 border border-slate-850 rounded-2xl p-5 sm:p-6 shadow-2xl text-center">
             <div class="w-12 h-12 bg-rose-500/10 text-rose-400 rounded-full flex items-center justify-center text-xl mx-auto mb-3">
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
-            <h4 class="text-sm sm:text-base font-bold text-white mb-1">Xác nhận xóa</h4>
+            <h4 class="text-sm sm:text-base font-extrabold text-white mb-1.5 tracking-wide">Xác nhận xóa</h4>
             <p id="confirm-modal-message" class="text-[11px] sm:text-xs text-slate-400 mb-5 leading-relaxed">Bạn chắc chắn muốn thực hiện hành động này?</p>
             <div class="flex items-center gap-2">
                 <button id="btn-confirm-cancel" class="flex-1 py-2.5 bg-slate-950 hover:bg-slate-850 text-slate-400 font-bold rounded-xl transition-all text-xs border border-slate-800">
@@ -141,27 +181,27 @@
 
     <div class="flex-grow flex flex-col lg:flex-row w-full max-w-7xl mx-auto p-3 sm:p-6 lg:p-8 gap-4 sm:gap-6 relative z-10">
         
-        <!-- SIDEBAR NAVIGATION MENU (Scrollable on Mobile, Sticky on Desktop) -->
+        <!-- SIDEBAR NAVIGATION MENU -->
         <aside class="w-full lg:w-64 shrink-0 flex flex-col gap-3">
             <div class="glass-card p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-800/80 space-y-4 shadow-xl">
                 <div class="flex items-center gap-3 border-b border-slate-800 pb-3 sm:pb-4">
-                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-lg sm:text-xl">
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-lg sm:text-xl shrink-0">
                         <i class="fa-solid fa-house-medical"></i>
                     </div>
                     <div>
-                        <h2 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">DỮ LIỆU</h2>
-                        <p class="text-[9px] sm:text-[10px] text-slate-500">Phục Hồi Chức Năng</p>
+                        <h2 class="text-xs sm:text-sm font-black uppercase tracking-widest bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">DỮ LIỆU</h2>
+                        <p class="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wide mt-0.5">Phục Hồi Chức Năng</p>
                     </div>
                 </div>
 
-                <!-- Discipline Selection Buttons - Horizontally Scrollable on Mobile, Stacked on Desktop -->
+                <!-- Discipline Selection Buttons -->
                 <nav class="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0 scrollbar-none" id="discipline-nav">
                     <button onclick="switchDiscipline('thu_co')" id="nav-thu_co" 
                             class="flex items-center justify-between gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 border border-transparent rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-bold transition-all duration-300 hover:bg-slate-900/60 text-slate-400 text-left shrink-0 min-w-[155px] lg:min-w-0 lg:w-full">
                         <span class="flex items-center gap-2">
                             <i class="fa-solid fa-child-reaching text-sm sm:text-base"></i> Thử cơ
                         </span>
-                        <span class="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-950 text-emerald-400 font-mono" id="badge-thu_co">0</span>
+                        <span class="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded-md bg-yellow-950 text-yellow-400 font-mono" id="badge-thu_co">0</span>
                     </button>
 
                     <button onclick="switchDiscipline('đo_tam_van_dong')" id="nav-đo_tam_van_dong" 
@@ -172,13 +212,14 @@
                         <span class="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-950 text-emerald-400 font-mono" id="badge-đo_tam_van_dong">0</span>
                     </button>
 
-                    <button onclick="switchDiscipline('vdtl')" id="nav-vdtl" 
-                            class="flex items-center justify-between gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 border border-transparent rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-bold transition-all duration-300 hover:bg-slate-900/60 text-slate-400 text-left shrink-0 min-w-[155px] lg:min-w-0 lg:w-full">
-                        <span class="flex items-center gap-2">
-                            <i class="fa-solid fa-person-walking-rehab text-sm sm:text-base"></i> Vận động trị liệu
-                        </span>
-                        <span class="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded-md bg-cyan-950 text-cyan-400 font-mono" id="badge-vdtl">0</span>
-                    </button>
+                    <button onclick="switchDiscipline('vdtl')" id="nav-vdtl"
+    class="flex items-center justify-between gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 border border-transparent rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-bold transition-all duration-300 hover:bg-slate-900/60 text-slate-400 text-left shrink-0 min-w-[155px] lg:min-w-0 lg:w-full">
+    <span class="flex items-center gap-2">
+        <i class="fa-solid fa-dumbbell text-sm sm:text-base"></i>
+        Vận động trị liệu
+    </span>
+    <span class="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded-md bg-cyan-950 text-cyan-400 font-mono" id="badge-vdtl">0</span>
+</button>
                     
                     <button onclick="switchDiscipline('hoat_dong_tl')" id="nav-hoat_dong_tl" 
                             class="flex items-center justify-between gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 border border-transparent rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-bold transition-all duration-300 hover:bg-slate-900/60 text-slate-400 text-left shrink-0 min-w-[155px] lg:min-w-0 lg:w-full">
@@ -198,9 +239,9 @@
                     <button onclick="switchDiscipline('vltl_benh_ly')" id="nav-vltl_benh_ly" 
                             class="flex items-center justify-between gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 border border-transparent rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-bold transition-all duration-300 hover:bg-slate-900/60 text-slate-400 text-left shrink-0 min-w-[155px] lg:min-w-0 lg:w-full">
                         <span class="flex items-center gap-2">
-                            <i class="fa-solid fa-heart-pulse text-sm sm:text-base"></i> Vận động trị liệu - Bệnh lý
+                            <i class="fa-solid fa-heart-pulse text-sm sm:text-base"></i> VLTL - Bệnh lý
                         </span>
-                        <span class="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded-md bg-orange-950 text-orange-400 font-mono" id="badge-vltl_benh_ly">0</span>
+                        <span class="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded-md bg-green-950 text-green-400 font-mono" id="badge-vltl_benh_ly">0</span>
                     </button>
                 </nav>
             </div>
@@ -211,34 +252,36 @@
             <!-- ================= SECTION 1: ARTICLES LIST ================= -->
             <section id="sec-list" class="space-y-4 sm:space-y-6">
                 
-                <!-- Dynamic Title & Search Bar (Adapts layout at medium breakpoint) -->
+                <!-- Dynamic Title & Search Bar -->
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800/80 pb-4 sm:pb-6">
                     <div>
-                        <h1 id="discipline-header-title" class="text-xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-2.5">
-                            <span class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-sm sm:text-base"><i class="fa-solid fa-folder-open"></i></span>
-                            Vận Động Trị Liệu
+                        <h1 id="discipline-header-title" class="text-2xl sm:text-3.5xl font-extrabold tracking-tight text-white flex items-center gap-2.5">
+                            <span class="w-8.5 h-8.5 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-sm sm:text-base shrink-0">
+                                <i class="fa-solid fa-folder-open"></i>
+                            </span>
+                            <span class="premium-title">Vận Động Trị Liệu</span>
                         </h1>
-                        <p class="text-[10px] sm:text-xs text-slate-400 mt-1 sm:mt-1.5 leading-relaxed">
-                            Tổng số bài viết: <span id="stat-counter" class="text-cyan-400 font-bold font-mono">0</span>
+                        <p class="text-[10px] sm:text-xs text-slate-400 mt-1.5 leading-relaxed font-semibold">
+                            Tổng số bài viết hiện tại: <span id="stat-counter" class="text-cyan-400 font-extrabold font-mono text-xs sm:text-sm px-1">0</span>
                         </p>
                     </div>
                     
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                         <!-- Search Box -->
                         <div class="relative w-full sm:w-60 md:w-64">
-                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 sm:top-3.5 text-slate-500 text-xs"></i>
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 sm:top-4 text-slate-500 text-xs"></i>
                             <input type="text" id="admin-search-input" oninput="applyFilters()" placeholder="Tìm kiếm tên kỹ thuật..." 
-                                   class="w-full text-xs bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-4 py-2.5 sm:py-3 text-white placeholder:text-slate-600 focus:outline-none focus:border-cyan-500 transition-all">
+                                   class="w-full text-xs bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-4 py-2.5 sm:py-3.5 text-white placeholder:text-slate-600 focus:outline-none focus:border-cyan-500 transition-all">
                         </div>
 
                         <!-- Create New Post Button -->
-                        <button onclick="resetForm(); switchView('editor')" class="px-4 sm:px-5 py-2.5 sm:py-3 bg-cyan-400 hover:bg-cyan-300 text-slate-950 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-cyan-400/15 shrink-0">
+                        <button onclick="resetForm(); switchView('editor')" class="px-4 sm:px-5 py-2.5 sm:py-3.5 bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-cyan-400/15 shrink-0">
                             <i class="fa-solid fa-circle-plus text-sm"></i> Viết bài mới
                         </button>
                     </div>
                 </div>
 
-                <!-- CATEGORY SUB-FILTERS (Smooth swipe behavior) -->
+                <!-- CATEGORY SUB-FILTERS -->
                 <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none snap-x touch-pan-x" id="category-filters-container">
                     <!-- Dynamic subcategory pills go here -->
                 </div>
@@ -248,15 +291,15 @@
                         <table class="w-full text-left border-collapse text-[11px] sm:text-xs table-fixed min-w-[650px] sm:min-w-0">
                             <thead>
                                 <tr class="bg-slate-950/60 text-slate-400 border-b border-slate-800">
-                                    <th class="p-3 sm:p-4 font-bold uppercase tracking-wider w-[42%]">Tên Kỹ Thuật</th>
-                                    <th class="p-3 sm:p-4 font-bold uppercase tracking-wider w-[23%]">Chuyên Đề</th>
-                                    <th class="p-3 sm:p-4 font-bold uppercase tracking-wider w-[18%]">Phương Tiện / Liên Kết</th>
-                                    <th class="p-3 sm:p-4 font-bold uppercase tracking-wider text-right w-[17%]">Tác Vụ</th>
+                                    <th class="p-3 sm:p-4 font-black uppercase tracking-wider w-[42%]">Tên Kỹ Thuật</th>
+                                    <th class="p-3 sm:p-4 font-black uppercase tracking-wider w-[23%]">Chuyên Đề</th>
+                                    <th class="p-3 sm:p-4 font-black uppercase tracking-wider w-[18%]">Phương Tiện / Liên Kết</th>
+                                    <th class="p-3 sm:p-4 font-black uppercase tracking-wider text-right w-[17%]">Tác Vụ</th>
                                 </tr>
                             </thead>
                             <tbody id="articles-table-body" class="divide-y divide-slate-800/40">
                                 <tr>
-                                    <td colspan="4" class="p-8 text-center text-slate-500 animate-pulse">Đang đồng bộ dữ liệu của bạn...</td>
+                                    <td colspan="4" class="p-8 text-center text-slate-500 animate-pulse font-medium animate-pulse">Đang đồng bộ dữ liệu của bạn...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -264,14 +307,14 @@
                 </div>
             </section>
 
-            <!-- ================= SECTION 2: CREATION & EDITING FORM (Fully Responsive Layout Stack) ================= -->
+            <!-- ================= SECTION 2: CREATION & EDITING FORM ================= -->
             <section id="sec-editor" class="space-y-4 sm:space-y-6 hidden">
                 <!-- Editor Header -->
                 <div class="border-b border-slate-800 pb-4 flex items-center justify-between gap-2">
                     <div>
-                        <h2 id="editor-heading" class="text-lg sm:text-2xl font-black tracking-tight text-white flex items-center gap-2.5">
-                            <span class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-sm sm:text-base"><i class="fa-solid fa-pen-nib"></i></span>
-                            Soạn Thảo Bài Viết Mới
+                        <h2 id="editor-heading" class="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2.5">
+                            <span class="w-8.5 h-8.5 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-sm sm:text-base shrink-0"><i class="fa-solid fa-pen-nib"></i></span>
+                            <span class="premium-title">Soạn Thảo Bài Viết Mới</span>
                         </h2>
                     </div>
                     <button onclick="switchView('list')" class="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border border-slate-800 shadow-sm shrink-0">
@@ -281,14 +324,14 @@
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-start">
                     
-                    <!-- Input Form Fields (Fluid container width) -->
+                    <!-- Input Form Fields -->
                     <div class="lg:col-span-7 bg-slate-900/40 border border-slate-800/80 rounded-2xl sm:rounded-3xl p-4 sm:p-6 space-y-4 shadow-xl">
                         <input type="hidden" id="form-id">
                         
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="space-y-1">
-                                <label class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider">Chuyên khoa lưu trữ</label>
-                                <select id="form-discipline" onchange="updateFormCategorySelect()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-xs text-white focus:outline-none focus:border-cyan-500">
+                                <label class="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-wider">Chuyên khoa lưu trữ</label>
+                                <select id="form-discipline" onchange="updateFormCategorySelect()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3.5 text-xs text-white focus:outline-none focus:border-cyan-500">
                                     <option value="thu_co">Thử cơ</option>
                                     <option value="đo_tam_van_dong">Đo tầm vận động</option>
                                     <option value="vdtl">Vận Động Trị Liệu</option>
@@ -299,35 +342,35 @@
                             </div>
 
                             <div class="space-y-1">
-                                <label class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider">Chuyên Đề</label>
-                                <select id="form-category" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-xs text-white focus:outline-none focus:border-cyan-500">
+                                <label class="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-wider">Chuyên Đề</label>
+                                <select id="form-category" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3.5 text-xs text-white focus:outline-none focus:border-cyan-500">
                                     <!-- Populated dynamically -->
                                 </select>
                             </div>
                         </div>
 
                         <div class="space-y-1">
-                            <label class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider">Tên kỹ thuật</label>
+                            <label class="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-wider">Tên kỹ thuật</label>
                             <input type="text" id="form-title" placeholder="Ví dụ: Kỹ thuật di động khớp vai Maitland độ III" 
-                                   class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-xs text-white placeholder:text-slate-700 focus:outline-none focus:border-cyan-500">
+                                   class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3.5 text-xs text-white placeholder:text-slate-700 focus:outline-none focus:border-cyan-500">
                         </div>
 
                         <div class="space-y-1">
-                            <label class="text-[9px] sm:text-[10px] font-bold text-cyan-400 uppercase tracking-wider flex justify-between">
+                            <label class="text-[9px] sm:text-[10px] font-black text-cyan-400 uppercase tracking-wider flex justify-between">
                                 <span>Đường dẫn bài viết</span>
-                                <span class="text-slate-500 text-[8px] normal-case hidden sm:inline">Mở liên kết trực tiếp</span>
+                                <span class="text-slate-500 text-[8px] normal-case hidden sm:inline font-semibold">Mở liên kết trực tiếp</span>
                             </label>
                             <input type="text" id="form-article-url" placeholder="https://yourpage.com/post.html" 
-                                   class="w-full bg-slate-950 border border-cyan-800/60 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-xs text-white placeholder:text-slate-700 focus:outline-none focus:border-cyan-400">
+                                   class="w-full bg-slate-950 border border-cyan-800/60 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3.5 text-xs text-white placeholder:text-slate-700 focus:outline-none focus:border-cyan-400">
                         </div>
 
                         <!-- MULTIPLE YOUTUBE VIDEOS GROUP WITH DRAG AND DROP -->
                         <div class="space-y-2 border border-slate-800/80 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-950/40">
                             <div class="flex items-center justify-between pb-1 gap-2">
-                                <label class="text-[9px] sm:text-[10px] font-bold text-red-400 uppercase tracking-wider flex items-center gap-1.5">
+                                <label class="text-[9px] sm:text-[10px] font-black text-red-400 uppercase tracking-wider flex items-center gap-1.5">
                                     <i class="fa-solid fa-circle-play text-red-500"></i> Video hướng dẫn
                                 </label>
-                                <button type="button" onclick="addVideoInputRow()" class="px-2.5 py-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-[9px] sm:text-[10px] font-bold rounded-lg transition-all flex items-center gap-1">
+                                <button type="button" onclick="addVideoInputRow()" class="px-2.5 py-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-[9px] sm:text-[10px] font-black rounded-lg transition-all flex items-center gap-1">
                                     <i class="fa-solid fa-plus"></i> Thêm
                                 </button>
                             </div>
@@ -339,10 +382,10 @@
                         <!-- MULTIPLE PDF FILES GROUP -->
                         <div class="space-y-2 border border-slate-800/80 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-950/40">
                             <div class="flex items-center justify-between pb-1 gap-2">
-                                <label class="text-[9px] sm:text-[10px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1">
+                                <label class="text-[9px] sm:text-[10px] font-black text-emerald-400 uppercase tracking-wider flex items-center gap-1">
                                     <i class="fa-solid fa-file-pdf text-emerald-500"></i> Tài liệu đính kèm (PDF)
                                 </label>
-                                <button type="button" onclick="addPdfInputRow()" class="px-2.5 py-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 text-[9px] sm:text-[10px] font-bold rounded-lg transition-all flex items-center gap-1">
+                                <button type="button" onclick="addPdfInputRow()" class="px-2.5 py-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 text-[9px] sm:text-[10px] font-black rounded-lg transition-all flex items-center gap-1">
                                     <i class="fa-solid fa-plus"></i> Thêm
                                 </button>
                             </div>
@@ -354,8 +397,8 @@
                         <!-- TEXT CONTENT AREA -->
                         <div class="space-y-1">
                             <div class="flex items-center justify-between gap-2">
-                                <label class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nội dung</label>
-                                <button onclick="insertHtmlTemplate()" type="button" class="text-[9px] sm:text-[10px] text-cyan-400 hover:underline flex items-center gap-1">
+                                <label class="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-wider">Nội dung</label>
+                                <button onclick="insertHtmlTemplate()" type="button" class="text-[9px] sm:text-[10px] text-cyan-400 hover:underline flex items-center gap-1 font-bold">
                                     <i class="fa-solid fa-code"></i> Chèn sườn HTML mẫu
                                 </button>
                             </div>
@@ -365,23 +408,25 @@
 
                         <!-- Actions panel -->
                         <div class="flex items-center gap-3 pt-2">
-                            <button onclick="resetForm(); switchView('list');" class="px-4 sm:px-5 py-3 sm:py-3.5 bg-slate-950 hover:bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-bold transition-all border border-slate-800">
+                            <button onclick="resetForm(); switchView('list');" class="px-4 sm:px-5 py-3 sm:py-3.5 bg-slate-950 hover:bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-black transition-all border border-slate-800">
                                 Hủy
                             </button>
-                            <button onclick="saveArticle()" class="flex-grow py-3 sm:py-3.5 bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold rounded-xl transition-all text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-400/15">
+                            <button onclick="saveArticle()" class="flex-grow py-3 sm:py-3.5 bg-gradient-to-r from-cyan-400 to-indigo-500 hover:opacity-95 text-slate-950 font-black rounded-xl transition-all text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-400/15">
                                 <i class="fa-solid fa-cloud-arrow-up"></i> Lưu thông tin
                             </button>
                         </div>
                     </div>
 
-                    <!-- Live Preview Sidebox (Sticks dynamically on desktop screens) -->
+                    <!-- Live Preview Sidebox -->
                     <div class="lg:col-span-5 space-y-4 lg:sticky lg:top-6">
-                        <p class="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider px-1 flex items-center gap-1.5">
+                        <p class="text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-wider px-1 flex items-center gap-1.5">
                             <span class="flex h-1.5 w-1.5 rounded-full bg-cyan-400"></span>
                             Xem trước nội dung hiển thị
                         </p>
                         <div class="glass-card rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-slate-800 max-h-[400px] lg:max-h-[520px] overflow-y-auto shadow-xl">
-                            <div id="live-preview-title" class="text-sm sm:text-base font-extrabold text-white pb-2.5 border-b border-slate-800 mb-4">Xem trước tiêu đề</div>
+                            <div id="live-preview-title" class="text-sm sm:text-base font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-300 pb-2.5 border-b border-slate-800 mb-4 tracking-tight leading-snug">
+                                Xem trước tiêu đề
+                            </div>
                             <div id="live-preview-body" class="text-[11px] sm:text-xs text-slate-300 space-y-3 leading-relaxed font-sans">
                                 <p class="text-slate-500 italic">Vui lòng nhập nội dung để xem trước kết quả định dạng...
                             </div>
@@ -409,7 +454,7 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // App ID and strict collection path configuration (Rule 1)
+        // App ID and strict collection path configuration
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'dulieuweb-6541e';
         
         function getArticlesCollection() {
@@ -483,14 +528,14 @@
                 }
             },
             vltl_benh_ly: {
-                title: 'VLTL Bênh Lý',
-                icon: 'fa-solid fa-comments',
+                title: 'VLTL Bệnh Lý',
+                icon: 'fa-solid fa-heart-pulse',
                 color: 'green',
                 colorHex: '#10b981',
                 categories: {
                     vltl_benh_ly_1: 'Vẹo cột sống',
-                    vltl_benh_ly_2: 'Thoát vị đia đệm',
-                    vltl_benh_ly_3: 'Tai biến mạch mau não',
+                    vltl_benh_ly_2: 'Thoát vị đĩa đệm',
+                    vltl_benh_ly_3: 'Tai biến mạch máu não',
                     vltl_benh_ly_4: 'Tổn thương tủy sống',
                 }
             }
@@ -504,13 +549,13 @@
 
         // Application State
         let localArticles = [];
-        let displayedArticles = []; // Active filtered list currently shown on DOM
-        let draggedRow = null; // Drag tracking for video dynamic rows
-        let draggedArticleRow = null; // Drag tracking for main articles rows reordering
+        let displayedArticles = []; 
+        let draggedRow = null; 
+        let draggedArticleRow = null; 
         
-        let activeDiscipline = 'vdtl'; // Active Selected Sidebar Tab
-        let activeCategoryFilter = 'all'; // Active category pill filter
-        let selectedRowForMoveId = null; // Storing first selected row in click-to-move swap mode
+        let activeDiscipline = 'vdtl'; 
+        let activeCategoryFilter = 'all'; 
+        let selectedRowForMoveId = null; 
 
         /* ====================================
            UI VIEW NAVIGATION
@@ -529,7 +574,7 @@
         }
 
         /* ====================================
-           DYNAMIC INPUT FIELDS GENERATORS WITH NATIVE DRAG AND DROP
+           DYNAMIC INPUT FIELDS GENERATORS
            ==================================== */
         function addVideoInputRow(url = '', label = '') {
             const container = document.getElementById('video-inputs-container');
@@ -629,13 +674,13 @@
                 activeBtn.className = `flex items-center justify-between gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 border rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-bold transition-all duration-300 text-left bg-${specColor}-500/10 border-${specColor}-500/40 text-${specColor}-400 shrink-0 min-w-[155px] lg:min-w-0 lg:w-full`;
             }
 
-            // Update Header & General Accent Themes
+            // Update Header & General Accent Themes (Sử dụng tiêu đề cao cấp premium-title)
             const headerTitle = document.getElementById('discipline-header-title');
             const disciplineData = disciplinesMeta[disciplineKey];
             headerTitle.innerHTML = `
-                <span class="w-8 h-8 rounded-lg bg-${disciplineData.color}-500/10 text-${disciplineData.color}-400 flex items-center justify-center text-sm sm:text-base">
+                <span class="w-8.5 h-8.5 rounded-xl bg-${disciplineData.color}-500/10 text-${disciplineData.color}-400 flex items-center justify-center text-sm sm:text-base shrink-0">
                     <i class="${disciplineData.icon}"></i>
-                </span>${disciplineData.title}
+                </span><span class="premium-title">${disciplineData.title}</span>
             `;
 
             // Animate Background Ambient Orbs matching selected specialty
@@ -645,8 +690,8 @@
                 oPrimary.className = "glow-orb w-[250px] sm:w-[450px] h-[250px] sm:h-[450px] bg-cyan-500 top-0 left-1/4";
                 oSecondary.className = "glow-orb w-[300px] sm:w-[550px] h-[300px] sm:h-[550px] bg-indigo-500 bottom-0 right-1/4";
             } else if (disciplineKey === 'thu_co') {
-                oPrimary.className = "glow-orb w-[250px] sm:w-[450px] h-[250px] sm:h-[450px] bg-emerald-500 top-0 left-1/4";
-                oSecondary.className = "glow-orb w-[300px] sm:w-[550px] h-[300px] sm:h-[550px] bg-teal-500 bottom-0 right-1/4";
+                oPrimary.className = "glow-orb w-[250px] sm:w-[450px] h-[250px] sm:h-[450px] bg-yellow-500 top-0 left-1/4";
+                oSecondary.className = "glow-orb w-[300px] sm:w-[550px] h-[300px] sm:h-[550px] bg-amber-500 bottom-0 right-1/4";
             } else if (disciplineKey === 'đo_tam_van_dong') {
                 oPrimary.className = "glow-orb w-[250px] sm:w-[450px] h-[250px] sm:h-[450px] bg-emerald-500 top-0 left-1/4";
                 oSecondary.className = "glow-orb w-[300px] sm:w-[550px] h-[300px] sm:h-[550px] bg-teal-500 bottom-0 right-1/4";
@@ -657,11 +702,10 @@
                 oPrimary.className = "glow-orb w-[250px] sm:w-[450px] h-[250px] sm:h-[450px] bg-rose-500 top-0 left-1/4";
                 oSecondary.className = "glow-orb w-[300px] sm:w-[550px] h-[300px] sm:h-[550px] bg-orange-500 bottom-0 right-1/4";
             } else if (disciplineKey === 'vltl_benh_ly') {
-                oPrimary.className = "glow-orb w-[250px] sm:w-[450px] h-[250px] sm:h-[450px] bg-rose-500 top-0 left-1/4";
-                oSecondary.className = "glow-orb w-[300px] sm:w-[550px] h-[300px] sm:h-[550px] bg-orange-500 bottom-0 right-1/4";
+                oPrimary.className = "glow-orb w-[250px] sm:w-[450px] h-[250px] sm:h-[450px] bg-green-500 top-0 left-1/4";
+                oSecondary.className = "glow-orb w-[300px] sm:w-[550px] h-[300px] sm:h-[550px] bg-emerald-500 bottom-0 right-1/4";
             }
             
-
             // Sync dynamic Category Filter controls & reload list
             renderCategoryFilters();
             applyFilters();
@@ -683,9 +727,9 @@
             allBtn.onclick = () => selectCategoryFilter('all');
             
             if (activeCategoryFilter === 'all') {
-                allBtn.className = `px-3 py-1.5 text-[11px] sm:text-xs font-bold rounded-xl transition-all bg-${themeColor}-400 text-slate-950 shadow-md shrink-0 snap-start`;
+                allBtn.className = `px-3.5 py-2 text-[11px] sm:text-xs font-black rounded-xl transition-all bg-${themeColor}-400 text-slate-950 shadow-md shrink-0 snap-start`;
             } else {
-                allBtn.className = `px-3 py-1.5 text-[11px] sm:text-xs font-bold rounded-xl transition-all bg-slate-900 text-slate-400 hover:text-white shrink-0 snap-start`;
+                allBtn.className = `px-3.5 py-2 text-[11px] sm:text-xs font-bold rounded-xl transition-all bg-slate-900 text-slate-400 hover:text-white shrink-0 snap-start`;
             }
             container.appendChild(allBtn);
 
@@ -698,9 +742,9 @@
                 btn.onclick = () => selectCategoryFilter(catKey);
 
                 if (activeCategoryFilter === catKey) {
-                    btn.className = `px-3 py-1.5 text-[11px] sm:text-xs font-bold rounded-xl transition-all bg-${themeColor}-400 text-slate-950 shadow-md shrink-0 snap-start`;
+                    btn.className = `px-3.5 py-2 text-[11px] sm:text-xs font-black rounded-xl transition-all bg-${themeColor}-400 text-slate-950 shadow-md shrink-0 snap-start`;
                 } else {
-                    btn.className = `px-3 py-1.5 text-[11px] sm:text-xs font-bold rounded-xl transition-all bg-slate-900 text-slate-400 hover:text-white shrink-0 snap-start`;
+                    btn.className = `px-3.5 py-2 text-[11px] sm:text-xs font-bold rounded-xl transition-all bg-slate-900 text-slate-400 hover:text-white shrink-0 snap-start`;
                 }
                 container.appendChild(btn);
             });
@@ -708,7 +752,7 @@
 
         function selectCategoryFilter(catKey) {
             activeCategoryFilter = catKey;
-            selectedRowForMoveId = null; // Clear manual swap selections
+            selectedRowForMoveId = null; 
             renderCategoryFilters();
             applyFilters();
         }
@@ -744,7 +788,7 @@
                     else if ((art.categoryKey || '').startsWith('ot_')) artDisc = 'hoat_dong_tl';
                     else if ((art.categoryKey || '').startsWith('st_')) artDisc = 'ngon_ngu_tl';
                     else if ((art.categoryKey || '').startsWith('vltl_benh_ly_')) artDisc = 'vltl_benh_ly';
-                    else artDisc = 'vdtl'; // default fallback
+                    else artDisc = 'vdtl'; 
                 }
 
                 const matchesDiscipline = (artDisc === activeDiscipline);
@@ -754,7 +798,6 @@
                 return matchesDiscipline && matchesCategory && matchesSearch;
             });
 
-            // Update badge totals
             updateDisciplineBadges();
 
             document.getElementById('stat-counter').innerText = displayedArticles.length;
@@ -788,7 +831,7 @@
         }
 
         /* ====================================
-           ADMIN TABLE RENDERER
+           STREAMING_CHUNK: Đồng bộ hoá và sắp xếp bảng...
            ==================================== */
         function renderAdminTable(dataArray) {
             const tbody = document.getElementById('articles-table-body');
@@ -797,7 +840,7 @@
             tbody.innerHTML = '';
 
             if (dataArray.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-500">Không tìm thấy kỹ thuật nào tương ứng hoặc cơ sở dữ liệu trống.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-500 font-medium">Không tìm thấy kỹ thuật nào tương ứng hoặc cơ sở dữ liệu trống.</td></tr>`;
                 return;
             }
 
@@ -808,11 +851,11 @@
                 const videoCount = art.videoUrls ? art.videoUrls.length : (art.videoUrl ? 1 : 0);
                 const pdfCount = art.pdfUrls ? art.pdfUrls.length : (art.pdfUrl ? 1 : 0);
 
-                if (videoCount > 0) mediaStatusList.push(`<span class="text-red-400 font-bold whitespace-nowrap">Video (${videoCount})</span>`);
-                if (pdfCount > 0) mediaStatusList.push(`<span class="text-emerald-400 font-bold whitespace-nowrap">PDF (${pdfCount})</span>`);
-                if (art.articleUrl) mediaStatusList.push('<span class="text-cyan-400 font-bold whitespace-nowrap"><i class="fa-solid fa-link"></i> HTML</span>');
+                if (videoCount > 0) mediaStatusList.push(`<span class="text-red-400 font-extrabold whitespace-nowrap">Video (${videoCount})</span>`);
+                if (pdfCount > 0) mediaStatusList.push(`<span class="text-emerald-400 font-extrabold whitespace-nowrap">PDF (${pdfCount})</span>`);
+                if (art.articleUrl) mediaStatusList.push('<span class="text-cyan-400 font-extrabold whitespace-nowrap"><i class="fa-solid fa-link"></i> HTML</span>');
                 
-                let mediaStatus = mediaStatusList.length > 0 ? mediaStatusList.join(' • ') : '<span class="text-slate-600 whitespace-nowrap">Lý thuyết</span>';
+                let mediaStatus = mediaStatusList.length > 0 ? mediaStatusList.join(' • ') : '<span class="text-slate-600 font-medium whitespace-nowrap">Lý thuyết</span>';
 
                 const tr = document.createElement('tr');
                 tr.dataset.id = art.id;
@@ -836,22 +879,22 @@
                             <span class="truncate">${art.title}</span>
                         </div>
                     </td>
-                    <td class="p-3 sm:p-4 text-slate-400 truncate align-middle">${catName}</td>
+                    <td class="p-3 sm:p-4 text-slate-400 truncate align-middle font-medium">${catName}</td>
                     <td class="p-3 sm:p-4 align-middle text-slate-300 overflow-hidden text-ellipsis">${mediaStatus}</td>
                     <td class="p-3 sm:p-4 text-right space-x-1 sm:space-x-2 whitespace-nowrap align-middle">
-                        <button onclick="editArticle('${art.id}')" class="px-2.5 py-1.5 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 rounded-xl border border-cyan-500/20 transition-all text-[11px]">
+                        <button onclick="editArticle('${art.id}')" class="px-2.5 py-1.5 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 rounded-xl border border-cyan-500/20 transition-all text-[11px] font-bold">
                             <i class="fa-solid fa-pen-to-square"></i> <span class="hidden sm:inline">Sửa</span>
                         </button>
-                        <button onclick="deleteArticle('${art.id}')" class="px-2.5 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-xl border border-rose-500/20 transition-all text-[11px]">
+                        <button onclick="deleteArticle('${art.id}')" class="px-2.5 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-xl border border-rose-500/20 transition-all text-[11px] font-bold">
                             <i class="fa-solid fa-trash-can"></i> <span class="hidden sm:inline">Xóa</span>
                         </button>
                     </td>
                 `;
 
-                // Handle click on row (exclusive of action buttons) for selecting/moving
+                // Handle click on row for selecting/moving
                 tr.addEventListener('click', (e) => {
                     if (e.target.closest('button') || e.target.closest('i.cursor-move')) {
-                        return; // Let actions and drag handle trigger naturally
+                        return; 
                     }
                     handleRowClickToReorder(art.id, index);
                 });
@@ -899,17 +942,14 @@
            ==================================== */
         function handleRowClickToReorder(clickedId, clickedIdx) {
             if (selectedRowForMoveId === null) {
-                // First click: Select row
                 selectedRowForMoveId = clickedId;
-                applyFilters(); // Re-render to apply select styles
+                applyFilters(); 
                 showToast("Sắp xếp vị trí", "Chọn dòng tiếp theo để chuyển bài viết này tới vị trí đó.", "info");
             } else {
                 if (selectedRowForMoveId === clickedId) {
-                    // Clicking same row deselects it
                     selectedRowForMoveId = null;
                     applyFilters();
                 } else {
-                    // Second click: Swap/Move selected row to clicked row position
                     const fromIdx = displayedArticles.findIndex(a => a.id === selectedRowForMoveId);
                     const toIdx = clickedIdx;
                     
@@ -925,17 +965,13 @@
             
             if (!movingItem || !targetItem) return;
             
-            // Find global indices inside localArticles
             const fromGlobalIdx = localArticles.findIndex(a => a.id === movingItem.id);
-            localArticles.splice(fromGlobalIdx, 1); // Remove
+            localArticles.splice(fromGlobalIdx, 1); 
             
             const toGlobalIdx = localArticles.findIndex(a => a.id === targetItem.id);
-            localArticles.splice(toGlobalIdx, 0, movingItem); // Insert
+            localArticles.splice(toGlobalIdx, 0, movingItem); 
             
-            // Immediately re-render so user sees update with zero latency
             applyFilters();
-            
-            // Trigger automatic background save
             await autoSaveOrder();
         }
 
@@ -947,7 +983,6 @@
             try {
                 const batch = db.batch();
                 
-                // Set order values matching local index
                 localArticles.forEach((art, idx) => {
                     const docRef = getArticlesCollection().doc(art.id);
                     batch.update(docRef, { 
@@ -981,17 +1016,17 @@
         }
 
         function insertHtmlTemplate() {
-            const template = `<p class="font-semibold text-white">1. Chỉ định & vai trò lâm sàng:</p>
-<p>Nhập mô tả chi tiết tại đây...</p>
+            const template = `<p class="font-extrabold text-white text-xs sm:text-sm tracking-wide">1. Chỉ định & vai trò lâm sàng:</p>
+<p class="text-slate-300">Nhập mô tả chi tiết tại đây...</p>
 
-<p class="font-semibold text-white mt-4">2. Quy trình thực hành từng bước:</p>
+<p class="font-extrabold text-white text-xs sm:text-sm tracking-wide mt-4">2. Quy trình thực hành từng bước:</p>
 <ul class="list-disc list-inside space-y-2 pl-2">
-    <li><strong class="text-cyan-400">Bước 1:</strong> Chuẩn bị tư thế người bệnh và KTV.</li>
-    <li><strong class="text-cyan-400">Bước 2:</strong> Thực hiện các thao tác trị liệu...</li>
+    <li class="text-slate-300"><strong class="text-cyan-400 font-bold">Bước 1:</strong> Chuẩn bị tư thế người bệnh và KTV.</li>
+    <li class="text-slate-300"><strong class="text-cyan-400 font-bold">Bước 2:</strong> Thực hiện các thao tác trị liệu...</li>
 </ul>
 
-<p class="font-semibold text-white mt-4">3. Chống chỉ định:</p>
-<p>Không thực hiện khi có chấn thương hở...</p>`;
+<p class="font-extrabold text-white text-xs sm:text-sm tracking-wide mt-4">3. Chống chỉ định:</p>
+<p class="text-slate-300">Không thực hiện khi có chấn thương hở hoặc gãy xương chưa cố định...</p>`;
 
             document.getElementById('form-content').value = template;
             updateLivePreview(template);
@@ -1009,18 +1044,17 @@
             document.getElementById('video-inputs-container').innerHTML = '';
             document.getElementById('pdf-inputs-container').innerHTML = '';
 
-            document.getElementById('editor-heading').innerText = "Soạn Thảo Bài Viết Mới";
+            document.getElementById('editor-heading').innerHTML = `<span class="premium-title">Soạn Thảo Bài Viết Mới</span>`;
             updateLivePreview('');
         }
 
         /* ====================================
-           CRUD OPERATIONS (Rule 3)
+           STREAMING_CHUNK: Nghiệp vụ lưu, sửa và xóa...
            ==================================== */
         function editArticle(id) {
             const art = localArticles.find(a => a.id === id);
             if (!art) return;
 
-            // Resolve discipline configuration parameter
             let artDisc = art.disciplineKey;
             if (!artDisc) {
                 if ((art.categoryKey || '').startsWith('tc_')) artDisc = 'thu_co';
@@ -1053,7 +1087,7 @@
                 addPdfInputRow(art.pdfUrl, 'Tài liệu nghiên cứu');
             }
 
-            document.getElementById('editor-heading').innerText = "Quản lý bài viết phục hồi";
+            document.getElementById('editor-heading').innerHTML = `<span class="premium-title">Quản Lý Bài Viết Phục Hồi</span>`;
             updateLivePreview(art.content || '');
             
             switchView('editor');
@@ -1228,7 +1262,7 @@
            ==================================== */
         function validateAccess() {
             const pin = document.getElementById('passcode-input').value;
-            if (pin === '12345') {
+            if (pin === '180726') {
                 document.getElementById('gate-lock').classList.add('hidden');
                 showToast("Truy cập thành công", "Cơ sở dữ liệu trực tuyến sẵn sàng.");
             } else {
@@ -1237,7 +1271,7 @@
         }
 
         /* ====================================
-           FIRESTORE SYNC (Rule 3)
+           REAL-TIME DATA SYNCHRONIZATION
            ==================================== */
         function setupRealtimeSync() {
             if (!auth.currentUser) return;
@@ -1253,11 +1287,9 @@
                     });
                 });
 
-                // Read and sort the raw array from firebase
                 localArticles = tempArticles;
                 localArticles.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
                 
-                // Initialize Category selection pillbars
                 renderCategoryFilters();
                 applyFilters();
             }, (error) => {
@@ -1270,7 +1302,6 @@
            INITIAL_LOAD
            ==================================== */
         document.addEventListener('DOMContentLoaded', async () => {
-            // Initial dynamic category select population
             updateFormCategorySelect();
             
             try {
@@ -1280,7 +1311,7 @@
                     await auth.signInAnonymously();
                 }
             } catch (e) {
-                console.warn("Lỗi đăng nhập, bạn vui lòng kiểm tra lại", e);
+                console.warn("Lỗi đăng nhập, đang thử lại bằng chế độ ẩn danh", e);
                 await auth.signInAnonymously();
             }
         });
