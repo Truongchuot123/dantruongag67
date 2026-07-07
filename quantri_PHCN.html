@@ -212,14 +212,13 @@
                         <span class="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-950 text-emerald-400 font-mono" id="badge-đo_tam_van_dong">0</span>
                     </button>
 
-                    <button onclick="switchDiscipline('vdtl')" id="nav-vdtl"
-    class="flex items-center justify-between gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 border border-transparent rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-bold transition-all duration-300 hover:bg-slate-900/60 text-slate-400 text-left shrink-0 min-w-[155px] lg:min-w-0 lg:w-full">
-    <span class="flex items-center gap-2">
-        <i class="fa-solid fa-dumbbell text-sm sm:text-base"></i>
-        Vận động trị liệu
-    </span>
-    <span class="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded-md bg-cyan-950 text-cyan-400 font-mono" id="badge-vdtl">0</span>
-</button>
+                    <button onclick="switchDiscipline('vdtl')" id="nav-vdtl" 
+                            class="flex items-center justify-between gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 border border-transparent rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-bold transition-all duration-300 hover:bg-slate-900/60 text-slate-400 text-left shrink-0 min-w-[155px] lg:min-w-0 lg:w-full">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-dumbbell text-sm sm:text-base"></i> Vận động trị liệu
+                        </span>
+                        <span class="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded-md bg-cyan-950 text-cyan-400 font-mono" id="badge-vdtl">0</span>
+                    </button>
                     
                     <button onclick="switchDiscipline('hoat_dong_tl')" id="nav-hoat_dong_tl" 
                             class="flex items-center justify-between gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 border border-transparent rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-bold transition-all duration-300 hover:bg-slate-900/60 text-slate-400 text-left shrink-0 min-w-[155px] lg:min-w-0 lg:w-full">
@@ -815,7 +814,7 @@
                     else if ((art.categoryKey || '').startsWith('ot_')) artDisc = 'hoat_dong_tl';
                     else if ((art.categoryKey || '').startsWith('st_')) artDisc = 'ngon_ngu_tl';
                     else if ((art.categoryKey || '').startsWith('vltl_benh_ly_')) artDisc = 'vltl_benh_ly';
-                    else artDisc = 'vdtl';
+                    else artDisc = 'thu_co';
                 }
                 if (counts[artDisc] !== undefined) {
                     counts[artDisc]++;
