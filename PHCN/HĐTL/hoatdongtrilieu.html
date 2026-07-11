@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vận động trị liệu - Nguyễn Mai Đan Trường</title>
-    <meta name="description" content="Khám phá tài liệu vận động trị liệu chuyên nghiệp.">
-    <meta property="og:description" content="Khám phá các kỹ thuật vật lý trị liệu và phục hồi chức năng chuyên sâu cùng Đan Trường.">
-    <meta property="og:image" content="https://placehold.co/1200x630/0f172a/38bdf8?text=Van+Dong+Tri+Lieu">
-    <link rel="stylesheet" href="/style.css">
+    <title>Hoạt động trị liệu - Nguyễn Mai Đan Trường</title>
+    <meta name="description" content="Khám phá tài liệu hoạt động trị liệu chuyên nghiệp và phục hồi chức năng chuyên sâu.">
+    <meta property="og:description" content="Khám phá các kỹ thuật hoạt động trị liệu, vận động tinh bàn tay và sinh hoạt hàng ngày cùng Đan Trường.">
+    <meta property="og:image" content="https://placehold.co/1200x630/0f172a/6366f1?text=Hoat+Dong+Tri+Lieu">
 
     <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Firebase SDKs (v11.6.1 Compatibility mode) -->
@@ -22,7 +21,7 @@
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #080b11;
+            background-color: #060913;
             color: #f1f5f9;
         }
 
@@ -44,14 +43,14 @@
 
         /* Glassmorphism Classes */
         .glass-panel {
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(11, 17, 32, 0.65);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
 
         .glass-card {
-            background: rgba(15, 23, 42, 0.45);
+            background: rgba(11, 17, 32, 0.45);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.03);
@@ -60,8 +59,9 @@
 
         .glass-card:hover {
             transform: translateY(-5px) scale(1.01);
-            background: rgba(20, 30, 55, 0.6);
-            box-shadow: 0 20px 40px -15px rgba(6, 182, 212, 0.15);
+            background: rgba(15, 23, 42, 0.7);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.2);
         }
 
         /* Smooth Hide/Show animation */
@@ -85,7 +85,7 @@
             position: absolute;
             border-radius: 50%;
             filter: blur(140px);
-            opacity: 0.15;
+            opacity: 0.12;
             pointer-events: none;
             z-index: 0;
             transition: all 0.8s ease;
@@ -122,15 +122,14 @@
         }
     </style>
 </head>
-<body class="overflow-x-hidden min-h-screen flex flex-col selection:bg-cyan-500 selection:text-slate-900">
+<body class="overflow-x-hidden min-h-screen flex flex-col selection:bg-indigo-500 selection:text-slate-900">
 
-    <!-- Ambient background glows -->
-    <div class="glow-orb w-[600px] h-[600px] bg-cyan-500/80 -top-40 -left-40"></div>
-    <div class="glow-orb w-[500px] h-[500px] bg-indigo-600/60 top-[40%] right-[-100px]"></div>
-    <div class="glow-orb w-[700px] h-[700px] bg-emerald-500/30 bottom-[-200px] left-[20%]"></div>
+    <!-- Ambient background glows - Premium Style Matching quantri_PHCN -->
+    <div class="glow-orb w-[600px] h-[600px] bg-indigo-500/80 -top-40 -left-40"></div>
+    <div class="glow-orb w-[500px] h-[500px] bg-purple-600/60 top-[40%] right-[-100px]"></div>
+    <div class="glow-orb w-[700px] h-[700px] bg-rose-500/30 bottom-[-200px] left-[20%]"></div>
 
-    
-    <!-- Header Placeholder -->
+    <!-- HEADER / NAVIGATION PLACEHOLDER -->
     <div id="header-placeholder"></div>
     <div id="search-placeholder"></div>
 
@@ -140,18 +139,18 @@
             <div class="space-y-6 fade-in-up">
                 
                 <h1 class="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight leading-[1.1]">
-                    VẬN ĐỘNG <br class="hidden sm:inline">
-                    <span class="bg-gradient-to-r from-cyan-400 via-teal-300 to-indigo-400 bg-clip-text text-transparent">TRỊ LIỆU LÂM SÀNG</span>
+                    HOẠT ĐỘNG <br class="hidden sm:inline">
+                    <span class="bg-gradient-to-r from-indigo-400 via-purple-300 to-rose-400 bg-clip-text text-transparent">TRỊ LIỆU LÂM SÀNG</span>
                 </h1>
 
                 <!-- Stats Quick view -->
                 <div class="pt-4 grid grid-cols-2 gap-4 max-w-xs mx-auto">
-                    <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80 text-center glass-panel">
-                        <p id="stats-tab-count" class="text-2xl sm:text-3xl font-bold text-cyan-400">...</p>
+                    <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 text-center glass-panel">
+                        <p id="stats-tab-count" class="text-2xl sm:text-3xl font-bold text-indigo-400">...</p>
                         <p class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold mt-1">Chuyên Đề</p>
                     </div>
-                    <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80 text-center glass-panel">
-                        <p id="stats-art-count" class="text-2xl sm:text-3xl font-bold text-teal-400">...</p>
+                    <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 text-center glass-panel">
+                        <p id="stats-art-count" class="text-2xl sm:text-3xl font-bold text-rose-400">...</p>
                         <p class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold mt-1">Bài viết</p>
                     </div>
                 </div>
@@ -165,10 +164,10 @@
         <!-- Search & Filter Area -->
         <div id="search-section" class="mb-12 max-w-xl mx-auto transition-all duration-300">
             <div class="relative group">
-                <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500/50 to-indigo-500/50 rounded-2xl blur opacity-35 group-focus-within:opacity-80 transition duration-300"></div>
+                <div class="absolute -inset-0.5 bg-gradient-to-r from-indigo-500/50 to-rose-500/50 rounded-2xl blur opacity-35 group-focus-within:opacity-80 transition duration-300"></div>
                 <div class="relative flex items-center bg-slate-900/90 border border-slate-800/80 rounded-2xl px-5 py-3.5">
-                    <i class="fa-solid fa-magnifying-glass text-slate-400 mr-3 text-lg transition-colors group-focus-within:text-cyan-400"></i>
-                    <input type="text" id="article-search" placeholder="Tìm kiếm kỹ thuật xoa bóp, PNF, kéo giãn..." 
+                    <i class="fa-solid fa-magnifying-glass text-slate-400 mr-3 text-lg transition-colors group-focus-within:text-indigo-400"></i>
+                    <input type="text" id="article-search" placeholder="Tìm kiếm tư thế, vận động tinh, dụng cụ hỗ trợ..." 
                            class="w-full bg-transparent border-none text-slate-100 placeholder:text-slate-500 focus:outline-none text-sm sm:text-base font-medium"
                            oninput="handleSearch(this.value)">
                     <button onclick="clearSearch()" id="clear-search-btn" class="hidden text-slate-400 hover:text-white ml-2">
@@ -176,52 +175,51 @@
                     </button>
                 </div>
             </div>
-            <p id="search-status" class="text-xs text-cyan-400/80 mt-2 text-center hidden"><i class="fa-solid fa-spinner animate-spin mr-1"></i> Đang tìm kiếm thông tin...</p>
+            <p id="search-status" class="text-xs text-indigo-400/80 mt-2 text-center hidden"><i class="fa-solid fa-spinner animate-spin mr-1"></i> Đang kết nối dữ liệu...</p>
         </div>
 
         <!-- Section Title -->
         <div class="text-center mb-8 space-y-2">
-            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">HỆ THỐNG KỸ THUẬT LÝ THUYẾT & THỰC HÀNH</h2>
-            <p class="text-xs sm:text-sm text-slate-400 max-w-lg mx-auto">Chọn danh mục chuyên đề dưới đây để xem nhanh các nội dung.</p>
+            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight uppercase">Hệ Thống Trị Liệu & Huấn Luyện ADL</h2>
+            <p class="text-xs sm:text-sm text-slate-400 max-w-lg mx-auto">Chọn danh mục chuyên đề dưới đây để khám phá các bài thực hành chuyên sâu.</p>
         </div>
 
-        <!-- Category Horizontal Navigation - Enhanced Sliding Interface -->
+        <!-- Category Horizontal Navigation -->
         <div class="relative group/nav mb-12">
-            <!-- Left Gradient Shadow to indicate more content -->
-            <div id="left-fade" class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#080b11] via-[#080b11]/60 to-transparent z-10 pointer-events-none transition-opacity duration-300 opacity-0"></div>
-            <!-- Right Gradient Shadow -->
-            <div id="right-fade" class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#080b11] via-[#080b11]/60 to-transparent z-10 pointer-events-none transition-opacity duration-300"></div>
+            <!-- Left/Right Gradient Shadows -->
+            <div id="left-fade" class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#060913] via-[#060913]/60 to-transparent z-10 pointer-events-none transition-opacity duration-300 opacity-0"></div>
+            <div id="right-fade" class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#060913] via-[#060913]/60 to-transparent z-10 pointer-events-none transition-opacity duration-300"></div>
 
             <!-- Left navigation arrow button -->
-            <button id="slide-left-btn" onclick="scrollTabs('left')" class="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-cyan-400 flex items-center justify-center shadow-lg transition-all duration-300 opacity-0 pointer-events-none hover:scale-110 active:scale-95">
+            <button id="slide-left-btn" onclick="scrollTabs('left')" class="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-indigo-400 flex items-center justify-center shadow-lg transition-all duration-300 opacity-0 pointer-events-none hover:scale-110 active:scale-95">
                 <i class="fa-solid fa-chevron-left text-sm"></i>
             </button>
             
             <!-- Category Tabs Container -->
             <div id="category-tabs" onscroll="updateScrollState()" class="flex overflow-x-auto pb-4 gap-3 no-scrollbar scroll-smooth snap-x snap-mandatory" role="tablist">
-                <div class="text-slate-500 text-sm animate-pulse mx-auto">Đang kết nối cơ sở dữ liệu đám mây...</div>
+                <div class="text-slate-500 text-sm animate-pulse mx-auto">Đang đồng bộ dữ liệu đám mây...</div>
             </div>
 
             <!-- Right navigation arrow button -->
-            <button id="slide-right-btn" onclick="scrollTabs('right')" class="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-cyan-400 flex items-center justify-center shadow-lg transition-all duration-300 opacity-0 pointer-events-none hover:scale-110 active:scale-95">
+            <button id="slide-right-btn" onclick="scrollTabs('right')" class="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-indigo-400 flex items-center justify-center shadow-lg transition-all duration-300 opacity-0 pointer-events-none hover:scale-110 active:scale-95">
                 <i class="fa-solid fa-chevron-right text-sm"></i>
             </button>
         </div>
 
         <!-- Dynamic Content Header/Description for current category -->
-        <div id="current-category-desc" class="p-6 mb-10 rounded-2xl bg-gradient-to-r from-slate-900/80 via-slate-950/80 to-slate-900/80 border border-slate-800/60 flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 fade-in-up">
-            <div id="cat-icon-badge" class="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-2xl shadow-xl bg-gradient-to-tr from-cyan-400 to-teal-400 shrink-0">
-                <i class="fa-solid fa-hands-holding-circle"></i>
+        <div id="current-category-desc" class="p-6 mb-10 rounded-2xl bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border border-slate-800/60 flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 fade-in-up">
+            <div id="cat-icon-badge" class="w-14 h-14 rounded-2xl flex items-center justify-center text-slate-950 text-2xl shadow-xl bg-gradient-to-tr from-indigo-400 to-purple-400 shrink-0">
+                <i class="fa-solid fa-puzzle-piece"></i>
             </div>
             <div class="flex-grow text-center sm:text-left space-y-1">
-                <h3 id="cat-headline" class="text-lg sm:text-xl font-extrabold text-white">Đang tải dữ liệu...</h3>
-                <p id="cat-subline" class="text-xs sm:text-sm text-slate-400 leading-relaxed font-normal">Hệ thống đang kết nối với dữ liệu...</p>
+                <h3 id="cat-headline" class="text-lg sm:text-xl font-extrabold text-white">Đang tải dữ liệu chuyên ngành...</h3>
+                <p id="cat-subline" class="text-xs sm:text-sm text-slate-400 leading-relaxed font-normal">Hệ thống đang đồng bộ dữ liệu với máy chủ...</p>
             </div>
         </div>
 
         <!-- ARTICLES CONTAINER -->
         <div id="articles-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Loading Skeleton -->
+            <!-- Loading Skeletons -->
             <div class="glass-card rounded-2xl p-6 space-y-4 animate-pulse">
                 <div class="h-4 bg-slate-800 rounded w-1/3"></div>
                 <div class="h-6 bg-slate-800 rounded w-3/4"></div>
@@ -245,57 +243,52 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
             </div>
             <div class="space-y-1">
-                <h4 class="text-xl font-bold">Không tìm thấy tài liệu</h4>
-                <p class="text-sm text-slate-500 max-w-sm mx-auto">Vui lòng kiểm tra lại từ khóa hoặc chuyển đổi chuyên đề khác.</p>
+                <h4 class="text-xl font-bold">Không tìm thấy tài liệu Hoạt động trị liệu</h4>
+                <p class="text-sm text-slate-500 max-w-sm mx-auto">Vui lòng kiểm tra lại từ khóa hoặc chuyển sang các chuyên đề OT khác.</p>
             </div>
-            <button onclick="clearSearch(true)" class="px-5 py-2.5 text-xs font-bold text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 rounded-xl hover:bg-cyan-400/20 transition-all">
+            <button onclick="clearSearch(true)" class="px-5 py-2.5 text-xs font-bold text-indigo-400 bg-indigo-400/10 border border-indigo-400/20 rounded-xl hover:bg-indigo-400/20 transition-all">
                 Xem tất cả bài viết
             </button>
         </div>
     </main>
 
-    <!-- INTERACTIVE ARTICLE PREMIUM VIEWER MODAL -->
+    <!-- PREMIUM INTERACTIVE DETAIL MODAL -->
     <div id="article-modal" class="fixed inset-0 z-50 overflow-y-auto hidden" role="dialog" aria-modal="true">
         <!-- Backdrop -->
         <div class="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity" onclick="closeArticleModal()"></div>
         
-        <!-- Modal Content Container -->
+        <!-- Modal Container -->
         <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-6">
             <div class="relative transform overflow-hidden rounded-3xl bg-slate-900 border border-slate-800/80 text-left shadow-2xl transition-all w-full max-w-4xl fade-in-up">
                 
-                <!-- Modal Top Header bar -->
+                <!-- Modal Header -->
                 <div class="px-6 py-4 border-b border-slate-800/80 flex items-center justify-between sticky top-0 bg-slate-900/90 backdrop-blur-md z-10">
                     <div class="flex items-center gap-2">
                         <span id="modal-category-badge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">DANH MỤC</span>
                     </div>
-                    <button onclick="closeArticleModal()" class="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-400 hover:text-white flex items-center justify-center transition-all border border-slate-700/40" aria-label="Đóng">
+                    <button onclick="closeArticleModal()" class="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-400 hover:text-white flex items-center justify-center transition-all border border-slate-700/40">
                         <i class="fa-solid fa-xmark text-lg"></i>
                     </button>
                 </div>
 
-                <!-- Rich Article Core Content -->
+                <!-- Core Content -->
                 <div class="px-6 py-8 space-y-6 max-h-[72vh] overflow-y-auto">
-                    <!-- Title & Author block -->
                     <div class="space-y-4">
                         <h2 id="modal-title" class="text-2xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent leading-snug">Tiêu Đề Bài Viết</h2>
                     </div>
 
                     <hr class="border-slate-800/60">
 
-                    <!-- Dynamic Media Section (Video / PDF Player) -->
-                    <div id="modal-media-container" class="hidden space-y-6">
-                        <!-- Loaded dynamically via JavaScript -->
-                    </div>
+                    <!-- Dynamic Media Section -->
+                    <div id="modal-media-container" class="hidden space-y-6"></div>
 
-                    <!-- Dynamic Body Container -->
-                    <div id="modal-body-content" class="text-slate-300 space-y-6 leading-relaxed text-sm sm:text-base">
-                        <!-- Content loaded dynamic via javascript -->
-                    </div>
+                    <!-- Dynamic Body Content -->
+                    <div id="modal-body-content" class="text-slate-300 space-y-6 leading-relaxed text-sm sm:text-base"></div>
 
-                    <!-- Disclaimer & Author signature -->
+                    <!-- Disclaimer -->
                     <div class="p-5 rounded-2xl bg-slate-950/60 border border-slate-800/80 text-xs text-slate-400 space-y-2 mt-8">
                         <p class="font-bold text-slate-300 flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation text-amber-500 text-sm"></i> Ghi chú:</p>
-                        <p class="leading-relaxed">Tất cả thông tin trên chỉ nhằm mục đích tham khảo.</p>
+                        <p class="leading-relaxed">Tất cả thông tin chỉ mang tính chất tham khảo.</p>
                     </div>
                 </div>
 
@@ -303,7 +296,7 @@
                 <div class="px-6 py-4 border-t border-slate-800/80 bg-slate-950/40 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <span class="text-xs text-slate-500 font-mono tracking-wider">dantruongag.id.vn</span>
                     <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-                        <button onclick="closeArticleModal()" class="w-full sm:w-auto px-6 py-3 text-xs font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 rounded-xl transition-all text-center tracking-wide active:scale-95 shadow-lg shadow-cyan-500/10">
+                        <button onclick="closeArticleModal()" class="w-full sm:w-auto px-6 py-3 text-xs font-bold bg-indigo-500 hover:bg-indigo-400 text-slate-950 rounded-xl transition-all text-center tracking-wide active:scale-95 shadow-lg shadow-indigo-500/10">
                             Thoát
                         </button>
                     </div>
@@ -313,9 +306,9 @@
         </div>
     </div>
 
-    <!-- INTERACTIVE JAVASCRIPT SYSTEM WITH CLOUD FIRESTORE -->
+    <!-- SCRIPT SYSTEM WITH FIRESTORE -->
     <script>
-        // FIREBASE INITIALIZATION CONFIG
+        // CONFIGURATION CORRESPONDING TO quantri_PHCN
         const firebaseConfig = {
             apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
             authDomain: "dulieuweb-6541e.firebaseapp.com",
@@ -325,77 +318,77 @@
             appId: "1:215480268517:web:16600eafd6839fee5dc60c"
         };
 
-        // Initialize Firebase app and services
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // App ID and strict collection path configuration (Rule 1 Alignment)
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'dulieuweb-6541e';
-        
+        const disciplineKey = 'hoat_dong_tl'; // Chuyên khoa Hoạt động trị liệu (OT)
+
         function getArticlesCollection() {
             return db.collection('artifacts/' + appId + '/public/data/articles');
         }
 
-        // Constant metadata for Tabs / Categories 
+        // Subcategory definitions for Hoat dong tri lieu (OT)
         const tabMeta = {
-            tab_1: { 
-                name: 'Kỹ Thuật Xoa Bóp', 
-                icon: 'fa-hands-holding-circle',
-                badgeBg: 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20',
-                themeColor: 'from-cyan-400 to-teal-400',
-                accentColor: 'shadow-cyan-500/20',
-                desc: 'Hệ thống các phương pháp và thủ thuật cơ học bằng tay tác động trực tiếp lên hệ cơ, mô liên kết nhằm giảm co cứng, đau đớn và tuần hoàn dinh dưỡng.'
+            ot_1: { 
+                name: 'Thay đổi tư thế', 
+                icon: 'fa-bed',
+                badgeBg: 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20',
+                themeColor: 'from-indigo-400 to-purple-400',
+                accentColor: 'shadow-indigo-500/20',
+                desc: 'Hướng dẫn lăn trở, di chuyển an toàn, định vị tư thế trên giường và xe lăn chống loét ép.'
             },
-            tab_2: { 
-                name: 'Kỹ Thuật Tập Vận Động', 
-                icon: 'fa-person-walking-rehab',
-                badgeBg: 'bg-red-500/10 text-red-400 border border-red-500/20',
-                themeColor: 'from-red-400 to-orange-400',
-                accentColor: 'shadow-red-500/20',
-                desc: 'Hệ thống các cử động chủ động, thụ động hoặc có kháng trở để hồi phục hoặc gia tăng tầm vận động của các khớp (ROM - Range Of Motion).'
+            ot_2: { 
+                name: 'Tập với dụng cụ hỗ trợ', 
+                icon: 'fa-wheelchair',
+                badgeBg: 'bg-purple-500/10 text-purple-400 border border-purple-500/20',
+                themeColor: 'from-purple-400 to-pink-400',
+                accentColor: 'shadow-purple-500/20',
+                desc: 'Thiết kế, chế tạo và sử dụng nẹp chỉnh hình, máng đỡ và các thiết bị trợ giúp sinh hoạt.'
             },
-            tab_3: { 
-                name: 'Kỹ Thuật Tập Mạnh Cơ', 
-                icon: 'fa-dumbbell',
+            ot_3: { 
+                name: 'Vận động tinh - Bàn tay', 
+                icon: 'fa-hand',
+                badgeBg: 'bg-rose-500/10 text-rose-400 border border-rose-500/20',
+                themeColor: 'from-rose-400 to-orange-400',
+                accentColor: 'shadow-rose-500/20',
+                desc: 'Các bài tập cải thiện chức năng cầm nắm, nhặt đồ vật, viết vẽ và phối hợp khéo léo ngón tay.'
+            },
+            ot_4: { 
+                name: 'Sinh hoạt hàng ngày (ADL)', 
+                icon: 'fa-shirt',
                 badgeBg: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
                 themeColor: 'from-emerald-400 to-teal-400',
                 accentColor: 'shadow-emerald-500/20',
-                desc: 'Tập hợp các kỹ thuật tập luyện kháng lực tăng dần (PRE), tập tĩnh cơ, tập động tâm và ly tâm để phục hồi trương lực và sức mạnh nhóm cơ.'
+                desc: 'Tái huấn luyện kỹ năng ăn uống, mặc quần áo, tắm rửa, vệ sinh cá nhân độc lập cho người bệnh.'
             },
-            tab_4: { 
-                name: 'Tạo Thuận Thần Kinh Cơ (PNF)', 
+            ot_5: { 
+                name: 'Điều hòa cảm giác', 
                 icon: 'fa-brain',
-                badgeBg: 'bg-violet-500/10 text-violet-400 border border-violet-500/20',
-                themeColor: 'from-violet-400 to-indigo-400',
-                accentColor: 'shadow-violet-500/20',
-                desc: 'Ứng dụng cơ chế thụ cảm bản thể, các mẫu vận động chéo - xoắn ốc để tái kích hoạt các đường truyền thần kinh cơ bị tổn thương.'
-            },
-            tab_5: { 
-                name: 'Kéo Giãn (Stretching)', 
-                icon: 'fa-arrows-left-right',
                 badgeBg: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
                 themeColor: 'from-amber-400 to-yellow-400',
                 accentColor: 'shadow-amber-500/20',
-                desc: 'Phương pháp định vị kéo giãn kéo dài thụ động hoặc chủ động các cấu trúc mô mềm bị co rút để tối ưu độ dẻo dai cơ khớp.'
+                desc: 'Kích thích xúc giác, bản thể, tiền đình nhằm kiểm soát rối loạn cảm giác và hành vi.'
             },
-            tab_6: { 
-                name: 'Di Động Khớp', 
-                icon: 'fa-joint',
-                badgeBg: 'bg-teal-500/10 text-teal-400 border border-teal-500/20',
-                themeColor: 'from-teal-400 to-emerald-400',
-                accentColor: 'shadow-teal-500/20',
-                desc: 'Thực hiện kỹ thuật trượt diện khớp, lăn diện khớp theo quy luật Lồi - Lõm y học để phục hồi cơ học khớp dính dầy xơ hoá.'
+            ot_6: { 
+                name: 'Nhận thức & Hoạt động chơi', 
+                icon: 'fa-gamepad',
+                badgeBg: 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20',
+                themeColor: 'from-cyan-400 to-teal-400',
+                accentColor: 'shadow-cyan-500/20',
+                desc: 'Trị liệu nhận thức qua các trò chơi thiết kế đặc thù giúp phục hồi trí nhớ, chú ý và giải quyết vấn đề.'
             }
         };
 
-        // Global Application State
+        // Application State
         let localArticles = []; 
-        let currentCategory = 'tab_1';
+        let currentCategory = 'ot_1';
         let searchQuery = '';
 
         /* ====================================
-           YOUTUBE CONVERSION HELPER
+           YOUTUBE URL CONVERSION
            ==================================== */
         function getYouTubeEmbedUrl(url) {
             if (!url) return '';
@@ -408,29 +401,44 @@
         }
 
         /* ====================================
-           FIRESTORE SYNC (Rule 3 Implemented)
+           FIRESTORE SYNC
            ==================================== */
         function setupRealtimeSync() {
             if (!auth.currentUser) return;
 
-            // Direct connection path configuration
+            // Truy vấn lấy dữ liệu của chuyên khoa Hoạt động trị liệu (Rule 2: Không dùng compound phức tạp)
             const collectionRef = getArticlesCollection();
 
             collectionRef.onSnapshot((querySnapshot) => {
                 const tempArticles = [];
                 querySnapshot.forEach((doc) => {
-                    tempArticles.push({
-                        id: doc.id,
-                        ...doc.data()
-                    });
+                    const data = doc.data();
+                    
+                    // Xác định xem bài viết có thuộc chuyên khoa Hoạt động trị liệu (ot) không
+                    let artDisc = data.disciplineKey;
+                    if (!artDisc) {
+                        if ((data.categoryKey || '').startsWith('ot_')) {
+                            artDisc = 'hoat_dong_tl';
+                        }
+                    }
+
+                    // Chỉ lọc dữ liệu hoat_dong_tl ở phía Client để tuân thủ luật cấu trúc Firestore
+                    if (artDisc === 'hoat_dong_tl') {
+                        tempArticles.push({
+                            id: doc.id,
+                            ...data
+                        });
+                    }
                 });
 
+                // Sắp xếp theo order định sẵn giống như quantri
                 localArticles = tempArticles;
+                localArticles.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
                 updateDashboardStats();
                 renderCategoryTabs();
                 renderArticles();
-                setTimeout(updateScrollState, 100); // Check horizontal slider buttons on data load
+                setTimeout(updateScrollState, 100);
             }, (error) => {
                 console.error("Lỗi đồng bộ dữ liệu Firestore: ", error);
             });
@@ -459,14 +467,14 @@
                 const item = tabMeta[key];
                 const isActive = key === currentCategory;
 
-                // Count total articles in this category
+                // Đếm số bài viết thuộc phân loại phụ này
                 const count = localArticles.filter(a => a.categoryKey === key).length;
 
                 const button = document.createElement('button');
                 button.type = 'button';
                 button.className = `snap-start shrink-0 px-6 py-3.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-3 transition-all duration-300 ${
                     isActive 
-                        ? 'bg-slate-900 text-cyan-400 shadow-xl border border-cyan-500/40 active-pulse' 
+                        ? 'bg-slate-900 text-indigo-400 shadow-xl border border-indigo-500/40 active-pulse' 
                         : 'bg-slate-900/30 text-slate-400 hover:text-slate-200 border border-slate-800/40 hover:bg-slate-900/60'
                 }`;
                 
@@ -483,7 +491,7 @@
                 container.appendChild(button);
             });
 
-            // Update Header Meta current category
+            // Cập nhật thông tin mô tả danh mục hiện tại
             const currentObj = tabMeta[currentCategory];
             const badge = document.getElementById('cat-icon-badge');
             const headline = document.getElementById('cat-headline');
@@ -508,13 +516,13 @@
         }
 
         /* ====================================
-           SLIDING LOGIC FOR DANH MỤC
+           SLIDING LOGIC FOR CATEGORIES
            ==================================== */
         function scrollTabs(direction) {
             const container = document.getElementById('category-tabs');
             if (!container) return;
             
-            const scrollAmount = 300; // Khoảng cách trượt mỗi lần ấn
+            const scrollAmount = 300;
             if (direction === 'left') {
                 container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
             } else {
@@ -535,7 +543,6 @@
             const isAtEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 5;
             const hasScrollableContent = container.scrollWidth > container.clientWidth;
 
-            // Xử lý nút điều hướng bên trái
             if (leftBtn) {
                 if (isAtStart || !hasScrollableContent) {
                     leftBtn.classList.add('opacity-0', 'pointer-events-none');
@@ -547,7 +554,6 @@
                 }
             }
 
-            // Xử lý nút điều hướng bên phải
             if (rightBtn) {
                 if (isAtEnd || !hasScrollableContent) {
                     rightBtn.classList.add('opacity-0', 'pointer-events-none');
@@ -560,12 +566,8 @@
             }
         }
 
-        // Tự động kiểm tra lại khi đổi kích thước màn hình
         window.addEventListener('resize', updateScrollState);
 
-        /* ====================================
-           STREAMING_CHUNK: Writing Modal triggers and active styling...
-           ==================================== */
         /* ====================================
            RENDER ARTICLES (User View)
            ==================================== */
@@ -575,11 +577,10 @@
             if(!container || !emptyState) return;
 
             container.innerHTML = '';
-            
             let matchingArticles = [];
 
             if(searchQuery.trim() !== '') {
-                // Search globally across all tabs
+                // Tìm kiếm toàn diện
                 localArticles.forEach(art => {
                     const lowTitle = (art.title || '').toLowerCase();
                     const lowSearch = searchQuery.toLowerCase();
@@ -588,11 +589,10 @@
                     }
                 });
             } else {
-                // Return articles of active tab only
+                // Hiển thị bài viết theo danh mục được chọn
                 matchingArticles = localArticles.filter(art => art.categoryKey === currentCategory);
             }
 
-            // Empty state display
             if(matchingArticles.length === 0) {
                 emptyState.classList.remove('hidden');
                 container.classList.add('hidden');
@@ -602,16 +602,15 @@
             emptyState.classList.add('hidden');
             container.classList.remove('hidden');
 
-            // Populate cards
             matchingArticles.forEach((article, index) => {
-                const categoryObj = tabMeta[article.categoryKey] || tabMeta['tab_1'];
+                const categoryObj = tabMeta[article.categoryKey] || tabMeta['ot_1'];
                 const card = document.createElement('div');
-                card.className = 'glass-card rounded-2xl p-6 flex flex-col justify-between gap-6 cursor-pointer hover:border-cyan-500/30 transition-all duration-300 fade-in-up';
+                card.className = 'glass-card rounded-2xl p-6 flex flex-col justify-between gap-6 cursor-pointer hover:border-indigo-500/30 transition-all duration-300 fade-in-up';
                 card.style.animationDelay = `${index * 30}ms`;
                 
                 card.onclick = () => openArticle(article);
 
-                // Media Indicators icons (Multiple support check)
+                // Media indicators
                 let mediaIndicators = '';
                 const videoCount = article.videoUrls ? article.videoUrls.length : (article.videoUrl ? 1 : 0);
                 const pdfCount = article.pdfUrls ? article.pdfUrls.length : (article.pdfUrl ? 1 : 0);
@@ -626,35 +625,34 @@
                     mediaIndicators += `<span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/10 px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1.5"><i class="fa-solid fa-globe"></i> Web</span>`;
                 }
 
-                // Dynamic SVG Graphics based on categories
+                // Dynamic SVG Graphics based on OT subcategory
                 let svgIllustration = `
-                    <svg class="w-10 h-10 text-cyan-400/20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path>
+                    <svg class="w-10 h-10 text-indigo-400/25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
                 `;
                 
-                if (article.categoryKey === 'tab_1') {
+                if (article.categoryKey === 'ot_1' || article.categoryKey === 'ot_4') {
                     svgIllustration = `
-                        <svg class="w-10 h-10 text-cyan-400/25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
+                        <svg class="w-10 h-10 text-indigo-400/25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                         </svg>
                     `;
-                } else if (article.categoryKey === 'tab_2' || article.categoryKey === 'tab_3') {
+                } else if (article.categoryKey === 'ot_2' || article.categoryKey === 'ot_3') {
                     svgIllustration = `
-                        <svg class="w-10 h-10 text-red-400/25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.3 10.5l-3.3 3.3-3.3-3.3M12 3v12.5M19.5 21H4.5" />
+                        <svg class="w-10 h-10 text-purple-400/25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.05 4.575a1 1 0 0 1 .828.435L13.5 9h-6.9l2.622-3.99a1 1 0 0 1 .828-.435ZM4.5 19.5A1.5 1.5 0 0 1 3 18V9A1.5 1.5 0 0 1 4.5 7.5h15A1.5 1.5 0 0 1 21 9v9a1.5 1.5 0 0 1-1.5 1.5h-15Z" />
                         </svg>
                     `;
-                } else if (article.categoryKey === 'tab_4' || article.categoryKey === 'tab_5') {
+                } else if (article.categoryKey === 'ot_5' || article.categoryKey === 'ot_6') {
                     svgIllustration = `
-                        <svg class="w-10 h-10 text-violet-400/25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21m0 0l-1.813-5.096M9 21h8.125A2.875 2.875 0 0020 18.125V6.875A2.875 2.875 0 0017.125 4H9m0 17V4m0 17H3.875A2.875 2.875 0 011 18.125V6.875A2.875 2.875 0 013.875 4H9" />
+                        <svg class="w-10 h-10 text-rose-400/25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-1.245c0-.778-.271-1.51-.78-2.128Zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.043-.025a15.994 15.994 0 0 1-1.622-3.39m3.39 3.39a15.995 15.995 0 0 0 4.794-4.794m-8.03 4.182a15.994 15.994 0 0 1-4.183-8.029m4.794 8.03c1.996.1 4-.2 5.892-1.043m-9.482-1.127a15.996 15.996 0 0 1-1.043-5.893m9.482 1.127c.415-.556.765-1.163 1.043-1.81" />
                         </svg>
                     `;
                 }
 
-                // Check link type for text description
-                let actionText = article.articleUrl ? 'Mở liên kết gốc' : 'Xem chi tiết bài viết';
+                let actionText = article.articleUrl ? 'Mở liên kết gốc' : 'Xem chi tiết can thiệp';
                 let actionIcon = article.articleUrl ? 'fa-arrow-up-right-from-square' : 'fa-angle-right';
 
                 card.innerHTML = `
@@ -667,14 +665,14 @@
                                 ${mediaIndicators}
                             </div>
                         </div>
-                        <h4 class="text-base font-bold text-slate-100 line-clamp-2 hover:text-cyan-400 transition-colors duration-200 leading-snug">${article.title || 'Đang cập nhật tiêu đề'}</h4>
+                        <h4 class="text-base font-bold text-slate-100 line-clamp-2 hover:text-indigo-400 transition-colors duration-200 leading-snug">${article.title || 'Đang cập nhật kỹ thuật'}</h4>
                     </div>
 
                     <div class="flex items-end justify-between border-t border-slate-800/80 pt-4 mt-2">
                         <div class="opacity-90 transition-transform duration-300 hover:scale-105">
                             ${svgIllustration}
                         </div>
-                        <span class="text-xs font-bold text-cyan-400 flex items-center gap-1.5 group-hover:underline">
+                        <span class="text-xs font-bold text-indigo-400 flex items-center gap-1.5 group-hover:underline">
                             ${actionText} <i class="fa-solid ${actionIcon} text-[10px]"></i>
                         </span>
                     </div>
@@ -713,16 +711,14 @@
         }
 
         /* ====================================
-           MODAL & EXTERNAL NAVIGATION CONTROL
+           MODAL CONTROL
            ==================================== */
         function openArticle(article) {
-            // CRITICAL REQUIREMENT CHECK: If an external HTML URL exists, open it directly in a new window/tab
             if (article.articleUrl && article.articleUrl.trim() !== '') {
                 window.open(article.articleUrl, '_blank');
                 return;
             }
 
-            // Normal operation if no custom HTML URL is specified
             const modal = document.getElementById('article-modal');
             const title = document.getElementById('modal-title');
             const catBadge = document.getElementById('modal-category-badge');
@@ -731,25 +727,20 @@
 
             if(!modal || !title || !catBadge || !body || !mediaContainer) return;
 
-            const categoryObj = tabMeta[article.categoryKey] || tabMeta['tab_1'];
+            const categoryObj = tabMeta[article.categoryKey] || tabMeta['ot_1'];
 
-            // Render details
             title.innerText = article.title;
             catBadge.innerText = categoryObj.name.toUpperCase();
-            
-            // Apply category badge styling
             catBadge.className = `px-3.5 py-1.5 rounded-xl text-xs font-bold ${categoryObj.badgeBg}`;
             
-            // Build Media layout (Grouped dynamically)
             mediaContainer.innerHTML = '';
             let hasMedia = false;
 
-            // RENDER MULTIPLE YOUTUBE VIDEOS (GROUPED)
+            // RENDER MULTIPLE YOUTUBE VIDEOS
             if (article.videoUrls && Array.isArray(article.videoUrls) && article.videoUrls.length > 0) {
                 hasMedia = true;
                 article.videoUrls.forEach((video, index) => {
                     const baseVideoUrl = getYouTubeEmbedUrl(video.url);
-                    // FORCE AUTOPLAY & MUTE (for Chrome/Safari autoplay compliance)
                     const normalizedVideoUrl = baseVideoUrl ? (baseVideoUrl.includes('?') ? `${baseVideoUrl}&autoplay=1&mute=1` : `${baseVideoUrl}?autoplay=1&mute=1`) : '';
 
                     mediaContainer.innerHTML += `
@@ -768,7 +759,6 @@
                     `;
                 });
             } else if (article.videoUrl && article.videoUrl.trim() !== '') {
-                // Fallback for single legacy video
                 hasMedia = true;
                 const baseVideoUrl = getYouTubeEmbedUrl(article.videoUrl);
                 const normalizedVideoUrl = baseVideoUrl ? (baseVideoUrl.includes('?') ? `${baseVideoUrl}&autoplay=1&mute=1` : `${baseVideoUrl}?autoplay=1&mute=1`) : '';
@@ -780,7 +770,7 @@
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                                 <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
                             </span>
-                            Video hướng dẫn thực hành lâm sàng
+                            Video hướng dẫn thực hành OT
                         </p>
                         <div class="relative pb-[56.25%] h-0 rounded-2xl overflow-hidden border border-slate-800/80 shadow-2xl bg-slate-950">
                             <iframe src="${normalizedVideoUrl}" class="absolute top-0 left-0 w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -789,26 +779,26 @@
                 `;
             }
 
-            // RENDER MULTIPLE PDF FILES (GROUPED)
+            // RENDER MULTIPLE PDF FILES
             if (article.pdfUrls && Array.isArray(article.pdfUrls) && article.pdfUrls.length > 0) {
                 hasMedia = true;
                 let pdfSectionHtml = `
                     <div class="space-y-3.5 p-5 rounded-2xl bg-slate-950/40 border border-slate-800/60">
                         <p class="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                            <span class="flex h-2 w-2 rounded-full bg-cyan-400"></span>
-                            Tài liệu (PDF)
+                            <span class="flex h-2 w-2 rounded-full bg-indigo-400"></span>
+                            Tài liệu kèm theo (PDF)
                         </p>
                         <div class="grid grid-cols-1 gap-3">
                 `;
 
                 article.pdfUrls.forEach(pdf => {
                     pdfSectionHtml += `
-                        <div class="flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl bg-slate-950/80 border border-slate-800/50 gap-4 hover:border-red-500/20 transition-all duration-300">
+                        <div class="flex flex-col sm:flex-row items-center justify-between p-4 rounded-xl bg-slate-950/80 border border-slate-800/50 gap-4 hover:border-indigo-500/20 transition-all duration-300">
                             <div class="flex items-center gap-3.5">
                                 <div class="w-10 h-10 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center text-lg shrink-0">
                                     <i class="fa-solid fa-file-pdf"></i>
                                 </div>
-                                <h5 class="text-xs sm:text-sm font-bold text-white leading-normal">${pdf.label || 'Tài liệu hướng dẫn lý thuyết'}</h5>
+                                <h5 class="text-xs sm:text-sm font-bold text-white leading-normal">${pdf.label || 'Hướng dẫn OT Chuyên sâu'}</h5>
                             </div>
                             <a href="${pdf.url}" target="_blank" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-xs font-bold transition-all text-center flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở PDF
@@ -820,22 +810,21 @@
                 pdfSectionHtml += `</div></div>`;
                 mediaContainer.innerHTML += pdfSectionHtml;
             } else if (article.pdfUrl && article.pdfUrl.trim() !== '') {
-                // Fallback for single legacy PDF
                 hasMedia = true;
                 mediaContainer.innerHTML += `
                     <div class="space-y-3.5 p-5 rounded-2xl bg-slate-950/40 border border-slate-800/60">
                         <p class="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                            <span class="flex h-2 w-2 rounded-full bg-cyan-400"></span>
-                            Tài liệu nghiên cứu chuyên ngành (PDF)
+                            <span class="flex h-2 w-2 rounded-full bg-indigo-400"></span>
+                            Tài liệu Nghiên cứu & Thực hành (PDF)
                         </p>
-                        <div class="flex flex-col sm:flex-row items-center justify-between p-4 rounded-2xl bg-slate-950 border border-slate-800/60 gap-4 hover:border-red-500/20 transition-all duration-300">
+                        <div class="flex flex-col sm:flex-row items-center justify-between p-4 rounded-2xl bg-slate-950 border border-slate-800/60 gap-4 hover:border-indigo-500/20 transition-all duration-300">
                             <div class="flex items-center gap-3.5">
                                 <div class="w-12 h-12 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center text-xl shrink-0">
                                     <i class="fa-solid fa-file-pdf"></i>
                                 </div>
                                 <div>
-                                    <h5 class="text-sm font-bold text-white leading-normal">Tài liệu học tập chi tiết</h5>
-                                    <p class="text-[11px] text-slate-400 mt-0.5">Đọc phiên bản PDF chính thức hoặc lưu về thiết bị</p>
+                                    <h5 class="text-sm font-bold text-white leading-normal">Tài liệu hướng dẫn lý thuyết</h5>
+                                    <p class="text-[11px] text-slate-400 mt-0.5">Mở trực tiếp hoặc tải xuống thiết bị cá nhân</p>
                                 </div>
                             </div>
                             <div class="flex gap-2 w-full sm:w-auto">
@@ -854,7 +843,7 @@
                 mediaContainer.classList.add('hidden');
             }
 
-            // Format HTML contents
+            // Format nội dung HTML
             if (article.content && article.content.trim() !== '') {
                 body.innerHTML = article.content;
             } else {
@@ -863,7 +852,7 @@
                         <div class="w-14 h-14 bg-slate-800/80 rounded-full flex items-center justify-center mx-auto text-amber-500 text-2xl mb-4">
                             <i class="fa-solid fa-hourglass-half"></i>
                         </div>
-                        <p class="font-bold text-white text-base">Hệ thống đang cập nhật nội dung</p>
+                        <p class="font-bold text-white text-base">Nội dung đang được cập nhật</p>
                     </div>
                 `;
             }
@@ -878,18 +867,16 @@
             modal.classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
             
-            // RESET MEDIA TO STOP VIDEO: Clear the media container upon closing to stop the autoplaying video instantly
             const mediaContainer = document.getElementById('modal-media-container');
             if (mediaContainer) {
-                mediaContainer.innerHTML = '';
+                mediaContainer.innerHTML = ''; // Reset dừng phát video
             }
         }
 
         /* ====================================
-           INITIAL LOAD
+           INITIAL LOAD & AUTHENTICATION
            ==================================== */
         document.addEventListener('DOMContentLoaded', async () => {
-            // Secure auth state initiation (Rule 3)
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await auth.signInWithCustomToken(__initial_auth_token);
@@ -897,22 +884,17 @@
                     await auth.signInAnonymously();
                 }
             } catch (e) {
-                console.warn("Lỗi token tùy chỉnh, chuyển đăng nhập ẩn danh...", e);
+                console.warn("Lỗi xác thực Token, chuyển đổi sang đăng nhập ẩn danh...", e);
                 await auth.signInAnonymously();
             }
         });
 
         auth.onAuthStateChanged((user) => {
             if (user) {
-                console.log("Xác thực đám mây thành công.");
+                console.log("Xác thực hệ thống OT thành công.");
                 setupRealtimeSync();
             }
         });
     </script>
-    
-    <div id="footer-placeholder"></div>
-
-    <!-- Nạp script.js với type="module" để hỗ trợ Firebase imports trực tiếp -->
-    <script type="module" src="/script.js"></script>
 </body>
 </html>

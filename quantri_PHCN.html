@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bản điều khiển Quản trị - Nguyễn Mai Đan Trường</title>
+    <title>Bản điều khiển Quản trị</title>
     
     <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -536,6 +536,7 @@
                     vltl_benh_ly_2: 'Thoát vị đĩa đệm',
                     vltl_benh_ly_3: 'Tai biến mạch máu não',
                     vltl_benh_ly_4: 'Tổn thương tủy sống',
+                    vltl_benh_ly_5: 'Khác',
                 }
             }
         };
@@ -814,7 +815,7 @@
                     else if ((art.categoryKey || '').startsWith('ot_')) artDisc = 'hoat_dong_tl';
                     else if ((art.categoryKey || '').startsWith('st_')) artDisc = 'ngon_ngu_tl';
                     else if ((art.categoryKey || '').startsWith('vltl_benh_ly_')) artDisc = 'vltl_benh_ly';
-                    else artDisc = 'thu_co';
+                    else artDisc = 'vdtl';
                 }
                 if (counts[artDisc] !== undefined) {
                     counts[artDisc]++;

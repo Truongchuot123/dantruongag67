@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-slate-950">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sổ Tiết Kiệm Tích Lũy Thông Minh - Dark Mode</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#818cf8',
+                            600: '#6366f1',
+                            700: '#4f46e5',
+                            900: '#312e81',
+                            950: '#1e1b4b'
+                        },
+                        success: {
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                        },
+                        dark: {
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#020617'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #020617;
+        }
+        /* Custom scrollbar for Dark Theme */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        /* Input date color override for dark mode */
+        color-scheme: dark;
+    </style>
+</head>
+<body class="h-full flex flex-col text-slate-100 antialiased bg-slate-950">
+
+    <!-- Header / Navbar -->
+    <header class="bg-slate-900/80 border-b border-slate-800/80 sticky top-0 z-30 shadow-lg backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-xl shadow-lg shadow-indigo-500/25">
+                        <i class="fa-solid fa-piggy-bank text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-extrabold text-lg text-white tracking-tight bg-clip-text bg-gradient-to-r from-white to-indigo-200">PiggyInterest Pro</h1>
+                        <p class="text-xs text-indigo-300 font-semibold">Công cụ quản lý & Dự phóng tiết kiệm tích lũy</p>
+                    </div>
+                </div>
+                <!-- Navigation Tabs -->
+                <nav class="flex space-x-1 bg-slate-950/60 p-1 rounded-xl border border-slate-800">
+                    <button id="tab-dashboard" onclick="switchTab('dashboard')" class="px-4 py-2 text-sm font-bold rounded-lg transition-all duration-200 bg-indigo-600 text-white shadow-md shadow-indigo-600/10">
+                        <i class="fa-solid fa-chart-line mr-1.5"></i>Tổng quan
+                    </button>
+                    <button id="tab-transactions" onclick="switchTab('transactions')" class="px-4 py-2 text-sm font-bold rounded-lg transition-all duration-200 text-slate-400 hover:text-slate-200 hover:bg-slate-900">
+                        <i class="fa-solid fa-wallet mr-1.5"></i>Gửi tiền
+                    </button>
+                    <button id="tab-settings" onclick="switchTab('settings')" class="px-4 py-2 text-sm font-bold rounded-lg transition-all duration-200 text-slate-400 hover:text-slate-200 hover:bg-slate-900">
+                        <i class="fa-solid fa-sliders mr-1.5"></i>Cấu hình lãi suất
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- TAB 1: DASHBOARD -->
+        <div id="view-dashboard" class="space-y-8">
+            <!-- Minimal Header Toolbar without Sample Data Button -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-2 gap-4 border-b border-slate-900">
+                <div>
+                    <h2 class="text-xl font-extrabold text-white tracking-tight">Bảng Điều Khiển Tài Sản</h2>
+                    <p class="text-xs text-slate-400">Dự phóng dòng tiền gửi tích lũy và cập nhật lãi suất bậc thang</p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="triggerClearConfirm()" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 px-4 py-2 rounded-xl text-xs font-bold transition">
+                        <i class="fa-solid fa-trash-can mr-1.5"></i>Xóa sạch dữ liệu
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mode Toggle: Today vs. End of Term -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-900/60 p-4 rounded-2xl border border-slate-800/80 gap-3 backdrop-blur-sm">
+                <div>
+                    <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Bộ lọc tính toán</span>
+                    <h3 class="text-sm font-bold text-white">Chế độ hiển thị số liệu thống kê</h3>
+                </div>
+                <div class="inline-flex rounded-xl p-1 bg-slate-950 border border-slate-800">
+                    <button id="btn-calc-today" onclick="setCalculationTarget('today')" class="px-4 py-2 rounded-lg text-xs font-bold transition-all bg-indigo-600 text-white shadow-md">
+                        <i class="fa-solid fa-calendar-day mr-1.5"></i>Tính đến Hôm nay (11/07/2026)
+                    </button>
+                    <button id="btn-calc-end" onclick="setCalculationTarget('end')" class="px-4 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-slate-200">
+                        <i class="fa-solid fa-flag-checkered mr-1.5"></i>Cuối kỳ hạn (12 tháng)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Time Tracking Progress Bar Widget -->
+            <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800/80 shadow-lg backdrop-blur-sm">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
+                    <div>
+                        <span class="text-xs text-indigo-400 font-bold uppercase tracking-wider">Thời gian tích lũy</span>
+                        <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-business-time text-indigo-400"></i>Tiến độ & Trạng thái kỳ hạn gửi
+                        </h3>
+                    </div>
+                    <div class="bg-slate-950 px-3.5 py-1.5 rounded-lg border border-slate-800/60 text-xs text-slate-400 font-semibold">
+                        Kỳ hạn thiết lập: <span class="text-indigo-400 font-bold" id="time-widget-duration">12 tháng</span>
+                    </div>
+                </div>
+                
+                <!-- Progress Line -->
+                <div class="w-full bg-slate-950 rounded-full h-3 border border-slate-800 overflow-hidden mb-5">
+                    <div id="time-widget-progress-bar" class="bg-gradient-to-r from-indigo-500 via-indigo-600 to-purple-600 h-full rounded-full transition-all duration-700 shadow-[0_0_12px_rgba(99,102,241,0.4)]" style="width: 0%"></div>
+                </div>
+                
+                <!-- Details Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-800/50 flex justify-between items-center hover:border-indigo-500/20 transition duration-200">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-2.5 h-2.5 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.8)]"></div>
+                            <span class="text-slate-400 font-bold">Thời gian đã gửi:</span>
+                        </div>
+                        <span class="font-extrabold text-white" id="time-widget-elapsed">-</span>
+                    </div>
+                    <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-800/50 flex justify-between items-center hover:border-purple-500/20 transition duration-200">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.8)]"></div>
+                            <span class="text-slate-400 font-bold">Thời gian còn lại:</span>
+                        </div>
+                        <span class="font-extrabold text-indigo-300" id="time-widget-remaining">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <!-- Card 1: Gốc Đã Gửi -->
+                <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800/80 shadow-lg hover:border-slate-700/60 transition duration-200 backdrop-blur-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-semibold text-slate-400">Tổng Gốc Đã Gửi</span>
+                        <div class="w-10 h-10 bg-slate-800 text-indigo-400 rounded-xl flex items-center justify-center border border-slate-700/50">
+                            <i class="fa-solid fa-money-bill-wave"></i>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-bold text-white" id="card-total-principal">0 đ</p>
+                    <p class="text-xs text-indigo-300/70 mt-1.5" id="card-principal-sub">Tổng số lần gửi góp</p>
+                </div>
+
+                <!-- Card 2: Lãi Cộng Dồn -->
+                <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800/80 shadow-lg hover:border-slate-700/60 transition duration-200 backdrop-blur-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-semibold text-slate-400">Tổng Lãi Sinh Ra</span>
+                        <div class="w-10 h-10 bg-success-500/10 text-success-400 rounded-xl flex items-center justify-center border border-success-500/20">
+                            <i class="fa-solid fa-arrow-trend-up"></i>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-bold text-success-400" id="card-total-interest">0 đ</p>
+                    <p class="text-xs text-slate-500 mt-1.5" id="card-interest-sub">Tích lũy thực tế theo ngày</p>
+                </div>
+
+                <!-- Card 3: Số Dư Hiện Tại -->
+                <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800/80 shadow-lg hover:border-slate-700/60 transition duration-200 backdrop-blur-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-semibold text-slate-400">Tổng Số Dư Hiện Có</span>
+                        <div class="w-10 h-10 bg-indigo-500/10 text-indigo-400 rounded-xl flex items-center justify-center border border-indigo-500/20">
+                            <i class="fa-solid fa-sack-dollar"></i>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-bold text-indigo-400" id="card-current-balance">0 đ</p>
+                    <p class="text-xs text-slate-500 mt-1.5" id="card-balance-sub">Gồm cả gốc gửi thêm và lãi</p>
+                </div>
+
+                <!-- Card 4: Hiệu Suất Sinh Lời -->
+                <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800/80 shadow-lg hover:border-slate-700/60 transition duration-200 backdrop-blur-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-semibold text-slate-400">Tỷ Suất Lợi Nhuận</span>
+                        <div class="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center border border-amber-500/20">
+                            <i class="fa-solid fa-percent"></i>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-bold text-amber-400" id="card-yield">0%</p>
+                    <p class="text-xs text-slate-500 mt-1.5">Tính trên tổng gốc đã nộp</p>
+                </div>
+            </div>
+
+            <!-- Interactive Timeline Slider for Custom Month Checking -->
+            <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800/80 shadow-lg backdrop-blur-sm">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-regular fa-clock text-indigo-400"></i>Tra cứu số dư theo dòng thời gian
+                        </h3>
+                        <p class="text-sm text-slate-400">Di chuyển thanh trượt để hiển thị số tiền có được tại mốc mong muốn.</p>
+                    </div>
+                    <div class="mt-2 md:mt-0 bg-indigo-500/10 text-indigo-300 px-4 py-1.5 rounded-full font-bold text-sm border border-indigo-500/20 shadow-inner" id="slider-month-label">
+                        Khởi đầu (T0)
+                    </div>
+                </div>
+                
+                <div class="px-2">
+                    <input type="range" id="timeline-slider" min="0" max="12" value="12" oninput="updateSliderView(this.value)" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500">
+                    <div id="slider-legend" class="flex justify-between text-[10px] text-slate-400 font-bold mt-4 px-1 select-none overflow-x-auto whitespace-nowrap gap-2 scrollbar-none">
+                        <!-- Populated dynamically based on start date -->
+                    </div>
+                </div>
+
+                <!-- Instant view for selected slider position -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 pt-6 border-t border-slate-800/60 bg-slate-950/60 p-4 rounded-xl">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2.5 h-2.5 rounded-full bg-slate-500"></div>
+                        <div class="text-sm">
+                            <span class="text-slate-400 font-medium block">Số dư gốc:</span>
+                            <span class="font-bold text-slate-200 text-lg" id="slider-val-principal">0 đ</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-2.5 h-2.5 rounded-full bg-success-400"></div>
+                        <div class="text-sm">
+                            <span class="text-slate-400 font-medium block">Lãi tích lũy:</span>
+                            <span class="font-bold text-success-400 text-lg" id="slider-val-interest">0 đ</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-2.5 h-2.5 rounded-full bg-indigo-400"></div>
+                        <div class="text-sm">
+                            <span class="text-slate-400 font-medium block">Tổng giá trị tài sản:</span>
+                            <span class="font-bold text-indigo-400 text-lg" id="slider-val-total">0 đ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart & Formula explanation -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Growth Chart -->
+                <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800/80 shadow-lg lg:col-span-2 backdrop-blur-sm">
+                    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-indigo-400"></i>Biểu đồ tăng trưởng tài sản lũy tiến
+                    </h3>
+                    <div class="h-[300px] w-full relative">
+                        <canvas id="growthChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Math Details & Guide -->
+                <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800/80 shadow-lg flex flex-col justify-between backdrop-blur-sm">
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-calculator text-indigo-400"></i>Công thức tính lãi ngày
+                        </h3>
+                        <p class="text-sm text-slate-400 leading-relaxed mb-4">
+                            Lãi suất tiết kiệm gửi góp được tính theo chuẩn ngân hàng thương mại hiện nay (phân rã tính theo ngày thực tế):
+                        </p>
+                        
+                        <div class="bg-slate-950/60 border border-slate-800 p-4 rounded-xl space-y-3 mb-4 text-xs font-mono text-slate-300">
+                            <div>
+                                <p class="text-slate-500 font-sans font-semibold mb-1">Công thức tính ngày:</p>
+                                <p class="text-indigo-300 font-bold">Lãi ngày = Gốc × (Lãi suất ÷ 365)</p>
+                            </div>
+                            <div class="border-t border-slate-800/80 pt-2.5">
+                                <p class="text-slate-500 font-sans font-semibold mb-1">Cơ chế nộp gốc:</p>
+                                <p class="text-slate-300">Gốc tăng từ ngày nộp và sinh lãi tương ứng trên phần tiền cộng dồn mới.</p>
+                            </div>
+                        </div>
+
+                        <div class="text-xs text-indigo-300 bg-indigo-950/40 border border-indigo-500/20 p-3.5 rounded-xl flex gap-2">
+                            <i class="fa-solid fa-circle-info text-indigo-400 mt-0.5"></i>
+                            <span id="rate-bilingual-hint">Hệ thống áp dụng biểu phí lãi bậc thang dựa trên cấu hình tùy chỉnh của bạn.</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-800/60 flex justify-between items-center text-xs text-slate-500">
+                        <span>Hệ thống dự phóng</span>
+                        <span class="font-bold text-slate-400">PiggyInterest © 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table of Monthly Breakdowns -->
+            <div class="bg-slate-900/60 rounded-2xl border border-slate-800/80 shadow-lg overflow-hidden backdrop-blur-sm">
+                <div class="p-6 border-b border-slate-800/80 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-white">Sao kê chi tiết quá trình tích lũy</h3>
+                        <p class="text-sm text-slate-400">Bảng chi tiết tăng trưởng theo từng tháng</p>
+                    </div>
+                    <span class="bg-emerald-500/10 text-emerald-400 text-xs px-3 py-1.5 rounded-full font-bold border border-emerald-500/20 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Đã tối ưu hóa lãi suất bậc thang
+                    </span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-950/60 border-b border-slate-800 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                <th class="p-4">Thời điểm</th>
+                                <th class="p-4">Ngày mốc (DD/MM/YYYY)</th>
+                                <th class="p-4 text-right">Biến động gốc</th>
+                                <th class="p-4 text-right">Lũy kế gốc</th>
+                                <th class="p-4 text-center">Lãi suất năm</th>
+                                <th class="p-4 text-right">Lãi phát sinh (Tháng)</th>
+                                <th class="p-4 text-right">Lãi tích lũy</th>
+                                <th class="p-4 text-right">Tổng tài sản cuối kỳ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="monthly-table-body" class="divide-y divide-slate-800 text-sm">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: TRANSACTIONS (GỬI TIỀN) -->
+        <div id="view-transactions" class="hidden space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Transaction Form -->
+                <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800/80 shadow-lg h-fit backdrop-blur-sm">
+                    <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-plus-circle text-indigo-400"></i>Thêm Giao Dịch Gửi
+                    </h3>
+                    <p class="text-sm text-slate-400 mb-6">Nộp thêm tiền tiết kiệm vào bất kỳ ngày nào trong thời hạn gửi.</p>
+                    
+                    <form id="transaction-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Số tiền nộp thêm (VND)</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold text-sm">đ</span>
+                                <input type="number" id="tx-amount" required placeholder="Ví dụ: 3000000" class="w-full pl-8 pr-4 py-3 bg-slate-950/60 border border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition font-semibold text-white">
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Ngày nộp tiền</label>
+                                <!-- LIVE FORMATTED LABEL -->
+                                <span id="lbl-tx-date-formatted" class="text-xs text-indigo-400 font-bold"></span>
+                            </div>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
+                                    <i class="fa-regular fa-calendar-days"></i>
+                                </span>
+                                <input type="date" id="tx-date" oninput="updateLiveDateLabel('tx-date', 'lbl-tx-date-formatted')" required class="w-full pl-11 pr-4 py-3 bg-slate-950/60 border border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition font-semibold text-white">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Ghi chú (Tùy chọn)</label>
+                            <input type="text" id="tx-note" placeholder="Ví dụ: Lương thưởng tháng 2" class="w-full px-4 py-3 bg-slate-950/60 border border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-white text-sm">
+                        </div>
+
+                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 px-4 rounded-xl transition duration-200 shadow-md shadow-indigo-600/10 flex justify-center items-center gap-2">
+                            <i class="fa-solid fa-plus"></i>Thêm vào quỹ tiết kiệm
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Grouped Monthly Transaction List -->
+                <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800/80 shadow-lg lg:col-span-2 backdrop-blur-sm">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 class="text-lg font-bold text-white">Lịch sử nộp tiền (Phân chia theo tháng)</h3>
+                            <p class="text-sm text-slate-400">Các khoản nộp được thống kê nhóm cụ thể theo từng tháng gửi tương ứng.</p>
+                        </div>
+                        <span id="tx-count" class="bg-indigo-500/10 text-indigo-300 text-xs font-bold px-3 py-1 rounded-full border border-indigo-500/20">
+                            0 khoản gửi
+                        </span>
+                    </div>
+
+                    <!-- Dynamic container for Monthly Groups -->
+                    <div id="grouped-tx-container" class="space-y-6">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: SETTINGS (CẤU HÌNH LÃI SUẤT) -->
+        <div id="view-settings" class="hidden">
+            <div class="bg-slate-900/60 p-8 rounded-2xl border border-slate-800/80 shadow-lg max-w-3xl mx-auto backdrop-blur-sm">
+                <h3 class="text-xl font-extrabold text-white mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-gears text-indigo-400"></i>Cài đặt thời gian & Lãi suất
+                </h3>
+                <p class="text-sm text-slate-400 mb-8">Thiết lập ngày mốc đầu tiên, kỳ hạn tổng và các dải lãi suất bậc thang áp dụng cho tài khoản.</p>
+
+                <form id="settings-form" onsubmit="handleSettingsSubmit(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Ngày bắt đầu gửi (Mốc 0)</label>
+                                <!-- LIVE FORMATTED LABEL -->
+                                <span id="lbl-config-date-formatted" class="text-xs text-indigo-400 font-bold"></span>
+                            </div>
+                            <input type="date" id="config-start-date" oninput="updateLiveDateLabel('config-start-date', 'lbl-config-date-formatted')" required class="w-full px-4 py-3 bg-slate-950/60 border border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition font-semibold text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Kỳ hạn gửi (Tháng)</label>
+                            <input type="number" id="config-duration" min="1" max="60" required class="w-full px-4 py-3 bg-slate-950/60 border border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition font-semibold text-white">
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-800/60 pt-6">
+                        <h4 class="font-bold text-white mb-4 flex items-center gap-2 text-sm">
+                            <i class="fa-solid fa-chart-line text-success-400"></i>Cài đặt Lãi suất bậc thang (% / năm)
+                        </h4>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Giai đoạn 1 (Tháng đầu)</label>
+                                <div class="flex items-center gap-2 bg-slate-950/40 px-4 py-3 border border-slate-800 rounded-xl">
+                                    <span class="text-slate-400 text-xs font-semibold" id="label-setting-period-1">Tháng 1 đến tháng 6</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Mức lãi suất GĐ 1</label>
+                                <div class="relative">
+                                    <input type="number" id="config-rate-1" step="0.01" required class="w-full pr-10 pl-4 py-3 bg-slate-950/60 border border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition font-semibold text-white text-right">
+                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold text-sm">%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center mt-6">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Giai đoạn 2 (Tháng tiếp theo)</label>
+                                <div class="flex items-center gap-2 bg-slate-950/40 px-4 py-3 border border-slate-800 rounded-xl">
+                                    <span class="text-slate-400 text-xs font-semibold" id="label-setting-period-2">Tháng 7 trở đi</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Mức lãi suất GĐ 2</label>
+                                <div class="relative">
+                                    <input type="number" id="config-rate-2" step="0.01" required class="w-full pr-10 pl-4 py-3 bg-slate-950/60 border border-slate-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition font-semibold text-white text-right">
+                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold text-sm">%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-800/60 flex justify-end">
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-8 rounded-xl transition duration-200 shadow-md">
+                            <i class="fa-solid fa-save mr-2"></i>Lưu cấu hình
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Custom Modal for Confirmation (Replacing browser confirm) -->
+    <div id="confirm-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden">
+        <div class="bg-slate-900 border border-slate-800/80 p-6 rounded-2xl max-w-sm w-full shadow-2xl transform scale-95 transition-all">
+            <div class="w-12 h-12 bg-rose-500/10 text-rose-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white text-center mb-2">Xác nhận xóa dữ liệu</h3>
+            <p class="text-sm text-slate-400 text-center mb-6">Bạn có chắc chắn muốn xóa toàn bộ các giao dịch tiết kiệm hiện có? Hành động này không thể hoàn tác.</p>
+            <div class="flex gap-3">
+                <button onclick="closeConfirmModal()" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-bold text-xs transition">Hủy bỏ</button>
+                <button onclick="confirmClearAllData()" class="flex-1 py-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl font-bold text-xs transition">Xóa sạch</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 pointer-events-none space-y-2"></div>
+
+    <script>
+        // --- DATA STATE MANAGEMENT ---
+        let appConfig = {
+            startDate: '2026-01-01',
+            duration: 12, // Months
+            rate1: 7.4,   // First 6 months (% / year)
+            rate2: 4.75,  // Remaining months (% / year)
+            rate1LimitMonths: 6 // Boundary month
+        };
+
+        // System Date is fixed to today: Saturday, July 11, 2026
+        const systemTodayDate = new Date('2026-07-11');
+        
+        let calculationTarget = 'today'; // 'today' or 'end'
+        let transactions = [];
+        let chartInstance = null;
+        let dayByDayHistory = []; // Tracks every day of calculation
+        let monthlyMilestones = []; // Tracks month end details for displays
+
+        // --- LOCAL STORAGE AUTO-SAVE / LOAD SYSTEM ---
+        function saveToLocalStorage() {
+            localStorage.setItem('piggy_appConfig_v2', JSON.stringify(appConfig));
+            localStorage.setItem('piggy_transactions_v2', JSON.stringify(transactions));
+            localStorage.setItem('piggy_calculationTarget_v2', calculationTarget);
+        }
+
+        function loadFromLocalStorage() {
+            const savedConfig = localStorage.getItem('piggy_appConfig_v2');
+            const savedTransactions = localStorage.getItem('piggy_transactions_v2');
+            const savedTarget = localStorage.getItem('piggy_calculationTarget_v2');
+            
+            if (savedConfig) {
+                appConfig = JSON.parse(savedConfig);
+            }
+            if (savedTransactions) {
+                transactions = JSON.parse(savedTransactions);
+            } else {
+                transactions = []; // Empty state on first boot
+            }
+            if (savedTarget) {
+                calculationTarget = savedTarget;
+            }
+        }
+
+        // Utility: Set transaction date input value to TODAY's date format (YYYY-MM-DD)
+        function setTodayOnTxInput() {
+            const dateString = "2026-07-11";
+            const dateInput = document.getElementById('tx-date');
+            if (dateInput) {
+                dateInput.value = dateString;
+                updateLiveDateLabel('tx-date', 'lbl-tx-date-formatted');
+            }
+        }
+
+        // Live text formatting helper for Input Dates (shows preview of DD/MM/YYYY above date inputs)
+        function updateLiveDateLabel(inputId, labelId) {
+            const inputVal = document.getElementById(inputId).value;
+            const labelElement = document.getElementById(labelId);
+            if (!labelElement) return;
+
+            if (!inputVal) {
+                labelElement.innerText = "";
+                return;
+            }
+
+            const parts = inputVal.split('-');
+            if (parts.length === 3) {
+                labelElement.innerText = `(${parts[2]}/${parts[1]}/${parts[0]})`;
+            } else {
+                labelElement.innerText = "";
+            }
+        }
+
+        // --- TIME ACCRUED AND REMAINING CALCULATION ---
+        function updateTimeStatsWidget() {
+            const start = new Date(appConfig.startDate);
+            const durationMonths = parseInt(appConfig.duration);
+            const end = new Date(start);
+            end.setMonth(start.getMonth() + durationMonths);
+
+            const durationText = `${durationMonths} tháng`;
+            document.getElementById('time-widget-duration').innerText = durationText;
+
+            const progressBar = document.getElementById('time-widget-progress-bar');
+            const elapsedEl = document.getElementById('time-widget-elapsed');
+            const remainingEl = document.getElementById('time-widget-remaining');
+
+            if (calculationTarget === 'end') {
+                progressBar.style.width = '100%';
+                elapsedEl.innerText = `${durationMonths} tháng (Đáo hạn cuối kỳ)`;
+                remainingEl.innerText = 'Đã hoàn thành kỳ hạn (0 ngày)';
+                return;
+            }
+
+            const today = systemTodayDate;
+
+            if (today < start) {
+                progressBar.style.width = '0%';
+                elapsedEl.innerText = 'Chưa đến ngày bắt đầu gửi';
+                remainingEl.innerText = `${durationMonths} tháng (${Math.round((end - today) / (1000 * 60 * 60 * 24))} ngày)`;
+                return;
+            }
+
+            if (today >= end) {
+                progressBar.style.width = '100%';
+                elapsedEl.innerText = `${durationMonths} tháng (Đã đáo hạn)`;
+                remainingEl.innerText = 'Đã hoàn thành kỳ hạn (0 ngày)';
+                return;
+            }
+
+            function getDifferenceFriendly(d1, d2) {
+                let y1 = d1.getFullYear();
+                let m1 = d1.getMonth();
+                let r1 = d1.getDate();
+                
+                let y2 = d2.getFullYear();
+                let m2 = d2.getMonth();
+                let r2 = d2.getDate();
+                
+                let years = y2 - y1;
+                let months = m2 - m1;
+                let days = r2 - r1;
+                
+                if (days < 0) {
+                    const prevMonth = new Date(d2.getFullYear(), d2.getMonth(), 0);
+                    days += prevMonth.getDate();
+                    months--;
+                }
+                if (months < 0) {
+                    months += 12;
+                    years--;
+                }
+                
+                let parts = [];
+                if (years > 0) parts.push(`${years} năm`);
+                if (months > 0) parts.push(`${months} tháng`);
+                if (days > 0 || parts.length === 0) parts.push(`${days} ngày`);
+                
+                return parts.join(' ');
+            }
+
+            const totalDays = Math.round((end - start) / (1000 * 60 * 60 * 24));
+            const elapsedDays = Math.round((today - start) / (1000 * 60 * 60 * 24));
+            const remainingDays = totalDays - elapsedDays;
+            
+            const progressPercent = Math.min(100, Math.max(0, (elapsedDays / totalDays) * 100));
+
+            progressBar.style.width = `${progressPercent.toFixed(1)}%`;
+            elapsedEl.innerText = `${getDifferenceFriendly(start, today)} (${elapsedDays} ngày)`;
+            remainingEl.innerText = `${getDifferenceFriendly(today, end)} (${remainingDays} ngày)`;
+        }
+
+        // --- DYNAMIC SLIDER LEGEND GENERATION ---
+        function renderSliderLegend() {
+            const legendContainer = document.getElementById('slider-legend');
+            if (!legendContainer) return;
+            legendContainer.innerHTML = '';
+            
+            const start = new Date(appConfig.startDate);
+            const duration = parseInt(appConfig.duration);
+            
+            for (let i = 0; i <= duration; i++) {
+                const milestoneDate = new Date(start);
+                milestoneDate.setMonth(start.getMonth() + i);
+                
+                const month = milestoneDate.getMonth() + 1;
+                const year = milestoneDate.getFullYear();
+                
+                const span = document.createElement('span');
+                if (i === 0) {
+                    span.innerText = `Bắt đầu (${month}/${year})`;
+                    span.className = "text-indigo-400 font-bold";
+                } else if (i === duration) {
+                    span.innerText = `Kết thúc (${month}/${year})`;
+                    span.className = "text-purple-400 font-bold";
+                } else if (i === 3) {
+                    span.innerText = `Đầu Th ${month} 📌`;
+                    span.className = "text-indigo-300 font-extrabold scale-110";
+                } else {
+                    span.innerText = `Th ${month}`;
+                }
+                legendContainer.appendChild(span);
+            }
+        }
+
+        // --- CORE BANKING ENGINE ---
+        function calculateSavings() {
+            const start = new Date(appConfig.startDate);
+            const durationMonths = parseInt(appConfig.duration);
+            const end = new Date(start);
+            end.setMonth(start.getMonth() + durationMonths);
+
+            const labelP1 = document.getElementById('label-setting-period-1');
+            const labelP2 = document.getElementById('label-setting-period-2');
+            if (labelP1 && labelP2) {
+                const p1End = new Date(start);
+                p1End.setMonth(start.getMonth() + appConfig.rate1LimitMonths);
+                labelP1.innerText = `Tháng ${start.getMonth() + 1}/${start.getFullYear()} đến ${p1End.getMonth() + 1}/${p1End.getFullYear()}`;
+                labelP2.innerText = `Từ tháng ${p1End.getMonth() + 1}/${p1End.getFullYear()} trở đi`;
+            }
+
+            const hintCard = document.getElementById('rate-bilingual-hint');
+            if (hintCard) {
+                hintCard.innerText = `Hệ thống tự động phân tách biểu phí lãi bậc thang: Giai đoạn 1 (${appConfig.rate1}%) và giai đoạn 2 (${appConfig.rate2}%).`;
+            }
+
+            // Sắp xếp các giao dịch theo thời gian tăng dần
+            transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            dayByDayHistory = [];
+            monthlyMilestones = [];
+
+            let currentPrincipal = 0;
+            let accumulatedInterest = 0;
+            
+            const totalDays = Math.round((end - start) / (1000 * 60 * 60 * 24));
+            
+            const txMap = {};
+            transactions.forEach(tx => {
+                const txD = new Date(tx.date).toDateString();
+                if (!txMap[txD]) txMap[txD] = 0;
+                txMap[txD] += parseFloat(tx.amount);
+            });
+
+            const getMonthsDifference = (d1, d2) => {
+                let months = (d2.getFullYear() - d1.getFullYear()) * 12;
+                months -= d1.getMonth();
+                months += d2.getMonth();
+                if (d2.getDate() < d1.getDate()) {
+                    months--;
+                }
+                return Math.max(0, months);
+            };
+
+            // Vòng lặp tính toán chi tiết từng ngày
+            for (let dayOffset = 0; dayOffset <= totalDays; dayOffset++) {
+                const iterDate = new Date(start);
+                iterDate.setDate(start.getDate() + dayOffset);
+
+                if (iterDate > end) break;
+
+                const dateKey = iterDate.toDateString();
+                let appliedTransaction = 0;
+                if (txMap[dateKey]) {
+                    currentPrincipal += txMap[dateKey];
+                    appliedTransaction = txMap[dateKey];
+                }
+
+                const monthsElapsed = getMonthsDifference(start, iterDate);
+                const activeRate = (monthsElapsed < appConfig.rate1LimitMonths) ? appConfig.rate1 : appConfig.rate2;
+
+                const dailyRateFraction = (activeRate / 100) / 365;
+                const dailyInterestEarned = currentPrincipal * dailyRateFraction;
+
+                if (dayOffset < totalDays) {
+                    accumulatedInterest += dailyInterestEarned;
+                }
+
+                dayByDayHistory.push({
+                    dayIndex: dayOffset,
+                    date: new Date(iterDate),
+                    principal: currentPrincipal,
+                    rate: activeRate,
+                    interestAccumulated: accumulatedInterest,
+                    transactionAdded: appliedTransaction,
+                    totalValue: currentPrincipal + accumulatedInterest
+                });
+            }
+
+            // Nhóm dữ liệu theo các cột mốc tháng đầu kỳ phục vụ thống kê
+            for (let m = 0; m <= durationMonths; m++) {
+                const milestoneDate = new Date(start);
+                milestoneDate.setMonth(start.getMonth() + m);
+
+                let record = dayByDayHistory.find(r => r.date.toDateString() === milestoneDate.toDateString());
+                if (!record) {
+                    record = dayByDayHistory.reduce((prev, curr) => {
+                        return (Math.abs(curr.date - milestoneDate) < Math.abs(prev.date - milestoneDate)) ? curr : prev;
+                    });
+                }
+
+                let txInMonth = 0;
+                transactions.forEach(tx => {
+                    const txD = new Date(tx.date);
+                    if (m === 0) {
+                        if (txD.toDateString() === start.toDateString()) txInMonth += parseFloat(tx.amount);
+                    } else {
+                        const prevMilestone = new Date(start);
+                        prevMilestone.setMonth(start.getMonth() + m - 1);
+                        if (txD > prevMilestone && txD <= milestoneDate) {
+                            txInMonth += parseFloat(tx.amount);
+                        }
+                    }
+                });
+
+                monthlyMilestones.push({
+                    monthIndex: m,
+                    date: new Date(milestoneDate),
+                    principal: record.principal,
+                    rate: (m < appConfig.rate1LimitMonths) ? appConfig.rate1 : appConfig.rate2,
+                    interestAccumulated: record.interestAccumulated,
+                    totalValue: record.totalValue,
+                    txAdded: txInMonth
+                });
+            }
+            
+            saveToLocalStorage();
+        }
+
+        // Thay đổi chế độ lọc tính toán
+        function setCalculationTarget(target) {
+            calculationTarget = target;
+            const btnToday = document.getElementById('btn-calc-today');
+            const btnEnd = document.getElementById('btn-calc-end');
+            
+            if (target === 'today') {
+                btnToday.className = "px-4 py-2 rounded-lg text-xs font-bold transition-all bg-indigo-600 text-white shadow-md";
+                btnEnd.className = "px-4 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-slate-200";
+                showToast("Đã chuyển sang chế độ: Tính thực tế đến hôm nay (11/07/2026)", "info");
+            } else {
+                btnToday.className = "px-4 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-slate-200";
+                btnEnd.className = "px-4 py-2 rounded-lg text-xs font-bold transition-all bg-indigo-600 text-white shadow-md";
+                showToast("Đã chuyển sang chế độ: Dự phóng kết thúc kỳ hạn", "info");
+            }
+            saveToLocalStorage();
+            renderDashboard();
+        }
+
+        // --- INTERACTIVE UI UPDATES ---
+        function renderDashboard() {
+            let targetState = null;
+            if (calculationTarget === 'today') {
+                targetState = dayByDayHistory.find(r => r.date.toDateString() === systemTodayDate.toDateString());
+                if (!targetState) {
+                    targetState = dayByDayHistory.reduce((prev, curr) => {
+                        return (Math.abs(curr.date - systemTodayDate) < Math.abs(prev.date - systemTodayDate)) ? curr : prev;
+                    });
+                }
+                document.getElementById('card-interest-sub').innerText = "Tích lũy thực tế tính đến hôm nay";
+                document.getElementById('card-balance-sub').innerText = "Gồm gốc nộp + Lãi đến hôm nay";
+            } else {
+                targetState = dayByDayHistory[dayByDayHistory.length - 1] || { principal: 0, interestAccumulated: 0, totalValue: 0 };
+                document.getElementById('card-interest-sub').innerText = "Tích lũy thực tế cuối kỳ hạn";
+                document.getElementById('card-balance-sub').innerText = "Dự kiến nhận về khi đáo hạn";
+            }
+            
+            document.getElementById('card-total-principal').innerText = formatCurrency(targetState.principal);
+            document.getElementById('card-total-interest').innerText = formatCurrency(targetState.interestAccumulated);
+            document.getElementById('card-current-balance').innerText = formatCurrency(targetState.totalValue);
+            document.getElementById('card-principal-sub').innerText = `Tích lũy từ ${transactions.length} đợt nộp`;
+            
+            const yieldRate = targetState.principal > 0 ? (targetState.interestAccumulated / targetState.principal) * 100 : 0;
+            document.getElementById('card-yield').innerText = `${yieldRate.toFixed(2)}%`;
+
+            updateTimeStatsWidget();
+            renderSliderLegend();
+
+            const slider = document.getElementById('timeline-slider');
+            slider.max = appConfig.duration;
+            updateSliderView(slider.value);
+
+            const tbody = document.getElementById('monthly-table-body');
+            tbody.innerHTML = '';
+
+            if (transactions.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="p-8 text-center text-slate-500">
+                            <div class="flex flex-col items-center justify-center gap-2 py-6">
+                                <i class="fa-solid fa-folder-open text-4xl text-slate-600 mb-2"></i>
+                                <span class="font-bold text-slate-400">Chưa có giao dịch gửi tiền nào</span>
+                                <span class="text-xs text-slate-500">Hãy chuyển sang tab "Gửi tiền" để khởi tạo khoản gốc tiết kiệm đầu tiên của bạn.</span>
+                                <button onclick="switchTab('transactions')" class="mt-4 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition shadow-md shadow-indigo-600/15">
+                                    <i class="fa-solid fa-plus mr-1.5"></i>Thêm khoản gửi mới
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                updateChart();
+                return;
+            }
+
+            let todayRowRendered = false;
+
+            monthlyMilestones.forEach((item, index) => {
+                if (!todayRowRendered && index > 0) {
+                    const prevItem = monthlyMilestones[index - 1];
+                    if (systemTodayDate > prevItem.date && systemTodayDate < item.date) {
+                        const todayState = dayByDayHistory.find(r => r.date.toDateString() === systemTodayDate.toDateString()) || { principal: prevItem.principal, interestAccumulated: prevItem.interestAccumulated, totalValue: prevItem.totalValue };
+                        const todayYield = todayState.interestAccumulated - prevItem.interestAccumulated;
+                        
+                        const trToday = document.createElement('tr');
+                        trToday.className = "bg-emerald-500/10 border-y border-emerald-500/30 transition-colors shadow-[0_0_15px_rgba(16,185,129,0.1)]";
+                        trToday.innerHTML = `
+                            <td class="p-4 font-black text-emerald-400 flex items-center gap-1.5">
+                                <span class="relative flex h-2 w-2">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                </span>
+                                Hôm nay (Hiện tại) ⚡
+                            </td>
+                            <td class="p-4 text-emerald-300 font-bold">${formatDate(systemTodayDate)}</td>
+                            <td class="p-4 text-right text-emerald-300 font-semibold">-</td>
+                            <td class="p-4 text-right text-slate-300 font-medium">${formatCurrency(todayState.principal)}</td>
+                            <td class="p-4 text-center">
+                                <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                    ${(index < appConfig.rate1LimitMonths ? appConfig.rate1 : appConfig.rate2).toFixed(2)}% / năm
+                                </span>
+                            </td>
+                            <td class="p-4 text-right text-emerald-400 font-medium">+${formatCurrency(todayYield)}</td>
+                            <td class="p-4 text-right text-emerald-400 font-black">${formatCurrency(todayState.interestAccumulated)}</td>
+                            <td class="p-4 text-right text-emerald-100 font-black">${formatCurrency(todayState.totalValue)}</td>
+                        `;
+                        tbody.appendChild(trToday);
+                        todayRowRendered = true;
+                    }
+                }
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-800/30 transition-colors border-b border-slate-800/50";
+
+                const itemMonth = item.date.getMonth() + 1;
+                const itemYear = item.date.getFullYear();
+                let timeLabel = `Đầu Tháng ${itemMonth}/${itemYear}`;
+                if (index === 0) timeLabel = `Khởi đầu (Tháng ${itemMonth}/${itemYear})`;
+                if (index === appConfig.duration) timeLabel = `Đáo hạn (Tháng ${itemMonth}/${itemYear})`;
+
+                let monthlyYield = 0;
+                if (index === 0) {
+                    monthlyYield = 0;
+                } else {
+                    monthlyYield = item.interestAccumulated - monthlyMilestones[index - 1].interestAccumulated;
+                }
+
+                tr.innerHTML = `
+                    <td class="p-4 font-bold text-slate-200">${timeLabel}</td>
+                    <td class="p-4 text-slate-400 font-medium">${formatDate(item.date)}</td>
+                    <td class="p-4 text-right text-indigo-300 font-semibold ${item.txAdded > 0 ? 'text-indigo-200 bg-indigo-500/10' : ''}">
+                        ${item.txAdded > 0 ? `+${formatCurrency(item.txAdded)}` : '-'}
+                    </td>
+                    <td class="p-4 text-right text-slate-300 font-medium">${formatCurrency(item.principal)}</td>
+                    <td class="p-4 text-center">
+                        <span class="px-2.5 py-1 text-xs font-bold rounded-full ${item.rate >= 6 ? 'bg-indigo-500/15 text-indigo-300' : 'bg-slate-800 text-slate-400'}">
+                            ${item.rate.toFixed(2)}% / năm
+                        </span>
+                    </td>
+                    <td class="p-4 text-right text-emerald-400 font-medium">+${formatCurrency(monthlyYield)}</td>
+                    <td class="p-4 text-right text-success-400 font-semibold">${formatCurrency(item.interestAccumulated)}</td>
+                    <td class="p-4 text-right text-white font-extrabold">${formatCurrency(item.totalValue)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            updateChart();
+        }
+
+        function updateSliderView(val) {
+            const index = parseInt(val);
+            const item = monthlyMilestones[index];
+            if (!item) return;
+
+            const itemMonth = item.date.getMonth() + 1;
+            const itemYear = item.date.getFullYear();
+            
+            let label = `Tháng ${itemMonth}/${itemYear}`;
+            if (index === 0) label = `Khởi đầu (Tháng ${itemMonth}/${itemYear})`;
+            else if (index === appConfig.duration) label = `Đáo hạn (Tháng ${itemMonth}/${itemYear})`;
+            else label = `Đầu Tháng ${itemMonth}/${itemYear}`;
+            
+            document.getElementById('slider-month-label').innerHTML = `<i class="fa-regular fa-clock mr-1.5"></i>${label}`;
+
+            document.getElementById('slider-val-principal').innerText = formatCurrency(item.principal);
+            document.getElementById('slider-val-interest').innerText = formatCurrency(item.interestAccumulated);
+            document.getElementById('slider-val-total').innerText = formatCurrency(item.totalValue);
+        }
+
+        // --- GROUPING & RENDERING TRANSACTIONS BY MONTH ---
+        function renderTransactions() {
+            document.getElementById('tx-count').innerText = `${transactions.length} khoản gửi`;
+            
+            const container = document.getElementById('grouped-tx-container');
+            container.innerHTML = '';
+
+            if (transactions.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-slate-500 font-semibold bg-slate-900/20 rounded-xl border border-dashed border-slate-800">
+                        <i class="fa-solid fa-folder-open text-4xl mb-3 block text-slate-600"></i>
+                        Không có giao dịch nào được ghi nhận
+                        <span class="text-xs text-slate-500 block mt-1">Hãy dùng form bên trái để nộp khoản tiết kiệm của bạn.</span>
+                    </div>
+                `;
+                return;
+            }
+
+            const startD = new Date(appConfig.startDate);
+            const grouped = {};
+
+            transactions.forEach((tx, idx) => {
+                const txD = new Date(tx.date);
+                const diffTime = Math.abs(txD - startD);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                const diffMonths = (txD.getFullYear() - startD.getFullYear()) * 12 + (txD.getMonth() - startD.getMonth());
+
+                const actualMonth = txD.getMonth() + 1;
+                const actualYear = txD.getFullYear();
+                let monthGroupLabel = `Giao dịch Tháng ${actualMonth}/${actualYear}`;
+                if (diffDays === 0 || diffMonths === 0) {
+                    monthGroupLabel = `Khởi tạo gốc đầu kỳ (Tháng ${actualMonth}/${actualYear})`;
+                }
+
+                if (!grouped[monthGroupLabel]) {
+                    grouped[monthGroupLabel] = [];
+                }
+
+                grouped[monthGroupLabel].push({
+                    data: tx,
+                    originalIndex: idx,
+                    diffDays: diffDays,
+                    diffMonths: diffMonths
+                });
+            });
+
+            Object.keys(grouped).forEach(groupLabel => {
+                const groupItems = grouped[groupLabel];
+                const groupSum = groupItems.reduce((acc, curr) => acc + parseFloat(curr.data.amount), 0);
+
+                const groupDiv = document.createElement('div');
+                groupDiv.className = "bg-slate-950/40 rounded-xl border border-slate-800 overflow-hidden shadow-md";
+                
+                let groupHeaderHTML = `
+                    <div class="bg-slate-900/60 px-4 py-3 border-b border-slate-800/80 flex justify-between items-center">
+                        <span class="font-extrabold text-sm text-indigo-300 tracking-wide uppercase"><i class="fa-regular fa-folder-open mr-2 text-indigo-400"></i>${groupLabel}</span>
+                        <span class="text-xs font-bold text-slate-400 bg-slate-950 px-2.5 py-1 rounded border border-slate-800">Tổng nhóm: <span class="text-indigo-400">${formatCurrency(groupSum)}</span></span>
+                    </div>
+                `;
+
+                let tableRowsHTML = '';
+                groupItems.forEach(item => {
+                    const tx = item.data;
+                    const idx = item.originalIndex;
+                    const txD = new Date(tx.date);
+
+                    let diffLabel = "";
+                    if (item.diffDays === 0) diffLabel = "Mốc khởi điểm";
+                    else if (item.diffMonths > 0) diffLabel = `Sau ${item.diffMonths} tháng (${item.diffDays} ngày)`;
+                    else diffLabel = `Sau ${item.diffDays} ngày`;
+
+                    tableRowsHTML += `
+                        <tr class="hover:bg-slate-900/40 transition-colors">
+                            <td class="p-3 font-bold text-slate-300">${formatDate(txD)}</td>
+                            <td class="p-3 font-extrabold text-indigo-400 text-right">${formatCurrency(tx.amount)}</td>
+                            <td class="p-3 text-slate-400 text-xs font-medium">${diffLabel}</td>
+                            <td class="p-3 text-slate-500 italic text-xs max-w-[150px] truncate">${tx.note || 'Không ghi chú'}</td>
+                            <td class="p-3 text-center">
+                                <button onclick="deleteTransaction(${idx})" class="text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 p-1.5 rounded-lg transition duration-150">
+                                    <i class="fa-solid fa-trash-can text-sm"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                groupDiv.innerHTML = `
+                    ${groupHeaderHTML}
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead>
+                                <tr class="bg-slate-950/20 border-b border-slate-800 text-[10px] font-bold text-slate-500 uppercase">
+                                    <th class="p-3">Ngày nộp (DD/MM/YYYY)</th>
+                                    <th class="p-3 text-right">Số tiền nộp</th>
+                                    <th class="p-3">Mốc khoảng cách</th>
+                                    <th class="p-3">Ghi chú</th>
+                                    <th class="p-3 text-center">Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800/40">
+                                ${tableRowsHTML}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                container.appendChild(groupDiv);
+            });
+        }
+
+        function populateConfigForm() {
+            document.getElementById('config-start-date').value = appConfig.startDate;
+            document.getElementById('config-duration').value = appConfig.duration;
+            document.getElementById('config-rate-1').value = appConfig.rate1;
+            document.getElementById('config-rate-2').value = appConfig.rate2;
+            
+            updateLiveDateLabel('config-start-date', 'lbl-config-date-formatted');
+        }
+
+        // --- CHART GENERATION (Custom Dark Styling) ---
+        function updateChart() {
+            const ctx = document.getElementById('growthChart').getContext('2d');
+            
+            const labels = monthlyMilestones.length > 0 ? monthlyMilestones.map((item, idx) => {
+                return `${item.date.getMonth() + 1}/${item.date.getFullYear()}`;
+            }) : ["Chưa có dữ liệu"];
+            
+            const dataPrincipal = monthlyMilestones.length > 0 ? monthlyMilestones.map(item => item.principal) : [0];
+            const dataTotal = monthlyMilestones.length > 0 ? monthlyMilestones.map(item => item.totalValue) : [0];
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Tổng tiền tài khoản (Gốc + Lãi)',
+                            data: dataTotal,
+                            borderColor: '#818cf8',
+                            backgroundColor: 'rgba(129, 140, 248, 0.05)',
+                            fill: true,
+                            tension: 0.35,
+                            borderWidth: 3,
+                            pointBackgroundColor: '#6366f1',
+                            pointHoverRadius: 8
+                        },
+                        {
+                            label: 'Lượng tiền gốc gửi tích lũy',
+                            data: dataPrincipal,
+                            borderColor: '#475569',
+                            backgroundColor: 'transparent',
+                            borderDash: [5, 5],
+                            tension: 0.1,
+                            borderWidth: 2,
+                            pointBackgroundColor: '#334155'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    family: 'Plus Jakarta Sans',
+                                    weight: 'bold',
+                                    size: 11
+                                },
+                                color: '#94a3b8'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleColor: '#fff',
+                            bodyColor: '#cbd5e1',
+                            borderColor: '#334155',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += formatCurrency(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: function(value) {
+                                    return (value / 1000000) + ' Tr';
+                                },
+                                font: {
+                                    family: 'Plus Jakarta Sans'
+                                },
+                                color: '#64748b'
+                            },
+                            grid: {
+                                color: '#1e293b'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    family: 'Plus Jakarta Sans',
+                                    size: 10
+                                },
+                                color: '#64748b'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- TAB CONTROL & SYSTEM INITIALIZATIONS ---
+        function switchTab(tabName) {
+            document.getElementById('view-dashboard').classList.add('hidden');
+            document.getElementById('view-transactions').classList.add('hidden');
+            document.getElementById('view-settings').classList.add('hidden');
+
+            document.getElementById('tab-dashboard').className = "px-4 py-2 text-sm font-bold rounded-lg transition-all duration-200 text-slate-400 hover:text-slate-200 hover:bg-slate-900";
+            document.getElementById('tab-transactions').className = "px-4 py-2 text-sm font-bold rounded-lg transition-all duration-200 text-slate-400 hover:text-slate-200 hover:bg-slate-900";
+            document.getElementById('tab-settings').className = "px-4 py-2 text-sm font-bold rounded-lg transition-all duration-200 text-slate-400 hover:text-slate-200 hover:bg-slate-900";
+
+            if (tabName === 'dashboard') {
+                document.getElementById('view-dashboard').classList.remove('hidden');
+                document.getElementById('tab-dashboard').className = "px-4 py-2 text-sm font-bold rounded-lg transition-all duration-200 bg-indigo-600 text-white shadow-md shadow-indigo-600/10";
+                calculateSavings();
+                renderDashboard();
+            } else if (tabName === 'transactions') {
+                document.getElementById('view-transactions').classList.remove('hidden');
+                document.getElementById('tab-transactions').className = "px-4 py-2 text-sm font-bold rounded-lg transition-all duration-200 bg-white text-slate-900 shadow-sm";
+                setTodayOnTxInput();
+                renderTransactions();
+            } else if (tabName === 'settings') {
+                document.getElementById('view-settings').classList.remove('hidden');
+                document.getElementById('tab-settings').className = "px-4 py-2 text-sm font-bold rounded-lg transition-all duration-200 bg-white text-slate-900 shadow-sm";
+                populateConfigForm();
+            }
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('tx-amount').value);
+            const date = document.getElementById('tx-date').value;
+            const note = document.getElementById('tx-note').value;
+
+            const startDate = new Date(appConfig.startDate);
+            const txDate = new Date(date);
+            const endLimitDate = new Date(startDate);
+            endLimitDate.setMonth(startDate.getMonth() + parseInt(appConfig.duration));
+
+            if (txDate < startDate) {
+                showToast(`Ngày nộp tiền không thể trước ngày bắt đầu sổ tiết kiệm (${formatDate(startDate)})!`, "error");
+                return;
+            }
+            if (txDate > endLimitDate) {
+                showToast(`Ngày nộp tiền đã vượt quá ngày kết thúc kỳ hạn gửi (${formatDate(endLimitDate)})!`, "error");
+                return;
+            }
+
+            transactions.push({ amount, date, note });
+            document.getElementById('transaction-form').reset();
+            
+            setTodayOnTxInput();
+            
+            showToast("Thêm khoản nộp tiền thành công!", "success");
+            calculateSavings();
+            renderTransactions();
+        }
+
+        function deleteTransaction(index) {
+            transactions.splice(index, 1);
+            showToast("Đã gỡ bỏ khoản nộp tiền khỏi hệ thống.", "info");
+            calculateSavings();
+            renderTransactions();
+        }
+
+        function handleSettingsSubmit(e) {
+            e.preventDefault();
+            
+            appConfig.startDate = document.getElementById('config-start-date').value;
+            appConfig.duration = parseInt(document.getElementById('config-duration').value);
+            appConfig.rate1 = parseFloat(document.getElementById('config-rate-1').value);
+            appConfig.rate2 = parseFloat(document.getElementById('config-rate-2').value);
+
+            showToast("Đã lưu cấu hình lãi suất mới!", "success");
+            calculateSavings();
+            switchTab('dashboard');
+        }
+
+        // --- CUSTOM CONFIRM MODAL CONTROLLERS ---
+        function triggerClearConfirm() {
+            const modal = document.getElementById('confirm-modal');
+            modal.classList.remove('hidden');
+        }
+
+        function closeConfirmModal() {
+            const modal = document.getElementById('confirm-modal');
+            modal.classList.add('hidden');
+        }
+
+        function confirmClearAllData() {
+            transactions = [];
+            calculateSavings();
+            renderDashboard();
+            closeConfirmModal();
+            showToast("Đã dọn dẹp sạch toàn bộ dữ liệu. Mời bạn nhập khoản gửi mới!", "info");
+        }
+
+        // --- AUXILIARY UTILS ---
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount).replace('₫', 'đ');
+        }
+
+        function formatDate(dateObj) {
+            if (!dateObj) return "";
+            const d = new Date(dateObj);
+            if (isNaN(d.getTime())) return "";
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const year = d.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        function showToast(message, type = "success") {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = "bg-emerald-600 text-white border-emerald-500/20";
+            let icon = "fa-circle-check";
+            
+            if (type === "error") {
+                bgClass = "bg-rose-600 text-white border-rose-500/20";
+                icon = "fa-circle-xmark";
+            } else if (type === "info") {
+                bgClass = "bg-indigo-950 text-indigo-300 border-indigo-500/20";
+                icon = "fa-circle-info";
+            }
+
+            toast.className = `flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-lg border transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto ${bgClass}`;
+            toast.innerHTML = `
+                <i class="fa-solid ${icon} text-lg"></i>
+                <span class="font-semibold text-sm">${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        window.onload = function() {
+            loadFromLocalStorage();
+            calculateSavings();
+            renderDashboard();
+            showToast("Đã đồng bộ và khôi phục dữ liệu từ bộ nhớ trình duyệt!", "info");
+        }
+    </script>
+</body>
+</html>
