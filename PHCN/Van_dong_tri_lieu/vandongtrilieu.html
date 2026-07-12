@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vận động trị liệu - Nguyễn Mai Đan Trường</title>
+    <title>VẬN ĐỘNG TRỊ LIỆU</title>
     <meta name="description" content="Khám phá tài liệu vận động trị liệu chuyên nghiệp.">
     <meta property="og:description" content="Khám phá các kỹ thuật vật lý trị liệu và phục hồi chức năng chuyên sâu cùng Đan Trường.">
     <meta property="og:image" content="https://placehold.co/1200x630/0f172a/38bdf8?text=Van+Dong+Tri+Lieu">
-    <link rel="stylesheet" href="/style.css">
-
+    
     <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -129,19 +128,14 @@
     <div class="glow-orb w-[500px] h-[500px] bg-indigo-600/60 top-[40%] right-[-100px]"></div>
     <div class="glow-orb w-[700px] h-[700px] bg-emerald-500/30 bottom-[-200px] left-[20%]"></div>
 
-    
-    <!-- Header Placeholder -->
-    <div id="header-placeholder"></div>
-    <div id="search-placeholder"></div>
-
     <!-- MAIN HERO / INTRODUCTION SECTION -->
     <header id="welcome" class="relative overflow-hidden pt-16 pb-8 flex items-center">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-center">
             <div class="space-y-6 fade-in-up">
                 
                 <h1 class="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight leading-[1.1]">
-                    VẬN ĐỘNG <br class="hidden sm:inline">
-                    <span class="bg-gradient-to-r from-cyan-400 via-teal-300 to-indigo-400 bg-clip-text text-transparent">TRỊ LIỆU LÂM SÀNG</span>
+                    PHỤC HỒI CHỨC NĂNG <br class="hidden sm:inline">
+                    <span class="bg-gradient-to-r from-cyan-400 via-teal-300 to-indigo-400 bg-clip-text text-transparent">VẬN ĐỘNG TRỊ LIỆU</span>
                 </h1>
 
                 <!-- Stats Quick view -->
@@ -186,7 +180,7 @@
         </div>
 
         <!-- Category Horizontal Navigation - Enhanced Sliding Interface -->
-        <div class="relative group/nav mb-12">
+        <div class="relative group/nav mb-8">
             <!-- Left Gradient Shadow to indicate more content -->
             <div id="left-fade" class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#080b11] via-[#080b11]/60 to-transparent z-10 pointer-events-none transition-opacity duration-300 opacity-0"></div>
             <!-- Right Gradient Shadow -->
@@ -209,13 +203,28 @@
         </div>
 
         <!-- Dynamic Content Header/Description for current category -->
-        <div id="current-category-desc" class="p-6 mb-10 rounded-2xl bg-gradient-to-r from-slate-900/80 via-slate-950/80 to-slate-900/80 border border-slate-800/60 flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 fade-in-up">
+        <div id="current-category-desc" class="p-6 mb-8 rounded-2xl bg-gradient-to-r from-slate-900/80 via-slate-950/80 to-slate-900/80 border border-slate-800/60 flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 fade-in-up">
             <div id="cat-icon-badge" class="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-2xl shadow-xl bg-gradient-to-tr from-cyan-400 to-teal-400 shrink-0">
                 <i class="fa-solid fa-hands-holding-circle"></i>
             </div>
             <div class="flex-grow text-center sm:text-left space-y-1">
                 <h3 id="cat-headline" class="text-lg sm:text-xl font-extrabold text-white">Đang tải dữ liệu...</h3>
                 <p id="cat-subline" class="text-xs sm:text-sm text-slate-400 leading-relaxed font-normal">Hệ thống đang kết nối với dữ liệu...</p>
+            </div>
+        </div>
+
+        <!-- SORTING & ITEM COUNT CONTROLLER -->
+        <div class="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-900/30 border border-slate-800/50 p-4 rounded-2xl glass-panel">
+            <div class="text-sm text-slate-400">
+                Có <span id="filtered-count" class="font-extrabold text-cyan-400">0</span> tài liệu khả dụng
+            </div>
+            <div class="flex items-center gap-2 bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2 text-xs font-semibold text-slate-300">
+                <span class="text-slate-500 flex items-center gap-1"><i class="fa-solid fa-arrow-down-wide-short"></i> Sắp xếp theo:</span>
+                <select id="sort-selector" onchange="handleSortChange(this.value)" class="bg-transparent border-none text-cyan-400 focus:outline-none cursor-pointer pr-1 font-extrabold select-none">
+                    <option value="index" class="bg-slate-950 text-slate-300">Thứ tự mặc định</option>
+                    <option value="az" class="bg-slate-950 text-slate-300">Tiêu đề (A → Z)</option>
+                    <option value="za" class="bg-slate-950 text-slate-300">Tiêu đề (Z → A)</option>
+                </select>
             </div>
         </div>
 
@@ -330,7 +339,7 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // App ID and strict collection path configuration (Rule 1 Alignment)
+        // App ID and strict collection path configuration
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'dulieuweb-6541e';
         
         function getArticlesCollection() {
@@ -393,6 +402,7 @@
         let localArticles = []; 
         let currentCategory = 'tab_1';
         let searchQuery = '';
+        let currentSort = 'index'; // 'index', 'az', 'za'
 
         /* ====================================
            YOUTUBE CONVERSION HELPER
@@ -408,12 +418,11 @@
         }
 
         /* ====================================
-           FIRESTORE SYNC (Rule 3 Implemented)
+           FIRESTORE SYNC (Realtime setup)
            ==================================== */
         function setupRealtimeSync() {
             if (!auth.currentUser) return;
 
-            // Direct connection path configuration
             const collectionRef = getArticlesCollection();
 
             collectionRef.onSnapshot((querySnapshot) => {
@@ -430,7 +439,7 @@
                 updateDashboardStats();
                 renderCategoryTabs();
                 renderArticles();
-                setTimeout(updateScrollState, 100); // Check horizontal slider buttons on data load
+                setTimeout(updateScrollState, 100); 
             }, (error) => {
                 console.error("Lỗi đồng bộ dữ liệu Firestore: ", error);
             });
@@ -514,7 +523,7 @@
             const container = document.getElementById('category-tabs');
             if (!container) return;
             
-            const scrollAmount = 300; // Khoảng cách trượt mỗi lần ấn
+            const scrollAmount = 300; 
             if (direction === 'left') {
                 container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
             } else {
@@ -535,7 +544,6 @@
             const isAtEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 5;
             const hasScrollableContent = container.scrollWidth > container.clientWidth;
 
-            // Xử lý nút điều hướng bên trái
             if (leftBtn) {
                 if (isAtStart || !hasScrollableContent) {
                     leftBtn.classList.add('opacity-0', 'pointer-events-none');
@@ -547,7 +555,6 @@
                 }
             }
 
-            // Xử lý nút điều hướng bên phải
             if (rightBtn) {
                 if (isAtEnd || !hasScrollableContent) {
                     rightBtn.classList.add('opacity-0', 'pointer-events-none');
@@ -560,26 +567,73 @@
             }
         }
 
-        // Tự động kiểm tra lại khi đổi kích thước màn hình
         window.addEventListener('resize', updateScrollState);
 
         /* ====================================
-           STREAMING_CHUNK: Writing Modal triggers and active styling...
+           STREAMING_CHUNK: Integrating sorting operations ...
            ==================================== */
         /* ====================================
-           RENDER ARTICLES (User View)
+           SORTING OPERATION LOGIC
+           ==================================== */
+        function handleSortChange(sortType) {
+            currentSort = sortType;
+            renderArticles();
+        }
+
+        function executeSorting(articles) {
+            return articles.sort((a, b) => {
+                if (currentSort === 'index') {
+                    // Extract numeric order priorities
+                    const getOrderVal = (item) => {
+                        if (item.order !== undefined && item.order !== null && item.order !== '') return Number(item.order);
+                        if (item.index !== undefined && item.index !== null && item.index !== '') return Number(item.index);
+                        if (item.stt !== undefined && item.stt !== null && item.stt !== '') return Number(item.stt);
+                        return 999999; // Lower priority if not explicitly defined
+                    };
+                    const orderA = getOrderVal(a);
+                    const orderB = getOrderVal(b);
+
+                    if (orderA !== orderB) {
+                        return orderA - orderB;
+                    }
+                    // Fallback to title comparison if priority values are identical
+                    const titleA = (a.title || '').trim();
+                    const titleB = (b.title || '').trim();
+                    return titleA.localeCompare(titleB, 'vi', { sensitivity: 'base' });
+                } 
+                
+                if (currentSort === 'az') {
+                    const titleA = (a.title || '').trim();
+                    const titleB = (b.title || '').trim();
+                    return titleA.localeCompare(titleB, 'vi', { sensitivity: 'base' });
+                } 
+                
+                if (currentSort === 'za') {
+                    const titleA = (a.title || '').trim();
+                    const titleB = (b.title || '').trim();
+                    return titleB.localeCompare(titleA, 'vi', { sensitivity: 'base' });
+                }
+
+                return 0;
+            });
+        }
+
+        /* ====================================
+           STREAMING_CHUNK: Processing active views rendering ...
+           ==================================== */
+        /* ====================================
+           RENDER ARTICLES (User View with sorting embedded)
            ==================================== */
         function renderArticles() {
             const container = document.getElementById('articles-container');
             const emptyState = document.getElementById('empty-state');
+            const filteredCountEl = document.getElementById('filtered-count');
             if(!container || !emptyState) return;
 
             container.innerHTML = '';
-            
             let matchingArticles = [];
 
             if(searchQuery.trim() !== '') {
-                // Search globally across all tabs
                 localArticles.forEach(art => {
                     const lowTitle = (art.title || '').toLowerCase();
                     const lowSearch = searchQuery.toLowerCase();
@@ -588,8 +642,15 @@
                     }
                 });
             } else {
-                // Return articles of active tab only
                 matchingArticles = localArticles.filter(art => art.categoryKey === currentCategory);
+            }
+
+            // Execute client-side sorting before rendering cards
+            matchingArticles = executeSorting(matchingArticles);
+
+            // Update item count UI dynamically
+            if(filteredCountEl) {
+                filteredCountEl.innerText = matchingArticles.length;
             }
 
             // Empty state display
@@ -657,14 +718,26 @@
                 let actionText = article.articleUrl ? 'Mở liên kết gốc' : 'Xem chi tiết bài viết';
                 let actionIcon = article.articleUrl ? 'fa-arrow-up-right-from-square' : 'fa-angle-right';
 
+                // Display Sort Index visually in small text if exists
+                let orderDisplay = '';
+                if (article.order !== undefined || article.index !== undefined || article.stt !== undefined) {
+                    const num = article.order !== undefined ? article.order : (article.index !== undefined ? article.index : article.stt);
+                    if (num !== '') {
+                        orderDisplay = ``;
+                    }
+                }
+
                 card.innerHTML = `
                     <div class="space-y-4">
-                        <div class="flex flex-wrap items-center gap-2">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
                             <span class="px-3 py-1 rounded-lg text-[9px] font-extrabold tracking-widest uppercase ${categoryObj.badgeBg}">
                                 ${categoryObj.name}
                             </span>
-                            <div class="flex flex-wrap gap-1">
-                                ${mediaIndicators}
+                            <div class="flex items-center gap-1.5">
+                                ${orderDisplay}
+                                <div class="flex flex-wrap gap-1">
+                                    ${mediaIndicators}
+                                </div>
                             </div>
                         </div>
                         <h4 class="text-base font-bold text-slate-100 line-clamp-2 hover:text-cyan-400 transition-colors duration-200 leading-snug">${article.title || 'Đang cập nhật tiêu đề'}</h4>
@@ -684,6 +757,9 @@
             });
         }
 
+        /* ====================================
+           STREAMING_CHUNK: Implementing navigation actions ...
+           ==================================== */
         /* ====================================
            SEARCH SYSTEM
            ==================================== */
@@ -716,13 +792,11 @@
            MODAL & EXTERNAL NAVIGATION CONTROL
            ==================================== */
         function openArticle(article) {
-            // CRITICAL REQUIREMENT CHECK: If an external HTML URL exists, open it directly in a new window/tab
             if (article.articleUrl && article.articleUrl.trim() !== '') {
                 window.open(article.articleUrl, '_blank');
                 return;
             }
 
-            // Normal operation if no custom HTML URL is specified
             const modal = document.getElementById('article-modal');
             const title = document.getElementById('modal-title');
             const catBadge = document.getElementById('modal-category-badge');
@@ -733,14 +807,10 @@
 
             const categoryObj = tabMeta[article.categoryKey] || tabMeta['tab_1'];
 
-            // Render details
             title.innerText = article.title;
             catBadge.innerText = categoryObj.name.toUpperCase();
-            
-            // Apply category badge styling
             catBadge.className = `px-3.5 py-1.5 rounded-xl text-xs font-bold ${categoryObj.badgeBg}`;
             
-            // Build Media layout (Grouped dynamically)
             mediaContainer.innerHTML = '';
             let hasMedia = false;
 
@@ -749,7 +819,6 @@
                 hasMedia = true;
                 article.videoUrls.forEach((video, index) => {
                     const baseVideoUrl = getYouTubeEmbedUrl(video.url);
-                    // FORCE AUTOPLAY & MUTE (for Chrome/Safari autoplay compliance)
                     const normalizedVideoUrl = baseVideoUrl ? (baseVideoUrl.includes('?') ? `${baseVideoUrl}&autoplay=1&mute=1` : `${baseVideoUrl}?autoplay=1&mute=1`) : '';
 
                     mediaContainer.innerHTML += `
@@ -768,7 +837,6 @@
                     `;
                 });
             } else if (article.videoUrl && article.videoUrl.trim() !== '') {
-                // Fallback for single legacy video
                 hasMedia = true;
                 const baseVideoUrl = getYouTubeEmbedUrl(article.videoUrl);
                 const normalizedVideoUrl = baseVideoUrl ? (baseVideoUrl.includes('?') ? `${baseVideoUrl}&autoplay=1&mute=1` : `${baseVideoUrl}?autoplay=1&mute=1`) : '';
@@ -820,7 +888,6 @@
                 pdfSectionHtml += `</div></div>`;
                 mediaContainer.innerHTML += pdfSectionHtml;
             } else if (article.pdfUrl && article.pdfUrl.trim() !== '') {
-                // Fallback for single legacy PDF
                 hasMedia = true;
                 mediaContainer.innerHTML += `
                     <div class="space-y-3.5 p-5 rounded-2xl bg-slate-950/40 border border-slate-800/60">
@@ -854,7 +921,6 @@
                 mediaContainer.classList.add('hidden');
             }
 
-            // Format HTML contents
             if (article.content && article.content.trim() !== '') {
                 body.innerHTML = article.content;
             } else {
@@ -878,7 +944,6 @@
             modal.classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
             
-            // RESET MEDIA TO STOP VIDEO: Clear the media container upon closing to stop the autoplaying video instantly
             const mediaContainer = document.getElementById('modal-media-container');
             if (mediaContainer) {
                 mediaContainer.innerHTML = '';
@@ -889,7 +954,6 @@
            INITIAL LOAD
            ==================================== */
         document.addEventListener('DOMContentLoaded', async () => {
-            // Secure auth state initiation (Rule 3)
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await auth.signInWithCustomToken(__initial_auth_token);
@@ -909,10 +973,5 @@
             }
         });
     </script>
-    
-    <div id="footer-placeholder"></div>
-
-    <!-- Nạp script.js với type="module" để hỗ trợ Firebase imports trực tiếp -->
-    <script type="module" src="/script.js"></script>
 </body>
 </html>

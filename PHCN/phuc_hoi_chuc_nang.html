@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phục hồi chức năng</title>
-     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
     <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
     <meta property="og:image" content="/hinhanh/logo_web.png">
     <meta property="og:url" content="https://dantruongag.id.vn">
@@ -15,103 +15,251 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <!-- Confetti.js for effects -->
     
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        
         :root {
-            --primary-color: #0c7ec4;
-            --bg-body: #f7f9fc;
+            --primary-glow: conic-gradient(from 180deg at 50% 50%, #16a34a 0deg, #0d9488 120deg, #2563eb 240deg, #16a34a 360deg);
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(13, 148, 136, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(37, 99, 235, 0.12) 0px, transparent 50%);
         }
 
         .main-container {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 2rem 1rem;
+            padding: 2rem 1.5rem 6rem 1.5rem;
         }
 
-        /* === SECTION TITLES === */
-        .section-title, .article-section-title {
-            font-size: 1.875rem;
-            font-weight: 800;
-            color: #f4f4f4;
-            text-align: center;
-            margin-bottom: 3rem;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes shimmerText {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .animate-fade-in-up {
+            opacity: 0;
+            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .delay-100 { animation-delay: 150ms; }
+        .delay-200 { animation-delay: 300ms; }
+        .delay-300 { animation-delay: 450ms; }
+
+        .hero-banner {
             position: relative;
-            padding-bottom: 1rem;
+            background: linear-gradient(135deg, rgba(17, 24, 39, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
+            border-radius: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 4rem 2rem;
+            overflow: hidden;
+            margin-bottom: 5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(13, 148, 136, 0.25) 0%, transparent 70%);
+            filter: blur(40px);
+            animation: pulseGlow 6s ease-in-out infinite;
+        }
+
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -10%;
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.2) 0%, transparent 70%);
+            filter: blur(50px);
+            animation: pulseGlow 8s ease-in-out infinite alternate;
+        }
+
+        .shimmer-gradient-text {
+            background: linear-gradient(to right, #38bdf8, #34d399, #6366f1, #38bdf8);
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmerText 8s ease infinite;
+        }
+
+        /* === MODERN SECTION TITLES === */
+        .section-title, .article-section-title {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            text-transform: uppercase;
+            background: linear-gradient(to right, #38bdf8, #34d399, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
         }
 
         .section-title::after, .article-section-title::after {
             content: '';
             position: absolute;
-            bottom: 0;
+            bottom: -1rem;
             left: 50%;
             transform: translateX(-50%);
-            width: 80px;
+            width: 60px;
             height: 4px;
             background: linear-gradient(to right, #3b82f6, #10b981);
-            border-radius: 2px;
+            border-radius: 9999px;
         }
 
-        /* === SERVICE GRID STYLES (Giữ nguyên logic cũ) === */
+        /* === PREMIUM SERVICE GRID === */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(1, minmax(0, 1fr)); 
-            gap: 1.5rem;
-            margin-bottom: 5rem;
+            gap: 2rem;
+            margin-bottom: 6rem;
         }
-        @media (min-width: 768px) { .services-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-        @media (min-width: 1024px) { .services-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+        @media (min-width: 640px) { .services-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (min-width: 1024px) { .services-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
         .service-card {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 1.5rem;
-            background: #fff;
-            border-radius: 1.25rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            padding: 2.25rem 2rem;
+            background: rgba(17, 24, 39, 0.7);
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             text-decoration: none;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid #f1f5f9;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
         }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 1.5rem;
+            padding: 2px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            transition: background 0.4s ease;
+        }
+
         .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            transform: translateY(-8px);
+            background: rgba(17, 24, 39, 0.9);
+            box-shadow: 0 20px 40px -15px var(--glow-color);
+            border-color: rgba(255, 255, 255, 0.15);
         }
-        .card-1 { --card-color: #3b82f6; --card-light: #eff6ff; }
-        .card-2 { --card-color: #10b981; --card-light: #ecfdf5; }
-        .card-3 { --card-color: #8b5cf6; --card-light: #f5f3ff; }
-        .card-4 { --card-color: #f97316; --card-light: #fff7ed; }
-        .card-5 { --card-color: #3b82f6; --card-light: #eff6ff; }
-        .card-6 { --card-color: #10b981; --card-light: #ecfdf5; }
-        .card-7 { --card-color: #8b5cf6; --card-light: #f5f3ff; }
-        .card-8 { --card-color: #f97316; --card-light: #fff7ed; }
+
+        .service-card:hover::before {
+            background: linear-gradient(135deg, var(--card-color) 0%, rgba(255, 255, 255, 0.05) 100%);
+        }
+
+        /* Định nghĩa màu sắc hào quang phát sáng đặc trưng */
+        .card-1 { --card-color: #3b82f6; --card-light: rgba(59, 130, 246, 0.1); --glow-color: rgba(59, 130, 246, 0.25); }
+        .card-2 { --card-color: #10b981; --card-light: rgba(16, 185, 129, 0.1); --glow-color: rgba(16, 185, 129, 0.25); }
+        .card-3 { --card-color: #8b5cf6; --card-light: rgba(139, 92, 246, 0.1); --glow-color: rgba(139, 92, 246, 0.25); }
+        .card-4 { --card-color: #f97316; --card-light: rgba(249, 115, 22, 0.1); --glow-color: rgba(249, 115, 22, 0.25); }
+        .card-5 { --card-color: #06b6d4; --card-light: rgba(6, 182, 212, 0.1); --glow-color: rgba(6, 182, 212, 0.25); }
+        .card-6 { --card-color: #ec4899; --card-light: rgba(236, 72, 153, 0.1); --glow-color: rgba(236, 72, 153, 0.25); }
+        .card-7 { --card-color: #eab308; --card-light: rgba(234, 179, 8, 0.1); --glow-color: rgba(234, 179, 8, 0.25); }
+        .card-8 { --card-color: #a855f7; --card-light: rgba(168, 85, 247, 0.1); --glow-color: rgba(168, 85, 247, 0.25); }
 
         .icon-container {
-            width: 4rem; height: 4rem; margin: 0 auto 1.5rem;
-            border-radius: 1rem; display: flex; align-items: center; justify-content: center;
-            background-color: var(--card-light); border: 2px solid var(--card-color);
-        }
-        .icon-container img { width: 60%; height: 60%; object-fit: contain; }
-        .card-title { font-size: 1.1rem; font-weight: 700; color: #1e293b; text-align: center; }
-        .cta-button {
-            background: var(--card-color); color: white; border: none; padding: 0.8rem;
-            border-radius: 0.75rem; font-weight: 600; margin-top: 1.5rem; cursor: pointer;
+            width: 4.5rem; height: 4.5rem; margin: 0 auto 1.75rem;
+            border-radius: 1.25rem; display: flex; align-items: center; justify-content: center;
+            background-color: var(--card-light); border: 2px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease;
+            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.05);
         }
 
-        /* === NÂNG CẤP BÀI VIẾT (ARTICLE GRID) === */
+        .service-card:hover .icon-container {
+            border-color: var(--card-color);
+            transform: scale(1.05) rotate(3deg);
+            box-shadow: 0 0 20px var(--glow-color);
+        }
+
+        .icon-container img { 
+            width: 60%; height: 60%; object-fit: contain; 
+            filter: brightness(0.95);
+        }
+
+        .card-title { 
+            font-size: 1.25rem; 
+            font-weight: 700; 
+            color: #f3f4f6; 
+            text-align: center; 
+            line-height: 1.4;
+            letter-spacing: -0.01em;
+            margin-bottom: 0.5rem;
+        }
+
+        .cta-button {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%); 
+            color: #e5e7eb; 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            padding: 0.9rem;
+            border-radius: 1rem; 
+            font-weight: 700; 
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+            margin-top: 2rem; 
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover .cta-button {
+            background: var(--card-color);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px var(--glow-color);
+        }
+
+        /* === PREMIUM ARTICLE GRID === */
         .article-grid {
             display: grid;
             grid-template-columns: repeat(1, minmax(0, 1fr)); 
@@ -123,24 +271,26 @@
         .article-card {
             display: flex;
             flex-direction: column;
-            background-color: #ffffff;
-            border-radius: 1.5rem; 
+            background-color: rgba(17, 24, 39, 0.6);
+            border-radius: 1.75rem; 
             overflow: hidden;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             text-decoration: none;
-            border: 1px solid #edf2f7;
+            border: 1px solid rgba(255, 255, 255, 0.06);
             position: relative;
+            backdrop-filter: blur(12px);
         }
 
         .article-card:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.15);
         }
 
         .article-image-wrapper {
             width: 100%;
-            height: 220px;
+            height: 240px;
             overflow: hidden;
             position: relative;
         }
@@ -149,42 +299,44 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.6s ease;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .article-card:hover .article-image {
-            transform: scale(1.1);
+            transform: scale(1.08);
         }
 
-        /* Nhãn chuyên mục nổi bật */
         .article-badge {
             position: absolute;
-            top: 1rem;
-            left: 1rem;
-            padding: 0.4rem 1rem;
-            border-radius: 2rem;
+            top: 1.25rem;
+            left: 1.25rem;
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
             font-size: 0.75rem;
-            font-weight: 700;
+            font-weight: 800;
             color: white;
-            background: var(--article-color);
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             z-index: 10;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            backdrop-filter: blur(8px);
+            letter-spacing: 0.05em;
             text-transform: uppercase;
         }
 
         .article-content {
-            padding: 1.75rem;
+            padding: 2rem;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
         }
 
         .article-title {
-            font-size: 1.25rem;
+            font-size: 1.35rem;
             font-weight: 800;
-            color: #1a202c;
-            margin-bottom: 0.75rem;
+            color: #f3f4f6;
+            margin-bottom: 1rem;
             line-height: 1.4;
+            letter-spacing: -0.01em;
             transition: color 0.3s ease;
         }
 
@@ -193,10 +345,10 @@
         }
 
         .article-description {
-            color: #4a5568;
+            color: #9ca3af;
             font-size: 0.95rem;
             line-height: 1.6;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
@@ -208,78 +360,76 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-top: 1.25rem;
-            border-top: 1px solid #f1f5f9;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
         }
 
         .article-date {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            color: #718096;
+            color: #9ca3af;
             font-size: 0.85rem;
+            font-weight: 500;
         }
 
         .article-link {
             display: flex;
             align-items: center;
-            gap: 0.25rem;
+            gap: 0.35rem;
             color: var(--article-color);
-            font-weight: 700;
-            font-size: 0.9rem;
+            font-weight: 800;
+            font-size: 0.85rem;
             text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .article-link i {
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .article-card:hover .article-link i {
-            transform: translateX(5px);
+            transform: translateX(4px);
         }
 
-        /* Định nghĩa màu sắc cho từng loại bài viết */
         .article-1 { --article-color: #3b82f6; }
         .article-2 { --article-color: #10b981; }
         .article-3 { --article-color: #8b5cf6; }
-        .article-4 { --article-color: #f97316; }
-
-        /* Banner styles (giữ nguyên yêu cầu) */
-        .main-banner_trang_con {
-            background: linear-gradient(135deg, #0c7ec4 0%, #064e77 100%);
-            padding: 4rem 1rem;
-            color: white;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        .main-title { font-size: 2.5rem; margin-bottom: 1rem; }
-        .sub-text { max-width: 800px; margin: 0 auto; opacity: 0.9; line-height: 1.6; }
     </style>
 </head>
-     <body class="bg-gray-900">
-    <div id="header-placeholder"></div>
-    <div id="search-placeholder"></div>
-    <header class="main-banner_trang_con">
-        <div class="banner_trang_con-overlay"></div>
-        <div class="hbanner_trang_con-image-bg"></div>
-
-        <div class="hbanner_trang_con-content">
-            <h1 class="main-title">PHỤC HỒI CHỨC NĂNG <span class="icon-span"></span></h1>
-            <p class="sub-text">Phục hồi chức năng là biện pháp giảm tối đa tác động của giảm chức năng và tàn tật, từ đó, giúp người bệnh hội nhập hoặc tái hội nhập với xã hội. Những chức năng này có thể thuộc về chức năng thể chất hoặc tâm thần (khả năng nhận thức, tư duy,…)</p>
-        </div>
-    </header>
+<body class="bg-[#0b0f19]">
 
     <div class="main-container">
         
+        <!-- BANNER GIỚI THIỆU PHCN CAO CẤP -->
+        <div class="hero-banner animate-fade-in-up">
+            <div class="max-w-3xl mx-auto text-center relative z-10 flex flex-col items-center">
+                <!-- Tiêu đề chính -->
+                <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 animate-fade-in-up delay-200">
+                    <span class="shimmer-gradient-text">Phục Hồi Chức Năng</span>
+                </h1>
+                
+                <!-- Đoạn văn mô tả chi tiết -->
+                <p class="text-gray-300 text-sm md:text-base leading-relaxed max-w-2xl animate-fade-in-up delay-300 opacity-90">
+                    Phục hồi chức năng là biện pháp giảm tối đa tác động của giảm chức năng và tàn tật, từ đó, giúp người bệnh hội nhập hoặc tái hội nhập với xã hội. Những chức năng này có thể thuộc về chức năng thể chất hoặc tâm thần (khả năng nhận thức, tư duy,…)
+                </p>
+
+            </div>
+        </div>
+
+        <!-- SECTION TIÊU ĐỀ DANH MỤC -->
         <h1 class="section-title">
-            DANH MỤC
+            Danh Mục
         </h1>
+        
+        <!-- DANH SÁCH DỊCH VỤ -->
         <div class="services-grid services-section">
             
             <a href="/PHCN/PHCN_co_xuong/phuc_hoi_chuc_nang_co_xuong.html" class="service-card card-1">
                 <div>
                     <div class="icon-container">
-                        <img src="/hinhanh/icon/bone.jpg" alt="" class="w-full h-full object-contain">
+                        <img src="/hinhanh/icon/bone.jpg" alt="Icon Cơ Xương" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="hidden flex-col items-center justify-center text-blue-500"><i class="fa-solid fa-bone text-2xl"></i></div>
                     </div>
                     <h2 class="card-title">Phục hồi chức năng Cơ Xương</h2>
                 </div>
@@ -289,7 +439,8 @@
             <a href="than_kinh_co.html" class="service-card card-2">
                 <div>
                     <div class="icon-container">
-                        <img src="/hinhanh/icon/brain.jpg" alt="" class="w-full h-full object-contain">
+                        <img src="/hinhanh/icon/brain.jpg" alt="Icon Thần Kinh" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="hidden flex-col items-center justify-center text-emerald-500"><i class="fa-solid fa-brain text-2xl"></i></div>
                     </div>
                     <h2 class="card-title">Phục hồi chức năng Thần Kinh - Cơ</h2>
                 </div>
@@ -299,7 +450,8 @@
             <a href="/PHCN/PHCN_ho_hap/phuc_hoi_chuc_nang_ho_hap.html" class="service-card card-3">
                 <div>
                     <div class="icon-container">
-                        <img src="/hinhanh/icon/lung.jpg" alt="" class="w-full h-full object-contain">
+                        <img src="/hinhanh/icon/lung.jpg" alt="Icon Hô Hấp" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="hidden flex-col items-center justify-center text-purple-500"><i class="fa-solid fa-lungs text-2xl"></i></div>
                     </div>
                     <h2 class="card-title">Phục hồi chức năng Hô Hấp</h2>
                 </div>
@@ -309,7 +461,8 @@
             <a href="phcn_nhi.html" class="service-card card-4">
                 <div>
                     <div class="icon-container">
-                        <img src="/hinhanh/icon/baby.jpg" alt="" class="w-full h-full object-contain">
+                        <img src="/hinhanh/icon/baby.jpg" alt="Icon Nhi Khoa" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="hidden flex-col items-center justify-center text-orange-500"><i class="fa-solid fa-baby text-2xl"></i></div>
                     </div>
                     <h2 class="card-title">Phục hồi chức năng Nhi Khoa</h2>
                 </div>
@@ -319,7 +472,8 @@
             <a href="/PHCN/Van_dong_tri_lieu/vandongtrilieu.html" class="service-card card-5">
                 <div>
                     <div class="icon-container">
-                        <img src="/hinhanh/icon/LGCN.jpg" alt="" class="w-full h-full object-contain">
+                        <img src="/hinhanh/icon/LGCN.jpg" alt="Icon Vận Động" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="hidden flex-col items-center justify-center text-cyan-500"><i class="fa-solid fa-person-running text-2xl"></i></div>
                     </div>
                     <h2 class="card-title">Vận động trị liệu</h2>
                 </div>
@@ -329,17 +483,19 @@
             <a href="/PHCN/Điện trị liệu/dien_tri_lieu.html" class="service-card card-6">
                 <div>
                     <div class="icon-container">
-                        <img src="/hinhanh/icon/DTL.jpg" alt="" class="w-full h-full object-contain">
+                        <img src="/hinhanh/icon/DTL.jpg" alt="Icon Điện Trị Liệu" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="hidden flex-col items-center justify-center text-pink-500"><i class="fa-solid fa-bolt text-2xl"></i></div>
                     </div>
                     <h2 class="card-title">Điện Trị Liệu</h2>
                 </div>
                 <button class="cta-button">XEM NGAY</button>
             </a>
 
-            <a href="hoat_dong_tri_lieu.html" class="service-card card-7">
+            <a href="/PHCN/HĐTL/hoatdongtrilieu.html" class="service-card card-7">
                 <div>
                     <div class="icon-container">
-                        <img src="/hinhanh/icon/HĐTL.jpg" alt="Icon Hoạt Động" class="w-full h-full object-contain">
+                        <img src="/hinhanh/icon/HĐTL.jpg" alt="Icon Hoạt Động" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="hidden flex-col items-center justify-center text-yellow-500"><i class="fa-solid fa-hand-holding-heart text-2xl"></i></div>
                     </div>
                     <h2 class="card-title">Hoạt Động Trị Liệu</h2>
                 </div>
@@ -349,7 +505,8 @@
             <a href="ngon_ngu_tri_lieu.html" class="service-card card-8">
                 <div>
                     <div class="icon-container">
-                        <img src="/hinhanh/icon/NNTL.jpg" alt="Icon Ngôn Ngữ" class="w-full h-full object-contain">
+                        <img src="/hinhanh/icon/NNTL.jpg" alt="Icon Ngôn Ngữ" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="hidden flex-col items-center justify-center text-purple-400"><i class="fa-solid fa-comments text-2xl"></i></div>
                     </div>
                     <h2 class="card-title">Ngôn Ngữ Trị Liệu</h2>
                 </div>
@@ -359,7 +516,8 @@
             <a href="/PHCN/PHCN_dua_vao_cong_dong/PHCN_dua-Vao-cong_dong.html" class="service-card card-5">
                 <div>
                     <div class="icon-container">
-                        <img src="/hinhanh/icon/PHCNDVCD.jpg" alt="" class="w-full h-full object-contain">
+                        <img src="/hinhanh/icon/PHCNDVCD.jpg" alt="Icon Cộng Đồng" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="hidden flex-col items-center justify-center text-cyan-500"><i class="fa-solid fa-users text-2xl"></i></div>
                     </div>
                     <h2 class="card-title">Phục hồi chức năng dựa vào cộng đồng</h2>
                 </div>
@@ -368,26 +526,27 @@
 
         </div>
 
+        <!-- SECTION TIÊU ĐỀ BÀI VIẾT NỔI BẬT -->
+        <h2 class="article-section-title">Bài Viết Nổi Bật</h2>
 
-        <h2 class="article-section-title">BÀI VIẾT NỔI BẬT</h2>
-
+        <!-- GRID BÀI VIẾT -->
         <div class="article-grid">
 
             <!-- Bài viết 1 -->
             <a href="/PHCN/HĐTL/dung_cu_vltl.html" class="article-card article-1">
-                <span class="article-badge">Hoạt động trị liệu</span>
+                <span class="article-badge" style="color: #3b82f6;">Hoạt động trị liệu</span>
                 <div class="article-image-wrapper">
-                    <img src="/PHCN/hinhanh/dung_cu_vltl/dung_cu_vat_ly_tri_lieu.jpg" class="article-image" alt="">
+                    <img src="/PHCN/hinhanh/dung_cu_vltl/dung_cu_vat_ly_tri_lieu.jpg" class="article-image" alt="Dụng cụ vật lý trị liệu" onerror="this.src='https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=600'">
                 </div>
                 <div class="article-content">
                     <h3 class="article-title">Dụng cụ vật lý trị liệu</h3>
                     <p class="article-description">Khám phá danh sách các trang thiết bị hiện đại hỗ trợ tối ưu quá trình hồi phục tại nhà và tại phòng khám.</p>
                     <div class="article-footer">
                         <div class="article-date">
-                            <i data-lucide="calendar" size="16"></i> 13/04/2026
+                            <i data-lucide="calendar" class="w-4 h-4"></i> 13/04/2026
                         </div>
                         <div class="article-link">
-                            Xem ngay <i data-lucide="chevron-right" size="18"></i>
+                            Xem ngay <i data-lucide="chevron-right" class="w-4 h-4"></i>
                         </div>
                     </div>
                 </div>
@@ -395,7 +554,7 @@
 
             <!-- Bài viết 2 -->
             <a href="#" class="article-card article-2">
-                <span class="article-badge">Người cao tuổi</span>
+                <span class="article-badge" style="color: #10b981;">Người cao tuổi</span>
                 <div class="article-image-wrapper">
                     <img src="https://images.unsplash.com/photo-1581579438747-104c53d7fbc4?q=80&w=600" class="article-image" alt="Người già">
                 </div>
@@ -404,10 +563,10 @@
                     <p class="article-description">Tổng hợp các bài tập thăng bằng và cách sắp xếp nhà cửa giúp giảm thiểu nguy cơ chấn thương cho người già.</p>
                     <div class="article-footer">
                         <div class="article-date">
-                            <i data-lucide="calendar" size="16"></i> 05/12/2026
+                            <i data-lucide="calendar" class="w-4 h-4"></i> 05/12/2026
                         </div>
                         <div class="article-link">
-                            Xem ngay <i data-lucide="chevron-right" size="18"></i>
+                            Xem ngay <i data-lucide="chevron-right" class="w-4 h-4"></i>
                         </div>
                     </div>
                 </div>
@@ -415,7 +574,7 @@
 
             <!-- Bài viết 3 -->
             <a href="#" class="article-card article-3">
-                <span class="article-badge">Hô hấp</span>
+                <span class="article-badge" style="color: #8b5cf6;">Hô hấp</span>
                 <div class="article-image-wrapper">
                     <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?q=80&w=600" class="article-image" alt="Phổi">
                 </div>
@@ -424,10 +583,10 @@
                     <p class="article-description">Hướng dẫn chi tiết kỹ thuật thở chúm môi và thở cơ hoành giúp cải thiện đáng kể dung tích phổi.</p>
                     <div class="article-footer">
                         <div class="article-date">
-                            <i data-lucide="calendar" size="16"></i> 01/12/2026
+                            <i data-lucide="calendar" class="w-4 h-4"></i> 01/12/2026
                         </div>
                         <div class="article-link">
-                            Xem ngay <i data-lucide="chevron-right" size="18"></i>
+                            Xem ngay <i data-lucide="chevron-right" class="w-4 h-4"></i>
                         </div>
                     </div>
                 </div>
@@ -435,12 +594,10 @@
 
         </div>
     </div>
-    
-    </div>
 
-    <div id="footer-placeholder"></div>
-
-      <script src="/script.js"></script>
-      <script src="/banner_trang_con.css"></script>
+    <!-- KHỞI TẠO CÁC ICON LUCIDE -->
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>

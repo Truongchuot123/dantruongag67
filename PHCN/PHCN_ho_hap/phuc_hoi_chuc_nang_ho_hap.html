@@ -2,245 +2,716 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phục hồi chức năng hô hấp-Nguyễn Mai Đan Trường</title>
-     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:image" content="/hinhanh/logo_web.png">
-    <meta property="og:url" content="https://dantruongag.id.vn">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" href="/hinhanh/logo_web.png" type="">
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/banner_trang_con.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Phục hồi chức năng Hô hấp - NGUYỄN MAI ĐAN TRƯỜNG</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá chuyên khoa Phục hồi chức năng Hô hấp.">
+    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá chuyên khoa Phục hồi chức năng Hô hấp.">
+    <meta property="og:image" content="https://placehold.co/600x400/0f172a/06b6d4?text=PHCN+Ho+Hap">
+    <meta property="og:url" content="https://dantruongag.id.vn">
+    <link class="js-favicon" rel="icon" href="/hinhanh/logo_web.png" type="">
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-    </style>
-</head>
-    <body class="bg-gray-900">
-    <div id="header-placeholder"></div>
-    <div id="search-placeholder"></div>
-    <header class="main-banner_trang_con">
-        <div class="banner_trang_con-overlay"></div>
-        <div class="hbanner_trang_con-image-bg"></div>
-
-        <div class="hbanner_trang_con-content">
-            <h1 class="main-title">PHỤC HỒI CHỨC NĂNG HÔ HẤP <span class="icon-span">🫁</span></h1>
-            <p class="sub-text">Phục hồi chức năng là biện pháp giảm tối đa tác động của giảm chức năng và tàn tật, từ đó, giúp người bệnh hội nhập hoặc tái hội nhập với xã hội. Những chức năng này có thể thuộc về chức năng thể chất hoặc tâm thần (khả năng nhận thức, tư duy,…)</p>
-            <div class="hbanner_trang_con-tabs-wrap">
-                <div id="category-tabs" class="category-scroll" aria-label="Danh mục bài viết"></div>
-            </div>
-        </div>
-    </header>
-    <section id="articles-section" class="content-section">
-        <div class="section-container">
-            <div id="articles-container" class="articles-container"></div>
-        </div>
-    </section>
-
-    <script>
-        let currentCategory = 'tab_1';
-        const DEFAULT_IMAGE = '/hinhanh/logo_web.png';
-
-        const dataStore = {
-            tab_1: { name: 'Kỹ Thuật Hô Hấp', articles: [
-                {   url: '/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_mim_moi.html', 
-                    title: 'Kỹ thuật thở mím môi' 
-                },
-                {   url: '/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_co_hoanh.html', 
-                    title: 'Kỹ thuật thở cơ hoành' 
-                },
-                {   url: '/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_phoi_hop_van_dong_tay.html', 
-                    title: 'Kỹ thuật thở phối hợp vận động tay' 
-                },
-                {   url: '/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_ra_manh.html', 
-                    title: 'Kỹ thuật thở ra mạnh' 
-                },
-                {   url: '/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_tung_thuy.html', 
-                    title: 'Kỹ thuật thở từng thùy' 
-                },
-                {   url: '/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/tho_theo_ty_le_phan_so.html', 
-                    title: 'Kỹ thuật thở theo tỷ lệ phân số' 
-                },
-                {   url: '/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/huong_dan_ho.html', 
-                    title: 'Hướng dẫn ho' 
-                },
-                {   url: '/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/AFE_chu_dong.html', 
-                    title: 'Kỹ thuật tâng tốc thì thở ra (AFE)' 
-                },
-                {   url: '/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/vo_rung.html', 
-                    title: 'Kỹ thuật vỗ rung lồng ngực' 
-                },
-                {   url: '/PHCN/PHCN_ho_hap/Ki_thuat_ho_hap/dan_luu_tu_the.html', 
-                    title: 'Dẫn lưu tư thế' 
-                }
-            ]},
-            tab_2: { name: 'Pháp đồ điều trị', articles: [
-                {   url: '/PHCN/PHCN_ho_hap/Phap_do_dieu_tri/phuc_hoi_chuc_nang_viem', 
-                    title: 'Phục hồi chức năng viêm phế quản mãn tính' 
-                },
-                {   url: '/PHCN/PHCN_ho_hap/Phap_do_dieu_tri/phuc_hoi_chuc_nang_tran_dich', 
-                    title: 'Phục hồi chức năng tràn dịch màng phổi' 
-                }
-                 
-            ]},
-            tab_3: { name: 'Lượng giá chức năng', articles: [
-                {   url: '', 
-                    title: 'Kiểm soát hen suyễn: Hướng dẫn cho bệnh nhân' 
-                },
-                {   url: '/cham_soc_benh_nhan_covid.html', 
-                    title: '' 
-                }
-            ]},
-            tab_4: { name: 'Dinh Dưỡng & Lối Sống', articles: [
-                {   url: '', 
-                    title: 'Chế độ dinh dưỡng cho người bệnh phổi mạn tính' 
-                },
-                {   url: '/hoat_dong_vat_ly.html', 
-                    title: 'Hoạt động thể lực phù hợp để cải thiện hô hấp' 
-                }
-            ]}
-        };
-
-        const categoryColors = {
-            tab_1: { bg: 'linear-gradient(90deg,#06b6d4,#3b82f6)', activeColor:'#071033', inactiveColor: '#0ea5e9' },
-            tab_2: { bg: 'linear-gradient(90deg,#ef4444,#fb923c)', activeColor:'#071033', inactiveColor: '#fb923c' },
-            tab_3: { bg: 'linear-gradient(90deg,#8b5cf6,#06b6d4)', activeColor:'#071033', inactiveColor: '#8b5cf6' },
-            tab_4: { bg: 'linear-gradient(90deg,#f59e0b,#10b981)', activeColor:'#071033', inactiveColor: '#f59e0b' }
-        };
-
-        const observer = new IntersectionObserver((entries, obs) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting){
-                    entry.target.classList.add('opacity-100');
-                    obs.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.08 });
-
-                function resolveArticleData(url){
-
-            for(const k of Object.keys(dataStore)){
-                const f = dataStore[k].articles.find(a => a.url === url);
-                if(f){
-                    // clone để không sửa dataStore gốc
-                    return { title: f.title, imageUrl: DEFAULT_IMAGE };
-                }
-            }
-
-            return { title: `Không tìm thấy tiêu đề (${url})`, imageUrl: DEFAULT_IMAGE };
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at 0% 0%, #0f172a 0%, #020617 100%);
+            min-height: 100vh;
+            color: #f1f5f9;
+            overflow-x: hidden;
         }
 
-        function createArticleBox(targetUrl, container, index){
-            const data = resolveArticleData(targetUrl);
-            const box = document.createElement('a');
-            box.href = targetUrl || '#';
-            box.className = 'article-card transition-observer';
-            box.style.transitionDelay = `${index * 50}ms`;
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
-            let categoryKey = 'tab_1';
-            for(const k of Object.keys(dataStore)){
-                if(dataStore[k].articles.some(a => a.url === targetUrl)){
-                    categoryKey = k;
-                    box.dataset.cat = k;
-                    break;
+        .glass-panel-active {
+            background: rgba(6, 182, 212, 0.08);
+            border-color: rgba(6, 182, 212, 0.3);
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.1);
+        }
+
+        .glow-cyan {
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.15);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.01);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 99px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(6, 182, 212, 0.4);
+        }
+
+        .loader {
+            border: 3px solid rgba(255, 255, 255, 0.05);
+            border-top: 3px solid #06b6d4;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="theme-cyan bg-[#0b0f19] text-gray-100 overflow-x-hidden selection:bg-cyan-500 selection:text-white">
+
+    <!-- HIDDEN AUTH INDICATOR -->
+    <div id="auth-indicator" class="hidden"></div>
+    
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+    <div id="search-placeholder"></div>
+
+    <!-- MAIN BODY CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col gap-6">
+        
+        <!-- PREMIUM HERO BANNER SECTION -->
+        <section class="w-full glass-panel rounded-3xl p-6 sm:p-8 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-r from-slate-900/90 via-slate-950/70 to-cyan-950/20 border-cyan-500/10">
+            <!-- Background glow effect in the banner -->
+            <div class="absolute -right-24 -top-24 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-24 -bottom-24 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 relative z-10 text-center sm:text-left">
+                <!-- Human lungs stylized neon icon -->
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500/20 to-teal-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-2xl shadow-lg shadow-cyan-500/10 shrink-0">
+                    <i class="fas fa-lungs animate-pulse"></i>
+                </div>
+                <div>
+                    <span class="inline-block text-[10px] uppercase font-extrabold tracking-widest text-cyan-400 px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20">PHỤC HỒI CHỨC NĂNG</span>
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold mt-2 tracking-tight text-white leading-tight">
+                        PHỤC HỒI CHỨC NĂNG <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400">HÔ HẤP</span>
+                    </h1>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-xl leading-relaxed">
+                        Phục hồi chức năng hô hấp giúp cải thiện tình trạng khó thở, tăng cường thể chất, ngăn ngừa suy giảm chức năng phổi và nâng cao chất lượng cuộc sống cho người bệnh có bệnh lý hô hấp cấp và mạn tính thông qua các bài tập thở, kỹ thuật thải đờm và rèn luyện thể lực.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TWO-COLUMN WORKSPACE GRID -->
+        <div class="flex flex-col lg:flex-row gap-6 w-full">
+            
+            <!-- SIDEBAR: DANH SÁCH TÀI LIỆU -->
+            <section class="w-full lg:w-96 flex flex-col gap-5 shrink-0">
+                
+                <!-- Documents List Panel -->
+                <div class="glass-panel rounded-2xl p-5 flex-1 flex flex-col min-h-[350px] lg:min-h-0">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                            <i class="fas fa-file-prescription text-cyan-400"></i>
+                            <span>Danh mục học liệu</span>
+                        </h2>
+                        <span id="doc-counter" class="text-[10px] font-bold bg-slate-950 px-2.5 py-1 rounded-full text-cyan-400 border border-slate-800">
+                            0 bài học
+                        </span>
+                    </div>
+
+                    <!-- Live Search Box inside Sidebar -->
+                    <div class="relative mb-4">
+                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                        <input type="text" id="sidebarSearch" placeholder="Tìm bài học hô hấp, thở cơ hoành..." 
+                            class="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-850 rounded-xl outline-none focus:border-cyan-500 text-xs text-slate-200 transition-all placeholder:text-slate-600" oninput="renderFilteredDocs()">
+                    </div>
+
+                    <!-- Document Items Container -->
+                    <div id="docs-list-container" class="flex-1 overflow-y-auto custom-scrollbar space-y-2.5 pr-1 max-h-[420px] lg:max-h-none">
+                        <!-- Loading state -->
+                        <div id="sidebar-loader" class="flex flex-col items-center justify-center py-12 gap-3">
+                            <div class="loader"></div>
+                            <span class="text-xs text-slate-500">Đang tải học liệu Hô hấp...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MAIN WORKSPACE: IFRAME VIEWER & STUDY NOTES / EXAMS -->
+            <section class="flex-1 flex flex-col gap-6 min-w-0">
+                
+                <!-- VIEWPORT / IFRAME WORKSPACE -->
+                <div id="viewer-container" class="hidden lg:flex glass-panel rounded-3xl overflow-hidden flex-col h-[500px] lg:h-[620px] relative">
+                    
+                    <!-- Initial Welcome Screen -->
+                    <div id="viewer-welcome" class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-slate-950/20 z-10">
+                        <div class="w-20 h-20 rounded-3xl bg-cyan-500/5 border border-cyan-500/20 flex items-center justify-center text-cyan-400 text-3xl mb-4 animate-bounce">
+                            <i class="fas fa-shield-virus"></i>
+                        </div>
+                        <h2 class="text-xl font-bold text-slate-200">Trình xem học liệu Hô hấp</h2>
+                        <p class="text-sm text-slate-400 max-w-md mt-2 leading-relaxed">
+                            Nội dung chi tiết tài liệu phục hồi chức năng phổi sẽ hiển thị trực tiếp tại đây. Hãy nhấp chọn một bài học bên danh mục.
+                        </p>
+                    </div>
+
+                    <!-- Interactive Document Header -->
+                    <div id="viewer-header" class="hidden px-5 py-3.5 bg-slate-950/80 border-b border-slate-800/80 flex items-center justify-between gap-3 shrink-0">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="text-[10px] font-extrabold text-cyan-400 uppercase bg-cyan-500/10 px-2 py-0.5 rounded-md border border-cyan-500/20 shrink-0">ĐANG ĐỌC</span>
+                            <h2 id="active-doc-title" class="text-xs sm:text-sm font-bold text-slate-200 truncate">Tên bài học hô hấp</h2>
+                        </div>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <!-- External Fallback -->
+                            <a id="active-doc-external" href="#" target="_blank" class="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-800 hover:border-slate-700 text-slate-300 hover:text-white rounded-lg text-[10px] font-bold flex items-center gap-1.5 transition-all">
+                                <span>Mở Tab Ngoài</span>
+                                <i class="fas fa-external-link-alt text-[8px]"></i>
+                            </a>
+                            <button onclick="closeActiveDoc()" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-rose-500/10 text-slate-400 hover:text-rose-400 transition-colors">
+                                <i class="fas fa-times text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- The Actual Iframe -->
+                    <div class="flex-1 w-full h-full bg-slate-950/30 relative">
+                        <iframe id="doc-iframe" class="w-full h-full border-none hidden" allow="autoplay; encrypted-media" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        
+                        <!-- Sandboxed warning -->
+                        <div id="iframe-blocked-warning" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-slate-950/95 z-20">
+                            <div class="w-14 h-14 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl mb-3">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <h3 class="text-sm font-bold text-slate-300">Tài liệu bảo mật cao / Chặn xem nhúng</h3>
+                            <p class="text-xs text-slate-400 max-w-sm mt-1 leading-relaxed">
+                                Nguồn lưu trữ hạn chế hiển thị trực tiếp. Vui lòng nhấn vào liên kết bên dưới để xem hoặc lưu trữ tài liệu chuẩn:
+                            </p>
+                            <a id="fallback-iframe-link" href="#" target="_blank" class="mt-4 px-5 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs rounded-xl shadow-lg transition-colors flex items-center gap-1.5">
+                                <i class="fas fa-file-download"></i>
+                                <span>Truy cập trực tiếp</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EXAM & PRACTICE ACCORDION SECTION -->
+                <div id="practice-section" class="glass-panel rounded-3xl p-5 sm:p-6 space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-slate-800">
+                        <div>
+                            <h3 class="text-sm font-extrabold text-slate-200 flex items-center gap-2">
+                                <i class="fas fa-clipboard-check text-indigo-400"></i>
+                                <span>Kiểm tra trắc nghiệm & Lý thuyết</span>
+                            </h3>
+                        </div>
+                        <span id="quiz-count-lbl" class="text-[10px] font-mono text-indigo-400 bg-indigo-500/5 px-2 py-0.5 rounded border border-indigo-500/20 font-bold shrink-0">
+                            Chưa chọn bài
+                        </span>
+                    </div>
+
+                    <div id="quiz-wrapper" class="space-y-4 max-h-[350px] overflow-y-auto custom-scrollbar pr-1">
+                        <div class="text-center py-8 text-slate-500 text-xs">
+                            <i class="fas fa-info-circle mb-2 text-lg block opacity-20"></i>
+                            <span>Hãy chọn bài để tải câu hỏi lượng giá phù hợp...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- TOAST NOTIFICATION FOR USER ALERTS -->
+    <div id="toast" class="fixed bottom-6 right-6 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 shadow-2xl opacity-0 translate-y-4 transition-all duration-300 z-50 pointer-events-none flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-cyan-500" id="toast-dot"></span>
+        <span id="toast-text">Thông báo hệ thống</span>
+    </div>
+
+    <!-- FIREBASE & CORE SYSTEM CODE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
+            authDomain: "dulieuweb-6541e.firebaseapp.com",
+            projectId: "dulieuweb-6541e",
+            storageBucket: "dulieuweb-6541e.firebasestorage.app",
+            messagingSenderId: "215480268517",
+            appId: "1:215480268517:web:16600eafd6839fee5dc60c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // App configuration
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'v2-database-school';
+        
+        // Target Subjects/Topics for Respiratory Therapy
+        const TARGET_SUBJECT = "Phục hồi chức năng";
+        const TARGET_TOPIC = "Hô hấp";
+
+        // Global memory caches
+        let respiratoryDocs = [];
+        let respiratoryQuizzes = [];
+        let activeFilterKeyword = "";
+
+        // Handle authentication first
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.error("Auth Error", err);
+                triggerToast("Lỗi xác thực hệ thống!", "rose-500");
+            }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const indicator = document.getElementById('auth-indicator');
+                if (indicator) {
+                    indicator.innerHTML = `Connected [${user.uid.substring(0, 6)}]`;
+                }
+
+                // 1. Fetch Links/Docs for Respiratory system
+                const docColRef = collection(db, 'artifacts', appId, 'public', 'data', 'links');
+                onSnapshot(docColRef, (snap) => {
+                    const allLinks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                    
+                    // Filter exclusively for PHCN Hô hấp
+                    respiratoryDocs = allLinks.filter(item => 
+                        (item.subject || '').trim().toLowerCase() === TARGET_SUBJECT.toLowerCase() &&
+                        (item.topic || '').trim().toLowerCase() === TARGET_TOPIC.toLowerCase()
+                    );
+
+                    // Sort chronologically/updated
+                    respiratoryDocs.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+
+                    document.getElementById('sidebar-loader').classList.add('hidden');
+                    renderFilteredDocs();
+                }, (error) => {
+                    console.error("Fetch Docs Error:", error);
+                    triggerToast("Đồng bộ tài liệu thất bại!", "rose-500");
+                });
+
+                // 2. Fetch Questions Bank for Respiratory system
+                const quizColRef = collection(db, 'artifacts', appId, 'public', 'data', 'questions');
+                onSnapshot(quizColRef, (snap) => {
+                    const allQuizzes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+                    // Filter matching subject/topic to optimize practice
+                    respiratoryQuizzes = allQuizzes.filter(q => 
+                        (q.subject || '').trim().toLowerCase() === TARGET_SUBJECT.toLowerCase() &&
+                        (q.topic || '').trim().toLowerCase() === TARGET_TOPIC.toLowerCase()
+                    );
+                }, (error) => {
+                    console.error("Fetch Quizzes Error:", error);
+                });
+            }
+        });
+
+        initAuth();
+
+        // Respiratory Filter Keyword Logic
+        window.filterByKeyword = function(keyword) {
+            activeFilterKeyword = keyword;
+            
+            // Adjust active state UI for joint button selectors (Safe check if elements exist)
+            document.querySelectorAll('.joint-btn').forEach(btn => {
+                btn.classList.remove('bg-cyan-500/10', 'border-cyan-500/40');
+            });
+
+            // Set current active visual styling
+            const btnAll = document.getElementById('btn-joint-all');
+            if (keyword === '') {
+                if (btnAll) btnAll.classList.add('bg-cyan-500/10', 'border-cyan-500/40');
+            } else if (event && event.currentTarget && event.currentTarget.classList.contains('joint-btn')) {
+                event.currentTarget.classList.add('bg-cyan-500/10', 'border-cyan-500/40');
+            }
+
+            renderFilteredDocs();
+            triggerToast(`Đang lọc: ${keyword || 'Tất cả tài liệu hô hấp'}`, "cyan-500");
+        };
+
+        // Main Document Rendering logic in the sidebar
+        window.renderFilteredDocs = function() {
+            const container = document.getElementById('docs-list-container');
+            const searchVal = document.getElementById('sidebarSearch').value.toLowerCase();
+
+            // Run search and respiration keywords queries over filtered lists
+            const finalizedItems = respiratoryDocs.filter(doc => {
+                const titleMatch = (doc.title || '').toLowerCase().includes(searchVal);
+                
+                let matchesJointFilter = true;
+                if (activeFilterKeyword !== "") {
+                    // Normalize keyword matching to enhance search hit rate
+                    matchesJointFilter = (doc.title || '').toLowerCase().includes(activeFilterKeyword.toLowerCase()) ||
+                                         (doc.summary || '').toLowerCase().includes(activeFilterKeyword.toLowerCase());
+                }
+
+                return titleMatch && matchesJointFilter;
+            });
+
+            // Update Counter Label
+            document.getElementById('doc-counter').textContent = `${finalizedItems.length} tài liệu`;
+
+            if (finalizedItems.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-slate-600 text-xs">
+                        <i class="fas fa-folder-open mb-2 text-xl block opacity-20"></i>
+                        <span>Không tìm thấy tài liệu phù hợp</span>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = finalizedItems.map(item => {
+                const isDraft = !item.url || item.url.trim() === '';
+                return `
+                    <div onclick="${isDraft ? `triggerToast('Tài liệu này chưa được soạn xong!', 'amber-500')` : `loadDocumentViewer('${item.id}')`}"
+                        id="doc-item-${item.id}"
+                        class="p-3.5 rounded-xl border border-slate-800/80 bg-slate-900/30 hover:bg-slate-800/40 cursor-pointer transition-all flex items-start gap-3 group relative overflow-hidden ${isDraft ? 'opacity-60 hover:opacity-85' : ''}">
+                        
+                        <div class="w-8 h-8 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-xs text-cyan-400 shrink-0 group-hover:border-cyan-500/30 group-hover:text-cyan-300 transition-colors">
+                            <i class="${isDraft ? 'fas fa-spinner fa-spin text-slate-500' : 'fas fa-file-pdf'}"></i>
+                        </div>
+
+                        <div class="min-w-0 flex-1">
+                            <h4 class="text-xs font-semibold text-slate-300 leading-relaxed group-hover:text-slate-100 transition-colors truncate">
+                                ${escapeHtml(item.title)}
+                            </h4>
+                            <div class="flex items-center gap-2 mt-1.5 flex-wrap">
+                                <span class="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-slate-950 text-slate-500 font-mono">
+                                    PHCN
+                                </span>
+                                <span class="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 font-mono border border-cyan-500/10">
+                                    Hô hấp
+                                </span>
+                                ${isDraft ? `
+                                    <span class="text-[9px] font-bold text-rose-400 animate-pulse flex items-center gap-1">
+                                        <i class="fas fa-clock"></i> Chưa soạn
+                                    </span>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        <!-- Luyện tập riêng biệt nhanh cho bài học này -->
+                        ${!isDraft ? `
+                        <button onclick="event.stopPropagation(); loadDocumentPracticeOnly('${item.id}')" 
+                            class="w-7 h-7 rounded-lg bg-indigo-500/10 hover:bg-indigo-600 text-indigo-300 hover:text-white flex items-center justify-center transition-all shrink-0 active:scale-90"
+                            title="Luyện tập bài này">
+                            <i class="fas fa-graduation-cap text-[10px]"></i>
+                        </button>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        };
+
+        // Kích hoạt chế độ chỉ Luyện tập trắc nghiệm riêng biệt
+        window.loadDocumentPracticeOnly = function(docId) {
+            const docData = respiratoryDocs.find(item => item.id === docId);
+            if (!docData) return;
+
+            renderRelatedExams(docData);
+            
+            // Cuộn xuống khu vực luyện tập
+            document.getElementById('practice-section').scrollIntoView({ behavior: 'smooth' });
+            triggerToast(`Đang tải câu hỏi: ${docData.title.substring(0, 25)}...`, "indigo-500");
+        };
+
+        // Click handler to load respiratory files in frame safely
+        window.loadDocumentViewer = function(docId) {
+            const docData = respiratoryDocs.find(item => item.id === docId);
+            if (!docData) return;
+
+            // KIỂM TRA MÀN HÌNH NHỎ (MOBILE/TABLET)
+            const isMobile = window.innerWidth < 1024;
+
+            if (isMobile) {
+                // Mở trực tiếp trên tab mới khi ở điện thoại để tránh lỗi vỡ khung
+                window.open(docData.url, '_blank');
+                renderRelatedExams(docData);
+                triggerToast("Đã mở tài liệu ở tab mới!");
+                return;
+            }
+
+            // Reset selected states on Sidebar
+            document.querySelectorAll('#docs-list-container > div').forEach(card => {
+                card.classList.remove('glass-panel-active', 'border-cyan-500/20');
+            });
+            const selectedCard = document.getElementById(`doc-item-${docId}`);
+            if (selectedCard) {
+                selectedCard.classList.add('glass-panel-active', 'border-cyan-500/20');
+            }
+
+            // Unhide viewer parts
+            document.getElementById('viewer-welcome').classList.add('hidden');
+            document.getElementById('viewer-header').classList.remove('hidden');
+
+            const iframe = document.getElementById('doc-iframe');
+            const iframeWarning = document.getElementById('iframe-blocked-warning');
+
+            // Setup Details
+            document.getElementById('active-doc-title').textContent = docData.title;
+            document.getElementById('active-doc-external').href = docData.url;
+            document.getElementById('fallback-iframe-link').href = docData.url;
+
+            // Drive transformer preview url
+            const isGoogleDrive = docData.url.includes("drive.google.com");
+            let embedUrl = docData.url;
+
+            if (isGoogleDrive) {
+                if (embedUrl.includes("/view")) {
+                    embedUrl = embedUrl.replace("/view", "/preview");
+                } else if (embedUrl.includes("/edit")) {
+                    embedUrl = embedUrl.replace("/edit", "/preview");
                 }
             }
 
-            box.innerHTML = `
-        <div class="image-wrapper" aria-hidden="true">
-          <img class="article-image" src="${DEFAULT_IMAGE}" alt="${data.title}" onerror="this.style.display='none'"/>
-        </div>
-        <div class="content-area">
-          <span class="tag-pill">${dataStore[categoryKey].name}</span>
-          <p class="article-title">${data.title}</p>
-        </div>
-      `;
-      container.appendChild(box);
-      observer.observe(box);
-    }
+            // Attempt to load embedded iframe
+            iframe.src = embedUrl;
+            iframe.classList.remove('hidden');
+            iframeWarning.classList.add('hidden');
 
-        function renderCategories(){
-            const tabs = document.getElementById('category-tabs');
-            if(!tabs) return;
-            tabs.innerHTML = '';
-            let tabIndex = 1;
-            Object.keys(dataStore).forEach(key => {
-                const btn = document.createElement('button');
-                btn.id = `tab_${tabIndex++}`;
-                btn.className = 'category-btn';
-                btn.dataset.key = key;
+            // Handle security blocks gracefully
+            if (docData.url.includes("docs.google.com") && !docData.url.includes("/pubhtml") && !docData.url.includes("/preview")) {
+                iframeWarning.classList.remove('hidden');
+                iframe.classList.add('hidden');
+            }
 
-                const colorData = categoryColors[key] || {bg:'linear-gradient(90deg,#374151,#4b5563)', activeColor:'#fff', inactiveColor:'#94a3b8'};
+            // Fetch related exams inside bottom practice block
+            renderRelatedExams(docData);
+            triggerToast("Đã nạp học liệu nội bộ", "cyan-500");
+        };
 
-                if(key === currentCategory){
-                    btn.classList.remove('inactive');
-                    btn.classList.add('active');
-                    btn.style.background = colorData.bg;
-                    btn.style.color = colorData.activeColor;
-                    btn.innerHTML = `<span class="category-name-span" style="color: ${colorData.activeColor};">${dataStore[key].name}</span>
-                                     <span class="category-count-span"> (${dataStore[key].articles.length})</span>`;
+        // Render exam questions matching respiratory pathology keywords
+        function renderRelatedExams(activeDoc) {
+            const quizContainer = document.getElementById('quiz-wrapper');
+            const counterLbl = document.getElementById('quiz-count-lbl');
+
+            // Find matching questions using clinical terms
+            const relatedQuizzes = respiratoryQuizzes.filter(q => {
+                const docTitleNorm = (activeDoc.title || '').toLowerCase();
+                const lessonNorm = (q.lesson || '').toLowerCase();
+                const contentNorm = (q.content || '').toLowerCase();
+
+                return docTitleNorm.includes(lessonNorm) || 
+                       lessonNorm.includes(docTitleNorm) ||
+                       extractKeywordsMatch(docTitleNorm, contentNorm);
+            });
+
+            // Fallback to top respiratory questions if no specific matched
+            const finalQuizzes = relatedQuizzes.length > 0 ? relatedQuizzes : respiratoryQuizzes.slice(0, 5);
+
+            counterLbl.textContent = `${finalQuizzes.length} Câu hỏi ôn tập`;
+
+            if (finalQuizzes.length === 0) {
+                quizContainer.innerHTML = `
+                    <div class="text-center py-6 text-slate-600 text-xs">
+                        <i class="fas fa-notes-medical mb-2 text-xl block opacity-25"></i>
+                        <span>Ngân hàng câu hỏi hô hấp đang được bổ sung...</span>
+                    </div>
+                `;
+                return;
+            }
+
+            // Render questions UI
+            quizContainer.innerHTML = finalQuizzes.map((q, idx) => {
+                const qNum = idx + 1;
+                const isMcq = q.type === 'multiple_choice';
+
+                let interactiveHtml = '';
+                if (isMcq) {
+                    interactiveHtml = `
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3">
+                            <button onclick="checkPracticeQuizAnswer('${q.id}', 'A')" class="option-btn-${q.id} p-2.5 rounded-xl border border-slate-800 bg-slate-950/40 hover:bg-slate-900 text-left text-xs text-slate-300 transition-all flex items-center gap-2">
+                                <span class="font-extrabold text-cyan-400">A.</span>
+                                <span>${escapeHtml(q.opt_A)}</span>
+                            </button>
+                            <button onclick="checkPracticeQuizAnswer('${q.id}', 'B')" class="option-btn-${q.id} p-2.5 rounded-xl border border-slate-800 bg-slate-950/40 hover:bg-slate-900 text-left text-xs text-slate-300 transition-all flex items-center gap-2">
+                                <span class="font-extrabold text-cyan-400">B.</span>
+                                <span>${escapeHtml(q.opt_B)}</span>
+                            </button>
+                            <button onclick="checkPracticeQuizAnswer('${q.id}', 'C')" class="option-btn-${q.id} p-2.5 rounded-xl border border-slate-800 bg-slate-950/40 hover:bg-slate-900 text-left text-xs text-slate-300 transition-all flex items-center gap-2">
+                                <span class="font-extrabold text-cyan-400">C.</span>
+                                <span>${escapeHtml(q.opt_C)}</span>
+                            </button>
+                            <button onclick="checkPracticeQuizAnswer('${q.id}', 'D')" class="option-btn-${q.id} p-2.5 rounded-xl border border-slate-800 bg-slate-950/40 hover:bg-slate-900 text-left text-xs text-slate-300 transition-all flex items-center gap-2">
+                                <span class="font-extrabold text-cyan-400">D.</span>
+                                <span>${escapeHtml(q.opt_D)}</span>
+                            </button>
+                        </div>
+                    `;
                 } else {
-                    btn.classList.remove('active');
-                    btn.classList.add('inactive');
-                    btn.innerHTML = `<span class="category-name-span" style="color: ${colorData.inactiveColor};">${dataStore[key].name}</span>
-                                     <span class="category-count-span"> (${dataStore[key].articles.length})</span>`;
+                    interactiveHtml = `
+                        <div class="mt-3 flex gap-2">
+                            <input type="text" id="short-input-${q.id}" placeholder="Điền nhanh đáp án của bạn..." 
+                                class="flex-1 px-3 py-2 bg-slate-950 border border-slate-850 rounded-xl text-xs text-slate-200 outline-none focus:border-cyan-500 transition-all">
+                            <button onclick="checkPracticeShortAnswer('${q.id}')" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-xs font-bold transition-all">
+                                Gửi đáp án
+                            </button>
+                        </div>
+                    `;
                 }
 
-                 btn.onclick = () => {
-          if(key === currentCategory) return;
-          currentCategory = key;
-          renderCategories();
-          renderArticles(); // show all trong category
-          // scroll tab into view for better UX on mobile:
-          btn.scrollIntoView({behavior:'smooth', inline:'center'});
+                return `
+                    <div class="p-4 rounded-2xl border border-slate-800/80 bg-slate-900/10 space-y-2">
+                        <div class="flex items-center gap-2 border-b border-slate-800/40 pb-2 mb-2">
+                            <span class="w-5 h-5 rounded bg-cyan-500/10 border border-cyan-500/20 text-[10px] font-bold text-cyan-400 flex items-center justify-center">
+                                ${qNum}
+                            </span>
+                            <span class="text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-slate-950 text-slate-400 border border-slate-800">
+                                ${isMcq ? 'Trắc nghiệm' : 'TL Ngắn'}
+                            </span>
+                            ${q.lesson ? `<span class="text-[9px] text-slate-500 truncate">Bài: ${escapeHtml(q.lesson)}</span>` : ''}
+                        </div>
+                        <p class="text-xs text-slate-200 leading-relaxed font-semibold">${escapeHtml(q.content)}</p>
+                        
+                        ${interactiveHtml}
+
+                        <!-- Answer Feedback -->
+                        <div id="quiz-explain-${q.id}" class="hidden p-3 rounded-xl bg-slate-950/60 border border-slate-800 mt-2 text-[11px] leading-relaxed">
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Answer checking algorithm
+        window.checkPracticeQuizAnswer = function(quizId, userChoice) {
+            const quiz = respiratoryQuizzes.find(q => q.id === quizId);
+            if (!quiz) return;
+
+            const isCorrect = quiz.correctAnswer === userChoice;
+            const feedbackContainer = document.getElementById(`quiz-explain-${quizId}`);
+            
+            document.querySelectorAll(`.option-btn-${quizId}`).forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-50');
+            });
+
+            feedbackContainer.classList.remove('hidden');
+
+            if (isCorrect) {
+                feedbackContainer.innerHTML = `
+                    <span class="text-emerald-400 font-bold block mb-1">
+                        <i class="fas fa-check-circle"></i> CHÍNH XÁC!
+                    </span>
+                    <span class="text-slate-400">${escapeHtml(quiz.explanation || 'Không có giải thích chi tiết.')}</span>
+                `;
+                feedbackContainer.className = "p-3 rounded-xl bg-emerald-950/10 border border-emerald-500/20 mt-2 text-[11px] leading-relaxed";
+            } else {
+                feedbackContainer.innerHTML = `
+                    <span class="text-rose-400 font-bold block mb-1">
+                        <i class="fas fa-times-circle"></i> SAI MẤT RỒI!
+                    </span>
+                    <span class="text-slate-400 block mb-1">Đáp án đúng là: <strong class="text-emerald-400">${quiz.correctAnswer}</strong></span>
+                    <span class="text-slate-500">${escapeHtml(quiz.explanation || 'Không có giải thích chi tiết.')}</span>
+                `;
+                feedbackContainer.className = "p-3 rounded-xl bg-rose-950/10 border border-rose-500/20 mt-2 text-[11px] leading-relaxed";
+            }
         };
-        tabs.appendChild(btn);
-      });
-    }
 
-    // Render tất cả bài viết của category hiện tại (KHÔNG phân trang, KHÔNG xáo trộn)
-    function renderArticles(){
-      const container = document.getElementById('articles-container');
-      const section = document.getElementById('articles-section');
-      if(!container || !section) return;
+        window.checkPracticeShortAnswer = function(quizId) {
+            const quiz = respiratoryQuizzes.find(q => q.id === quizId);
+            if (!quiz) return;
 
-      Array.from(container.children).forEach(c => observer.unobserve(c));
-      container.innerHTML = '';
+            const input = document.getElementById(`short-input-${quizId}`);
+            const userAns = input.value.trim().toLowerCase();
+            const correctAns = (quiz.correctAnswerShort || '').trim().toLowerCase();
 
-      const links = (dataStore[currentCategory]?.articles) || [];
-      if(links.length === 0){
-        const empty = document.createElement('div');
-        empty.className = 'empty-state-box';
-        empty.innerHTML = `<p>Không tìm thấy bài viết nào trong danh mục <strong>${dataStore[currentCategory]?.name || ''}</strong>.</p>`;
-        container.appendChild(empty);
-        return;
-      }
+            const isCorrect = userAns === correctAns && correctAns !== "";
+            const feedbackContainer = document.getElementById(`quiz-explain-${quizId}`);
 
-      links.forEach((a, i) => createArticleBox(a.url, container, i));
-      // điều chỉnh padding nếu cần
-      section.style.paddingBottom = '4rem';
-    }
+            feedbackContainer.classList.remove('hidden');
 
-    document.addEventListener('DOMContentLoaded', () => {
-      renderCategories();
-      renderArticles();
-      // resize debounce để observe lại nếu cần
-      window.addEventListener('resize', () => {
-        clearTimeout(window._rt);
-        window._rt = setTimeout(() => {
-          document.querySelectorAll('.article-card').forEach(el => observer.observe(el));
-        }, 120);
-      });
-    });
+            if (isCorrect) {
+                feedbackContainer.innerHTML = `
+                    <span class="text-emerald-400 font-bold block mb-1">
+                        <i class="fas fa-check-circle"></i> CHÍNH XÁC!
+                    </span>
+                    <span class="text-slate-400">${escapeHtml(quiz.explanation || 'Không có giải thích chi tiết.')}</span>
+                `;
+                feedbackContainer.className = "p-3 rounded-xl bg-emerald-950/10 border border-emerald-500/20 mt-2 text-[11px] leading-relaxed";
+            } else {
+                feedbackContainer.innerHTML = `
+                    <span class="text-rose-400 font-bold block mb-1">
+                        <i class="fas fa-times-circle"></i> CHƯA CHÍNH XÁC!
+                    </span>
+                    <span class="text-slate-400 block mb-1">Đáp án chuẩn: <strong class="text-emerald-400">${escapeHtml(quiz.correctAnswerShort)}</strong></span>
+                    <span class="text-slate-500">${escapeHtml(quiz.explanation || 'Không có giải thích chi tiết.')}</span>
+                `;
+                feedbackContainer.className = "p-3 rounded-xl bg-rose-950/10 border border-rose-500/20 mt-2 text-[11px] leading-relaxed";
+            }
+        };
+
+        // Close Document state cleaner
+        window.closeActiveDoc = function() {
+            document.getElementById('viewer-welcome').classList.remove('hidden');
+            document.getElementById('viewer-header').classList.add('hidden');
+            document.getElementById('doc-iframe').classList.add('hidden');
+            document.getElementById('doc-iframe').src = "";
+            document.getElementById('iframe-blocked-warning').classList.add('hidden');
+            
+            document.querySelectorAll('#docs-list-container > div').forEach(card => {
+                card.classList.remove('glass-panel-active', 'border-cyan-500/20');
+            });
+
+            document.getElementById('quiz-wrapper').innerHTML = `
+                <div class="text-center py-8 text-slate-500 text-xs">
+                    <i class="fas fa-info-circle mb-2 text-lg block opacity-20"></i>
+                    <span>Nhấp vào bài học bất kỳ ở danh sách để hiển thị các câu hỏi ôn tập tương ứng.</span>
+                </div>
+            `;
+            document.getElementById('quiz-count-lbl').textContent = "Chưa chọn bài";
+        };
+
+        // Respiratory keywords semantic matcher
+        function extractKeywordsMatch(title, content) {
+            const keywords = [
+                'hoành', 'thở', 'phổi', 'copd', 'hen', 'khí phế thũng', 'dung tích',
+                'đờm', 'rung lồng ngực', 'môi mím', 'ho chủ động', 'thông khí', 'phế quản', 'vỗ rung'
+            ];
+            return keywords.some(kw => title.includes(kw) && content.includes(kw));
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Custom clean notification system
+        window.triggerToast = function(msg, accentColorClass = "cyan-500") {
+            const toast = document.getElementById('toast');
+            const dot = document.getElementById('toast-dot');
+            const text = document.getElementById('toast-text');
+
+            dot.className = `w-2 h-2 rounded-full bg-${accentColorClass}`;
+            text.textContent = msg;
+
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+                toast.classList.remove('opaacity-100', 'translate-y-0');
+            }, 3000);
+        };
     </script>
-        <div id="footer-placeholder"></div>
+    
+    <div id="footer-placeholder"></div>
 
-        <script src="/script.js"></script>
-        <script src="/banner_trang_con.js"></script>
+    <script type="module" src="/script.js"></script>
 </body>
 </html>

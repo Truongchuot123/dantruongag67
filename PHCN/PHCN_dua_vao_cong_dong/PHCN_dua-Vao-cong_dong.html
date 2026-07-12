@@ -2,474 +2,695 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phục hồi chức năng dựa vào cộng đồng</title>
-     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:image" content="/hinhanh/logo_web.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PHCN Dựa vào cộng đồng - NGUYỄN MAI ĐAN TRƯỜNG</title>
+    
+    <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá chuyên đề Phục hồi chức năng Dựa vào cộng đồng (CBR).">
+    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá chuyên đề Phục hồi chức năng Dựa vào cộng đồng (CBR).">
+    <meta property="og:image" content="https://placehold.co/600x400/0f172a/f59e0b?text=PHCN+Cong+Dong">
     <meta property="og:url" content="https://dantruongag.id.vn">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" href="/hinhanh/logo_web.png" type="">
+    <link class="js-favicon" rel="icon" href="/hinhanh/logo_web.png" type="">
     <link rel="stylesheet" href="/style.css">
-        <link rel="stylesheet" href="/banner_trang_con.css">
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
-</head>
-</head>
     <style>
-        /* Hiệu ứng chuyển động mượt mà cho thẻ bài viết */
-        .article-card {
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at 0% 0%, #0f172a 0%, #020617 100%);
+            min-height: 100vh;
+            color: #f1f5f9;
+            overflow-x: hidden;
         }
-        /* Hiệu ứng khi di chuột qua thẻ */
-        .article-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
+
+        .glass-panel-active {
+            background: rgba(245, 158, 11, 0.08);
+            border-color: rgba(245, 158, 11, 0.3);
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.1);
+        }
+
+        .glow-amber {
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.15);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.01);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 99px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(245, 158, 11, 0.4);
+        }
+
+        .loader {
+            border: 3px solid rgba(255, 255, 255, 0.05);
+            border-top: 3px solid #f59e0b;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
-    <body class="bg-gray-900">
-          
+</head>
+<body class="theme-amber bg-[#0b0f19] text-gray-100 overflow-x-hidden selection:bg-amber-500 selection:text-white">
+
+    <!-- HIDDEN AUTH INDICATOR -->
+    <div id="auth-indicator" class="hidden"></div>
+    
+    <!-- Header Placeholder -->
     <div id="header-placeholder"></div>
     <div id="search-placeholder"></div>
 
-    <header class="main-banner_trang_con">
-        <div class="banner_trang_con-overlay"></div>
-        <div class="hbanner_trang_con-image-bg"></div>
-
-        <div class="hbanner_trang_con-content">
-            <h1 class="main-title">PHỤC HỒI CHỨC NĂNG DỰA VÀO CỘNG ĐỒNG</h1>
-            <p class="sub-text">Phục hồi chức năng dựa vào cộng đồng là chiến lược nằm trong sự phát triển cộng đồng về phục hồi chức năng, bình đẳng về mọi cơ hội và hoà nhập xã hội của tất cả những người khuyết tật. Phục hồi chức năng dựa vào cộng đồng được triển khai với sự phối hợp chung của chính bản thân người khuyết tật, gia đình họ và cộng đồng bằng những dịch vụ y tế, giáo dục, hướng nghiệp và xã hội thích hợp.</p>
-            <div class="hbanner_trang_con-tabs-wrap">
-                <div id="category-tabs" class="category-scroll" aria-label="Danh mục bài viết"></div>
+    <!-- MAIN BODY CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col gap-6">
+        
+        <!-- PREMIUM HERO BANNER SECTION -->
+        <section class="w-full glass-panel rounded-3xl p-6 sm:p-8 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-r from-slate-900/90 via-slate-950/70 to-amber-950/20 border-amber-500/10">
+            <!-- Background glow effect in the banner -->
+            <div class="absolute -right-24 -top-24 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-24 -bottom-24 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 relative z-10 text-center sm:text-left">
+                <!-- Human community/home stylized icon -->
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500/20 to-orange-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 text-2xl shadow-lg shadow-amber-500/10 shrink-0">
+                    <i class="fas fa-people-roof animate-pulse"></i>
+                </div>
+                <div>
+                    <span class="inline-block text-[10px] uppercase font-extrabold tracking-widest text-amber-400 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20">PHỤC HỒI CHỨC NĂNG</span>
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold mt-2 tracking-tight text-white leading-tight">
+                        PHỤC HỒI CHỨC NĂNG <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">DỰA VÀO CỘNG ĐỒNG</span>
+                    </h1>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-xl leading-relaxed">
+                        Phục hồi chức năng dựa vào cộng đồng (PHCN DVCĐ / CBR) là biện pháp chuyển giao kỹ thuật phục hồi, tạo cơ hội bình đẳng và hòa nhập xã hội cho người khuyết tật ngay tại địa phương, với sự tham gia tích cực của gia đình, cộng đồng và các ban ngành xã hội.
+                    </p>
+                </div>
             </div>
-        </div>
-    </header>
+        </section>
 
-
-
-    <!-- Phần nội dung chính chứa các bài viết -->
-    <main class="container mx-auto px-6 py-12">
-        <div class="grid gap-12">
-
-            <!--Phục hồi chức năng sau TBMMN -->
-            <a href="/PHCN/PHCN_dua_vao_cong_dong/PHCN_sau_TBMMN.html" class="block article-card">
-                <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-                    <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" 
-                             src="/PHCN/hinhanh/PHCN_dua_vao_cong_dong/tai_bien_mach_mau_nao.jpg" 
-                             alt=""
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/334155?text=Lỗi+tải+ảnh';">
-                    </div>
-                    <div class="p-8 md:w-2/3 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Phục hồi chức năng sau tai biến mạch máu não</h2>
-                            <p class="mt-3 text-sm text-gray-500">22/03/2026</p>
-                            <p class="mt-4 text-gray-600">Tai biến mạch máu não gồm những biểu hiện bệnh lý đột ngột, cấp tính có tính chất khu trú của hệ thần kinh trung ương do giảm cung cấp máu tới não. </p>
-                        </div>
-                        <div class="mt-6">
-                            <span class="text-blue-600 font-semibold hover:underline">Xem thêm &rarr;</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-
-            <!--Phục hồi chức năng sau tổn thương tủy sống -->
-            <a href="/PHCN/PHCN_dua_vao_cong_dong/PHCN_ton_thuong_tuy_song.html" class="block article-card">
-                <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-                    <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" 
-                             src="/PHCN/hinhanh/PHCN_dua_vao_cong_dong/ton_thuong_tuy_song.jpg" 
-                             alt=""
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/334155?text=Lỗi+tải+ảnh';">
-                    </div>
-                    <div class="p-8 md:w-2/3 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Phục hồi chức năng tổn thương tủy sống</h2>
-                            <p class="mt-3 text-sm text-gray-500">22/03/2026</p>
-                            <p class="mt-4 text-gray-600">Tổn thương tuỷ sống là tình trạng một phần tuỷ sống bị tổn thương, gây ảnh hưởng đến phần cơ thể tương ứng (phần do tuỷ sống kiểm soát).. </p>
-                        </div>
-                        <div class="mt-6">
-                            <span class="text-blue-600 font-semibold hover:underline">Xem thêm &rarr;</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-
-            <!--Phục hồi chức năng viêm khớp dạng thấp -->
-            <a href="/PHCN/PHCN_dua_vao_cong_dong/PHCN_viem_khop_dang_thap.html" class="block article-card">
-                <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-                    <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" 
-                             src="/PHCN/hinhanh/PHCN_dua_vao_cong_dong/viem_khop_dang_thap.jpg" 
-                             alt=""
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/334155?text=Lỗi+tải+ảnh';">
-                    </div>
-                    <div class="p-8 md:w-2/3 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Phục hồi chức năng trong viêm khớp dạng thấp</h2>
-                            <p class="mt-3 text-sm text-gray-500">22/03/2026</p>
-                            <p class="mt-4 text-gray-600">Bệnh khớp là tên gọi chung của nhiều loại bệnh của khớp do nguyên nhân viêm khớp, thoái hoá khớp, chấn thương hoặc dị tật bẩm sinh của xương khớp...  </p>
-                        </div>
-                        <div class="mt-6">
-                            <span class="text-blue-600 font-semibold hover:underline">Xem thêm &rarr;</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-
-            <!--Phục hồi chức năng trẻ trật khớp háng bẩm sinh -->
-            <a href="/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_trat_khop_hang_bam_sinh" class="block article-card">
-                <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-                    <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" 
-                             src="/PHCN/hinhanh/PHCN_dua_vao_cong_dong/trat_khop_hang_bam_sinh.jpg" 
-                             alt=""
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/334155?text=Lỗi+tải+ảnh';">
-                    </div>
-                    <div class="p-8 md:w-2/3 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Phục hồi chức năng trẻ trật khớp hàng bẩm sinh</h2>
-                            <p class="mt-3 text-sm text-gray-500">22/03/2026</p>
-                            <p class="mt-4 text-gray-600">Trật khớp háng bẩm sinh là tình trạng chỏm xương đùi của một hoặc cả hai bên khớp háng bị trật ra khỏi vị trí bình thường của khớp háng.</p>
-                        </div>
-                        <div class="mt-6">
-                            <span class="text-blue-600 font-semibold hover:underline">Xem thêm &rarr;</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-
-            <!--Phục hồi chức năng trẻ chân khoèo bẩm sinh -->
-            <a href="/PHCN/PHCN_dua_vao_cong_dong/PHCN_ban_chan_khoeo_bam_sinh.html" class="block article-card">
-                <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-                    <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" 
-                             src="/PHCN/hinhanh/PHCN_dua_vao_cong_dong/ban_chan_khoeo.jpg" 
-                             alt=""
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/334155?text=Lỗi+tải+ảnh';">
-                    </div>
-                    <div class="p-8 md:w-2/3 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Phục hồi chức năng trẻ bàn chân khoèo bẩm sinh</h2>
-                            <p class="mt-3 text-sm text-gray-500">22/03/2026</p>
-                            <p class="mt-4 text-gray-600">Bàn chân khoèo bẩm sinh là một dị tật bàn chân xảy ra trong thời kì bào thai. Bao gồm phần trước bàn chân nghiêng, xoay trong và bị kéo xuống dưới; phần gót chân bị kéo vào trong, một số cơ và dây chằng bị ngắn lại và co rút.</p>
-                        </div>
-                        <div class="mt-6">
-                            <span class="text-blue-600 font-semibold hover:underline">Xem thêm &rarr;</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-
-            <!--Phục hồi chức năng trẻ bại não -->
-            <a href="/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_bai_nao.html" class="block article-card">
-                <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-                    <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" 
-                             src="/PHCN/hinhanh/PHCN_dua_vao_cong_dong/CP.png" 
-                             alt=""
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/334155?text=Lỗi+tải+ảnh';">
-                    </div>
-                    <div class="p-8 md:w-2/3 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Phục hồi chức năng trẻ bại não</h2>
-                            <p class="mt-3 text-sm text-gray-500">22/03/2026</p>
-                            <p class="mt-4 text-gray-600">Bại não Là các rối loạn vận động do tổn thương não không tiến triển. Xảy ra vào giai đoạn trước khi sinh, trong khi sinh, sau khi sinh đến 5 tuổi. Biểu hiện bằng các bất thường về vận động và tư thế thân mình. </p>
-                        </div>
-                        <div class="mt-6">
-                            <span class="text-blue-600 font-semibold hover:underline">Xem thêm &rarr;</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-
-            <!--Phục hồi chức năng trẻ chậm phát triển trí tuệ -->
-            <a href="/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_cham_phat_trien_tri_tue.html" class="block article-card">
-                <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-                    <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" 
-                             src="/PHCN/hinhanh/PHCN_dua_vao_cong_dong/cham_phat_trien_tri_tue.jpg" 
-                             alt=""
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/334155?text=Lỗi+tải+ảnh';">
-                    </div>
-                    <div class="p-8 md:w-2/3 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Phục hồi chức năng trẻ chậm phát triển trí tuệ</h2>
-                            <p class="mt-3 text-sm text-gray-500">22/03/2026</p>
-                            <p class="mt-4 text-gray-600">Chậm phát triển trí tuệ (PTTT) là tình trạng trẻ có trí tuệ dưới mức trung bình, khả năng tư duy chậm.., Chậm phát triển kỹ năng “thích ứng” như: giao tiếp, tự chăm sóc, các hoạt động sinh hoạt hàng ngày, kỹ năng xã hội, tham gia cộng đồng, tự định hướng,  sức khoẻ và an toàn, học tập, sở thích và việc làm. </p>
-                        </div>
-                        <div class="mt-6">
-                            <span class="text-blue-600 font-semibold hover:underline">Xem thêm &rarr;</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-
-            <!--Phục hồi chức năng trẻ tự kỷ -->
-            <a href="/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_tu_ky.html" class="block article-card">
-                <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-                    <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" 
-                             src="/PHCN/hinhanh/PHCN_dua_vao_cong_dong/tu_ky.jpg" 
-                             alt=""
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/334155?text=Lỗi+tải+ảnh';">
-                    </div>
-                    <div class="p-8 md:w-2/3 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Phục hồi chức năng trẻ tự kỷ</h2>
-                            <p class="mt-3 text-sm text-gray-500">22/03/2026</p>
-                            <p class="mt-4 text-gray-600">Tự kỷ là một dạng rối loạn phát triển về nhiều mặt song chủ yếu là rối loạn về kỹ năng quan hệ xã hội, giao tiếp bằng lời nói và hành vi bất thường </p>
-                        </div>
-                        <div class="mt-6">
-                            <span class="text-blue-600 font-semibold hover:underline">Xem thêm &rarr;</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-
-            <!--Động kinh ở trẻ em -->
-            <a href="/PHCN/PHCN_dua_vao_cong_dong/dong_kinh_tre_em.html" class="block article-card">
-                <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-                    <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" 
-                             src="/PHCN/hinhanh/PHCN_dua_vao_cong_dong/dong_kinh_trẻ_em.jpg" 
-                             alt=""
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/334155?text=Lỗi+tải+ảnh';">
-                    </div>
-                    <div class="p-8 md:w-2/3 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Động kinh ở trẻ em</h2>
-                            <p class="mt-3 text-sm text-gray-500">22/03/2026</p>
-                            <p class="mt-4 text-gray-600">Động kinh là tình trạng tổn thương não đặc trưng bằng sự lặp đi lặp lại những phóng lực kịch phát thành nhịp của tế bào não biểu hiện ra ngoài bằng: Cơn kịch phát về vận động (co giật các chi, co giật cơ), cảm giác, giác quan và tâm thần có tính chất lặp đi lặp lại nhiều lần. Có hoặc không kèm theo mất ý thức trong một khoảng thời gian ngắn hoặc thay đổi về trạng thái tri giác. </p>
-                        </div>
-                        <div class="mt-6">
-                            <span class="text-blue-600 font-semibold hover:underline">Xem thêm &rarr;</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-
-            <!--Giao tiếp với trẻ giảm thính lực -->
-            <a href="/PHCN/PHCN_dua_vao_cong_dong/giao_tiep_voi_tre_giam_thinh_luc" class="block article-card">
-                <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-                    <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" 
-                             src="/PHCN/hinhanh/PHCN_dua_vao_cong_dong/giam_thinh_luc.jpg" 
-                             alt=""
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/334155?text=Lỗi+tải+ảnh';">
-                    </div>
-                    <div class="p-8 md:w-2/3 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Giao tiếp với trẻ giảm thính lực</h2>
-                            <p class="mt-3 text-sm text-gray-500">22/03/2026</p>
-                            <p class="mt-4 text-gray-600">Trẻ có khó khăn về nghe (nghĩa là bị nghe kém hoặc điếc) là trẻ bị giảm ít nhiều hoặc toàn bộ sức nghe, khiến trẻ không nghe được ở khoảng cách và với cường độ âm thanh bình thường </p>
-                        </div>
-                        <div class="mt-6">
-                            <span class="text-blue-600 font-semibold hover:underline">Xem thêm &rarr;</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-
-            <!--Phục hồi chức năng trẻ cong vẹo cột sống -->
-            <a href="/PHCN/PHCN_dua_vao_cong_dong/PHCN_tre_cong_veo_cot_song.html" class="block article-card">
-                <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-                    <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" 
-                             src="/PHCN/hinhanh/PHCN_dua_vao_cong_dong/cong_veo_cot_song.jpg" 
-                             alt=""
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/334155?text=Lỗi+tải+ảnh';">
-                    </div>
-                    <div class="p-8 md:w-2/3 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Phục hồi chức năng trẻ cong vẹo cột sống</h2>
-                            <p class="mt-3 text-sm text-gray-500">22/03/2026</p>
-                            <p class="mt-4 text-gray-600">Cong vẹo cột sống Là tình trạng cột sống bị cong sang một hoặc hai bên, thân đốt sống bị vẹo (xoay) </p>
-                        </div>
-                        <div class="mt-6">
-                            <span class="text-blue-600 font-semibold hover:underline">Xem thêm &rarr;</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-
-            <!--Phục hồi chức năng cho người khuyết tật giảm chức năng nhìn -->
-            <a href="/PHCN/PHCN_dua_vao_cong_dong/PHCN_nguoi_khuyet_tat_giam_chuc_nang_nhin.html" class="block article-card">
-                <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-                    <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" 
-                             src="/PHCN/hinhanh/PHCN_dua_vao_cong_dong/nguoi_khuyet_tat_giam_chuc_nang_nhin.jpg" 
-                             alt=""
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/334155?text=Lỗi+tải+ảnh';">
-                    </div>
-                    <div class="p-8 md:w-2/3 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Phục hồi chức năng cho người khuyết tật giảm chức năng nhìn</h2>
-                            <p class="mt-3 text-sm text-gray-500">22/03/2026</p>
-                            <p class="mt-4 text-gray-600">Khuyết tật/giảm chức năng nhìn là tình trạng một người do ảnh hưởng, hậu qủa của các bệnh hoặc biến chứng về mắt bẩm sinh hay mắc phải, mà không nhìn rõ và nhận dạng được sự vật một cách bình thường như những người xung quanh. </p>
-                        </div>
-                        <div class="mt-6">
-                            <span class="text-blue-600 font-semibold hover:underline">Xem thêm &rarr;</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-
-            <!--Phục hồi chức năng nói ngọng, nói lắp, thất ngôn -->
-            <a href="/PHCN/PHCN_dua_vao_cong_dong/PHCN_noi_lap_ngong_that_ngon.html" class="block article-card">
-                <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-                    <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" 
-                             src="/PHCN/hinhanh/PHCN_dua_vao_cong_dong/noi_lap.webp" 
-                             alt=""
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/334155?text=Lỗi+tải+ảnh';">
-                    </div>
-                    <div class="p-8 md:w-2/3 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Phục hồi chức năng nói ngọng, nói lắp, thất ngôn</h2>
-                            <p class="mt-3 text-sm text-gray-500">22/03/2026</p>
-                            <p class="mt-4 text-gray-600">Trong phần này chúng tôi sẽ đề cập đến một số khó khăn về nói khi giao tiếp thường gặp ở trẻ em và người lớn. Đối với trẻ em, có thể gặp. </p>
-                        </div>
-                        <div class="mt-6">
-                            <span class="text-blue-600 font-semibold hover:underline">Xem thêm &rarr;</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-
-            <!--Phục hồi chức năng người có bệnh tâm thần -->
-            <a href="/PHCN/PHCN_dua_vao_cong_dong/PHCN_benh_tam_than.html" class="block article-card">
-                <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-                    <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" 
-                             src="/PHCN/hinhanh/PHCN_dua_vao_cong_dong/benh_tam_than.jpg" 
-                             alt=""
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/334155?text=Lỗi+tải+ảnh';">
-                    </div>
-                    <div class="p-8 md:w-2/3 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Phục hồi chức năng người có bệnh tâm thần</h2>
-                            <p class="mt-3 text-sm text-gray-500">22/03/2026</p>
-                            <p class="mt-4 text-gray-600">bệnh tâm thần là người có biểu hiện khác lạ về lời nói, hành vi, nhân cách so với những người bình thuờng. Người có bệnh tâm thần thường không nhận thức được khuyết tật và sự bất thường của mình. </p>
-                        </div>
-                        <div class="mt-6">
-                            <span class="text-blue-600 font-semibold hover:underline">Xem thêm &rarr;</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-
-            <!--Phục hồi chức năng phổi mãn tính -->
-            <a href="/PHCN/PHCN_dua_vao_cong_dong/PHCN_benh_phoi_man_tinh.html" class="block article-card">
-                <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-                    <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" 
-                             src="/PHCN/hinhanh/PHCN_dua_vao_cong_dong/benh_phoi.jpg" 
-                             alt=""
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/334155?text=Lỗi+tải+ảnh';">
-                    </div>
-                    <div class="p-8 md:w-2/3 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Phục hồi chức năng bệnh phổi mãn tính</h2>
-                            <p class="mt-3 text-sm text-gray-500">22/03/2026</p>
-                            <p class="mt-4 text-gray-600">Các bệnh phổi mạn tính có nhiều loại đó là những bệnh phổi kéo dài trên 3 tháng trong một năm và thường kéo dài ít nhất 2 năm trở lên. Bài này đề cập đến hai bệnh Phổi mãn tính thường gặp nhất đó là: hen phế quản và viêm phế quản mãn tính. </p>
-                        </div>
-                        <div class="mt-6">
-                            <span class="text-blue-600 font-semibold hover:underline">Xem thêm &rarr;</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-
-            <!--Phục hồi chức năng sau bỏng -->
-            <a href="/PHCN/PHCN_dua_vao_cong_dong/PHCN_sau_bong.html" class="block article-card">
-                <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-                    <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" 
-                             src="/PHCN/hinhanh/PHCN_dua_vao_cong_dong/PHCN_sau_bong.jpg" 
-                             alt=""
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/334155?text=Lỗi+tải+ảnh';">
-                    </div>
-                    <div class="p-8 md:w-2/3 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Phục hồi chức năng sau bỏng</h2>
-                            <p class="mt-3 text-sm text-gray-500">22/03/2026</p>
-                            <p class="mt-4 text-gray-600">Bỏng là tổn thương da và tổ chức dưới da do nhiệt độ, hoá chất và các tác nhân vật lý khác. </p>
-                        </div>
-                        <div class="mt-6">
-                            <span class="text-blue-600 font-semibold hover:underline">Xem thêm &rarr;</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-
-            <!--Chăm sóc mỏm cụt -->
-            <a href="/PHCN/PHCN_dua_vao_cong_dong/cham_soc_mom_cut.html" class="block article-card">
-                <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-                    <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" 
-                             src="/PHCN/hinhanh/PHCN_dua_vao_cong_dong/mom_cut.jpg" 
-                             alt=""
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/334155?text=Lỗi+tải+ảnh';">
-                    </div>
-                    <div class="p-8 md:w-2/3 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Chăm sóc mỏm cụt</h2>
-                            <p class="mt-3 text-sm text-gray-500">22/03/2026</p>
-                            <p class="mt-4 text-gray-600">Mỏm cụt hoặc đoạn chi là phần còn lại của một chi sau khi bị cắt cụt sau phẫu thuật cắt cụt chi hoặc tháo khớp. </p>
-                        </div>
-                        <div class="mt-6">
-                            <span class="text-blue-600 font-semibold hover:underline">Xem thêm &rarr;</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-
-            <!--Phòng ngừa thương tật thứ phát -->
-            <a href="/PHCN/PHCN_dua_vao_cong_dong/phong_ngua_thuong_tat_thu_phat.html" class="block article-card">
-                <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-                    <div class="md:w-1/3">
-                        <img class="h-full w-full object-cover" 
-                             src="/PHCN/hinhanh/PHCN_dua_vao_cong_dong/thuong_tat_thu_phat.jpg" 
-                             alt=""
-                             onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/334155?text=Lỗi+tải+ảnh';">
-                    </div>
-                    <div class="p-8 md:w-2/3 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Phòng ngừa thương tật thứ phát</h2>
-                            <p class="mt-3 text-sm text-gray-500">22/03/2026</p>
-                            <p class="mt-4 text-gray-600">Thương tật thứ phát là các khiếm khuyết xảy ra sau một bệnh khác, người bệnh phải nằm lâu, bất động hoặc thiếu chăm sóc, chăm sóc không đúng cách.  </p>
-                        </div>
-                        <div class="mt-6">
-                            <span class="text-blue-600 font-semibold hover:underline">Xem thêm &rarr;</span>
-                        </div>
-                    </div>
-                </article>
-            </a>
-
+        <!-- TWO-COLUMN WORKSPACE GRID -->
+        <div class="flex flex-col lg:flex-row gap-6 w-full">
             
+            <!-- SIDEBAR: DANH SÁCH TÀI LIỆU -->
+            <section class="w-full lg:w-96 flex flex-col gap-5 shrink-0">
+                
+                <!-- Documents List Panel -->
+                <div class="glass-panel rounded-2xl p-5 flex-1 flex flex-col min-h-[350px] lg:min-h-0">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                            <i class="fas fa-users-line text-amber-400"></i>
+                            <span>Danh mục học liệu</span>
+                        </h2>
+                        <span id="doc-counter" class="text-[10px] font-bold bg-slate-950 px-2.5 py-1 rounded-full text-amber-400 border border-slate-800">
+                            0 bài học
+                        </span>
+                    </div>
 
-            
+                    <!-- Live Search Box inside Sidebar -->
+                    <div class="relative mb-4">
+                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                        <input type="text" id="sidebarSearch" placeholder="Tìm bài học DVCĐ, vai trò gia đình..." 
+                            class="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-850 rounded-xl outline-none focus:border-amber-500 text-xs text-slate-200 transition-all placeholder:text-slate-600" oninput="renderFilteredDocs()">
+                    </div>
 
+                    <!-- Document Items Container -->
+                    <div id="docs-list-container" class="flex-1 overflow-y-auto custom-scrollbar space-y-2.5 pr-1 max-h-[420px] lg:max-h-none">
+                        <!-- Loading state -->
+                        <div id="sidebar-loader" class="flex flex-col items-center justify-center py-12 gap-3">
+                            <div class="loader"></div>
+                            <span class="text-xs text-slate-500">Đang tải học liệu DVCĐ...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
+            <!-- MAIN WORKSPACE: IFRAME VIEWER & STUDY NOTES / EXAMS -->
+            <section class="flex-1 flex flex-col gap-6 min-w-0">
+                
+                <!-- VIEWPORT / IFRAME WORKSPACE -->
+                <div id="viewer-container" class="hidden lg:flex glass-panel rounded-3xl overflow-hidden flex-col h-[500px] lg:h-[620px] relative">
+                    
+                    <!-- Initial Welcome Screen -->
+                    <div id="viewer-welcome" class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-slate-950/20 z-10">
+                        <div class="w-20 h-20 rounded-3xl bg-amber-500/5 border border-amber-500/20 flex items-center justify-center text-amber-400 text-3xl mb-4 animate-bounce">
+                            <i class="fas fa-hands-holding-child"></i>
+                        </div>
+                        <h2 class="text-xl font-bold text-slate-200">Trình xem học liệu DVCĐ</h2>
+                        <p class="text-sm text-slate-400 max-w-md mt-2 leading-relaxed">
+                            Tài liệu hướng dẫn PHCN dựa vào cộng đồng và chương trình can thiệp sẽ hiển thị tại đây. Vui lòng chọn bài học ở danh mục bên trái.
+                        </p>
+                    </div>
 
-            
+                    <!-- Interactive Document Header -->
+                    <div id="viewer-header" class="hidden px-5 py-3.5 bg-slate-950/80 border-b border-slate-800/80 flex items-center justify-between gap-3 shrink-0">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="text-[10px] font-extrabold text-amber-400 uppercase bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20 shrink-0">ĐANG ĐỌC</span>
+                            <h2 id="active-doc-title" class="text-xs sm:text-sm font-bold text-slate-200 truncate">Tên bài học</h2>
+                        </div>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <!-- External Fallback -->
+                            <a id="active-doc-external" href="#" target="_blank" class="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-800 hover:border-slate-700 text-slate-300 hover:text-white rounded-lg text-[10px] font-bold flex items-center gap-1.5 transition-all">
+                                <span>Mở Tab Ngoài</span>
+                                <i class="fas fa-external-link-alt text-[8px]"></i>
+                            </a>
+                            <button onclick="closeActiveDoc()" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-rose-500/10 text-slate-400 hover:text-rose-400 transition-colors">
+                                <i class="fas fa-times text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
 
+                    <!-- The Actual Iframe -->
+                    <div class="flex-1 w-full h-full bg-slate-950/30 relative">
+                        <iframe id="doc-iframe" class="w-full h-full border-none hidden" allow="autoplay; encrypted-media" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        
+                        <!-- Sandboxed warning -->
+                        <div id="iframe-blocked-warning" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-slate-950/95 z-20">
+                            <div class="w-14 h-14 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl mb-3">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <h3 class="text-sm font-bold text-slate-300">Tài liệu bảo mật cao / Chặn xem nhúng</h3>
+                            <p class="text-xs text-slate-400 max-w-sm mt-1 leading-relaxed">
+                                Liên kết lưu trữ hạn chế quyền hiển thị trực tiếp. Vui lòng bấm vào nút bên dưới để xem giáo trình:
+                            </p>
+                            <a id="fallback-iframe-link" href="#" target="_blank" class="mt-4 px-5 py-2.5 bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs rounded-xl shadow-lg transition-colors flex items-center gap-1.5">
+                                <i class="fas fa-file-download"></i>
+                                <span>Truy cập trực tiếp</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- EXAM & PRACTICE ACCORDION SECTION -->
+                <div id="practice-section" class="glass-panel rounded-3xl p-5 sm:p-6 space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-slate-800">
+                        <div>
+                            <h3 class="text-sm font-extrabold text-slate-200 flex items-center gap-2">
+                                <i class="fas fa-clipboard-check text-amber-400"></i>
+                                <span>Kiểm tra trắc nghiệm & Lý thuyết</span>
+                            </h3>
+                        </div>
+                        <span id="quiz-count-lbl" class="text-[10px] font-mono text-amber-400 bg-amber-500/5 px-2 py-0.5 rounded border border-amber-500/20 font-bold shrink-0">
+                            Chưa chọn bài
+                        </span>
+                    </div>
 
-
+                    <div id="quiz-wrapper" class="space-y-4 max-h-[350px] overflow-y-auto custom-scrollbar pr-1">
+                        <div class="text-center py-8 text-slate-500 text-xs">
+                            <i class="fas fa-info-circle mb-2 text-lg block opacity-20"></i>
+                            <span>Hãy chọn bài học để hiển thị ngân hàng câu hỏi lượng giá tương thích...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
 
-</body>
+    <!-- TOAST NOTIFICATION FOR USER ALERTS -->
+    <div id="toast" class="fixed bottom-6 right-6 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 shadow-2xl opacity-0 translate-y-4 transition-all duration-300 z-50 pointer-events-none flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-amber-500" id="toast-dot"></span>
+        <span id="toast-text">Thông báo hệ thống</span>
+    </div>
+
+    <!-- FIREBASE & CORE SYSTEM CODE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
+            authDomain: "dulieuweb-6541e.firebaseapp.com",
+            projectId: "dulieuweb-6541e",
+            storageBucket: "dulieuweb-6541e.firebasestorage.app",
+            messagingSenderId: "215480268517",
+            appId: "1:215480268517:web:16600eafd6839fee5dc60c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // App configuration
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'v2-database-school';
+        
+        // Target Subjects/Topics for CBR
+        const TARGET_SUBJECT = "Phục hồi chức năng";
+        const TARGET_TOPIC = "PHCN dựa vào cộng đồng";
+
+        // Global memory caches
+        let cbrDocs = [];
+        let cbrQuizzes = [];
+        let activeFilterKeyword = "";
+
+        // Handle authentication first
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.error("Auth Error", err);
+                triggerToast("Lỗi xác thực hệ thống!", "rose-500");
+            }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const indicator = document.getElementById('auth-indicator');
+                if (indicator) {
+                    indicator.innerHTML = `Connected [${user.uid.substring(0, 6)}]`;
+                }
+
+                // 1. Fetch Links/Docs for Community Rehabilitation
+                const docColRef = collection(db, 'artifacts', appId, 'public', 'data', 'links');
+                onSnapshot(docColRef, (snap) => {
+                    const allLinks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                    
+                    // Filter exclusively for PHCN Dựa vào cộng đồng
+                    cbrDocs = allLinks.filter(item => 
+                        (item.subject || '').trim().toLowerCase() === TARGET_SUBJECT.toLowerCase() &&
+                        (item.topic || '').trim().toLowerCase() === TARGET_TOPIC.toLowerCase()
+                    );
+
+                    // Sort chronologically/updated
+                    cbrDocs.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+
+                    document.getElementById('sidebar-loader').classList.add('hidden');
+                    renderFilteredDocs();
+                }, (error) => {
+                    console.error("Fetch Docs Error:", error);
+                    triggerToast("Đồng bộ tài liệu thất bại!", "rose-500");
+                });
+
+                // 2. Fetch Questions Bank for Community Rehabilitation
+                const quizColRef = collection(db, 'artifacts', appId, 'public', 'data', 'questions');
+                onSnapshot(quizColRef, (snap) => {
+                    const allQuizzes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+                    // Filter matching subject/topic to optimize practice
+                    cbrQuizzes = allQuizzes.filter(q => 
+                        (q.subject || '').trim().toLowerCase() === TARGET_SUBJECT.toLowerCase() &&
+                        (q.topic || '').trim().toLowerCase() === TARGET_TOPIC.toLowerCase()
+                    );
+                }, (error) => {
+                    console.error("Fetch Quizzes Error:", error);
+                });
+            }
+        });
+
+        initAuth();
+
+        // Main Document Rendering logic in the sidebar
+        window.renderFilteredDocs = function() {
+            const container = document.getElementById('docs-list-container');
+            const searchVal = document.getElementById('sidebarSearch').value.toLowerCase();
+
+            // Run search
+            const finalizedItems = cbrDocs.filter(doc => {
+                const titleMatch = (doc.title || '').toLowerCase().includes(searchVal);
+                
+                let matchesJointFilter = true;
+                if (activeFilterKeyword !== "") {
+                    matchesJointFilter = (doc.title || '').toLowerCase().includes(activeFilterKeyword.toLowerCase()) ||
+                                         (doc.summary || '').toLowerCase().includes(activeFilterKeyword.toLowerCase());
+                }
+
+                return titleMatch && matchesJointFilter;
+            });
+
+            // Update Counter Label
+            document.getElementById('doc-counter').textContent = `${finalizedItems.length} tài liệu`;
+
+            if (finalizedItems.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-slate-600 text-xs">
+                        <i class="fas fa-folder-open mb-2 text-xl block opacity-20"></i>
+                        <span>Không tìm thấy tài liệu phù hợp</span>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = finalizedItems.map(item => {
+                const isDraft = !item.url || item.url.trim() === '';
+                return `
+                    <div onclick="${isDraft ? `triggerToast('Tài liệu này chưa được soạn xong!', 'amber-500')` : `loadDocumentViewer('${item.id}')`}"
+                        id="doc-item-${item.id}"
+                        class="p-3.5 rounded-xl border border-slate-800/80 bg-slate-900/30 hover:bg-slate-800/40 cursor-pointer transition-all flex items-start gap-3 group relative overflow-hidden ${isDraft ? 'opacity-60 hover:opacity-85' : ''}">
+                        
+                        <div class="w-8 h-8 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-xs text-amber-400 shrink-0 group-hover:border-amber-500/30 group-hover:text-amber-300 transition-colors">
+                            <i class="${isDraft ? 'fas fa-spinner fa-spin text-slate-500' : 'fas fa-file-pdf'}"></i>
+                        </div>
+
+                        <div class="min-w-0 flex-1">
+                            <h4 class="text-xs font-semibold text-slate-300 leading-relaxed group-hover:text-slate-100 transition-colors truncate">
+                                ${escapeHtml(item.title)}
+                            </h4>
+                            <div class="flex items-center gap-2 mt-1.5 flex-wrap">
+                                <span class="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-slate-950 text-slate-500 font-mono">
+                                    PHCN
+                                </span>
+                                <span class="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 font-mono border border-amber-500/10">
+                                    DVCĐ
+                                </span>
+                                ${isDraft ? `
+                                    <span class="text-[9px] font-bold text-rose-400 animate-pulse flex items-center gap-1">
+                                        <i class="fas fa-clock"></i> Chưa soạn
+                                    </span>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        <!-- Luyện tập riêng biệt nhanh cho bài học này -->
+                        ${!isDraft ? `
+                        <button onclick="event.stopPropagation(); loadDocumentPracticeOnly('${item.id}')" 
+                            class="w-7 h-7 rounded-lg bg-indigo-500/10 hover:bg-indigo-600 text-indigo-300 hover:text-white flex items-center justify-center transition-all shrink-0 active:scale-90"
+                            title="Luyện tập bài này">
+                            <i class="fas fa-graduation-cap text-[10px]"></i>
+                        </button>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        };
+
+        // Kích hoạt chế độ chỉ Luyện tập trắc nghiệm riêng biệt
+        window.loadDocumentPracticeOnly = function(docId) {
+            const docData = cbrDocs.find(item => item.id === docId);
+            if (!docData) return;
+
+            renderRelatedExams(docData);
+            
+            // Cuộn xuống khu vực luyện tập
+            document.getElementById('practice-section').scrollIntoView({ behavior: 'smooth' });
+            triggerToast(`Đang tải câu hỏi: ${docData.title.substring(0, 25)}...`, "indigo-500");
+        };
+
+        // Click handler to load documents safely in iframe sandbox
+        window.loadDocumentViewer = function(docId) {
+            const docData = cbrDocs.find(item => item.id === docId);
+            if (!docData) return;
+
+            // KIỂM TRA MÀN HÌNH NHỎ (MOBILE/TABLET)
+            const isMobile = window.innerWidth < 1024;
+
+            if (isMobile) {
+                // Mở trực tiếp trên tab mới khi ở điện thoại để tránh lỗi vỡ khung
+                window.open(docData.url, '_blank');
+                renderRelatedExams(docData);
+                triggerToast("Đã mở tài liệu ở tab mới!");
+                return;
+            }
+
+            // Reset selected states on Sidebar
+            document.querySelectorAll('#docs-list-container > div').forEach(card => {
+                card.classList.remove('glass-panel-active', 'border-amber-500/20');
+            });
+            const selectedCard = document.getElementById(`doc-item-${docId}`);
+            if (selectedCard) {
+                selectedCard.classList.add('glass-panel-active', 'border-amber-500/20');
+            }
+
+            // Unhide viewer parts
+            document.getElementById('viewer-welcome').classList.add('hidden');
+            document.getElementById('viewer-header').classList.remove('hidden');
+
+            const iframe = document.getElementById('doc-iframe');
+            const iframeWarning = document.getElementById('iframe-blocked-warning');
+
+            // Setup Details
+            document.getElementById('active-doc-title').textContent = docData.title;
+            document.getElementById('active-doc-external').href = docData.url;
+            document.getElementById('fallback-iframe-link').href = docData.url;
+
+            // Drive transformer preview url
+            const isGoogleDrive = docData.url.includes("drive.google.com");
+            let embedUrl = docData.url;
+
+            if (isGoogleDrive) {
+                if (embedUrl.includes("/view")) {
+                    embedUrl = embedUrl.replace("/view", "/preview");
+                } else if (embedUrl.includes("/edit")) {
+                    embedUrl = embedUrl.replace("/edit", "/preview");
+                }
+            }
+
+            // Attempt to load embedded iframe
+            iframe.src = embedUrl;
+            iframe.classList.remove('hidden');
+            iframeWarning.classList.add('hidden');
+
+            // Handle security blocks gracefully
+            if (docData.url.includes("docs.google.com") && !docData.url.includes("/pubhtml") && !docData.url.includes("/preview")) {
+                iframeWarning.classList.remove('hidden');
+                iframe.classList.add('hidden');
+            }
+
+            // Fetch related exams inside bottom practice block
+            renderRelatedExams(docData);
+            triggerToast("Đã nạp tài liệu bài học", "amber-500");
+        };
+
+        // Render exam questions matching community rehabilitation keywords
+        function renderRelatedExams(activeDoc) {
+            const quizContainer = document.getElementById('quiz-wrapper');
+            const counterLbl = document.getElementById('quiz-count-lbl');
+
+            // Find matching questions using community terms
+            const relatedQuizzes = cbrQuizzes.filter(q => {
+                const docTitleNorm = (activeDoc.title || '').toLowerCase();
+                const lessonNorm = (q.lesson || '').toLowerCase();
+                const contentNorm = (q.content || '').toLowerCase();
+
+                return docTitleNorm.includes(lessonNorm) || 
+                       lessonNorm.includes(docTitleNorm) ||
+                       extractKeywordsMatch(docTitleNorm, contentNorm);
+            });
+
+            // Fallback to top general questions if no specific matched
+            const finalQuizzes = relatedQuizzes.length > 0 ? relatedQuizzes : cbrQuizzes.slice(0, 5);
+
+            counterLbl.textContent = `${finalQuizzes.length} Câu hỏi ôn tập`;
+
+            if (finalQuizzes.length === 0) {
+                quizContainer.innerHTML = `
+                    <div class="text-center py-6 text-slate-600 text-xs">
+                        <i class="fas fa-notes-medical mb-2 text-xl block opacity-25"></i>
+                        <span>Ngân hàng câu hỏi lượng giá đang được đồng bộ...</span>
+                    </div>
+                `;
+                return;
+            }
+
+            // Render questions UI
+            quizContainer.innerHTML = finalQuizzes.map((q, idx) => {
+                const qNum = idx + 1;
+                const isMcq = q.type === 'multiple_choice';
+
+                let interactiveHtml = '';
+                if (isMcq) {
+                    interactiveHtml = `
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3">
+                            <button onclick="checkPracticeQuizAnswer('${q.id}', 'A')" class="option-btn-${q.id} p-2.5 rounded-xl border border-slate-800 bg-slate-950/40 hover:bg-slate-900 text-left text-xs text-slate-300 transition-all flex items-center gap-2">
+                                <span class="font-extrabold text-amber-400">A.</span>
+                                <span>${escapeHtml(q.opt_A)}</span>
+                            </button>
+                            <button onclick="checkPracticeQuizAnswer('${q.id}', 'B')" class="option-btn-${q.id} p-2.5 rounded-xl border border-slate-800 bg-slate-950/40 hover:bg-slate-900 text-left text-xs text-slate-300 transition-all flex items-center gap-2">
+                                <span class="font-extrabold text-amber-400">B.</span>
+                                <span>${escapeHtml(q.opt_B)}</span>
+                            </button>
+                            <button onclick="checkPracticeQuizAnswer('${q.id}', 'C')" class="option-btn-${q.id} p-2.5 rounded-xl border border-slate-800 bg-slate-950/40 hover:bg-slate-900 text-left text-xs text-slate-300 transition-all flex items-center gap-2">
+                                <span class="font-extrabold text-amber-400">C.</span>
+                                <span>${escapeHtml(q.opt_C)}</span>
+                            </button>
+                            <button onclick="checkPracticeQuizAnswer('${q.id}', 'D')" class="option-btn-${q.id} p-2.5 rounded-xl border border-slate-800 bg-slate-950/40 hover:bg-slate-900 text-left text-xs text-slate-300 transition-all flex items-center gap-2">
+                                <span class="font-extrabold text-amber-400">D.</span>
+                                <span>${escapeHtml(q.opt_D)}</span>
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    interactiveHtml = `
+                        <div class="mt-3 flex gap-2">
+                            <input type="text" id="short-input-${q.id}" placeholder="Điền nhanh đáp án tự luận..." 
+                                class="flex-1 px-3 py-2 bg-slate-950 border border-slate-850 rounded-xl text-xs text-slate-200 outline-none focus:border-amber-500 transition-all">
+                            <button onclick="checkPracticeShortAnswer('${q.id}')" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold transition-all">
+                                Gửi đáp án
+                            </button>
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="p-4 rounded-2xl border border-slate-800/80 bg-slate-900/10 space-y-2">
+                        <div class="flex items-center gap-2 border-b border-slate-800/40 pb-2 mb-2">
+                            <span class="w-5 h-5 rounded bg-amber-500/10 border border-amber-500/20 text-[10px] font-bold text-amber-400 flex items-center justify-center">
+                                ${qNum}
+                            </span>
+                            <span class="text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-slate-950 text-slate-400 border border-slate-800">
+                                ${isMcq ? 'Trắc nghiệm' : 'Tự luận ngắn'}
+                            </span>
+                            ${q.lesson ? `<span class="text-[9px] text-slate-500 truncate">Bài: ${escapeHtml(q.lesson)}</span>` : ''}
+                        </div>
+                        <p class="text-xs text-slate-200 leading-relaxed font-semibold">${escapeHtml(q.content)}</p>
+                        
+                        ${interactiveHtml}
+
+                        <!-- Answer Feedback -->
+                        <div id="quiz-explain-${q.id}" class="hidden p-3 rounded-xl bg-slate-950/60 border border-slate-800 mt-2 text-[11px] leading-relaxed">
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Answer checking algorithm
+        window.checkPracticeQuizAnswer = function(quizId, userChoice) {
+            const quiz = cbrQuizzes.find(q => q.id === quizId);
+            if (!quiz) return;
+
+            const isCorrect = quiz.correctAnswer === userChoice;
+            const feedbackContainer = document.getElementById(`quiz-explain-${quizId}`);
+            
+            document.querySelectorAll(`.option-btn-${quizId}`).forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-50');
+            });
+
+            feedbackContainer.classList.remove('hidden');
+
+            if (isCorrect) {
+                feedbackContainer.innerHTML = `
+                    <span class="text-emerald-400 font-bold block mb-1">
+                        <i class="fas fa-check-circle"></i> ĐÁP ÁN CHÍNH XÁC!
+                    </span>
+                    <span class="text-slate-400">${escapeHtml(quiz.explanation || 'Không có giải thích chi tiết.')}</span>
+                `;
+                feedbackContainer.className = "p-3 rounded-xl bg-emerald-950/10 border border-emerald-500/20 mt-2 text-[11px] leading-relaxed";
+            } else {
+                feedbackContainer.innerHTML = `
+                    <span class="text-rose-400 font-bold block mb-1">
+                        <i class="fas fa-times-circle"></i> CHƯA CHÍNH XÁC!
+                    </span>
+                    <span class="text-slate-400 block mb-1">Đáp án đúng là: <strong class="text-emerald-400">${quiz.correctAnswer}</strong></span>
+                    <span class="text-slate-500">${escapeHtml(quiz.explanation || 'Không có giải thích chi tiết.')}</span>
+                `;
+                feedbackContainer.className = "p-3 rounded-xl bg-rose-950/10 border border-rose-500/20 mt-2 text-[11px] leading-relaxed";
+            }
+        };
+
+        window.checkPracticeShortAnswer = function(quizId) {
+            const quiz = cbrQuizzes.find(q => q.id === quizId);
+            if (!quiz) return;
+
+            const input = document.getElementById(`short-input-${quizId}`);
+            const userAns = input.value.trim().toLowerCase();
+            const correctAns = (quiz.correctAnswerShort || '').trim().toLowerCase();
+
+            const isCorrect = userAns === correctAns && correctAns !== "";
+            const feedbackContainer = document.getElementById(`quiz-explain-${quizId}`);
+
+            feedbackContainer.classList.remove('hidden');
+
+            if (isCorrect) {
+                feedbackContainer.innerHTML = `
+                    <span class="text-emerald-400 font-bold block mb-1">
+                        <i class="fas fa-check-circle"></i> ĐÁP ÁN CHÍNH XÁC!
+                    </span>
+                    <span class="text-slate-400">${escapeHtml(quiz.explanation || 'Không có giải thích chi tiết.')}</span>
+                `;
+                feedbackContainer.className = "p-3 rounded-xl bg-emerald-950/10 border border-emerald-500/20 mt-2 text-[11px] leading-relaxed";
+            } else {
+                feedbackContainer.innerHTML = `
+                    <span class="text-rose-400 font-bold block mb-1">
+                        <i class="fas fa-times-circle"></i> CHƯA CHÍNH XÁC!
+                    </span>
+                    <span class="text-slate-400 block mb-1">Đáp án chuẩn: <strong class="text-emerald-400">${escapeHtml(quiz.correctAnswerShort)}</strong></span>
+                    <span class="text-slate-500">${escapeHtml(quiz.explanation || 'Không có giải thích chi tiết.')}</span>
+                `;
+                feedbackContainer.className = "p-3 rounded-xl bg-rose-950/10 border border-rose-500/20 mt-2 text-[11px] leading-relaxed";
+            }
+        };
+
+        // Close Document state cleaner
+        window.closeActiveDoc = function() {
+            document.getElementById('viewer-welcome').classList.remove('hidden');
+            document.getElementById('viewer-header').classList.add('hidden');
+            document.getElementById('doc-iframe').classList.add('hidden');
+            document.getElementById('doc-iframe').src = "";
+            document.getElementById('iframe-blocked-warning').classList.add('hidden');
+            
+            document.querySelectorAll('#docs-list-container > div').forEach(card => {
+                card.classList.remove('glass-panel-active', 'border-amber-500/20');
+            });
+
+            document.getElementById('quiz-wrapper').innerHTML = `
+                <div class="text-center py-8 text-slate-500 text-xs">
+                    <i class="fas fa-info-circle mb-2 text-lg block opacity-20"></i>
+                    <span>Nhấp vào bài học bất kỳ ở danh sách để hiển thị các câu hỏi ôn tập tương ứng.</span>
+                </div>
+            `;
+            document.getElementById('quiz-count-lbl').textContent = "Chưa chọn bài";
+        };
+
+        // Semantic Matcher for Community-Based Rehabilitation keywords
+        function extractKeywordsMatch(title, content) {
+            const keywords = [
+                'cộng đồng', 'khuyết tật', 'hòa nhập', 'người khuyết tật', 'cbr', 'gia đình', 
+                'địa phương', 'chuyển giao', 'bình đẳng', 'vai trò', 'phát hiện sớm', 'can thiệp'
+            ];
+            return keywords.some(kw => title.includes(kw) && content.includes(kw));
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Custom clean notification system
+        window.triggerToast = function(msg, accentColorClass = "amber-500") {
+            const toast = document.getElementById('toast');
+            const dot = document.getElementById('toast-dot');
+            const text = document.getElementById('toast-text');
+
+            dot.className = `w-2 h-2 rounded-full bg-${accentColorClass}`;
+            text.textContent = msg;
+
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 3000);
+        };
+    </script>
     
     <div id="footer-placeholder"></div>
 
-        <script src="/script.js"></script>
-        <script src="/banner_trang_con.js"></script>
+    <script type="module" src="/script.js"></script>
 </body>
 </html>

@@ -139,8 +139,8 @@
             <div class="space-y-6 fade-in-up">
                 
                 <h1 class="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight leading-[1.1]">
-                    HOẠT ĐỘNG <br class="hidden sm:inline">
-                    <span class="bg-gradient-to-r from-indigo-400 via-purple-300 to-rose-400 bg-clip-text text-transparent">TRỊ LIỆU LÂM SÀNG</span>
+                    PHỤC HỒI CHỨC NĂNG <br class="hidden sm:inline">
+                    <span class="bg-gradient-to-r from-indigo-400 via-purple-300 to-rose-400 bg-clip-text text-transparent">HOẠT ĐỘNG TRỊ LIỆU</span>
                 </h1>
 
                 <!-- Stats Quick view -->
@@ -214,6 +214,21 @@
             <div class="flex-grow text-center sm:text-left space-y-1">
                 <h3 id="cat-headline" class="text-lg sm:text-xl font-extrabold text-white">Đang tải dữ liệu chuyên ngành...</h3>
                 <p id="cat-subline" class="text-xs sm:text-sm text-slate-400 leading-relaxed font-normal">Hệ thống đang đồng bộ dữ liệu với máy chủ...</p>
+            </div>
+        </div>
+
+        <!-- SORTING & ITEM COUNT CONTROLLER -->
+        <div class="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-900/30 border border-slate-800/50 p-4 rounded-2xl glass-panel">
+            <div class="text-sm text-slate-400">
+                Có <span id="filtered-count" class="font-extrabold text-indigo-400">0</span> tài liệu khả dụng
+            </div>
+            <div class="flex items-center gap-2 bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2 text-xs font-semibold text-slate-300">
+                <span class="text-slate-500 flex items-center gap-1"><i class="fa-solid fa-arrow-down-wide-short"></i> Sắp xếp theo:</span>
+                <select id="sort-selector" onchange="handleSortChange(this.value)" class="bg-transparent border-none text-indigo-400 focus:outline-none cursor-pointer pr-1 font-extrabold select-none">
+                    <option value="index" class="bg-slate-950 text-slate-300">Thứ tự mặc định</option>
+                    <option value="az" class="bg-slate-950 text-slate-300">Tiêu đề (A → Z)</option>
+                    <option value="za" class="bg-slate-950 text-slate-300">Tiêu đề (Z → A)</option>
+                </select>
             </div>
         </div>
 
@@ -386,6 +401,7 @@
         let localArticles = []; 
         let currentCategory = 'ot_1';
         let searchQuery = '';
+        let currentSort = 'index'; // 'index', 'az', 'za'
 
         /* ====================================
            YOUTUBE URL CONVERSION
@@ -406,7 +422,7 @@
         function setupRealtimeSync() {
             if (!auth.currentUser) return;
 
-            // Truy vấn lấy dữ liệu của chuyên khoa Hoạt động trị liệu (Rule 2: Không dùng compound phức tạp)
+            // Truy vấn lấy dữ liệu của chuyên khoa Hoạt động trị liệu
             const collectionRef = getArticlesCollection();
 
             collectionRef.onSnapshot((querySnapshot) => {
@@ -422,7 +438,6 @@
                         }
                     }
 
-                    // Chỉ lọc dữ liệu hoat_dong_tl ở phía Client để tuân thủ luật cấu trúc Firestore
                     if (artDisc === 'hoat_dong_tl') {
                         tempArticles.push({
                             id: doc.id,
@@ -431,9 +446,7 @@
                     }
                 });
 
-                // Sắp xếp theo order định sẵn giống như quantri
                 localArticles = tempArticles;
-                localArticles.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
                 updateDashboardStats();
                 renderCategoryTabs();
@@ -569,18 +582,65 @@
         window.addEventListener('resize', updateScrollState);
 
         /* ====================================
+           STREAMING_CHUNK: Setting up sorting logic...
+           ==================================== */
+        function handleSortChange(sortType) {
+            currentSort = sortType;
+            renderArticles();
+        }
+
+        function executeSorting(articles) {
+            return articles.sort((a, b) => {
+                if (currentSort === 'index') {
+                    const getOrderVal = (item) => {
+                        if (item.order !== undefined && item.order !== null && item.order !== '') return Number(item.order);
+                        if (item.index !== undefined && item.index !== null && item.index !== '') return Number(item.index);
+                        if (item.stt !== undefined && item.stt !== null && item.stt !== '') return Number(item.stt);
+                        return 999999;
+                    };
+                    const orderA = getOrderVal(a);
+                    const orderB = getOrderVal(b);
+
+                    if (orderA !== orderB) {
+                        return orderA - orderB;
+                    }
+                    const titleA = (a.title || '').trim();
+                    const titleB = (b.title || '').trim();
+                    return titleA.localeCompare(titleB, 'vi', { sensitivity: 'base' });
+                } 
+                
+                if (currentSort === 'az') {
+                    const titleA = (a.title || '').trim();
+                    const titleB = (b.title || '').trim();
+                    return titleA.localeCompare(titleB, 'vi', { sensitivity: 'base' });
+                } 
+                
+                if (currentSort === 'za') {
+                    const titleA = (a.title || '').trim();
+                    const titleB = (b.title || '').trim();
+                    return titleB.localeCompare(titleA, 'vi', { sensitivity: 'base' });
+                }
+
+                return 0;
+            });
+        }
+
+        /* ====================================
+           STREAMING_CHUNK: Rendering dynamic articles and count updates...
+           ==================================== */
+        /* ====================================
            RENDER ARTICLES (User View)
            ==================================== */
         function renderArticles() {
             const container = document.getElementById('articles-container');
             const emptyState = document.getElementById('empty-state');
+            const filteredCountEl = document.getElementById('filtered-count');
             if(!container || !emptyState) return;
 
             container.innerHTML = '';
             let matchingArticles = [];
 
             if(searchQuery.trim() !== '') {
-                // Tìm kiếm toàn diện
                 localArticles.forEach(art => {
                     const lowTitle = (art.title || '').toLowerCase();
                     const lowSearch = searchQuery.toLowerCase();
@@ -589,8 +649,15 @@
                     }
                 });
             } else {
-                // Hiển thị bài viết theo danh mục được chọn
                 matchingArticles = localArticles.filter(art => art.categoryKey === currentCategory);
+            }
+
+            // Sắp xếp bài viết theo cơ chế được cấu hình
+            matchingArticles = executeSorting(matchingArticles);
+
+            // Cập nhật số lượng đếm
+            if(filteredCountEl) {
+                filteredCountEl.innerText = matchingArticles.length;
             }
 
             if(matchingArticles.length === 0) {
@@ -652,17 +719,29 @@
                     `;
                 }
 
+                // Hiển thị chỉ mục ưu tiên STT lên thẻ nếu tồn tại
+                let orderDisplay = '';
+                if (article.order !== undefined || article.index !== undefined || article.stt !== undefined) {
+                    const num = article.order !== undefined ? article.order : (article.index !== undefined ? article.index : article.stt);
+                    if (num !== '' && num !== null) {
+                        orderDisplay = ``;
+                    }
+                }
+
                 let actionText = article.articleUrl ? 'Mở liên kết gốc' : 'Xem chi tiết can thiệp';
                 let actionIcon = article.articleUrl ? 'fa-arrow-up-right-from-square' : 'fa-angle-right';
 
                 card.innerHTML = `
                     <div class="space-y-4">
-                        <div class="flex flex-wrap items-center gap-2">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
                             <span class="px-3 py-1 rounded-lg text-[9px] font-extrabold tracking-widest uppercase ${categoryObj.badgeBg}">
                                 ${categoryObj.name}
                             </span>
-                            <div class="flex flex-wrap gap-1">
-                                ${mediaIndicators}
+                            <div class="flex items-center gap-1.5">
+                                ${orderDisplay}
+                                <div class="flex flex-wrap gap-1">
+                                    ${mediaIndicators}
+                                </div>
                             </div>
                         </div>
                         <h4 class="text-base font-bold text-slate-100 line-clamp-2 hover:text-indigo-400 transition-colors duration-200 leading-snug">${article.title || 'Đang cập nhật kỹ thuật'}</h4>

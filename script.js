@@ -1962,6 +1962,13 @@
                     category: 'Hệ thống'
                 },
                 {
+                    title: normalizeText('Hệ thống tính lãi suất'),
+                    description: 'Công cụ tính lãi suất.',
+                    url: '/hethong_laisuat.html',
+                    icon: 'fa-pen-to-square',
+                    category: 'Hệ thống'
+                },
+                {
                     title: normalizeText('Hệ thống tạo câu hỏi'),
                     description: 'Công cụ hỗ trợ thêm tài liệu và đề ôn tập lâm sàng.',
                     url: '/formnhapcauhoi.html',
