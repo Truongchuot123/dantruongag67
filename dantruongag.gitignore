@@ -1,0 +1,11 @@
+# Chặn file chứa biến môi trường nhạy cảm
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Chặn thư mục thư viện (nếu bạn dùng Node.js)
+node_modules/
+# Chặn file chứa cấu hình Firebase không cho push lên GitHub
+firebase-config.js

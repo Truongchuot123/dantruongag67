@@ -1,7 +1,6 @@
 // ================= GOOGLE APPS SCRIPT CONFIGURATION =================
         const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPan-KQDfgVodlpBL06ZjkSrIKUTgS3syVxJCZ67JhJaMktXfjz_99c6WptPuzjzLN_g/exec";
 
-        // Danh sách liên kết học tập thực tế dùng cho trang chủ
         const allExternalLinks = [
             "/đo_huyet_ap.html",
             "/rua_tay.html",
@@ -1818,9 +1817,9 @@
                 } else if (action === 'other') {
                     showSubMenu();
                 } else if (action === 'q_search') {
-                    showAnswer("Tìm kiếm bài học", "Bạn vui lòng nhấp vào biểu tượng kính lúp ở góc trên bên phải để mở công cụ tìm kiếm. Sau đó nhập từ khóa và xem các kết xuất hiện ra tức thì.");
+                    showAnswer("Tìm kiếm tài liệu", "Bạn vui lòng nhấp vào biểu tượng kính lúp ở góc trên bên phải để mở công cụ tìm kiếm. Sau đó nhập từ khóa và xem kết quả.");
                 } else if (action === 'q_password') {
-                    showAnswer("Tài khoản đăng nhập", "Bạn chưa có tài khoản đăng nhập hoặc mật khẩu không đúng. Vui lòng liên hệ trực tiếp để được cấp lại tài khoản.");
+                    showAnswer("Tôi không có tài khoản", "Bạn chưa có tài khoản đăng nhập hoặc mật khẩu không đúng. Vui lòng liên hệ trực tiếp để được cấp lại tài khoản.");
                 } else if (action === 'main_menu') {
                     showMainMenu();
                 }
@@ -1864,7 +1863,7 @@
             function showSubMenu() {
                 speech.innerHTML = `
                     <div class="assistant-title flex items-center gap-1.5 text-amber-400">
-                        <i class="fas fa-question-circle text-xs"></i> <span>Giải Đáp Thắc Mắc</span>
+                        <i class="fas fa-question-circle text-xs"></i> <span>Câu hỏi thường gặp</span>
                     </div>
                     <button onclick="handleAssistantAction('q_search')" class="assistant-btn">❓ Tìm kiếm tài liệu như thế nào?</button>
                     <button onclick="handleAssistantAction('q_password')" class="assistant-btn">🔑 Tôi quên mật khẩu đăng nhập?</button>
@@ -1911,7 +1910,7 @@
                     <div class="login-prompt-inline flex flex-col items-center justify-center text-center p-6 bg-slate-800/40 rounded-2xl border border-white/5">
                         <i class="fas fa-lock text-3xl text-amber-400 mb-3 animate-pulse"></i>
                         <h4 class="text-sm font-bold text-white mb-1">Yêu Cầu Đăng Nhập</h4>
-                        <p class="text-xs text-gray-400 mb-4 max-w-xs">Bạn cần đăng nhập tài khoản để tìm kiếm và xem kết quả học tập.</p>
+                        <p class="text-xs text-gray-400 mb-4 max-w-xs">Bạn cần đăng nhập tài khoản để tìm kiếm và xem kết quả.</p>
                         <button onclick="showLoginForm()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-xs transition shadow-lg shadow-indigo-500/25">Đăng nhập ngay</button>
                     </div>`,
 
@@ -1949,7 +1948,7 @@
             let searchableContent = [
                 {
                     title: normalizeText('Trang Chủ'),
-                    description: 'Quay về trang chủ của website học tập.',
+                    description: 'Quay về trang chủ của website.',
                     url: '/index.html',
                     icon: 'fa-home',
                     category: 'Hệ thống'
