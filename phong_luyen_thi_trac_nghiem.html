@@ -342,16 +342,8 @@
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Cấu hình máy chủ Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
-            authDomain: "dulieuweb-6541e.firebaseapp.com",
-            projectId: "dulieuweb-6541e",
-            storageBucket: "dulieuweb-6541e.firebasestorage.app",
-            messagingSenderId: "215480268517",
-            appId: "1:215480268517:web:16600eafd6839fee5dc60c"
-        };
-
+        import { firebaseConfig } from "/dl.js";
+        
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
