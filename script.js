@@ -8,7 +8,8 @@
             "/tienganh/IPA.html",
             "/PHCN/HĐTL/dung_cu_vltl.html",
             "/yhoccotruyen/tra_cuu_huyet.html",
-            "/phong_luyen_thi_trac_nghiem.html"
+            "/phong_luyen_thi_trac_nghiem.html",
+            "/APITIS.html"
         ];
 
         let articlesDb = [];

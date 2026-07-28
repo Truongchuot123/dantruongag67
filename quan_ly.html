@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Lý Tài Khoản Firebase - Phân Quyền</title>
+  <style>
+    :root {
+      --primary-color: #007bff;
+      --danger-color: #dc3545;
+      --warning-color: #ffc107;
+      --bg-color: #f4f6f9;
+      --card-bg: #ffffff;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background-color: var(--bg-color);
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 950px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      padding: 20px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    input, select {
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      background-color: #fff;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary-color);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .btn-submit { background: var(--primary-color); color: #fff; }
+    .btn-cancel { background: #6c757d; color: #fff; display: none; }
+    .btn-edit { background: var(--warning-color); color: #212529; padding: 6px 12px; font-size: 12px; }
+    .btn-delete { background: var(--danger-color); color: #fff; padding: 6px 12px; font-size: 12px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e9ecef;
+    }
+
+    th {
+      background-color: #e9ecef;
+      font-weight: 600;
+    }
+
+    .actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    /* Badge phân quyền */
+    .badge {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .badge-admin { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .badge-vip { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+    .badge-user { background-color: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Quản Lý Tài Khoản & Phân Quyền Firebase</h2>
+
+    <!-- Form Thêm / Cập Nhật -->
+    <div class="card">
+      <h3 id="form-title" style="margin-top:0">Thêm Tài Khoản Mới</h3>
+      <form id="account-form">
+        <input type="hidden" id="account-id">
+        <div class="form-group">
+          <input type="text" id="username" placeholder="Tên đăng nhập" required>
+          <input type="text" id="password" placeholder="Mật khẩu" required>
+          <input type="text" id="displayName" placeholder="Tên hiển thị" required>
+          
+          <!-- Trường chọn vai trò/quyền -->
+          <select id="role" required>
+            <option value="user">Người dùng (User)</option>
+            <option value="vip">Thành viên VIP</option>
+            <option value="admin">Quản trị viên (Admin)</option>
+          </select>
+        </div>
+        <div class="btn-group">
+          <button type="submit" id="btn-save" class="btn-submit">Lưu dữ liệu</button>
+          <button type="button" id="btn-cancel" class="btn-cancel">Hủy chỉnh sửa</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Bảng Hiển Thị Dữ Liệu -->
+    <div class="card">
+      <h3 style="margin-top:0">Danh Sách Tài Khoản</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Tên đăng nhập</th>
+            <th>Mật khẩu</th>
+            <th>Tên hiển thị</th>
+            <th>Quyền truy cập</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="account-list">
+          <tr>
+            <td colspan="6" style="text-align:center; color:#888;">Đang kết nối cơ sở dữ liệu...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Firebase SDK Modules -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { 
+      getDatabase, 
+      ref, 
+      push, 
+      onValue, 
+      remove, 
+      update 
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    // 1. Cấu hình Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
+      authDomain: "dulieuweb-6541e.firebaseapp.com",
+      databaseURL: "https://dulieuweb-6541e-default-rtdb.firebaseio.com",
+      projectId: "dulieuweb-6541e",
+      storageBucket: "dulieuweb-6541e.firebasestorage.app",
+      messagingSenderId: "215480268517",
+      appId: "1:215480268517:web:16600eafd6839fee5dc60c"
+    };
+
+    // 2. Khởi tạo Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const accountsRef = ref(db, 'accounts');
+
+    // 3. DOM Elements
+    const form = document.getElementById('account-form');
+    const accountIdInput = document.getElementById('account-id');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const displayNameInput = document.getElementById('displayName');
+    const roleSelect = document.getElementById('role');
+    const accountList = document.getElementById('account-list');
+    const formTitle = document.getElementById('form-title');
+    const btnSave = document.getElementById('btn-save');
+    const btnCancel = document.getElementById('btn-cancel');
+
+    // 4. Lắng nghe dữ liệu thời gian thực
+    onValue(accountsRef, (snapshot) => {
+      accountList.innerHTML = '';
+      const data = snapshot.val();
+
+      if (!data) {
+        accountList.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888;">Chưa có dữ liệu nào.</td></tr>`;
+        return;
+      }
+
+      let index = 1;
+      for (let id in data) {
+        const item = data[id];
+        const role = item.role || 'user'; // Mặc định là user nếu chưa có role
+        const row = document.createElement('tr');
+
+        // Định dạng nhãn (badge) theo quyền
+        let roleBadge = `<span class="badge badge-user">Người dùng</span>`;
+        if (role === 'admin') {
+          roleBadge = `<span class="badge badge-admin">Admin</span>`;
+        } else if (role === 'vip') {
+          roleBadge = `<span class="badge badge-vip">VIP</span>`;
+        }
+
+        row.innerHTML = `
+          <td>${index++}</td>
+          <td>${escapeHtml(item.username)}</td>
+          <td><code>${escapeHtml(item.password)}</code></td>
+          <td>${escapeHtml(item.displayName)}</td>
+          <td>${roleBadge}</td>
+          <td class="actions">
+            <button class="btn-edit" 
+              data-id="${id}" 
+              data-username="${escapeHtml(item.username)}" 
+              data-password="${escapeHtml(item.password)}" 
+              data-displayname="${escapeHtml(item.displayName)}"
+              data-role="${role}">Sửa</button>
+            <button class="btn-delete" data-id="${id}">Xóa</button>
+          </td>
+        `;
+        accountList.appendChild(row);
+      }
+    }, (error) => {
+      accountList.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Lỗi kết nối: ${error.message}</td></tr>`;
+    });
+
+    // 5. Thêm / Cập nhật tài khoản bao gồm vai trò
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const id = accountIdInput.value;
+      const accountData = {
+        username: usernameInput.value.trim(),
+        password: passwordInput.value.trim(),
+        displayName: displayNameInput.value.trim(),
+        role: roleSelect.value
+      };
+
+      if (id) {
+        update(ref(db, `accounts/${id}`), accountData)
+          .then(() => resetForm())
+          .catch((err) => alert("Lỗi cập nhật: " + err.message));
+      } else {
+        push(accountsRef, accountData)
+          .then(() => resetForm())
+          .catch((err) => alert("Lỗi thêm mới: " + err.message));
+      }
+    });
+
+    // 6. Xử lý nút Sửa / Xóa
+    accountList.addEventListener('click', (e) => {
+      const target = e.target;
+      const id = target.getAttribute('data-id');
+
+      if (target.classList.contains('btn-delete')) {
+        if (confirm("Bạn có chắc muốn xóa tài khoản này?")) {
+          remove(ref(db, `accounts/${id}`))
+            .catch((err) => alert("Lỗi xóa: " + err.message));
+        }
+      }
+
+      if (target.classList.contains('btn-edit')) {
+        accountIdInput.value = id;
+        usernameInput.value = target.getAttribute('data-username');
+        passwordInput.value = target.getAttribute('data-password');
+        displayNameInput.value = target.getAttribute('data-displayname');
+        roleSelect.value = target.getAttribute('data-role') || 'user';
+
+        formTitle.textContent = "Chỉnh Sửa Tài Khoản";
+        btnSave.textContent = "Cập nhật";
+        btnCancel.style.display = "inline-block";
+      }
+    });
+
+    // 7. Reset Form
+    btnCancel.addEventListener('click', resetForm);
+
+    function resetForm() {
+      form.reset();
+      accountIdInput.value = '';
+      roleSelect.value = 'user';
+      formTitle.textContent = "Thêm Tài Khoản Mới";
+      btnSave.textContent = "Lưu dữ liệu";
+      btnCancel.style.display = "none";
+    }
+
+    function escapeHtml(str) {
+      return str ? str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;") : '';
+    }
+  </script>
+</body>
+</html>

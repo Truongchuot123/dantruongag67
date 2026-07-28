@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="vi" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Luyện Thi Tiếng Anh</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: {
+                            bg: '#121212',
+                            panel: '#1E1E1E',
+                            border: '#333333',
+                            text: '#E0E0E0',
+                            textMuted: '#A0A0A0'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { transition: background-color 0.3s ease, color 0.3s ease; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(229, 231, 235, 0.8);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        .dark .glass-panel {
+            background: #1E1E1E;
+            border-color: #333333;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+        .option-btn { transition: all 0.2s ease; }
+        .option-btn.correct {
+            border-color: #10b981 !important;
+            background-color: #ecfdf5 !important;
+            color: #065f46 !important;
+        }
+        .dark .option-btn.correct {
+            background-color: rgba(16, 185, 129, 0.2) !important;
+            color: #34d399 !important;
+        }
+        .option-btn.incorrect {
+            border-color: #ef4444 !important;
+            background-color: #fef2f2 !important;
+            color: #991b1b !important;
+        }
+        .dark .option-btn.incorrect {
+            background-color: rgba(239, 68, 68, 0.2) !important;
+            color: #f87171 !important;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; }
+        .fade-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .loader {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #4f46e5;
+            border-radius: 50%;
+            width: 40px; height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        .dark .loader { border: 4px solid rgba(255, 255, 255, 0.1); border-left-color: #818cf8; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .pulse-recording {
+            animation: pulse-red 1.5s infinite;
+        }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 dark:bg-dark-bg dark:text-dark-text min-h-screen flex flex-col font-sans transition-colors duration-300">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-indigo-600 dark:bg-indigo-900 text-white shadow-lg sticky top-0 z-50 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center cursor-pointer group" onclick="app.navigate('home')">
+                    <div class="bg-white/20 p-2 rounded-xl mr-3 group-hover:bg-white/30 transition-colors">
+                        <i class="fas fa-graduation-cap text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="font-extrabold text-xl tracking-tight block leading-none">HỆ THỐNG LUYỆN THI TIẾNG ANH</span>
+                        <span class="text-[10px] opacity-80 uppercase tracking-widest font-semibold">Hệ thống luyện thi hiện đại</span>
+                    </div>
+                </div>
+                
+                <!-- Main Nav Links -->
+                <div class="flex items-center space-x-1 sm:space-x-3">
+                    <button onclick="app.navigate('vocab_book')" class="hover:bg-white/10 px-3 py-2 rounded-xl text-sm font-medium transition-colors flex items-center">
+                        <i class="fas fa-book-bookmark mr-1.5 text-yellow-300"></i> <span class="hidden sm:inline">Sổ tay</span>
+                    </button>
+                    <button onclick="app.navigate('history')" class="hover:bg-white/10 px-3 py-2 rounded-xl text-sm font-medium transition-colors flex items-center">
+                        <i class="fas fa-clock-rotate-left mr-1.5 text-cyan-300"></i> <span class="hidden sm:inline">Lịch sử</span>
+                    </button>
+                    <button onclick="app.navigate('admin_dashboard')" class="hover:bg-white/10 px-3 py-2 rounded-xl text-sm font-medium transition-colors flex items-center text-amber-300 hover:text-amber-100">
+                        <i class="fas fa-sliders mr-1.5"></i> <span class="hidden sm:inline">Quản trị</span>
+                    </button>
+                    
+                    <div class="w-px h-6 bg-indigo-400 dark:bg-indigo-600 mx-1"></div>
+                    
+                    <!-- Dark Mode Toggle -->
+                    <button id="theme-toggle" onclick="app.toggleTheme()" class="hover:bg-white/10 p-2 rounded-full transition-colors w-10 h-10 flex items-center justify-center">
+                        <i class="fas fa-moon text-lg" id="theme-icon"></i>
+                    </button>
+                    
+                    <!-- User Status -->
+                    <div id="user-status" class="hidden sm:flex text-xs bg-black/20 px-3 py-1.5 rounded-full items-center font-mono">
+                        <i class="fas fa-circle-notch fa-spin mr-2"></i> Kết nối...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Dynamic views will render here -->
+    </main>
+
+    <!-- Modal Container -->
+    <div id="modal-container"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB8AVoyDEpY2U5migHCQ_r7DEOC5QYkqMI",
+            authDomain: "luyentap-2f2ab.firebaseapp.com",
+            databaseURL: "https://luyentap-2f2ab-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "luyentap-2f2ab",
+            storageBucket: "luyentap-2f2ab.firebasestorage.app",
+            messagingSenderId: "646969953114",
+            appId: "1:646969953114:web:71dd282afdb53d02924163"
+        };
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'engtest-pro';
+        const sysFirebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : firebaseConfig;
+
+        const firebaseApp = initializeApp(sysFirebaseConfig);
+        const auth = getAuth(firebaseApp);
+        const db = getFirestore(firebaseApp);
+
+        // System Skill Categories Configuration
+        const CATEGORIES = {
+            grammar: { 
+                id: 'grammar', 
+                name: 'Grammar & Vocabulary', 
+                icon: 'fa-spell-check', 
+                color: 'bg-blue-600', 
+                textClass: 'text-blue-600',
+                timeLimit: 1500, // 25 min timer
+                desc: 'Gồm 2 Part (Part 1: 25 câu Grammar. Part 2: 25 câu Vocabulary). <br>Thời gian: 25 phút.'
+            },
+            reading: { 
+                id: 'reading', 
+                name: 'Reading', 
+                icon: 'fa-book-open', 
+                color: 'bg-emerald-600', 
+                textClass: 'text-emerald-600',
+                timeLimit: 2400, // 40 min timer
+                desc: 'Thời gian: 40 phút.'
+            },
+            listening: { 
+                id: 'listening', 
+                name: 'Listening', 
+                icon: 'fa-headphones', 
+                color: 'bg-purple-600', 
+                textClass: 'text-purple-600',
+                timeLimit: null, // No time limit
+                desc: 'Chỉ được nghe tối đa 2 lần cho mỗi bài nghe.'
+            },
+            writing: { 
+                id: 'writing', 
+                name: 'Writing', 
+                icon: 'fa-pen-nib', 
+                color: 'bg-orange-600', 
+                textClass: 'text-orange-600',
+                timeLimit: null, // No time limit
+                desc: 'Part 1: 3 câu hỏi ngắn (1-5 từ hoặc 20-30 từ). Part 2: Viết thư/email (120-150 từ).'
+            },
+            speaking: { 
+                id: 'speaking', 
+                name: 'Speaking', 
+                icon: 'fa-microphone', 
+                color: 'bg-rose-600', 
+                textClass: 'text-rose-600',
+                timeLimit: null, // No time limit
+                desc: 'Part 1: 3 câu hỏi đơn. Part 2: 1 ảnh & câu phụ. Part 3: 2 ảnh so sánh & câu phụ. Tích hợp ghi âm.'
+            }
+        };
+        
+        // Main App Engine & State
+        window.app = {
+            state: {
+                currentView: 'home',
+                activeCategory: 'grammar',
+                user: null,
+                darkMode: false,
+                timerInterval: null,
+                remainingSeconds: 0,
+                historyRecords: [], // Lưu trữ bộ lịch sử đã tải
+                
+                // Audio Recorder State for Speaking
+                mediaRecorder: null,
+                audioChunks: [],
+                isRecording: false,
+
+                // Test Session State
+                test: {
+                    questions: [],
+                    currentIndex: 0,
+                    answers: [], // MCQ or text response
+                    writingAnswers: [], 
+                    speakingAudioBlobs: [], 
+                    listeningPlayCounts: [], // Tracks listening play counts (max 2)
+                    startTime: null,
+                    isReviewMode: false
+                }
+            },
+
+            init: async function() {
+                this.initTheme();
+                this.renderLoading("Đang khởi tạo hệ thống thi...");
+                
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    
+                    onAuthStateChanged(auth, (user) => {
+                        this.state.user = user;
+                        const statusEl = document.getElementById('user-status');
+                        
+                        if (user) {
+                            statusEl.innerHTML = `<i class="fas fa-user-check text-emerald-400 mr-1.5"></i> ${user.uid.substring(0, 6)}`;
+                            if (this.state.currentView === 'home') this.navigate('home');
+                        } else {
+                            statusEl.innerHTML = `<i class="fas fa-exclamation-circle text-rose-400 mr-1.5"></i> Lỗi Auth`;
+                        }
+                    });
+                } catch (error) {
+                    console.error("Auth init error:", error);
+                    this.showNotification("Lỗi kết nối tài khoản", "error");
+                }
+            },
+
+            initTheme: function() {
+                if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    this.state.darkMode = true;
+                    document.documentElement.classList.add('dark');
+                    document.getElementById('theme-icon').className = 'fas fa-sun text-amber-300';
+                } else {
+                    this.state.darkMode = false;
+                    document.documentElement.classList.remove('dark');
+                    document.getElementById('theme-icon').className = 'fas fa-moon text-white';
+                }
+            },
+
+            toggleTheme: function() {
+                this.state.darkMode = !this.state.darkMode;
+                const icon = document.getElementById('theme-icon');
+                if (this.state.darkMode) {
+                    document.documentElement.classList.add('dark');
+                    localStorage.theme = 'dark';
+                    icon.className = 'fas fa-sun text-amber-300';
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.theme = 'light';
+                    icon.className = 'fas fa-moon text-white';
+                }
+            },
+
+            getPublicRef: function(colName) {
+                return collection(db, 'artifacts', appId, 'public', 'data', colName);
+            },
+
+            getPrivateRef: function(colName) {
+                if (!this.state.user) throw new Error("Chưa xác thực người dùng");
+                return collection(db, 'artifacts', appId, 'users', this.state.user.uid, colName);
+            },
+
+            shuffleArray: function(array) {
+                let shuffled = [...array];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+                return shuffled;
+            },
+
+            shuffleQuestionOptions: function(q) {
+                if (!q.options || q.options.length === 0) return q;
+                
+                const originalCorrectText = q.options[q.correctAnswer];
+                let shuffledOptions = [...q.options];
+                shuffledOptions = this.shuffleArray(shuffledOptions);
+                const newCorrectIndex = shuffledOptions.indexOf(originalCorrectText);
+
+                return {
+                    ...q,
+                    options: shuffledOptions,
+                    correctAnswer: newCorrectIndex
+                };
+            },
+
+            stopTimer: function() {
+                if (this.state.timerInterval) {
+                    clearInterval(this.state.timerInterval);
+                    this.state.timerInterval = null;
+                }
+            },
+
+            startTimer: function(durationSeconds) {
+                this.stopTimer();
+                this.state.remainingSeconds = durationSeconds;
+                
+                this.state.timerInterval = setInterval(() => {
+                    this.state.remainingSeconds--;
+                    const timerEl = document.getElementById('test-timer-display');
+                    
+                    if (timerEl) {
+                        const m = Math.floor(this.state.remainingSeconds / 60);
+                        const s = this.state.remainingSeconds % 60;
+                        timerEl.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                        
+                        if (this.state.remainingSeconds <= 300) {
+                            timerEl.classList.add('text-rose-600', 'animate-pulse');
+                        }
+                    }
+
+                    if (this.state.remainingSeconds <= 0) {
+                        this.stopTimer();
+                        this.showNotification("Đã hết thời gian làm bài! Tự động nộp bài...", "warning");
+                        setTimeout(() => this.finishTest(), 1500);
+                    }
+                }, 1000);
+            },
+
+            navigate: function(view, params = {}) {
+                this.stopTimer();
+                if (this.state.isRecording) {
+                    this.stopAudioRecording();
+                }
+
+                if (params.category) {
+                    this.state.activeCategory = params.category;
+                }
+
+                this.state.currentView = view;
+                const contentArea = document.getElementById('app-content');
+
+                switch(view) {
+                    case 'home':
+                        contentArea.innerHTML = this.views.home();
+                        break;
+                    case 'admin_dashboard':
+                        contentArea.innerHTML = this.views.adminDashboard();
+                        break;
+                    case 'admin_manage':
+                        this.loadAdminQuestions(this.state.activeCategory);
+                        break;
+                    case 'test_start':
+                        contentArea.innerHTML = this.views.testStart(this.state.activeCategory);
+                        break;
+                    case 'test_run':
+                        this.startTestSession(this.state.activeCategory);
+                        break;
+                    case 'history':
+                        this.loadHistory();
+                        break;
+                    case 'vocab_book':
+                        this.loadVocabBook();
+                        break;
+                }
+            },
+
+            startTestSession: async function(categoryId) {
+                this.renderLoading("Đang nạp bộ đề thi...");
+                
+                try {
+                    let rawQuestions = [];
+                    const snapshot = await getDocs(query(this.getPublicRef(`questions_${categoryId}`)));
+                    
+                    snapshot.forEach(doc => rawQuestions.push({ id: doc.id, ...doc.data() }));
+
+                    if (rawQuestions.length === 0) {
+                        this.showNotification("Chưa có câu hỏi cho phần thi này", "warning");
+                        this.navigate('test_start', { category: categoryId });
+                        return;
+                    }
+
+                    let preparedQuestions = [];
+
+                    if (categoryId === 'grammar') {
+                        let grammarPart = rawQuestions.filter(q => q.subType === 'grammar');
+                        let vocabPart = rawQuestions.filter(q => q.subType === 'vocab' || !q.subType);
+
+                        if (grammarPart.length === 0) grammarPart = rawQuestions;
+                        if (vocabPart.length === 0) vocabPart = rawQuestions;
+
+                        grammarPart = this.shuffleArray(grammarPart).map(q => this.shuffleQuestionOptions(q));
+                        vocabPart = this.shuffleArray(vocabPart).map(q => this.shuffleQuestionOptions(q));
+
+                        preparedQuestions = [
+                            ...grammarPart.map(q => ({ ...q, subType: 'grammar' })),
+                            ...vocabPart.map(q => ({ ...q, subType: 'vocab' }))
+                        ];
+                    } else if (categoryId === 'reading') {
+                        // Keep questions grouped by Passage Title or ID
+                        preparedQuestions = rawQuestions.sort((a, b) => (a.passageId || '').localeCompare(b.passageId || ''));
+                        preparedQuestions = preparedQuestions.map(q => this.shuffleQuestionOptions(q));
+                    } else if (categoryId === 'speaking' || categoryId === 'writing') {
+                        preparedQuestions = rawQuestions.sort((a, b) => (a.part || 1) - (b.part || 1));
+                    } else {
+                        preparedQuestions = this.shuffleArray(rawQuestions).map(q => this.shuffleQuestionOptions(q));
+                    }
+
+                    this.state.test = {
+                        questions: preparedQuestions,
+                        currentIndex: 0,
+                        answers: new Array(preparedQuestions.length).fill(null),
+                        writingAnswers: new Array(preparedQuestions.length).fill(''),
+                        speakingAudioBlobs: new Array(preparedQuestions.length).fill(null),
+                        listeningPlayCounts: new Array(preparedQuestions.length).fill(0), // Max 2 plays
+                        startTime: new Date(),
+                        isReviewMode: false
+                    };
+
+                    const categoryConfig = CATEGORIES[categoryId];
+                    if (categoryConfig.timeLimit) {
+                        this.startTimer(categoryConfig.timeLimit);
+                    }
+
+                    this.renderCurrentQuestion();
+
+                } catch (error) {
+                    console.error("Test start error:", error);
+                    this.showNotification("Không thể khởi tạo bài thi", "error");
+                    this.navigate('home');
+                }
+            },
+
+            handleAudioEnded: function(qIndex) {
+                const btnText = document.getElementById(`play-btn-text-${qIndex}`);
+                if (btnText) {
+                    const played = this.state.test.listeningPlayCounts[qIndex] || 0;
+                    btnText.innerText = played >= 2 ? 'Đã Hết Lượt Nghe' : 'Phát Lại Audio';
+                }
+                const btn = document.getElementById(`play-btn-${qIndex}`);
+                if (btn && this.state.test.listeningPlayCounts[qIndex] >= 2) {
+                    btn.disabled = true;
+                    btn.className = 'px-6 py-3 bg-gray-400 text-white font-bold rounded-2xl cursor-not-allowed opacity-60 flex items-center';
+                }
+            },
+
+            handleAudioError: function(qIndex) {
+                this.showNotification("Lỗi tải file audio. Vui lòng kiểm tra lại đường dẫn file mp3.", "error");
+            },
+
+            playListeningAudio: function(qIndex) {
+                const test = this.state.test;
+                const played = test.listeningPlayCounts[qIndex] || 0;
+
+                if (played >= 2) {
+                    this.showNotification("Bạn đã hết 2 lượt nghe cho câu hỏi này!", "warning");
+                    return;
+                }
+
+                const audioEl = document.getElementById(`audio-player-${qIndex}`);
+                if (audioEl) {
+                    if (!audioEl.paused) {
+                        return; // Tránh bấm nhiều lần khi đang phát
+                    }
+
+                    audioEl.currentTime = 0;
+                    audioEl.play().then(() => {
+                        test.listeningPlayCounts[qIndex] = played + 1;
+                        const btnText = document.getElementById(`play-btn-text-${qIndex}`);
+                        const counterText = document.getElementById(`play-counter-${qIndex}`);
+                        
+                        if (counterText) {
+                            counterText.innerText = `Đã nghe ${test.listeningPlayCounts[qIndex]}/2 lần`;
+                        }
+
+                        if (btnText) {
+                            btnText.innerText = 'Đang phát...';
+                        }
+                    }).catch(e => {
+                        console.error("Audio error:", e);
+                        this.showNotification("Không thể phát audio. Kiểm tra lại URL.", "error");
+                    });
+                }
+            },
+
+            renderCurrentQuestion: function() {
+                const test = this.state.test;
+                const question = test.questions[test.currentIndex];
+                const cat = CATEGORIES[this.state.activeCategory];
+
+                if (!question) {
+                    this.finishTest();
+                    return;
+                }
+
+                document.getElementById('app-content').innerHTML = this.views.testInterface(
+                    question,
+                    test.currentIndex,
+                    test.questions.length,
+                    cat,
+                    test.answers[test.currentIndex]
+                );
+            },
+
+            toggleAudioRecording: async function() {
+                if (this.state.isRecording) {
+                    this.stopAudioRecording();
+                } else {
+                    await this.startAudioRecording();
+                }
+            },
+
+            startAudioRecording: async function() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    this.state.audioChunks = [];
+                    this.state.mediaRecorder = new MediaRecorder(stream);
+
+                    this.state.mediaRecorder.ondataavailable = (event) => {
+                        if (event.data.size > 0) {
+                            this.state.audioChunks.push(event.data);
+                        }
+                    };
+
+                    this.state.mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(this.state.audioChunks, { type: 'audio/webm' });
+                        const reader = new FileReader();
+                        reader.readAsDataURL(audioBlob);
+                        reader.onloadend = () => {
+                            const base64Audio = reader.result;
+                            const currentIndex = this.state.test.currentIndex;
+                            this.state.test.speakingAudioBlobs[currentIndex] = base64Audio;
+                            this.state.test.answers[currentIndex] = { selected: true, isCorrect: true };
+                            
+                            const audioPreview = document.getElementById('audio-recording-preview');
+                            if (audioPreview) {
+                                audioPreview.src = base64Audio;
+                                audioPreview.classList.remove('hidden');
+                            }
+                            this.showNotification("Đã ghi âm bài nói thành công!", "success");
+                        };
+                    };
+
+                    this.state.mediaRecorder.start();
+                    this.state.isRecording = true;
+
+                    const recBtn = document.getElementById('record-mic-btn');
+                    if (recBtn) {
+                        recBtn.innerHTML = '<i class="fas fa-stop text-white mr-2"></i> Dừng Ghi Âm';
+                        recBtn.className = 'px-6 py-3 bg-rose-600 text-white font-bold rounded-2xl pulse-recording flex items-center shadow-lg';
+                    }
+                    const statusText = document.getElementById('recording-status-text');
+                    if (statusText) statusText.innerText = '🔴 Đang ghi âm bài nói của bạn... Hãy phát âm rõ ràng.';
+
+                } catch (err) {
+                    console.error("Mic Error:", err);
+                    this.showNotification("Không thể kết nối Micro. Vui lòng cấp quyền truy cập Mic.", "error");
+                }
+            },
+
+            stopAudioRecording: function() {
+                if (this.state.mediaRecorder && this.state.isRecording) {
+                    this.state.mediaRecorder.stop();
+                    this.state.isRecording = false;
+                    this.state.mediaRecorder.stream.getTracks().forEach(track => track.stop());
+
+                    const recBtn = document.getElementById('record-mic-btn');
+                    if (recBtn) {
+                        recBtn.innerHTML = '<i class="fas fa-microphone text-white mr-2"></i> Ghi Âm Lại';
+                        recBtn.className = 'px-6 py-3 bg-indigo-600 text-white font-bold rounded-2xl flex items-center shadow-md hover:bg-indigo-700';
+                    }
+                    const statusText = document.getElementById('recording-status-text');
+                    if (statusText) statusText.innerText = '✅ Đã hoàn thành ghi âm.';
+                }
+            },
+
+            selectOption: function(optionIndex) {
+                const test = this.state.test;
+                if (test.answers[test.currentIndex] !== null || test.isReviewMode) return;
+
+                const question = test.questions[test.currentIndex];
+                const isCorrect = (optionIndex === question.correctAnswer);
+
+                test.answers[test.currentIndex] = {
+                    selected: optionIndex,
+                    isCorrect: isCorrect
+                };
+
+                this.applyFeedbackStyles(question, optionIndex, isCorrect);
+            },
+
+            saveWritingInput: function(val) {
+                const test = this.state.test;
+                test.writingAnswers[test.currentIndex] = val;
+                
+                const wordCount = val.trim() ? val.trim().split(/\s+/).length : 0;
+                const counterEl = document.getElementById('word-counter');
+                if (counterEl) counterEl.innerText = `${wordCount} từ`;
+                
+                test.answers[test.currentIndex] = { selected: true, isCorrect: true };
+            },
+
+            applyFeedbackStyles: function(question, selectedIndex, isCorrect) {
+                const buttons = document.querySelectorAll('.option-btn');
+                
+                buttons.forEach((btn, idx) => {
+                    btn.classList.remove('hover:border-indigo-300', 'hover:bg-indigo-50', 'dark:hover:border-indigo-500', 'dark:hover:bg-indigo-900/20', 'cursor-pointer');
+                    btn.classList.add('cursor-default');
+                    btn.onclick = null;
+                    
+                    const iconBox = btn.querySelector('.icon-container');
+                    
+                    if (idx === question.correctAnswer) {
+                        btn.classList.add('correct');
+                        iconBox.innerHTML = '<i class="fas fa-check"></i>';
+                        iconBox.className = 'icon-container w-8 h-8 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center mr-4 shrink-0 text-sm';
+                    } else if (idx === selectedIndex && !isCorrect) {
+                        btn.classList.add('incorrect');
+                        iconBox.innerHTML = '<i class="fas fa-times"></i>';
+                        iconBox.className = 'icon-container w-8 h-8 rounded-full bg-rose-500 text-white font-bold flex items-center justify-center mr-4 shrink-0 text-sm';
+                    } else {
+                        btn.classList.add('opacity-40');
+                    }
+                });
+
+                const feedbackArea = document.getElementById('feedback-area');
+                if (feedbackArea) feedbackArea.classList.remove('hidden');
+            },
+
+            nextQuestion: function() {
+                if (this.state.isRecording) {
+                    this.stopAudioRecording();
+                }
+
+                const test = this.state.test;
+                const catId = this.state.activeCategory;
+
+                if (!['writing', 'speaking'].includes(catId) && test.answers[test.currentIndex] === null) {
+                    this.showNotification("Vui lòng chọn đáp án trước khi chuyển câu", "warning");
+                    return;
+                }
+
+                test.currentIndex++;
+
+                if (test.currentIndex >= test.questions.length) {
+                    this.finishTest();
+                } else {
+                    this.renderCurrentQuestion();
+                }
+            },
+
+            prevQuestion: function() {
+                if (this.state.isRecording) {
+                    this.stopAudioRecording();
+                }
+                const test = this.state.test;
+                if (test.currentIndex > 0) {
+                    test.currentIndex--;
+                    this.renderCurrentQuestion();
+                }
+            },
+
+            finishTest: async function() {
+                this.stopTimer();
+                if (this.state.isRecording) {
+                    this.stopAudioRecording();
+                }
+
+                this.renderLoading("Đang tổng hợp điểm và lưu bài thi...");
+                
+                const test = this.state.test;
+                let correctCount = 0;
+                let total = test.questions.length;
+
+                test.answers.forEach(ans => {
+                    if (ans && ans.isCorrect) correctCount++;
+                });
+
+                const percentage = total > 0 ? Math.round((correctCount / total) * 100) : 100;
+                const timeTakenSec = Math.round((new Date() - test.startTime) / 1000);
+
+                const record = {
+                    categoryId: this.state.activeCategory,
+                    categoryName: CATEGORIES[this.state.activeCategory].name,
+                    correctCount: correctCount,
+                    totalQuestions: total,
+                    score: percentage,
+                    timeTakenSec: timeTakenSec,
+                    date: new Date().toISOString(),
+                    questions: test.questions,
+                    answers: test.answers,
+                    writingAnswers: test.writingAnswers,
+                    speakingAudioBlobs: test.speakingAudioBlobs
+                };
+
+                try {
+                    await addDoc(this.getPrivateRef('test_history'), record);
+                } catch (e) {
+                    console.error("Lỗi lưu lịch sử thi:", e);
+                }
+
+                this.renderResultScreen(correctCount, total, percentage, timeTakenSec);
+            },
+
+            renderResultScreen: function(correct, total, percentage, timeTakenSec) {
+                const cat = CATEGORIES[this.state.activeCategory];
+                const mins = Math.floor(timeTakenSec / 60);
+                const secs = timeTakenSec % 60;
+                const timeStr = `${mins > 0 ? mins + ' phút ' : ''}${secs} giây`;
+
+                document.getElementById('app-content').innerHTML = `
+                    <div class="max-w-2xl mx-auto mt-6 fade-in">
+                        <div class="glass-panel rounded-3xl p-8 text-center relative overflow-hidden shadow-xl">
+                            <div class="w-20 h-20 mx-auto rounded-full bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 text-3xl mb-4 border border-indigo-100 dark:border-indigo-800">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-1">Hoàn Thành Bài Thi!</h2>
+                            <p class="text-gray-500 dark:text-dark-textMuted mb-6">${cat.name}</p>
+
+                            ${['writing', 'speaking'].includes(cat.id) ? `
+                                <div class="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 p-4 rounded-2xl mb-6 text-sm text-left leading-relaxed">
+                                    <i class="fas fa-circle-check mr-2 text-emerald-600"></i> Bài thi tự luận/ghi âm bài nói của bạn đã được lưu trữ thành công.
+                                </div>
+                            ` : `
+                                <div class="bg-gray-50 dark:bg-dark-bg p-6 rounded-2xl mb-6 border border-gray-100 dark:border-dark-border">
+                                    <div class="text-5xl font-black ${percentage >= 70 ? 'text-emerald-500' : 'text-indigo-600'} mb-2">${percentage}%</div>
+                                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">Trả lời đúng ${correct} / ${total} câu hỏi</p>
+                                    <p class="text-xs text-gray-400 mt-1">Thời gian làm bài: ${timeStr}</p>
+                                </div>
+                            `}
+
+                            <div class="flex flex-col sm:flex-row justify-center gap-3">
+                                <button onclick="app.navigate('home')" class="px-6 py-3 bg-gray-100 dark:bg-dark-bg text-gray-700 dark:text-gray-300 rounded-xl font-bold hover:bg-gray-200 transition-colors">
+                                    <i class="fas fa-house mr-2"></i> Trang chủ
+                                </button>
+                                <button onclick="app.startTestSession('${cat.id}')" class="px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-200 dark:shadow-none transition-colors">
+                                    <i class="fas fa-rotate-right mr-2"></i> Thi lại ngay
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+
+            loadAdminQuestions: async function(categoryId) {
+                this.renderLoading(`Đang nạp ngân hàng câu hỏi...`);
+                try {
+                    const snapshot = await getDocs(query(this.getPublicRef(`questions_${categoryId}`)));
+                    let list = [];
+                    snapshot.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
+
+                    document.getElementById('app-content').innerHTML = this.views.adminManage(categoryId, list);
+                } catch (error) {
+                    console.error("Admin load error:", error);
+                    this.showNotification("Lỗi tải danh sách câu hỏi", "error");
+                    this.navigate('admin_dashboard');
+                }
+            },
+
+            saveAdminQuestion: async function(event, categoryId, isEdit = false, docId = null) {
+                event.preventDefault();
+                const form = event.target;
+
+                let qObj = {
+                    text: form.q_text.value.trim(),
+                    part: parseInt(form.q_part ? form.q_part.value : 1),
+                    createdAt: new Date().toISOString()
+                };
+
+                if (categoryId === 'grammar') {
+                    qObj.subType = form.sub_type.value;
+                }
+
+                if (categoryId === 'listening' && form.audio_url) {
+                    qObj.audioUrl = form.audio_url.value.trim(); // Lưu trực tiếp URL
+                }
+
+                if (categoryId === 'reading') {
+                    qObj.passageId = form.q_passage_id ? form.q_passage_id.value.trim() : 'passage_01';
+                    qObj.passageTitle = form.q_passage_title ? form.q_passage_title.value.trim() : 'Bài đọc';
+                    qObj.passage = form.q_passage.value.trim();
+                }
+
+                if (categoryId === 'speaking') {
+                    qObj.subQuestion = form.q_sub_question ? form.q_sub_question.value.trim() : '';
+                    let imgArr = [];
+                    if (form.q_image1 && form.q_image1.value.trim()) imgArr.push(form.q_image1.value.trim());
+                    if (form.q_image2 && form.q_image2.value.trim()) imgArr.push(form.q_image2.value.trim());
+                    qObj.images = imgArr;
+                }
+
+                if (['grammar', 'reading', 'listening'].includes(categoryId)) {
+                    qObj.options = [form.opt_0.value, form.opt_1.value, form.opt_2.value];
+                    qObj.correctAnswer = parseInt(form.correct_opt.value);
+                    qObj.explanation = form.q_explanation ? form.q_explanation.value.trim() : '';
+                }
+
+                try {
+                    if (isEdit && docId) {
+                        await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', `questions_${categoryId}`, docId), qObj);
+                        this.showNotification("Cập nhật câu hỏi thành công!", "success");
+                    } else {
+                        await addDoc(this.getPublicRef(`questions_${categoryId}`), qObj);
+                        this.showNotification("Thêm câu hỏi mới thành công!", "success");
+                    }
+                    this.closeModal();
+                    this.loadAdminQuestions(categoryId);
+                } catch (e) {
+                    console.error("Save error:", e);
+                    this.showNotification("Lỗi khi lưu câu hỏi", "error");
+                }
+            },
+
+            deleteAdminQuestion: async function(categoryId, docId) {
+                if (!await this.showConfirm("Xóa câu hỏi", "Bạn có chắc chắn muốn xóa câu hỏi này khỏi kho đề?")) return;
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', `questions_${categoryId}`, docId));
+                    this.showNotification("Đã xóa câu hỏi", "success");
+                    
+                    const cardEl = document.getElementById(`q-card-${docId}`);
+                    if (cardEl) {
+                        cardEl.style.transition = 'all 0.3s ease';
+                        cardEl.style.opacity = '0';
+                        cardEl.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            cardEl.remove();
+                            const countBadge = document.getElementById('question-total-badge');
+                            if (countBadge) {
+                                const currentCount = parseInt(countBadge.innerText.replace(/\D/g, '') || '0');
+                                if (currentCount > 0) {
+                                    countBadge.innerText = `Tổng: ${currentCount - 1} câu`;
+                                }
+                            }
+                        }, 300);
+                    }
+                } catch (e) {
+                    this.showNotification("Không thể xóa câu hỏi", "error");
+                }
+            },
+
+            editAdminQuestion: function(categoryId, docId, qDataStr) {
+                const qData = JSON.parse(decodeURIComponent(qDataStr));
+                this.showModal(`Chỉnh sửa câu hỏi (${CATEGORIES[categoryId].name})`, this.views.questionForm(categoryId, qData, true, docId));
+            },
+
+            loadHistory: async function() {
+                this.renderLoading("Đang tải lịch sử thi...");
+                try {
+                    const snapshot = await getDocs(query(this.getPrivateRef('test_history')));
+                    let records = [];
+                    snapshot.forEach(doc => records.push({ id: doc.id, ...doc.data() }));
+                    records.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    
+                    this.state.historyRecords = records;
+                    document.getElementById('app-content').innerHTML = this.views.historyList(records);
+                } catch (e) {
+                    this.showNotification("Lỗi nạp lịch sử thi", "error");
+                    this.navigate('home');
+                }
+            },
+
+            deleteHistoryRecord: async function(recordId) {
+                if (!await this.showConfirm("Xóa lịch sử", "Bạn có chắc chắn muốn xóa kết quả bài thi này?")) return;
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'users', this.state.user.uid, 'test_history', recordId));
+                    this.showNotification("Đã xóa lịch sử thi", "success");
+                    this.loadHistory();
+                } catch (e) {
+                    console.error(e);
+                    this.showNotification("Không thể xóa lịch sử", "error");
+                }
+            },
+
+            reviewHistoryRecord: function(recordId) {
+                const record = this.state.historyRecords.find(r => r.id === recordId);
+                if (!record || !record.questions || record.questions.length === 0) {
+                    this.showNotification("Bài thi này không chứa dữ liệu câu hỏi để xem lại", "warning");
+                    return;
+                }
+
+                this.state.activeCategory = record.categoryId;
+                this.state.test = {
+                    questions: record.questions,
+                    currentIndex: 0,
+                    answers: record.answers || new Array(record.questions.length).fill(null),
+                    writingAnswers: record.writingAnswers || new Array(record.questions.length).fill(''),
+                    speakingAudioBlobs: record.speakingAudioBlobs || new Array(record.questions.length).fill(null),
+                    listeningPlayCounts: new Array(record.questions.length).fill(2),
+                    startTime: new Date(),
+                    isReviewMode: true
+                };
+
+                this.renderCurrentQuestion();
+                
+                setTimeout(() => {
+                    const feedbackArea = document.getElementById('feedback-area');
+                    if (feedbackArea) feedbackArea.classList.remove('hidden');
+                    
+                    const currentAns = record.answers ? record.answers[0] : null;
+                    const question = record.questions[0];
+                    if (currentAns !== null && currentAns !== undefined && typeof currentAns === 'object' && question.options) {
+                        this.applyFeedbackStyles(question, currentAns.selected, currentAns.isCorrect);
+                    }
+                }, 100);
+            },
+
+            loadVocabBook: async function() {
+                this.renderLoading("Đang tải sổ tay từ vựng...");
+                try {
+                    const snapshot = await getDocs(query(this.getPrivateRef('vocab_book')));
+                    let words = [];
+                    snapshot.forEach(doc => words.push({ id: doc.id, ...doc.data() }));
+                    words.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+                    document.getElementById('app-content').innerHTML = this.views.vocabBook(words);
+                } catch (e) {
+                    this.showNotification("Lỗi nạp sổ tay từ vựng", "error");
+                    this.navigate('home');
+                }
+            },
+
+            saveVocabWord: async function(event) {
+                event.preventDefault();
+                const form = event.target;
+                const data = {
+                    word: form.word.value.trim(),
+                    type: form.type.value,
+                    meaning: form.meaning.value.trim(),
+                    example: form.example.value.trim(),
+                    createdAt: new Date().toISOString()
+                };
+
+                try {
+                    await addDoc(this.getPrivateRef('vocab_book'), data);
+                    this.showNotification("Đã thêm từ mới vào sổ tay", "success");
+                    this.loadVocabBook();
+                } catch (e) {
+                    this.showNotification("Không thể lưu từ vựng", "error");
+                }
+            },
+
+            deleteVocabWord: async function(id) {
+                if (!await this.showConfirm("Xóa từ vựng", "Xóa từ này khỏi sổ tay của bạn?")) return;
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'users', this.state.user.uid, 'vocab_book', id));
+                    this.showNotification("Đã xóa từ vựng", "success");
+                    this.loadVocabBook();
+                } catch (e) {
+                    this.showNotification("Lỗi khi xóa", "error");
+                }
+            },
+
+            // UI Views Generator
+            views: {
+                home: function() {
+                    let html = `
+                        <div class="text-center mb-10 fade-in mt-4">
+                            <h1 class="text-3xl sm:text-5xl font-black text-gray-900 dark:text-white mb-3 tracking-tight">
+                                HỆ THỐNG LUYỆN THI <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600">TIẾNG ANH</span>
+                            </h1>
+                            <p class="text-base sm:text-lg text-gray-600 dark:text-dark-textMuted max-w-2xl mx-auto">
+                                Hệ thống luyện tập các kỹ năng Nghe, Nói, Đọc, Viết và Ngữ pháp tiếng Anh
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 fade-in max-w-6xl mx-auto">
+                    `;
+
+                    for (const [key, cat] of Object.entries(CATEGORIES)) {
+                        html += `
+                            <div class="glass-panel rounded-3xl p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer group flex flex-col justify-between" onclick="app.navigate('test_start', {category: '${key}'})">
+                                <div>
+                                    <div class="flex items-center justify-between mb-4">
+                                        <div class="${cat.color} w-14 h-14 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+                                            <i class="fas ${cat.icon}"></i>
+                                        </div>
+                                        <span class="text-xs font-bold uppercase tracking-wider px-3 py-1 bg-gray-100 dark:bg-dark-bg text-gray-600 dark:text-gray-300 rounded-full">
+                                            ${cat.timeLimit ? `${cat.timeLimit / 60} Phút` : 'Tự Do'}
+                                        </span>
+                                    </div>
+                                    <h3 class="text-xl font-extrabold text-gray-900 dark:text-white mb-2 group-hover:${cat.textClass} transition-colors">${cat.name}</h3>
+                                    <p class="text-gray-500 dark:text-dark-textMuted text-sm mb-6 leading-relaxed">${cat.desc}</p>
+                                </div>
+                                <div class="${cat.textClass} font-bold text-sm flex items-center pt-4 border-t border-gray-100 dark:border-dark-border">
+                                    Vào luyện tập <i class="fas fa-arrow-right ml-2 group-hover:translate-x-2 transition-transform"></i>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    html += `</div>`;
+                    return html;
+                },
+
+                testStart: function(categoryId) {
+                    const cat = CATEGORIES[categoryId];
+                    return `
+                        <div class="max-w-xl mx-auto mt-8 fade-in">
+                            <div class="glass-panel rounded-3xl p-8 text-center relative overflow-hidden shadow-2xl">
+                                <div class="${cat.color} w-20 h-20 rounded-3xl flex items-center justify-center text-white text-3xl mx-auto mb-4 shadow-xl">
+                                    <i class="fas ${cat.icon}"></i>
+                                </div>
+                                <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-2">${cat.name}</h2>
+                                <p class="text-gray-500 dark:text-dark-textMuted text-sm mb-6">${cat.desc}</p>
+
+                                <div class="bg-gray-50 dark:bg-dark-bg p-5 rounded-2xl text-left text-xs text-gray-600 dark:text-gray-300 mb-6 space-y-2 border border-gray-100 dark:border-dark-border">
+                                    ${cat.id === 'reading' ? `
+                                        <div class="flex items-start"><i class="fas fa-clock text-emerald-500 mr-2 mt-0.5"></i> <strong>Thời gian làm bài:</strong> 40 phút.</div>
+                                        <div class="flex items-start"><i class="fas fa-book-open text-emerald-500 mr-2 mt-0.5"></i> <strong>Cấu trúc:</strong> Một bài đọc lớn đi kèm nhiều câu hỏi liên quan.</div>
+                                    ` : ''}
+
+                                    ${cat.id === 'listening' ? `
+                                        <div class="flex items-start"><i class="fas fa-headphones text-purple-500 mr-2 mt-0.5"></i> <strong>Giới hạn nghe:</strong> Tối đa 2 lần phát file audio MP3 cho mỗi câu.</div>
+                                        <div class="flex items-start"><i class="fas fa-link text-purple-500 mr-2 mt-0.5"></i> Hỗ trợ link URL file Audio trực tiếp.</div>
+                                        <div class="flex items-start"><i class="fas fa-infinity text-purple-500 mr-2 mt-0.5"></i> Không quy định giới hạn thời gian tổng.</div>
+                                    ` : ''}
+
+                                    ${cat.id === 'speaking' ? `
+                                        <div class="flex items-start"><i class="fas fa-microphone text-rose-500 mr-2 mt-0.5"></i> Tích hợp nút ghi âm trực tiếp cho từng câu nói.</div>
+                                        <div class="flex items-start"><i class="fas fa-infinity text-rose-500 mr-2 mt-0.5"></i> Không giới hạn thời gian tổng bài thi.</div>
+                                    ` : ''}
+
+                                    ${cat.id === 'writing' ? `
+                                        <div class="flex items-start"><i class="fas fa-pen text-orange-500 mr-2 mt-0.5"></i> Part 1 (câu trả lời ngắn) & Part 2 (viết thư/email dài).</div>
+                                        <div class="flex items-start"><i class="fas fa-infinity text-orange-500 mr-2 mt-0.5"></i> Không quy định thời gian tổng.</div>
+                                    ` : ''}
+
+                                    ${cat.id === 'grammar' ? `
+                                        <div class="flex items-start"><i class="fas fa-clock text-blue-500 mr-2 mt-0.5"></i> <strong>Thời gian làm bài:</strong> 25 phút đếm ngược.</div>
+                                    ` : ''}
+                                </div>
+
+                                <div class="flex gap-3">
+                                    <button onclick="app.navigate('home')" class="w-1/3 py-3 bg-gray-100 dark:bg-dark-bg text-gray-700 dark:text-gray-300 rounded-xl font-bold hover:bg-gray-200">Trở về</button>
+                                    <button onclick="app.navigate('test_run')" class="w-2/3 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-200 dark:shadow-none">Bắt Đầu Làm Bài</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                },
+
+                testInterface: function(question, currentIndex, total, cat, currentAnswer) {
+                    const isWriting = cat.id === 'writing';
+                    const isSpeaking = cat.id === 'speaking';
+                    const isListening = cat.id === 'listening';
+                    const isReading = cat.id === 'reading';
+
+                    let progress = ((currentIndex + 1) / total) * 100;
+                    const recordedAudio = app.state.test.speakingAudioBlobs[currentIndex];
+                    const playedCount = app.state.test.listeningPlayCounts[currentIndex] || 0;
+
+                    let html = `
+                        <div class="fade-in max-w-5xl mx-auto pb-12">
+                            <!-- Top Status Header -->
+                            <div class="mb-6 bg-white dark:bg-dark-panel p-4 rounded-2xl shadow-sm border border-gray-200 dark:border-dark-border flex flex-col sm:flex-row items-center justify-between gap-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="${cat.color} w-9 h-9 rounded-xl flex items-center justify-center text-white text-base font-bold">
+                                        <i class="fas ${cat.icon}"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-extrabold text-gray-900 dark:text-white text-sm">${cat.name}</h4>
+                                        <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400">PART ${question.part || (question.subType === 'vocab' ? 2 : 1)}</span>
+                                    </div>
+                                </div>
+
+                                ${cat.timeLimit ? `
+                                    <div class="flex items-center bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 font-mono font-extrabold px-4 py-2 rounded-xl border border-rose-200 dark:border-rose-900">
+                                        <i class="fas fa-stopwatch mr-2 text-base"></i>
+                                        <span id="test-timer-display">--:--</span>
+                                    </div>
+                                ` : `
+                                `}
+
+                                <div class="flex items-center w-full sm:w-auto gap-3">
+                                    <span class="text-xs font-bold text-gray-500 whitespace-nowrap">Câu ${currentIndex + 1}/${total}</span>
+                                    <div class="w-32 h-2.5 bg-gray-100 dark:bg-dark-bg rounded-full overflow-hidden">
+                                        <div class="h-full ${cat.color} transition-all duration-300" style="width: ${progress}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Main Interface Body -->
+                            <div class="grid grid-cols-1 ${isReading ? 'lg:grid-cols-2' : ''} gap-6">
+                                
+                                <!-- Reading Passage Left Column (If Reading) -->
+                                ${isReading ? `
+                                    <div class="glass-panel rounded-3xl p-6 shadow-xl h-fit max-h-[75vh] overflow-y-auto custom-scrollbar border border-emerald-100 dark:border-emerald-900/30">
+                                        <div class="font-extrabold text-sm text-emerald-600 dark:text-emerald-400 mb-3 flex items-center border-b border-gray-100 dark:border-dark-border pb-2">
+                                            <i class="fas fa-book-open mr-2"></i> ${question.passageTitle || 'Nội dung bài đọc chính'}
+                                        </div>
+                                        <div class="text-gray-800 dark:text-gray-200 text-sm leading-relaxed whitespace-pre-wrap">
+                                            ${question.passage || 'Chưa có nội dung đoạn văn bài đọc.'}
+                                        </div>
+                                    </div>
+                                ` : ''}
+
+                                <!-- Right / Primary Panel -->
+                                <div class="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl relative flex flex-col justify-between">
+                                    <div>
+                                        <!-- Audio Player Component for Listening (Max 2 Plays) -->
+                                        ${isListening ? `
+                                            <div class="mb-6 bg-purple-50 dark:bg-purple-900/20 rounded-2xl p-4 border border-purple-100 dark:border-purple-800 flex flex-col items-center justify-center gap-3">
+                                                ${question.audioUrl ? `
+                                                    <audio id="audio-player-${currentIndex}" src="${question.audioUrl}" preload="auto" class="hidden" onended="app.handleAudioEnded(${currentIndex})" onerror="app.handleAudioError(${currentIndex})"></audio>
+                                                    <button id="play-btn-${currentIndex}" onclick="app.playListeningAudio(${currentIndex})" class="px-6 py-3 bg-purple-600 text-white font-bold rounded-2xl flex items-center shadow-lg hover:bg-purple-700 transition-colors ${playedCount >= 2 ? 'opacity-60 cursor-not-allowed bg-gray-400' : ''}" ${playedCount >= 2 ? 'disabled' : ''}>
+                                                        <i class="fas fa-play mr-2"></i> <span id="play-btn-text-${currentIndex}">${playedCount >= 2 ? 'Đã Hết Lượt Nghe' : 'Phát Audio MP3'}</span>
+                                                    </button>
+                                                    <span id="play-counter-${currentIndex}" class="text-xs font-bold text-purple-600 dark:text-purple-400">
+                                                        Đã nghe ${playedCount}/2 lần
+                                                    </span>
+                                                ` : '<div class="text-rose-500 font-bold text-sm"><i class="fas fa-exclamation-triangle"></i> Lỗi: Không tìm thấy Audio URL.</div>'}
+                                            </div>
+                                        ` : ''}
+
+                                        <!-- Speaking Images if any -->
+                                        ${isSpeaking && question.images && question.images.length > 0 ? `
+                                            <div class="mb-6 flex gap-4 overflow-x-auto custom-scrollbar pb-2">
+                                                ${question.images.map(img => `
+                                                    <img src="${img}" onerror="this.src='https://placehold.co/400x300/e2e8f0/475569?text=Image+Not+Found'" class="rounded-xl object-cover h-48 w-auto border border-gray-200 dark:border-dark-border shadow-md">
+                                                `).join('')}
+                                            </div>
+                                        ` : ''}
+                                        
+                                        <!-- The Question Text -->
+                                        <h3 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-6 leading-relaxed">
+                                            ${question.text}
+                                            ${question.subQuestion ? `<div class="text-sm font-normal text-gray-500 dark:text-dark-textMuted mt-2 italic">${question.subQuestion}</div>` : ''}
+                                        </h3>
+                                        
+                                        <!-- Interactive Areas -->
+                                        ${isWriting ? `
+                                            <div class="relative">
+                                                <textarea id="writing-input" rows="8" class="w-full bg-gray-50 dark:bg-dark-panel border border-gray-200 dark:border-dark-border rounded-2xl p-4 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none transition-all" placeholder="Nhập câu trả lời của bạn vào đây..." oninput="app.saveWritingInput(this.value)" ${app.state.test.isReviewMode ? 'readonly' : ''}>${app.state.test.writingAnswers[currentIndex] || ''}</textarea>
+                                                <div class="absolute bottom-3 right-4 text-xs font-bold text-gray-400" id="word-counter">
+                                                    ${(app.state.test.writingAnswers[currentIndex] || '').trim().split(/\s+/).filter(w=>w.length>0).length} từ
+                                                </div>
+                                            </div>
+                                        ` : isSpeaking ? `
+                                            <div class="bg-rose-50 dark:bg-rose-950/20 rounded-2xl p-6 border border-rose-100 dark:border-rose-900/50 flex flex-col items-center justify-center text-center gap-4">
+                                                ${!app.state.test.isReviewMode ? `
+                                                    <button id="record-mic-btn" onclick="app.toggleAudioRecording()" class="px-6 py-3 bg-indigo-600 text-white font-bold rounded-2xl flex items-center shadow-lg shadow-indigo-200 dark:shadow-none hover:bg-indigo-700 transition-all">
+                                                        <i class="fas fa-microphone mr-2"></i> ${recordedAudio ? 'Ghi Âm Lại' : 'Bắt Đầu Ghi Âm'}
+                                                    </button>
+                                                    <p id="recording-status-text" class="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                                                        ${recordedAudio ? '✅ Đã có bản ghi âm.' : 'Bấm để ghi âm câu trả lời của bạn.'}
+                                                    </p>
+                                                ` : '<div class="text-indigo-500 font-bold text-sm"><i class="fas fa-info-circle mr-1"></i> Chế độ xem lại bài thi</div>'}
+                                                
+                                                <audio id="audio-recording-preview" controls class="w-full mt-4 ${recordedAudio ? '' : 'hidden'}" src="${recordedAudio || ''}"></audio>
+                                            </div>
+                                        ` : `
+                                            <div class="space-y-3">
+                                                ${question.options.map((opt, idx) => `
+                                                    <div class="option-btn border-2 border-gray-100 dark:border-dark-border bg-white dark:bg-dark-panel p-4 rounded-2xl flex items-center cursor-pointer hover:border-indigo-300 hover:bg-indigo-50 dark:hover:border-indigo-500 dark:hover:bg-indigo-900/20" onclick="app.selectOption(${idx})">
+                                                        <div class="icon-container w-8 h-8 rounded-full border-2 border-gray-200 dark:border-gray-600 flex items-center justify-center mr-4 shrink-0 text-sm font-bold text-gray-400">
+                                                            ${String.fromCharCode(65 + idx)}
+                                                        </div>
+                                                        <span class="text-gray-700 dark:text-gray-200 font-medium">${opt}</span>
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                            
+                                            <!-- Review Feedback Area for MCQ -->
+                                            <div id="feedback-area" class="hidden mt-6 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded-r-xl">
+                                                <h5 class="font-bold text-blue-800 dark:text-blue-300 flex items-center mb-1">
+                                                    <i class="fas fa-lightbulb mr-2"></i> Giải thích đáp án:
+                                                </h5>
+                                                <p class="text-sm text-blue-900 dark:text-blue-200">
+                                                    ${question.explanation || 'Không có giải thích chi tiết cho câu hỏi này.'}
+                                                </p>
+                                            </div>
+                                        `}
+                                    </div>
+                                    
+                                    <div class="mt-8 flex justify-between items-center pt-4 border-t border-gray-100 dark:border-dark-border">
+                                        <button onclick="app.prevQuestion()" class="${currentIndex === 0 ? 'invisible' : ''} px-5 py-2.5 bg-gray-100 dark:bg-dark-bg text-gray-700 dark:text-gray-300 font-bold rounded-xl hover:bg-gray-200 transition-colors">
+                                            <i class="fas fa-chevron-left mr-1"></i> Câu trước
+                                        </button>
+                                        <button onclick="app.nextQuestion()" class="px-6 py-2.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 shadow-md transition-colors">
+                                            ${currentIndex === total - 1 ? 'Nộp bài <i class="fas fa-flag-checkered ml-1"></i>' : 'Tiếp theo <i class="fas fa-chevron-right ml-1"></i>'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    return html;
+                },
+                
+                adminDashboard: function() {
+                    let html = `
+                        <div class="max-w-4xl mx-auto fade-in">
+                            <div class="flex items-center justify-between mb-8">
+                                <div>
+                                    <h2 class="text-2xl font-black text-gray-900 dark:text-white">NGÂN HÀNG CÂU HỎI</h2>
+                                    <p class="text-gray-500 dark:text-dark-textMuted text-sm mt-1">Hệ thống quản lý câu hỏi.</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    `;
+
+                    for (const [key, cat] of Object.entries(CATEGORIES)) {
+                        html += `
+                            <div class="glass-panel p-5 rounded-2xl flex items-center justify-between hover:shadow-lg transition-all cursor-pointer border border-gray-200 dark:border-dark-border" onclick="app.navigate('admin_manage', {category: '${key}'})">
+                                <div class="flex items-center gap-4">
+                                    <div class="${cat.color} w-12 h-12 rounded-xl flex items-center justify-center text-white text-xl">
+                                        <i class="fas ${cat.icon}"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-gray-900 dark:text-white">${cat.name}</h3>
+                                        <p class="text-xs text-gray-500">Quản lý câu hỏi</p>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right text-gray-300"></i>
+                            </div>
+                        `;
+                    }
+
+                    html += `</div></div>`;
+                    return html;
+                },
+
+                adminManage: function(categoryId, questions) {
+                    const cat = CATEGORIES[categoryId];
+                    let html = `
+                        <div class="max-w-6xl mx-auto fade-in">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+                                <div class="flex items-center gap-3">
+                                    <button onclick="app.navigate('admin_dashboard')" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-dark-bg hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-colors">
+                                        <i class="fas fa-arrow-left"></i>
+                                    </button>
+                                    <div>
+                                        <h2 class="text-xl font-black text-gray-900 dark:text-white flex items-center">
+                                            <i class="fas ${cat.icon} ${cat.textClass} mr-2"></i> ${cat.name}
+                                        </h2>
+                                        <span id="question-total-badge" class="text-xs font-bold text-gray-500">Tổng: ${questions.length} câu</span>
+                                    </div>
+                                </div>
+                                <button onclick="app.showModal('Thêm câu hỏi mới (${cat.name})', app.views.questionForm('${categoryId}'))" class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-md">
+                                    <i class="fas fa-plus mr-1.5"></i> Thêm câu hỏi
+                                </button>
+                            </div>
+
+                            ${questions.length === 0 ? `
+                                <div class="text-center py-16 glass-panel rounded-3xl border border-dashed border-gray-300 dark:border-gray-700">
+                                    <div class="text-4xl text-gray-300 mb-4"><i class="fas fa-box-open"></i></div>
+                                    <p class="text-gray-500 font-medium">Chưa có câu hỏi nào trong ngân hàng đề này.</p>
+                                </div>
+                            ` : `
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    ${questions.map((q, i) => `
+                                        <div id="q-card-${q.id}" class="bg-white dark:bg-dark-panel p-5 rounded-2xl border border-gray-200 dark:border-dark-border shadow-sm flex flex-col justify-between">
+                                            <div>
+                                                <div class="flex justify-between items-start mb-2">
+                                                    <span class="text-xs font-bold px-2 py-1 bg-gray-100 dark:bg-dark-bg text-gray-600 dark:text-gray-400 rounded-lg">Part ${q.part || (q.subType === 'vocab' ? 2 : 1)} ${q.subType ? `· ${q.subType}` : ''}</span>
+                                                    <div class="flex gap-2">
+                                                        <button onclick="app.editAdminQuestion('${categoryId}', '${q.id}', '${encodeURIComponent(JSON.stringify(q))}')" class="text-indigo-500 hover:text-indigo-700" title="Chỉnh sửa"><i class="fas fa-edit"></i></button>
+                                                        <button onclick="app.deleteAdminQuestion('${categoryId}', '${q.id}')" class="text-rose-500 hover:text-rose-700" title="Xóa"><i class="fas fa-trash"></i></button>
+                                                    </div>
+                                                </div>
+                                                <p class="font-medium text-sm text-gray-800 dark:text-gray-200 line-clamp-3 mb-3">${q.text || '<em>(Không có nội dung text)</em>'}</p>
+                                                
+                                                ${q.options ? `
+                                                    <div class="text-xs text-gray-500 space-y-1">
+                                                        ${q.options.map((opt, idx) => `
+                                                            <div class="${idx === q.correctAnswer ? 'text-emerald-600 font-bold' : ''}">
+                                                                ${String.fromCharCode(65+idx)}. ${opt}
+                                                            </div>
+                                                        `).join('')}
+                                                    </div>
+                                                ` : ''}
+                                                ${q.audioUrl ? `<div class="text-xs mt-2 text-purple-600"><i class="fas fa-link mr-1"></i> ${q.audioUrl.substring(0,40)}...</div>` : ''}
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `}
+                        </div>
+                    `;
+                    return html;
+                },
+
+                questionForm: function(categoryId, qData = null, isEdit = false, docId = null) {
+                    const isMCQ = ['grammar', 'reading', 'listening'].includes(categoryId);
+                    const isReading = categoryId === 'reading';
+                    const isListening = categoryId === 'listening';
+                    const isSpeaking = categoryId === 'speaking';
+                    const isGrammar = categoryId === 'grammar';
+                    
+                    const q = qData || {};
+
+                    let formHtml = `
+                        <form onsubmit="app.saveAdminQuestion(event, '${categoryId}', ${isEdit}, '${docId || ''}')" class="space-y-5">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Part</label>
+                                    <input type="number" name="q_part" min="1" max="4" value="${q.part || 1}" required class="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-xl p-2.5 text-sm dark:text-white">
+                                </div>
+                                ${isGrammar ? `
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Loại</label>
+                                        <select name="sub_type" class="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-xl p-2.5 text-sm dark:text-white">
+                                            <option value="grammar" ${q.subType === 'grammar' ? 'selected' : ''}>Grammar</option>
+                                            <option value="vocab" ${q.subType === 'vocab' ? 'selected' : ''}>Vocabulary</option>
+                                        </select>
+                                    </div>
+                                ` : ''}
+                            </div>
+
+                            ${isReading ? `
+                                <div class="p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl space-y-3">
+                                    <div>
+                                        <label class="block text-xs font-bold text-emerald-800 dark:text-emerald-400 mb-1">ID Nhóm Bài Đọc</label>
+                                        <input type="text" name="q_passage_id" value="${q.passageId || 'passage_01'}" required class="w-full bg-white dark:bg-dark-panel border border-emerald-200 dark:border-emerald-700 rounded-xl p-2 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-emerald-800 dark:text-emerald-400 mb-1">Tiêu Đề Bài Đọc</label>
+                                        <input type="text" name="q_passage_title" value="${q.passageTitle || ''}" class="w-full bg-white dark:bg-dark-panel border border-emerald-200 dark:border-emerald-700 rounded-xl p-2 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-emerald-800 dark:text-emerald-400 mb-1">Nội dung đoạn văn</label>
+                                        <textarea name="q_passage" rows="4" class="w-full bg-white dark:bg-dark-panel border border-emerald-200 dark:border-emerald-700 rounded-xl p-2 text-sm">${q.passage || ''}</textarea>
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            ${isListening ? `
+                                <div>
+                                    <label class="block text-xs font-bold text-purple-700 dark:text-purple-400 mb-1"><i class="fas fa-link mr-1"></i> Link file Audio (URL)</label>
+                                    <input type="url" name="audio_url" value="${q.audioUrl || ''}" placeholder="Nhập đường dẫn trực tiếp đến file audio MP3..." class="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-xl p-2.5 text-sm dark:text-white">
+                                    <p class="text-[10px] text-gray-500 mt-1">Cung cấp đường dẫn trực tiếp tới file audio (.mp3, .wav...)</p>
+                                </div>
+                            ` : ''}
+
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Nội dung câu hỏi</label>
+                                <textarea name="q_text" rows="${isMCQ ? 2 : 4}" required class="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-xl p-3 text-sm dark:text-white resize-none">${q.text || ''}</textarea>
+                            </div>
+
+                            ${isSpeaking ? `
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Câu hỏi phụ (Sub-question)</label>
+                                    <input type="text" name="q_sub_question" value="${q.subQuestion || ''}" class="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-xl p-2.5 text-sm dark:text-white">
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-gray-500 mb-1">URL Ảnh 1 (Tùy chọn)</label>
+                                        <input type="url" name="q_image1" value="${q.images && q.images[0] ? q.images[0] : ''}" class="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-lg p-2 text-xs">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-gray-500 mb-1">URL Ảnh 2 (Tùy chọn)</label>
+                                        <input type="url" name="q_image2" value="${q.images && q.images[1] ? q.images[1] : ''}" class="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-lg p-2 text-xs">
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            ${isMCQ ? `
+                                <div class="bg-gray-100 dark:bg-dark-bg p-4 rounded-xl border border-gray-200 dark:border-dark-border space-y-3">
+                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2 border-b border-gray-200 dark:border-gray-700 pb-2">Đáp án</label>
+                                    ${[0,1,2].map(i => `
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs font-bold text-gray-500 w-6">${String.fromCharCode(65+i)}</span>
+                                            <input type="text" name="opt_${i}" value="${q.options ? q.options[i] : ''}" required class="flex-1 bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-lg p-2 text-sm dark:text-white">
+                                            <input type="radio" name="correct_opt" value="${i}" ${q.correctAnswer === i || (i===0 && !q.options) ? 'checked' : ''} class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Giải thích (Tùy chọn)</label>
+                                    <textarea name="q_explanation" rows="2" class="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-xl p-2.5 text-sm dark:text-white resize-none">${q.explanation || ''}</textarea>
+                                </div>
+                            ` : ''}
+
+                            <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-dark-border">
+                                <button type="button" onclick="app.closeModal()" class="px-5 py-2.5 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-100 dark:hover:bg-dark-bg rounded-xl">Hủy</button>
+                                <button type="submit" class="px-6 py-2.5 bg-indigo-600 text-white font-bold rounded-xl shadow-md hover:bg-indigo-700">${isEdit ? 'Cập nhật' : 'Lưu Câu Hỏi'}</button>
+                            </div>
+                        </form>
+                    `;
+                    return formHtml;
+                },
+
+                historyList: function(records) {
+                    let html = `
+                        <div class="max-w-4xl mx-auto fade-in">
+                            <div class="flex items-center justify-between mb-8">
+                                <div>
+                                    <h2 class="text-2xl font-black text-gray-900 dark:text-white">Lịch Sử Luyện Thi</h2>
+                                    <p class="text-gray-500 dark:text-dark-textMuted text-sm mt-1">Xem lại kết quả các bài kiểm tra đã thực hiện.</p>
+                                </div>
+                                <button onclick="app.navigate('home')" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-dark-bg hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-colors">
+                                    <i class="fas fa-house"></i>
+                                </button>
+                            </div>
+
+                            ${records.length === 0 ? `
+                                <div class="text-center py-16 glass-panel rounded-3xl border border-dashed border-gray-300 dark:border-gray-700">
+                                    <div class="text-4xl text-gray-300 mb-4"><i class="fas fa-clock"></i></div>
+                                    <p class="text-gray-500 font-medium">Bạn chưa có bài thi nào được lưu.</p>
+                                    <button onclick="app.navigate('home')" class="mt-4 px-5 py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700">Luyện tập ngay</button>
+                                </div>
+                            ` : `
+                                <div class="space-y-4">
+                                    ${records.map(r => {
+                                        const d = new Date(r.date);
+                                        const dateStr = `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()} ${d.getHours()}:${d.getMinutes().toString().padStart(2,'0')}`;
+                                        const isTextBased = ['writing', 'speaking'].includes(r.categoryId);
+                                        
+                                        return `
+                                        <div class="glass-panel p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-gray-200 dark:border-dark-border">
+                                            <div class="flex items-center gap-4">
+                                                <div class="${CATEGORIES[r.categoryId].color} w-12 h-12 rounded-xl flex items-center justify-center text-white text-xl shadow-sm">
+                                                    <i class="fas ${CATEGORIES[r.categoryId].icon}"></i>
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-bold text-gray-900 dark:text-white text-lg">${r.categoryName}</h3>
+                                                    <p class="text-xs text-gray-500 mb-1"><i class="far fa-calendar-alt mr-1"></i> ${dateStr}</p>
+                                                    <div class="flex gap-3 text-xs font-semibold">
+                                                        ${!isTextBased ? `
+                                                            <span class="${r.score >= 70 ? 'text-emerald-600' : 'text-rose-600'}">Đúng: ${r.correctCount}/${r.totalQuestions} (${r.score}%)</span>
+                                                        ` : `
+                                                            <span class="text-indigo-600">Đã hoàn thành</span>
+                                                        `}
+                                                        <span class="text-gray-500"><i class="far fa-clock mr-1"></i> ${Math.floor(r.timeTakenSec/60)}p ${r.timeTakenSec%60}s</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <button onclick="app.reviewHistoryRecord('${r.id}')" class="px-4 py-2 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 rounded-lg text-sm font-bold hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors">
+                                                    <i class="fas fa-eye mr-1"></i> Xem lại
+                                                </button>
+                                                <button onclick="app.deleteHistoryRecord('${r.id}')" class="px-3 py-2 bg-rose-50 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400 rounded-lg text-sm font-bold hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors" title="Xóa">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        `
+                                    }).join('')}
+                                </div>
+                            `}
+                        </div>
+                    `;
+                    return html;
+                },
+
+                vocabBook: function(words) {
+                    let html = `
+                        <div class="max-w-5xl mx-auto fade-in">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+                                <div>
+                                    <h2 class="text-2xl font-black text-gray-900 dark:text-white">Sổ Tay Từ Vựng</h2>
+                                    <p class="text-gray-500 dark:text-dark-textMuted text-sm mt-1">Lưu trữ và ôn tập từ vựng cá nhân của bạn.</p>
+                                </div>
+                                <div class="flex gap-3">
+                                    <button onclick="app.navigate('home')" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-dark-bg hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-colors">
+                                        <i class="fas fa-house"></i>
+                                    </button>
+                                    <button onclick="app.showModal('Thêm Từ Mới', app.views.vocabForm())" class="px-5 py-2.5 bg-yellow-500 text-white rounded-xl font-bold hover:bg-yellow-600 shadow-md">
+                                        <i class="fas fa-plus mr-1.5"></i> Thêm từ
+                                    </button>
+                                </div>
+                            </div>
+
+                            ${words.length === 0 ? `
+                                <div class="text-center py-16 glass-panel rounded-3xl border border-dashed border-gray-300 dark:border-gray-700">
+                                    <div class="text-4xl text-yellow-300 mb-4"><i class="fas fa-book-open"></i></div>
+                                    <p class="text-gray-500 font-medium">Sổ tay của bạn đang trống.</p>
+                                </div>
+                            ` : `
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    ${words.map(w => `
+                                        <div class="glass-panel p-5 rounded-2xl border border-gray-200 dark:border-dark-border relative group">
+                                            <button onclick="app.deleteVocabWord('${w.id}')" class="absolute top-3 right-3 text-gray-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fas fa-times"></i></button>
+                                            
+                                            <div class="flex items-baseline gap-2 mb-2">
+                                                <h3 class="text-lg font-bold text-indigo-600 dark:text-indigo-400">${w.word}</h3>
+                                                <span class="text-[10px] font-mono px-1.5 py-0.5 bg-gray-100 dark:bg-dark-bg text-gray-500 rounded">${w.type}</span>
+                                            </div>
+                                            <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">${w.meaning}</p>
+                                            ${w.example ? `<p class="text-xs text-gray-500 dark:text-dark-textMuted italic bg-gray-50 dark:bg-dark-bg p-2 rounded-lg border-l-2 border-yellow-400">" ${w.example} "</p>` : ''}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `}
+                        </div>
+                    `;
+                    return html;
+                },
+
+                vocabForm: function() {
+                    return `
+                        <form onsubmit="app.saveVocabWord(event)" class="space-y-4">
+                            <div class="grid grid-cols-3 gap-3">
+                                <div class="col-span-2">
+                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Từ vựng (Word)</label>
+                                    <input type="text" name="word" required class="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-xl p-2.5 text-sm dark:text-white">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Loại từ</label>
+                                    <select name="type" class="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-xl p-2.5 text-sm dark:text-white">
+                                        <option value="(n)">(n) Noun</option>
+                                        <option value="(v)">(v) Verb</option>
+                                        <option value="(adj)">(adj) Adjective</option>
+                                        <option value="(adv)">(adv) Adverb</option>
+                                        <option value="(prep)">(prep) Preposition</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Ý nghĩa (Meaning)</label>
+                                <input type="text" name="meaning" required class="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-xl p-2.5 text-sm dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Ví dụ (Example - Tùy chọn)</label>
+                                <textarea name="example" rows="2" class="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-xl p-2.5 text-sm dark:text-white resize-none"></textarea>
+                            </div>
+                            <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-dark-border">
+                                <button type="button" onclick="app.closeModal()" class="px-5 py-2 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-100 dark:hover:bg-dark-bg rounded-xl">Hủy</button>
+                                <button type="submit" class="px-6 py-2 bg-yellow-500 text-white font-bold rounded-xl shadow-md hover:bg-yellow-600">Lưu Từ</button>
+                            </div>
+                        </form>
+                    `;
+                }
+            },
+
+            // UI Helpers
+            showModal: function(title, contentHtml) {
+                const modal = document.getElementById('modal-container');
+                modal.innerHTML = `
+                    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 fade-in">
+                        <div class="bg-white dark:bg-dark-panel w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden border border-gray-200 dark:border-dark-border flex flex-col max-h-[90vh]">
+                            <div class="px-6 py-4 border-b border-gray-100 dark:border-dark-border flex justify-between items-center bg-gray-50 dark:bg-dark-bg shrink-0">
+                                <h3 class="font-black text-gray-900 dark:text-white text-lg">${title}</h3>
+                                <button onclick="app.closeModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors">
+                                    <i class="fas fa-times text-xl"></i>
+                                </button>
+                            </div>
+                            <div class="p-6 overflow-y-auto custom-scrollbar">
+                                ${contentHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            closeModal: function() {
+                document.getElementById('modal-container').innerHTML = '';
+            },
+
+            showConfirm: function(title, message) {
+                return new Promise((resolve) => {
+                    this.showModal(title, `
+                        <div class="text-center mb-6">
+                            <div class="w-16 h-16 rounded-full bg-rose-50 text-rose-500 mx-auto flex items-center justify-center text-2xl mb-4">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <p class="text-gray-700 dark:text-gray-300 font-medium">${message}</p>
+                        </div>
+                        <div class="flex justify-center gap-3">
+                            <button id="confirm-no" class="px-6 py-2.5 bg-gray-100 dark:bg-dark-bg text-gray-700 dark:text-gray-300 font-bold rounded-xl hover:bg-gray-200 w-1/2">Không</button>
+                            <button id="confirm-yes" class="px-6 py-2.5 bg-rose-600 text-white font-bold rounded-xl shadow-md hover:bg-rose-700 w-1/2">Đồng ý</button>
+                        </div>
+                    `);
+                    document.getElementById('confirm-yes').onclick = () => { this.closeModal(); resolve(true); };
+                    document.getElementById('confirm-no').onclick = () => { this.closeModal(); resolve(false); };
+                });
+            },
+
+            showNotification: function(message, type = 'info') {
+                const colors = {
+                    success: 'bg-emerald-500', error: 'bg-rose-500', 
+                    warning: 'bg-amber-500', info: 'bg-blue-500'
+                };
+                const icons = {
+                    success: 'fa-check-circle', error: 'fa-exclamation-circle', 
+                    warning: 'fa-exclamation-triangle', info: 'fa-info-circle'
+                };
+
+                const el = document.createElement('div');
+                el.className = `fixed bottom-6 right-6 ${colors[type]} text-white px-5 py-3 rounded-xl shadow-lg z-[200] flex items-center gap-3 transform transition-all duration-300 translate-y-20 opacity-0`;
+                el.innerHTML = `<i class="fas ${icons[type]} text-lg"></i> <span class="font-medium text-sm">${message}</span>`;
+                
+                document.body.appendChild(el);
+                
+                setTimeout(() => { el.classList.remove('translate-y-20', 'opacity-0'); }, 10);
+                setTimeout(() => {
+                    el.classList.add('translate-y-20', 'opacity-0');
+                    setTimeout(() => el.remove(), 300);
+                }, 3000);
+            },
+
+            renderLoading: function(text = "Đang xử lý...") {
+                document.getElementById('app-content').innerHTML = `
+                    <div class="flex flex-col items-center justify-center min-h-[50vh] fade-in">
+                        <div class="loader mb-6"></div>
+                        <p class="text-gray-500 dark:text-dark-textMuted font-medium">${text}</p>
+                    </div>
+                `;
+            }
+        };
+
+        // Bootstrap App
+        window.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+
+    </script>
+</body>
+</html>
