@@ -141,7 +141,7 @@
         <div id="status-message" class="hidden-view mb-6 p-4 rounded-2xl flex items-center border shadow-xl transition-all"></div>
 
         <!-- VIEW: LIBRARY -->
-        <section id="view-library" class="hidden-view animate-fadeIn">
+        <section id="view-library" class="animate-fadeIn">
             <!-- Search & Filters -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                 <div class="lg:col-span-2 space-y-4">
@@ -155,10 +155,11 @@
                             placeholder="Nhập từ vựng, nghĩa tiếng Việt, loại từ..."
                             class="block w-full pl-12 pr-4 py-4 bg-slate-900/70 border border-slate-800 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all outline-none text-base text-white placeholder-slate-500 shadow-inner"
                             autocomplete="off"
+                            oninput="window.app.handleSearch(event)"
                         >
                     </div>
                     
-                    <div class="flex flex-wrap gap-2">
+                    <div class="flex flex-wrap gap-2" id="filter-buttons">
                         <button onclick="window.app.setLibraryFilter('all', this)" class="filter-btn bg-purple-600 text-white px-4 py-2.5 rounded-xl text-sm transition-all font-bold shadow-lg shadow-purple-900/30">Tất cả</button>
                         <button onclick="window.app.setLibraryFilter('unsaved', this)" class="filter-btn bg-slate-900 border border-slate-800 hover:border-slate-700 px-4 py-2.5 rounded-xl text-sm transition-all text-slate-400 font-medium">Chưa lưu</button>
                         <button onclick="window.app.setLibraryFilter('saved', this)" class="filter-btn bg-slate-900 border border-slate-800 hover:border-slate-700 px-4 py-2.5 rounded-xl text-sm transition-all text-slate-400 font-medium">Đã thuộc</button>
@@ -170,11 +171,12 @@
                 
                 <!-- Topic Filter -->
                 <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800/80 backdrop-blur-md">
-                    <label class="text-[10px] uppercase font-extrabold text-slate-400 mb-3 block tracking-wider flex items-center gap-1.5">
+                    <label class="text-[10px] uppercase font-extrabold text-slate-400 mb-3 tracking-wider flex items-center gap-1.5">
                         <i data-lucide="folder-tree" class="w-4 h-4 text-purple-400"></i> Chủ Đề Từ Vựng
                     </label>
                     <input type="text" id="topic-search" placeholder="Gõ tìm chủ đề..." 
-                           class="w-full p-2.5 mb-3 rounded-xl bg-slate-950 border border-slate-800 text-sm outline-none focus:border-purple-500 transition-colors text-white">
+                           class="w-full p-2.5 mb-3 rounded-xl bg-slate-950 border border-slate-800 text-sm outline-none focus:border-purple-500 transition-colors text-white"
+                           oninput="window.app.handleTopicSearch(event)">
                     <div id="topicNav" class="flex flex-wrap gap-2 max-h-32 overflow-y-auto pr-2 flashcard-scroll"></div>
                 </div>
             </div>
@@ -204,7 +206,20 @@
         <!-- VIEW: DASHBOARD -->
         <section id="view-dashboard" class="hidden-view animate-fadeIn max-w-4xl mx-auto">
             <h2 class="text-2xl font-black mb-6 text-white">Thống Kê Tiến Độ</h2>
-            <div id="stats-content"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="stats-content">
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6">
+                    <h3 class="text-lg font-bold mb-4">Mức Độ Hoàn Thành</h3>
+                    <div class="w-full bg-slate-800 rounded-full h-4 mb-2 overflow-hidden relative">
+                        <div id="progress-bar" class="bg-gradient-to-r from-purple-500 to-indigo-500 h-4 rounded-full transition-all duration-1000" style="width: 0%"></div>
+                    </div>
+                    <p id="progress-text" class="text-sm text-slate-400 text-right">0%</p>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 flex items-center justify-center flex-col text-center">
+                    <i data-lucide="flame" class="w-12 h-12 text-amber-500 mb-3"></i>
+                    <h3 class="text-lg font-bold">Chuỗi học tập hiện tại</h3>
+                    <p id="dashboard-streak" class="text-3xl font-black text-amber-400 mt-2">1 Ngày</p>
+                </div>
+            </div>
         </section>
 
         <!-- VIEW: PRACTICE -->
@@ -214,7 +229,7 @@
 
     </main>
 
-    <!-- Custom Add/Edit Word Modal (Replacing SweetAlert2) -->
+    <!-- Custom Add/Edit Word Modal -->
     <div id="word-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-2xl animate-fadeIn">
             <div class="flex justify-between items-center mb-6">
@@ -324,7 +339,8 @@
             library: {
                 filter: 'all',
                 topic: 'all',
-                search: ''
+                search: '',
+                topicSearch: ''
             },
             practice: {
                 gameType: null, // 'flashcard', 'quiz', 'spelling'
@@ -358,7 +374,7 @@
             }
         };
 
-        // CUSTOM TOAST MESSAGE (REPLACING SWEETALERT2)
+        // CUSTOM TOAST MESSAGE
         const showToast = (msg, type = "success") => {
             const el = $('#status-message');
             const icon = type === 'error' ? 'alert-circle' : 'check-circle';
@@ -376,18 +392,13 @@
             }, 3500);
         };
 
-        // EXAMPLE PARSER & FORMATTER
-        // Output format: Each example on new line. English sentence colored, Vietnamese translation uncolored in brackets.
+        // FORMAT EXAMPLES
         const formatExamples = (exampleText) => {
             if (!exampleText) return '';
-            
-            // Split by line breaks or delimiter ||
             const lines = exampleText.split(/\r?\n|\|\|/).map(l => l.trim()).filter(Boolean);
             
             return lines.map(line => {
-                // Regex matches: "English text (Vietnamese translation)" or "English text - Vietnamese"
                 const parenMatch = line.match(/^(.*?)\s*\((.*?)\)\s*$/);
-                
                 if (parenMatch) {
                     const enStr = parenMatch[1].trim();
                     const viStr = parenMatch[2].trim();
@@ -411,15 +422,13 @@
             }).join('');
         };
 
-        // COMPONENT: HTML FOR DICTIONARY WORD CARD
+        // RENDER SINGLE WORD CARD
         const renderWordCard = (word, isSaved, isWatchlist) => {
             const safeWord = word.english.replace(/'/g, "\\'");
             const examplesHTML = formatExamples(word.example);
 
             return `
                 <div class="bg-slate-900/70 backdrop-blur-md border border-slate-800/90 rounded-3xl p-6 transition-all card-glow relative group">
-                    
-                    <!-- Header Section: Word, Type, IPA, Audio & Actions -->
                     <div class="flex flex-wrap justify-between items-start gap-3 pb-4 border-b border-slate-800/80">
                         <div class="space-y-1">
                             <div class="flex items-center gap-2.5 flex-wrap">
@@ -436,7 +445,6 @@
                             </div>
                         </div>
 
-                        <!-- Action Buttons -->
                         <div class="flex items-center gap-2">
                             <button onclick="window.app.toggleWatchlist('${safeWord}')" 
                                 class="p-2.5 rounded-xl border transition-all ${isWatchlist ? 'bg-amber-950/50 border-amber-600 text-amber-400' : 'bg-slate-950 border-slate-800 text-slate-500 hover:text-amber-400 hover:border-amber-900/50'}" 
@@ -458,7 +466,6 @@
                         </div>
                     </div>
 
-                    <!-- Meaning & Definition Section -->
                     <div class="py-4 space-y-3">
                         <div class="flex items-baseline gap-2">
                             <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Nghĩa chính:</span>
@@ -471,7 +478,6 @@
                             </div>
                         ` : ''}
 
-                        <!-- Formatted Example Lines -->
                         ${examplesHTML ? `
                             <div class="mt-3">
                                 <p class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest mb-2">Ví dụ thực tế:</p>
@@ -481,7 +487,6 @@
                             </div>
                         ` : ''}
 
-                        <!-- Synonyms & Antonyms Pill Tags -->
                         ${(word.synonym || word.antonym) ? `
                             <div class="flex flex-wrap gap-4 pt-2 text-xs">
                                 ${word.synonym ? `
@@ -499,7 +504,6 @@
                             </div>
                         ` : ''}
                     </div>
-
                 </div>
             `;
         };
@@ -520,6 +524,7 @@
                 localStorage.setItem('vocab_last_study_date', todayStr);
             }
             $('#stat-streak').innerText = `${state.streak} ngày 🔥`;
+            if ($('#dashboard-streak')) $('#dashboard-streak').innerText = `${state.streak} Ngày`;
         };
 
         const renderNav = () => {
@@ -542,6 +547,7 @@
                     <span class="whitespace-nowrap">${item.text}</span>
                 </button>
             `).join('');
+            lucide.createIcons();
         };
 
         const displayVocabulary = () => {
@@ -600,12 +606,43 @@
             lucide.createIcons();
         };
 
+        const renderMyWords = () => {
+            const container = $('#mywords-list');
+            if (!container) return;
+
+            const savedMap = new Set(state.myWords.map(m => m.id));
+            const watchSet = new Set(state.watchlist.map(w => w.toLowerCase()));
+            
+            const savedWordsFull = state.allWords.filter(w => savedMap.has(w.id));
+
+            if (savedWordsFull.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-16 bg-slate-900/40 rounded-3xl border border-dashed border-slate-800 text-slate-500">
+                        <i data-lucide="bookmark-minus" class="w-12 h-12 mx-auto mb-3 text-slate-600"></i>
+                        <p class="font-semibold text-slate-400">Bạn chưa lưu từ vựng nào. Hãy đánh dấu đã thuộc ở Thư viện từ!</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            container.innerHTML = savedWordsFull.map(word => 
+                renderWordCard(word, true, watchSet.has(word.english.toLowerCase()))
+            ).join('');
+            lucide.createIcons();
+        };
+
         const renderTopicNav = () => {
             const topicContainer = $('#topicNav');
             if (!topicContainer) return;
 
-            const topics = Array.from(new Set(state.allWords.map(w => w.topic).filter(Boolean)));
+            let topics = Array.from(new Set(state.allWords.map(w => w.topic).filter(Boolean)));
             
+            if (state.library.topicSearch) {
+                const query = state.library.topicSearch.toLowerCase();
+                topics = topics.filter(t => t.toLowerCase().includes(query));
+            }
+
             let html = `
                 <button onclick="window.app.setTopicFilter('all')" class="px-3 py-1 rounded-lg text-xs font-bold border transition-all ${state.library.topic === 'all' ? 'bg-purple-600 border-purple-500 text-white' : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white'}">
                     Tất cả (${state.allWords.length})
@@ -622,6 +659,17 @@
             });
 
             topicContainer.innerHTML = html;
+        };
+
+        const updateDashboardStats = () => {
+            const total = state.allWords.length;
+            const saved = state.myWords.length;
+            const percentage = total > 0 ? Math.round((saved / total) * 100) : 0;
+            
+            if ($('#progress-bar')) $('#progress-bar').style.width = `${percentage}%`;
+            if ($('#progress-text')) $('#progress-text').innerText = `${percentage}% hoàn thành (${saved}/${total})`;
+            
+            $('#stat-watchlist').innerText = state.watchlist.length;
         };
 
         const setupAuth = async () => {
@@ -649,6 +697,7 @@
                         $('#stat-saved-words').innerText = state.myWords.length;
                         if (state.activeTab === 'mywords') renderMyWords();
                         if (state.activeTab === 'library') displayVocabulary();
+                        updateDashboardStats();
                     }, (err) => console.error("Firestore sync error", err));
                 }
             });
@@ -675,8 +724,9 @@
                 
                 $('#stat-total-words').innerText = state.allWords.length;
                 displayVocabulary();
+                updateDashboardStats();
             } catch (err) {
-                showToast("Lỗi kết nối dữ liệu Google Sheet. Vui lòng thử lại.", "error");
+                showToast("Lỗi kết nối dữ liệu máy chủ. Vui lòng thử lại.", "error");
             } finally {
                 $('#loader').classList.add('hidden');
             }
@@ -689,108 +739,19 @@
                 if (!response.ok) throw new Error("Kết nối máy chủ thất bại.");
                 
                 await fetchSheetData(); 
-                closeModal();
+                window.app.closeModal();
                 showToast(isUpdate ? 'Cập nhật từ vựng thành công!' : 'Thêm từ vựng thành công!');
             } catch (error) {
                 showToast(error.message, "error");
             }
         };
 
-        const openModal = () => {
-            $('#form-id').value = '';
-            $('#modal-title').innerHTML = `<i data-lucide="plus-circle" class="text-purple-400"></i> Thêm Từ Vựng Mới`;
-            $('#word-form').reset();
-            $('#word-modal').classList.remove('hidden');
-            lucide.createIcons();
-        };
-
-        const openEditForm = (id) => {
-            const word = state.allWords.find(w => w.id === id);
-            if (!word) return;
-
-            $('#form-id').value = word.id;
-            $('#modal-title').innerHTML = `<i data-lucide="edit-3" class="text-purple-400"></i> Chỉnh Sửa Từ Vựng`;
-            $('#form-english').value = word.english;
-            $('#form-vietnamese').value = word.vietnamese;
-            $('#form-type').value = word.type || '';
-            $('#form-ipa').value = word.ipa || '';
-            $('#form-topic').value = word.topic || '';
-            $('#form-definition').value = word.definition || '';
-            $('#form-example').value = word.example || '';
-            $('#form-synonym').value = word.synonym || '';
-            $('#form-antonym').value = word.antonym || '';
-
-            $('#word-modal').classList.remove('hidden');
-            lucide.createIcons();
-        };
-
-        const closeModal = () => {
-            $('#word-modal').classList.add('hidden');
-        };
-
-        const handleFormSubmit = (e) => {
-            e.preventDefault();
-            const formData = new FormData();
-            const id = $('#form-id').value;
-
-            if (id) {
-                formData.append('action', 'update');
-                formData.append('id', id);
-            } else {
-                formData.append("action","add");
-            }
-
-            formData.append('english', $('#form-english').value.trim());
-            formData.append('vietnamese', $('#form-vietnamese').value.trim());
-            formData.append('type', $('#form-type').value.trim());
-            formData.append('ipa', $('#form-ipa').value.trim());
-            formData.append('topic', $('#form-topic').value.trim());
-            formData.append('definition', $('#form-definition').value.trim());
-            formData.append('example', $('#form-example').value.trim());
-            formData.append('synonym', $('#form-synonym').value.trim());
-            formData.append('antonym', $('#form-antonym').value.trim());
-
-            postToSheet(formData, Boolean(id));
-        };
-
-        // PRACTICE MODULE IMPLEMENTATION
-        const startPractice = (type, mode = 'en-vi') => {
-            if (state.allWords.length === 0) {
-                showToast("Kho từ vựng chưa sẵn sàng!", "error");
-                return;
-            }
-
-            // Shuffle words pool
-            const pool = [...state.allWords].sort(() => Math.random() - 0.5).slice(0, 15);
-            
-            state.practice = {
-                gameType: type,
-                mode: mode,
-                index: 0,
-                flipped: false,
-                pool: pool,
-                score: 0,
-                quizOptions: [],
-                quizAnswered: false,
-                quizSelectedId: null,
-                spellingInput: '',
-                spellingChecked: false,
-                spellingCorrect: false,
-                isFinished: false
-            };
-
-            if (type === 'quiz') setupQuizQuestion();
-            renderPractice();
-        };
-
         const setupQuizQuestion = () => {
             const currentWord = state.practice.pool[state.practice.index];
             const mode = state.practice.mode;
-
             let distractors = [];
 
             if (mode === 'synonym') {
-                // Find candidates that have synonyms or random fallback
                 const candidates = state.allWords.filter(w => w.id !== currentWord.id);
                 distractors = candidates.sort(() => Math.random() - 0.5).slice(0, 3);
             } else {
@@ -803,51 +764,6 @@
             state.practice.quizOptions = options;
             state.practice.quizAnswered = false;
             state.practice.quizSelectedId = null;
-        };
-
-        const answerQuiz = (optionId) => {
-            if (state.practice.quizAnswered) return;
-
-            const currentWord = state.practice.pool[state.practice.index];
-            state.practice.quizAnswered = true;
-            state.practice.quizSelectedId = optionId;
-
-            if (optionId === currentWord.id) {
-                state.practice.score += 1;
-            }
-
-            renderPractice();
-        };
-
-        const nextPracticeItem = () => {
-            if (state.practice.index < state.practice.pool.length - 1) {
-                state.practice.index += 1;
-                state.practice.flipped = false;
-                state.practice.spellingChecked = false;
-                state.practice.spellingInput = '';
-                
-                if (state.practice.gameType === 'quiz') {
-                    setupQuizQuestion();
-                }
-                renderPractice();
-            } else {
-                state.practice.isFinished = true;
-                renderPractice();
-            }
-        };
-
-        const prevPracticeItem = () => {
-            if (state.practice.index > 0) {
-                state.practice.index -= 1;
-                state.practice.flipped = false;
-                state.practice.spellingChecked = false;
-                state.practice.spellingInput = '';
-                
-                if (state.practice.gameType === 'quiz') {
-                    setupQuizQuestion();
-                }
-                renderPractice();
-            }
         };
 
         const renderPractice = () => {
@@ -880,7 +796,7 @@
                         <div class="bg-slate-900/70 border border-slate-800/90 rounded-3xl p-6 hover:border-indigo-500/50 transition-all card-glow flex flex-col justify-between">
                             <div>
                                 <div class="w-12 h-12 bg-indigo-950 text-indigo-400 rounded-2xl flex items-center justify-center mb-4"><i data-lucide="check-square" class="w-6 h-6"></i></div>
-                                <h3 class="text-lg font-extrabold text-white mb-2">Trắc Nghệm Thông Minh</h3>
+                                <h3 class="text-lg font-extrabold text-white mb-2">Trắc Nghiệm</h3>
                                 <p class="text-slate-400 text-xs leading-relaxed mb-6">Lựa chọn câu trả lời đúng, hiển thị lỗi sai & giải thích ô từ điển chi tiết.</p>
                             </div>
                             <div class="space-y-2">
@@ -934,14 +850,14 @@
 
             let contentHTML = '';
 
-            // 1. FLASHCARD MODE
+            // FLASHCARD MODE
             if (state.practice.gameType === 'flashcard') {
                 const isEnVi = state.practice.mode === 'en-vi';
                 const front = isEnVi ? word.english : word.vietnamese;
                 const back = isEnVi ? word.vietnamese : word.english;
 
                 contentHTML = `
-                    <div onclick="window.app.flipCard()" class="relative h-96 w-full cursor-pointer perspective-1000">
+                    <div onclick="window.app.flipCard()" class="relative h-96 w-full cursor-pointer perspective-1000 mb-6">
                         <div class="relative w-full h-full duration-500 preserve-3d ${state.practice.flipped ? 'rotate-y-180' : ''}">
                             <!-- Front -->
                             <div class="absolute w-full h-full backface-hidden bg-slate-900 border border-slate-800 rounded-3xl p-8 flex flex-col justify-between items-center text-center card-glow">
@@ -971,7 +887,7 @@
                     </div>
                 `;
             } 
-            // 2. QUIZ MODE
+            // QUIZ MODE
             else if (state.practice.gameType === 'quiz') {
                 const mode = state.practice.mode;
                 let promptTitle = "Chọn Nghĩa Tiếng Việt Đúng";
@@ -986,7 +902,7 @@
                 }
 
                 contentHTML = `
-                    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 card-glow">
+                    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 card-glow mb-6">
                         <div class="text-center mb-6">
                             <span class="text-[10px] text-purple-400 font-extrabold uppercase tracking-widest">${promptTitle}</span>
                             <div class="flex items-center justify-center gap-2 mt-2">
@@ -1003,11 +919,9 @@
 
                                 if (state.practice.quizAnswered) {
                                     if (opt.id === word.id) {
-                                        // Correct option
                                         btnStyle = "bg-emerald-950/80 border-emerald-500 text-emerald-200 font-bold shadow-lg shadow-emerald-950/50";
                                         icon = `<i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 shrink-0"></i>`;
                                     } else if (opt.id === state.practice.quizSelectedId) {
-                                        // Selected Wrong option
                                         btnStyle = "bg-rose-950/80 border-rose-500 text-rose-200 font-bold shadow-lg shadow-rose-950/50";
                                         icon = `<i data-lucide="x-circle" class="w-5 h-5 text-rose-400 shrink-0"></i>`;
                                     } else {
@@ -1018,289 +932,325 @@
                                 const labelText = mode === 'vi-en' ? opt.english : opt.vietnamese;
 
                                 return `
-                                    <button ${state.practice.quizAnswered ? 'disabled' : ''} 
-                                        onclick="window.app.answerQuiz('${opt.id}')" 
-                                        class="p-4 rounded-2xl border text-left text-sm font-semibold transition-all flex justify-between items-center ${btnStyle}">
-                                        <span>${labelText} ${mode === 'synonym' && opt.synonym ? `<span class="text-xs text-purple-300">(${opt.synonym})</span>` : ''}</span>
+                                    <button onclick="window.app.answerQuiz('${opt.id}')" class="w-full text-left p-4 rounded-xl border transition-all flex items-center justify-between ${btnStyle}">
+                                        <span class="font-semibold text-lg">${labelText}</span>
                                         ${icon}
                                     </button>
                                 `;
                             }).join('')}
                         </div>
-
-                        <!-- Full Dictionary Card display after answering -->
-                        ${state.practice.quizAnswered ? `
-                            <div class="mt-8 pt-6 border-t border-slate-800/80 animate-fadeIn space-y-4">
-                                <div class="flex items-center gap-2">
-                                    <i data-lucide="book-open" class="w-4 h-4 text-purple-400"></i>
-                                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Ô Từ Điển Chi Tiết Từ Vựng:</span>
-                                </div>
-                                ${renderWordCard(word, state.myWords.some(m => m.id === word.id), state.watchlist.includes(word.english.toLowerCase()))}
-                            </div>
-                        ` : ''}
                     </div>
                 `;
             }
-            // 3. SPELLING MODE
+            // SPELLING MODE
             else if (state.practice.gameType === 'spelling') {
                 contentHTML = `
-                    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 text-center card-glow">
-                        <span class="text-[10px] text-amber-400 font-extrabold uppercase tracking-widest">Gõ Từ Tiếng Anh Tương Ứng</span>
-                        <h3 class="text-3xl font-black text-white my-4">${word.vietnamese}</h3>
-
-                        <form onsubmit="window.app.checkSpelling(event)" class="space-y-4 max-w-md mx-auto">
-                            <input 
-                                type="text" 
-                                id="spelling-input"
-                                value="${state.practice.spellingInput}"
-                                ${state.practice.spellingChecked ? 'disabled' : ''}
-                                placeholder="Gõ từ tiếng Anh..." 
-                                class="w-full p-4 rounded-2xl bg-slate-950 border ${state.practice.spellingChecked ? (state.practice.spellingCorrect ? 'border-emerald-500 text-emerald-300' : 'border-rose-500 text-rose-300') : 'border-slate-800 focus:border-purple-500'} text-center font-bold text-lg text-white outline-none"
-                                autocomplete="off"
-                            >
+                    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 card-glow mb-6 text-center">
+                        <span class="text-[10px] text-amber-400 font-extrabold uppercase tracking-widest">Viết từ tiếng Anh tương ứng</span>
+                        <h3 class="text-3xl font-black text-white mt-2 mb-6">${word.vietnamese}</h3>
+                        
+                        <div class="max-w-md mx-auto space-y-4">
+                            <input type="text" id="spelling-input" value="${state.practice.spellingInput}" ${state.practice.spellingChecked ? 'disabled' : ''} 
+                                   placeholder="Gõ từ tiếng Anh..."
+                                   class="w-full text-center text-xl font-bold p-4 bg-slate-950 border ${state.practice.spellingChecked ? (state.practice.spellingCorrect ? 'border-emerald-500 text-emerald-400' : 'border-rose-500 text-rose-400') : 'border-slate-700 text-white focus:border-amber-500'} rounded-2xl outline-none transition-all">
                             
-                            ${!state.practice.spellingChecked ? `
-                                <button type="submit" class="w-full py-3.5 bg-gradient-to-tr from-purple-600 to-indigo-600 text-white font-bold rounded-2xl text-sm shadow-lg shadow-purple-500/20">Kiểm Tra Đáp Án</button>
-                            ` : ''}
-                        </form>
-
-                        ${state.practice.spellingChecked ? `
-                            <div class="mt-6 p-4 rounded-2xl ${state.practice.spellingCorrect ? 'bg-emerald-950/50 border border-emerald-800 text-emerald-300' : 'bg-rose-950/50 border border-rose-800 text-rose-300'} animate-fadeIn">
-                                <p class="font-bold text-sm">${state.practice.spellingCorrect ? 'Chính xác hoàn hảo! 🎉' : `Chưa đúng! Đáp án chuẩn: ${word.english}`}</p>
-                            </div>
-                            <div class="mt-6 text-left border-t border-slate-800 pt-6">
-                                ${renderWordCard(word, state.myWords.some(m => m.id === word.id), state.watchlist.includes(word.english.toLowerCase()))}
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            }
-
-            container.innerHTML = `
-                <div class="space-y-6">
-                    <!-- Progress Bar Header -->
-                    <div class="flex justify-between items-center text-xs font-bold text-slate-400">
-                        <button onclick="window.app.stopPractice()" class="flex items-center gap-1 hover:text-white"><i data-lucide="arrow-left" class="w-4 h-4"></i> Thoát</button>
-                        <span>Câu ${currentIndex} / ${total}</span>
-                    </div>
-
-                    <div class="w-full bg-slate-900 rounded-full h-2 border border-slate-800 overflow-hidden">
-                        <div class="bg-gradient-to-r from-purple-500 to-indigo-500 h-full transition-all duration-300" style="width: ${(currentIndex / total) * 100}%"></div>
-                    </div>
-
-                    <!-- Game Area Content -->
-                    ${contentHTML}
-
-                    <!-- Bottom Controls Navigation -->
-                    <div class="flex justify-between items-center gap-3">
-                        <button onclick="window.app.prevPracticeItem()" class="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white" title="Câu trước"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
-                        <button onclick="window.app.nextPracticeItem()" class="flex-1 py-3.5 bg-gradient-to-tr from-purple-600 to-indigo-600 text-white font-bold rounded-2xl text-sm shadow-lg shadow-purple-500/20 flex items-center justify-center gap-2">
-                            <span>Kế tiếp</span> <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            lucide.createIcons();
-        };
-
-        const checkSpelling = (e) => {
-            e.preventDefault();
-            const inputVal = $('#spelling-input').value.trim();
-            const currentWord = state.practice.pool[state.practice.index];
-
-            state.practice.spellingInput = inputVal;
-            state.practice.spellingChecked = true;
-            state.practice.spellingCorrect = inputVal.toLowerCase() === currentWord.english.toLowerCase();
-
-            if (state.practice.spellingCorrect) state.practice.score += 1;
-            renderPractice();
-        };
-
-        const flipCard = () => {
-            state.practice.flipped = !state.practice.flipped;
-            renderPractice();
-        };
-
-        const stopPractice = () => {
-            state.practice.gameType = null;
-            renderPractice();
-        };
-
-        // USER INTERACTIONS & TOGGLES
-        const toggleSaveWord = async (wordId) => {
-            if (!state.user) {
-                showToast("Vui lòng đợi kết nối người dùng...", "error");
-                return;
-            }
-
-            const wordObj = state.allWords.find(w => w.id === wordId);
-            if (!wordObj) return;
-
-            const exists = state.myWords.some(w => w.id === wordId);
-            const docRef = doc(db, 'artifacts', appId, 'users', state.user.uid, 'my_vocabulary', wordId);
-
-            try {
-                if (exists) {
-                    await deleteDoc(docRef);
-                    showToast(`Đã bỏ lưu "${wordObj.english}"`);
-                } else {
-                    await setDoc(docRef, wordObj);
-                    showToast(`Đã lưu "${wordObj.english}" vào bộ từ cá nhân!`);
-                }
-            } catch (err) {
-                showToast("Không thể cập nhật danh sách.", "error");
-            }
-        };
-
-        const toggleWatchlist = (english) => {
-            const lower = english.toLowerCase();
-            const idx = state.watchlist.findIndex(w => w.toLowerCase() === lower);
-            
-            if (idx > -1) {
-                state.watchlist.splice(idx, 1);
-                showToast(`Đã xóa "${english}" khỏi danh sách cần tìm hiểu`);
-            } else {
-                state.watchlist.push(english);
-                showToast(`Đã thêm "${english}" vào danh sách cần tìm hiểu!`);
-            }
-
-            localStorage.setItem('vocab_watchlist_data', JSON.stringify(state.watchlist));
-            $('#stat-watchlist').innerText = state.watchlist.length;
-            
-            if (state.activeTab === 'library') displayVocabulary();
-        };
-
-        const renderMyWords = () => {
-            const listEl = $('#mywords-list');
-            if (state.myWords.length === 0) {
-                listEl.innerHTML = `
-                    <div class="text-center py-16 bg-slate-900/40 rounded-3xl border border-dashed border-slate-800 text-slate-500">
-                        <i data-lucide="bookmark-minus" class="w-12 h-12 mx-auto mb-3 text-slate-600"></i>
-                        <p class="font-semibold text-slate-400">Danh sách cá nhân chưa có từ nào.</p>
-                    </div>
-                `;
-                lucide.createIcons();
-                return;
-            }
-
-            const watchSet = new Set(state.watchlist.map(w => w.toLowerCase()));
-            listEl.innerHTML = state.myWords.map(word => 
-                renderWordCard(word, true, watchSet.has(word.english.toLowerCase()))
-            ).join('');
-            lucide.createIcons();
-        };
-
-        const renderDashboard = () => {
-            const content = $('#stats-content');
-            const total = state.allWords.length;
-            const saved = state.myWords.length;
-            const percent = total > 0 ? Math.round((saved / total) * 100) : 0;
-
-            content.innerHTML = `
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="bg-slate-900/70 p-6 rounded-3xl border border-slate-800">
-                        <p class="text-xs font-bold text-slate-500 uppercase mb-2">Tổng Kho Từ</p>
-                        <p class="text-4xl font-black text-white">${total}</p>
-                    </div>
-                    <div class="bg-slate-900/70 p-6 rounded-3xl border border-slate-800">
-                        <p class="text-xs font-bold text-slate-500 uppercase mb-2">Đã Đánh Dấu Thuộc</p>
-                        <p class="text-4xl font-black text-purple-400">${saved}</p>
-                    </div>
-                    <div class="bg-slate-900/70 p-6 rounded-3xl border border-slate-800">
-                        <p class="text-xs font-bold text-slate-500 uppercase mb-2">Tiến Độ Thuộc Bài</p>
-                        <p class="text-4xl font-black text-emerald-400">${percent}%</p>
-                        <div class="w-full bg-slate-950 h-2 rounded-full mt-3 overflow-hidden border border-slate-800">
-                            <div class="bg-emerald-500 h-full" style="width: ${percent}%"></div>
+                            ${state.practice.spellingChecked ? `
+                                <div class="text-sm font-bold ${state.practice.spellingCorrect ? 'text-emerald-400' : 'text-rose-400'}">
+                                    ${state.practice.spellingCorrect ? 'Chính xác! 🎉' : `Sai rồi. Đáp án đúng là: <span class="text-white bg-slate-800 px-2 py-1 rounded ml-1">${word.english}</span>`}
+                                </div>
+                            ` : `
+                                <button onclick="window.app.checkSpelling()" class="w-full py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-xl transition-all">Kiểm Tra</button>
+                            `}
                         </div>
                     </div>
+                `;
+            }
+
+            // Global Practice Controls
+            container.innerHTML = `
+                <div class="flex justify-between items-center mb-6">
+                    <button onclick="window.app.stopPractice()" class="text-slate-400 hover:text-white flex items-center gap-1 text-sm font-semibold transition-colors">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Quay lại
+                    </button>
+                    <div class="text-sm font-bold text-slate-500 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">
+                        <span class="text-white">${currentIndex}</span> / ${total}
+                    </div>
+                </div>
+                
+                ${contentHTML}
+
+                <div class="flex justify-between gap-4">
+                    <button onclick="window.app.prevPracticeItem()" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl transition-all flex justify-center items-center gap-2 ${currentIndex === 1 ? 'opacity-50 cursor-not-allowed' : ''}" ${currentIndex === 1 ? 'disabled' : ''}>
+                        <i data-lucide="chevron-left" class="w-5 h-5"></i> Câu trước
+                    </button>
+                    <button onclick="window.app.nextPracticeItem()" class="flex-1 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl transition-all flex justify-center items-center gap-2">
+                        ${currentIndex === total ? 'Hoàn Thành' : 'Tiếp Theo'} <i data-lucide="${currentIndex === total ? 'check' : 'chevron-right'}" class="w-5 h-5"></i>
+                    </button>
                 </div>
             `;
-            lucide.createIcons();
-        };
-
-        const switchTab = (tabId) => {
-            state.activeTab = tabId;
-            renderNav();
             
-            ['library', 'mywords', 'practice', 'dashboard'].forEach(t => {
-                const el = $(`#view-${t}`);
-                if (t === tabId) {
-                    el.classList.remove('hidden-view');
-                    if (t === 'library') displayVocabulary();
-                    if (t === 'mywords') renderMyWords();
-                    if (t === 'practice') renderPractice();
-                    if (t === 'dashboard') renderDashboard();
-                } else {
-                    el.classList.add('hidden-view');
-                }
-            });
-
-            const fab = $('#fab-add-word');
-            if (tabId === 'library') fab.classList.remove('hidden');
-            else fab.classList.add('hidden');
+            // Auto focus spelling input
+            if (state.practice.gameType === 'spelling' && !state.practice.spellingChecked) {
+                setTimeout(() => {
+                    const input = $('#spelling-input');
+                    if(input) input.focus();
+                }, 100);
+            }
         };
 
-        const setLibraryFilter = (filter, btn) => {
-            state.library.filter = filter;
-            $$('.filter-btn').forEach(b => {
-                b.className = "filter-btn bg-slate-900 border border-slate-800 hover:border-slate-700 px-4 py-2.5 rounded-xl text-sm transition-all text-slate-400 font-medium";
-            });
-            btn.className = "filter-btn bg-purple-600 text-white px-4 py-2.5 rounded-xl text-sm transition-all font-bold shadow-lg shadow-purple-900/30";
-            displayVocabulary();
-        };
-
-        const setTopicFilter = (topic) => {
-            state.library.topic = topic;
-            displayVocabulary();
-        };
-
-        // EXPOSE TO GLOBAL APP SCOPE
+        // EXPOSE FUNCTIONS TO GLOBAL SCOPE SO HTML ONCLICK WORKS
         window.app = {
-            switchTab,
-            setLibraryFilter,
-            setTopicFilter,
-            playAudio,
-            toggleSaveWord,
-            toggleWatchlist,
-            openForm: openModal,
-            openEditForm,
-            closeModal,
-            handleFormSubmit,
-            startPractice,
-            answerQuiz,
-            nextPracticeItem,
-            prevPracticeItem,
-            checkSpelling,
-            flipCard,
-            stopPractice
+            switchTab: (tabId) => {
+                state.activeTab = tabId;
+                ['library', 'mywords', 'dashboard', 'practice'].forEach(t => {
+                    $(`#view-${t}`).classList.add('hidden-view');
+                });
+                $(`#view-${tabId}`).classList.remove('hidden-view');
+                renderNav();
+                
+                if (tabId === 'library') displayVocabulary();
+                if (tabId === 'mywords') renderMyWords();
+                if (tabId === 'dashboard') updateDashboardStats();
+                if (tabId === 'practice' && !state.practice.gameType) renderPractice();
+            },
+            
+            openForm: () => {
+                $('#form-id').value = '';
+                $('#modal-title').innerHTML = `<i data-lucide="plus-circle" class="text-purple-400"></i> Thêm Từ Vựng Mới`;
+                $('#word-form').reset();
+                $('#word-modal').classList.remove('hidden');
+                lucide.createIcons();
+            },
+
+            openEditForm: (id) => {
+                const word = state.allWords.find(w => w.id === id);
+                if (!word) return;
+
+                $('#form-id').value = word.id;
+                $('#modal-title').innerHTML = `<i data-lucide="edit-3" class="text-purple-400"></i> Chỉnh Sửa Từ Vựng`;
+                $('#form-english').value = word.english;
+                $('#form-vietnamese').value = word.vietnamese;
+                $('#form-type').value = word.type || '';
+                $('#form-ipa').value = word.ipa || '';
+                $('#form-topic').value = word.topic || '';
+                $('#form-definition').value = word.definition || '';
+                $('#form-example').value = word.example || '';
+                $('#form-synonym').value = word.synonym || '';
+                $('#form-antonym').value = word.antonym || '';
+
+                $('#word-modal').classList.remove('hidden');
+                lucide.createIcons();
+            },
+
+            closeModal: () => {
+                $('#word-modal').classList.add('hidden');
+            },
+
+            handleFormSubmit: (e) => {
+                e.preventDefault();
+                const formData = new FormData();
+                const id = $('#form-id').value;
+
+                if (id) {
+                    formData.append('action', 'update');
+                    formData.append('id', id);
+                } else {
+                    formData.append("action","add");
+                }
+
+                formData.append('english', $('#form-english').value.trim());
+                formData.append('vietnamese', $('#form-vietnamese').value.trim());
+                formData.append('type', $('#form-type').value.trim());
+                formData.append('ipa', $('#form-ipa').value.trim());
+                formData.append('topic', $('#form-topic').value.trim());
+                formData.append('definition', $('#form-definition').value.trim());
+                formData.append('example', $('#form-example').value.trim());
+                formData.append('synonym', $('#form-synonym').value.trim());
+                formData.append('antonym', $('#form-antonym').value.trim());
+
+                postToSheet(formData, Boolean(id));
+            },
+
+            toggleSaveWord: async (wordId) => {
+                if (!state.user) {
+                    showToast("Đang kết nối tài khoản, vui lòng thử lại.", "error");
+                    return;
+                }
+                const docRef = doc(db, 'artifacts', appId, 'users', state.user.uid, 'my_vocabulary', wordId);
+                const isSaved = state.myWords.some(m => m.id === wordId);
+                
+                try {
+                    if (isSaved) {
+                        await deleteDoc(docRef);
+                        showToast("Đã bỏ khỏi bộ sưu tập", "success");
+                    } else {
+                        const wordData = state.allWords.find(w => w.id === wordId);
+                        if (wordData) {
+                            await setDoc(docRef, { ...wordData, savedAt: new Date().toISOString() });
+                            showToast("Đã lưu vào bộ sưu tập!", "success");
+                        }
+                    }
+                } catch (err) {
+                    showToast("Lỗi khi lưu từ", "error");
+                }
+            },
+
+            toggleWatchlist: (wordEng) => {
+                const low = wordEng.toLowerCase();
+                const idx = state.watchlist.findIndex(w => w.toLowerCase() === low);
+                if (idx > -1) {
+                    state.watchlist.splice(idx, 1);
+                    showToast(`Bỏ đánh dấu: ${wordEng}`);
+                } else {
+                    state.watchlist.push(low);
+                    showToast(`Thêm vào Cần tìm hiểu: ${wordEng}`);
+                }
+                localStorage.setItem('vocab_watchlist_data', JSON.stringify(state.watchlist));
+                $('#stat-watchlist').innerText = state.watchlist.length;
+                
+                if (state.activeTab === 'library') displayVocabulary();
+                if (state.activeTab === 'mywords') renderMyWords();
+            },
+
+            setLibraryFilter: (filter, btnElement) => {
+                state.library.filter = filter;
+                $$('.filter-btn').forEach(btn => {
+                    btn.className = "filter-btn bg-slate-900 border border-slate-800 hover:border-slate-700 px-4 py-2.5 rounded-xl text-sm transition-all text-slate-400 font-medium";
+                });
+                
+                if(filter === 'watchlist') {
+                    btnElement.className = "filter-btn bg-amber-600 text-white border-amber-500 px-4 py-2.5 rounded-xl text-sm transition-all font-bold shadow-lg shadow-amber-900/30 flex items-center gap-1.5";
+                } else {
+                    btnElement.className = "filter-btn bg-purple-600 text-white px-4 py-2.5 rounded-xl text-sm transition-all font-bold shadow-lg shadow-purple-900/30";
+                }
+                
+                displayVocabulary();
+            },
+
+            setTopicFilter: (topic) => {
+                state.library.topic = topic;
+                displayVocabulary();
+            },
+
+            handleSearch: (e) => {
+                state.library.search = e.target.value;
+                displayVocabulary();
+            },
+            
+            handleTopicSearch: (e) => {
+                state.library.topicSearch = e.target.value;
+                renderTopicNav();
+            },
+
+            playAudio: playAudio,
+
+            startPractice: (type, mode = 'en-vi') => {
+                if (state.allWords.length === 0) {
+                    showToast("Kho từ vựng chưa sẵn sàng!", "error");
+                    return;
+                }
+                let sourcePool = [...state.allWords];
+                
+                // Ưu tiên các từ trong myWords và watchlist
+                if(state.myWords.length > 0) sourcePool = [...state.myWords, ...sourcePool];
+
+                // Shuffle & Unique
+                sourcePool = Array.from(new Set(sourcePool.map(a => a.id)))
+                    .map(id => sourcePool.find(a => a.id === id));
+
+                const pool = sourcePool.sort(() => Math.random() - 0.5).slice(0, 15);
+                
+                state.practice = {
+                    gameType: type,
+                    mode: mode,
+                    index: 0,
+                    flipped: false,
+                    pool: pool,
+                    score: 0,
+                    quizOptions: [],
+                    quizAnswered: false,
+                    quizSelectedId: null,
+                    spellingInput: '',
+                    spellingChecked: false,
+                    spellingCorrect: false,
+                    isFinished: false
+                };
+
+                if (type === 'quiz') setupQuizQuestion();
+                renderPractice();
+            },
+
+            stopPractice: () => {
+                state.practice.gameType = null;
+                renderPractice();
+            },
+
+            flipCard: () => {
+                state.practice.flipped = !state.practice.flipped;
+                renderPractice();
+            },
+
+            answerQuiz: (optionId) => {
+                if (state.practice.quizAnswered) return;
+                const currentWord = state.practice.pool[state.practice.index];
+                state.practice.quizAnswered = true;
+                state.practice.quizSelectedId = optionId;
+
+                if (optionId === currentWord.id) state.practice.score += 1;
+                renderPractice();
+            },
+
+            checkSpelling: () => {
+                const inputVal = $('#spelling-input').value.trim().toLowerCase();
+                if(!inputVal) return;
+                
+                const currentWord = state.practice.pool[state.practice.index];
+                state.practice.spellingInput = inputVal;
+                state.practice.spellingChecked = true;
+                
+                if (inputVal === currentWord.english.toLowerCase()) {
+                    state.practice.spellingCorrect = true;
+                    state.practice.score += 1;
+                } else {
+                    state.practice.spellingCorrect = false;
+                }
+                renderPractice();
+            },
+
+            nextPracticeItem: () => {
+                if (state.practice.index < state.practice.pool.length - 1) {
+                    state.practice.index += 1;
+                    state.practice.flipped = false;
+                    state.practice.spellingChecked = false;
+                    state.practice.spellingInput = '';
+                    if (state.practice.gameType === 'quiz') setupQuizQuestion();
+                    renderPractice();
+                } else {
+                    state.practice.isFinished = true;
+                    renderPractice();
+                }
+            },
+
+            prevPracticeItem: () => {
+                if (state.practice.index > 0) {
+                    state.practice.index -= 1;
+                    state.practice.flipped = false;
+                    state.practice.spellingChecked = false;
+                    state.practice.spellingInput = '';
+                    if (state.practice.gameType === 'quiz') setupQuizQuestion();
+                    renderPractice();
+                }
+            }
         };
 
-        // INIT APP
-        window.onload = async () => {
+        // INITIALIZE ON LOAD
+        document.addEventListener('DOMContentLoaded', () => {
             renderNav();
             updateStreak();
-            await setupAuth();
-            await fetchSheetData();
+            setupAuth();
+            fetchSheetData();
+        });
 
-            $('#search-input')?.addEventListener('input', (e) => {
-                state.library.search = e.target.value.trim();
-                displayVocabulary();
-            });
-
-            $('#topic-search')?.addEventListener('input', (e) => {
-                const query = e.target.value.toLowerCase();
-                const buttons = $$('#topicNav button');
-                buttons.forEach(btn => {
-                    const text = btn.innerText.toLowerCase();
-                    if (text.includes(query)) btn.classList.remove('hidden');
-                    else btn.classList.add('hidden');
-                });
-            });
-
-            switchTab('library');
-            lucide.createIcons();
-        };
     </script>
 </body>
 </html>
