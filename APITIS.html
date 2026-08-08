@@ -18,11 +18,11 @@
                     },
                     colors: {
                         dark: {
-                            bg: '#121212',
-                            panel: '#1E1E1E',
-                            border: '#333333',
-                            text: '#E0E0E0',
-                            textMuted: '#A0A0A0'
+                            bg: '#0f172a',
+                            panel: '#1e293b',
+                            border: '#334155',
+                            text: '#f8fafc',
+                            textMuted: '#94a3b8'
                         }
                     }
                 }
@@ -32,16 +32,19 @@
     
     <style>
         body { transition: background-color 0.3s ease, color 0.3s ease; }
+        
         .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(229, 231, 235, 0.8);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
         .dark .glass-panel {
-            background: #1E1E1E;
-            border-color: #333333;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            background: rgba(30, 41, 59, 0.7);
+            border-color: rgba(71, 85, 105, 0.5);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
         }
+        
         .option-btn { transition: all 0.2s ease; }
         .option-btn.correct {
             border-color: #10b981 !important;
@@ -61,15 +64,19 @@
             background-color: rgba(239, 68, 68, 0.2) !important;
             color: #f87171 !important;
         }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        
         .fade-in { animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
         .loader {
             border: 4px solid rgba(0, 0, 0, 0.1);
             border-left-color: #4f46e5;
@@ -80,20 +87,26 @@
         .dark .loader { border: 4px solid rgba(255, 255, 255, 0.1); border-left-color: #818cf8; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        .pulse-recording {
-            animation: pulse-red 1.5s infinite;
-        }
+        .pulse-recording { animation: pulse-red 1.5s infinite; }
         @keyframes pulse-red {
             0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
             70% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
             100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .criteria-item {
+            transition: opacity 0.3s ease, height 0.3s ease, padding 0.3s ease;
+            overflow: hidden;
+        }
+        .criteria-hidden {
+            opacity: 0; height: 0; padding-top: 0 !important; padding-bottom: 0 !important; margin: 0 !important; border: none !important;
         }
     </style>
 </head>
 
 <body class="bg-gray-50 text-gray-900 dark:bg-dark-bg dark:text-dark-text min-h-screen flex flex-col font-sans transition-colors duration-300" onload="app.init()">
 
-    <nav class="bg-indigo-600 dark:bg-indigo-900 text-white shadow-lg sticky top-0 z-50 transition-colors duration-300">
+    <nav class="bg-indigo-600 dark:bg-slate-900 text-white shadow-lg sticky top-0 z-50 transition-colors duration-300 border-b border-indigo-700 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <!-- Logo -->
@@ -108,18 +121,21 @@
                 </div>
                 
                 <!-- Main Nav Links -->
-                <div class="flex items-center space-x-1 sm:space-x-3">
-                    <button onclick="app.navigate('vocab_book')" class="hover:bg-white/10 px-3 py-2 rounded-xl text-sm font-medium transition-colors flex items-center">
+                <div class="flex items-center space-x-1 sm:space-x-3 text-sm font-medium">
+                    <button onclick="app.navigate('vocab_book')" class="hover:bg-white/10 px-3 py-2 rounded-xl transition-colors flex items-center">
                         <i class="fas fa-book-bookmark mr-1.5 text-yellow-300"></i> <span class="hidden sm:inline">Sổ tay</span>
                     </button>
-                    <button onclick="app.navigate('history')" class="hover:bg-white/10 px-3 py-2 rounded-xl text-sm font-medium transition-colors flex items-center">
+                    <button onclick="app.navigate('history')" class="hover:bg-white/10 px-3 py-2 rounded-xl transition-colors flex items-center">
                         <i class="fas fa-clock-rotate-left mr-1.5 text-cyan-300"></i> <span class="hidden sm:inline">Lịch sử</span>
                     </button>
-                    <button onclick="app.navigate('admin_dashboard')" class="hover:bg-white/10 px-3 py-2 rounded-xl text-sm font-medium transition-colors flex items-center text-amber-300 hover:text-amber-100">
+                    <button onclick="app.navigate('grading_criteria')" class="hover:bg-white/10 px-3 py-2 rounded-xl transition-colors flex items-center">
+                        <i class="fas fa-clipboard-check mr-1.5 text-emerald-300"></i> <span class="hidden md:inline">Tiêu chí</span>
+                    </button>
+                    <button onclick="app.navigate('admin_dashboard')" class="hover:bg-white/10 px-3 py-2 rounded-xl transition-colors flex items-center text-amber-300 hover:text-amber-100">
                         <i class="fas fa-sliders mr-1.5"></i> <span class="hidden sm:inline">Quản trị</span>
                     </button>
                     
-                    <div class="w-px h-6 bg-indigo-400 dark:bg-indigo-600 mx-1"></div>
+                    <div class="w-px h-6 bg-indigo-400 dark:bg-slate-700 mx-1"></div>
                     
                     <!-- Dark Mode Toggle -->
                     <button id="theme-toggle" onclick="app.toggleTheme()" class="hover:bg-white/10 p-2 rounded-full transition-colors w-10 h-10 flex items-center justify-center">
@@ -127,7 +143,7 @@
                     </button>
                     
                     <!-- User Status -->
-                    <div id="user-status" class="hidden sm:flex text-xs bg-black/20 px-3 py-1.5 rounded-full items-center font-mono">
+                    <div id="user-status" class="hidden lg:flex text-xs bg-black/20 px-3 py-1.5 rounded-full items-center font-mono">
                         <i class="fas fa-circle-notch fa-spin mr-2"></i> Kết nối...
                     </div>
                 </div>
@@ -135,9 +151,9 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
+    <!-- Main Content Area -->
     <main id="app-content" class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Dynamic views will render here -->
+        <!-- Dynamic views render here -->
     </main>
 
     <!-- Modal Container -->
@@ -148,7 +164,6 @@
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyB8AVoyDEpY2U5migHCQ_r7DEOC5QYkqMI",
             authDomain: "luyentap-2f2ab.firebaseapp.com",
@@ -166,51 +181,30 @@
         const auth = getAuth(firebaseApp);
         const db = getFirestore(firebaseApp);
 
-        // System Skill Categories Configuration
         const CATEGORIES = {
             grammar: { 
-                id: 'grammar', 
-                name: 'Grammar & Vocabulary', 
-                icon: 'fa-spell-check', 
-                color: 'bg-blue-600', 
-                textClass: 'text-blue-600',
-                timeLimit: 1500, // 25 min timer
+                id: 'grammar', name: 'Grammar & Vocabulary', icon: 'fa-spell-check', 
+                color: 'bg-blue-600', textClass: 'text-blue-600', timeLimit: 1500,
                 desc: 'Phần Trắc nghiệm Ngữ pháp và Ghép từ/Định nghĩa Từ vựng.<br>Thời gian: 25 phút.'
             },
             reading: { 
-                id: 'reading', 
-                name: 'Reading', 
-                icon: 'fa-book-open', 
-                color: 'bg-emerald-600', 
-                textClass: 'text-emerald-600',
-                timeLimit: 2400, // 40 min timer
+                id: 'reading', name: 'Reading', icon: 'fa-book-open', 
+                color: 'bg-emerald-600', textClass: 'text-emerald-600', timeLimit: 2400,
                 desc: 'Đọc hiểu đoạn văn. Một đoạn văn chứa nhiều câu hỏi (mỗi câu 3 đáp án).<br>Thời gian: 40 phút.'
             },
             listening: { 
-                id: 'listening', 
-                name: 'Listening', 
-                icon: 'fa-headphones', 
-                color: 'bg-purple-600', 
-                textClass: 'text-purple-600',
-                timeLimit: null, // No time limit
+                id: 'listening', name: 'Listening', icon: 'fa-headphones', 
+                color: 'bg-purple-600', textClass: 'text-purple-600', timeLimit: null,
                 desc: 'Chỉ được nghe tối đa 2 lần cho mỗi bài nghe.'
             },
             writing: { 
-                id: 'writing', 
-                name: 'Writing', 
-                icon: 'fa-pen-nib', 
-                color: 'bg-orange-600', 
-                textClass: 'text-orange-600',
-                timeLimit: null, // No time limit
+                id: 'writing', name: 'Writing', icon: 'fa-pen-nib', 
+                color: 'bg-orange-600', textClass: 'text-orange-600', timeLimit: null,
                 desc: 'Part 1: 3 câu hỏi ngắn (1-5 từ hoặc 20-30 từ). Part 2: Viết thư/email (120-150 từ).'
             },
             speaking: { 
-                id: 'speaking', 
-                name: 'Speaking', 
-                icon: 'fa-microphone', 
-                color: 'bg-rose-600', 
-                textClass: 'text-rose-600',
-                timeLimit: null, // No time limit
+                id: 'speaking', name: 'Speaking', icon: 'fa-microphone', 
+                color: 'bg-rose-600', textClass: 'text-rose-600', timeLimit: null,
                 desc: 'Part 1: 3 câu hỏi đơn. Part 2: 1 ảnh & câu phụ. Part 3: 2 ảnh so sánh. Có ghi âm.'
             }
         };
@@ -226,19 +220,16 @@
                 historyRecords: [], 
                 adminQuestions: [], 
                 
+                isTesting: false, // Prevents accidental reloads/navigation
+
                 mediaRecorder: null,
                 audioChunks: [],
                 isRecording: false,
 
                 test: {
-                    questions: [],
-                    currentIndex: 0,
-                    answers: [], 
-                    writingAnswers: [], 
-                    speakingAudioBlobs: [], 
-                    listeningPlayCounts: [], 
-                    startTime: null,
-                    isReviewMode: false
+                    questions: [], currentIndex: 0, answers: [], 
+                    writingAnswers: [], speakingAudioBlobs: [], listeningPlayCounts: [], 
+                    startTime: null, isReviewMode: false
                 }
             },
             
@@ -247,6 +238,15 @@
             init: async function() {
                 this.initTheme();
                 this.renderLoading("Đang khởi tạo hệ thống thi...");
+                
+                // Prevent accidental page reloads while testing
+                window.addEventListener('beforeunload', (e) => {
+                    if (this.state.isTesting) {
+                        e.preventDefault();
+                        e.returnValue = 'Bạn đang làm bài thi. Dữ liệu chưa lưu sẽ bị mất.';
+                        return e.returnValue;
+                    }
+                });
                 
                 try {
                     if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -261,7 +261,7 @@
                         
                         if (user) {
                             statusEl.innerHTML = `<i class="fas fa-user-check text-emerald-400 mr-1.5"></i> ${user.uid.substring(0, 6)}`;
-                            if (this.state.currentView === 'home') this.navigate('home');
+                            if (this.state.currentView === 'home') this.navigate('home', {}, true);
                         } else {
                             statusEl.innerHTML = `<i class="fas fa-exclamation-circle text-rose-400 mr-1.5"></i> Lỗi Auth`;
                         }
@@ -272,12 +272,11 @@
                 }
             },
 
-            // Utility Functions
             showModal: function(title, content) {
                 const modal = document.getElementById('modal-container');
                 modal.innerHTML = `
                     <div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 fade-in">
-                        <div class="bg-white dark:bg-dark-bg w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-gray-200 dark:border-dark-border">
+                        <div class="bg-white dark:bg-dark-bg w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-gray-200 dark:border-dark-border">
                             <div class="px-6 py-4 border-b border-gray-100 dark:border-dark-border flex justify-between items-center bg-gray-50/50 dark:bg-dark-panel/50">
                                 <h3 class="font-extrabold text-lg text-gray-900 dark:text-white">${title}</h3>
                                 <button onclick="app.closeModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 transition-colors">
@@ -291,37 +290,24 @@
                     </div>
                 `;
             },
-            closeModal: function() {
-                document.getElementById('modal-container').innerHTML = '';
-            },
+            closeModal: function() { document.getElementById('modal-container').innerHTML = ''; },
+            
             showNotification: function(msg, type = 'info') {
-                const colors = {
-                    success: 'bg-emerald-500',
-                    error: 'bg-rose-500',
-                    warning: 'bg-amber-500',
-                    info: 'bg-indigo-500'
-                };
-                const icon = {
-                    success: 'fa-check-circle',
-                    error: 'fa-exclamation-circle',
-                    warning: 'fa-exclamation-triangle',
-                    info: 'fa-info-circle'
-                };
+                const colors = { success: 'bg-emerald-500', error: 'bg-rose-500', warning: 'bg-amber-500', info: 'bg-indigo-500' };
+                const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
                 
                 const notif = document.createElement('div');
                 notif.className = `fixed bottom-6 right-6 ${colors[type]} text-white px-5 py-3.5 rounded-xl shadow-xl font-medium flex items-center gap-3 z-[200] transform transition-all duration-300 translate-y-10 opacity-0 border border-white/20`;
-                notif.innerHTML = `<i class="fas ${icon[type]} text-lg"></i> ${msg}`;
+                notif.innerHTML = `<i class="fas ${icons[type]} text-lg"></i> ${msg}`;
                 document.body.appendChild(notif);
                 
-                requestAnimationFrame(() => {
-                    notif.classList.remove('translate-y-10', 'opacity-0');
-                });
-                
+                requestAnimationFrame(() => notif.classList.remove('translate-y-10', 'opacity-0'));
                 setTimeout(() => {
                     notif.classList.add('translate-y-10', 'opacity-0');
                     setTimeout(() => notif.remove(), 300);
                 }, 3000);
             },
+            
             showConfirm: function(title, msg) {
                 return new Promise((resolve) => {
                     this.showModal(title, `
@@ -329,7 +315,7 @@
                             <div class="w-16 h-16 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-500 flex items-center justify-center mx-auto mb-4 text-2xl">
                                 <i class="fas fa-exclamation-triangle"></i>
                             </div>
-                            <p class="text-gray-700 dark:text-gray-300 mb-6">${msg}</p>
+                            <p class="text-gray-700 dark:text-gray-300 mb-6 font-medium">${msg}</p>
                             <div class="flex justify-center gap-3">
                                 <button id="btn-cancel-confirm" class="px-5 py-2.5 bg-gray-100 dark:bg-dark-bg hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl font-bold transition-colors">Hủy</button>
                                 <button id="btn-ok-confirm" class="px-5 py-2.5 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-bold shadow-md transition-colors">Đồng ý</button>
@@ -337,16 +323,11 @@
                         </div>
                     `);
                     
-                    document.getElementById('btn-cancel-confirm').onclick = () => {
-                        this.closeModal();
-                        resolve(false);
-                    };
-                    document.getElementById('btn-ok-confirm').onclick = () => {
-                        this.closeModal();
-                        resolve(true);
-                    };
+                    document.getElementById('btn-cancel-confirm').onclick = () => { this.closeModal(); resolve(false); };
+                    document.getElementById('btn-ok-confirm').onclick = () => { this.closeModal(); resolve(true); };
                 });
             },
+            
             renderLoading: function(msg) {
                 document.getElementById('app-content').innerHTML = `
                     <div class="flex flex-col items-center justify-center h-[50vh] fade-in">
@@ -382,13 +363,10 @@
                 }
             },
 
-            getPublicRef: function(colName) {
-                return collection(db, 'artifacts', appId, 'public', 'data', colName);
-            },
-
-            getPrivateRef: function(colName) {
+            getPublicRef: function(colName) { return collection(db, 'artifacts', appId, 'public', 'data', colName); },
+            getPrivateRef: function(colName) { 
                 if (!this.state.user) throw new Error("Chưa xác thực người dùng");
-                return collection(db, 'artifacts', appId, 'users', this.state.user.uid, colName);
+                return collection(db, 'artifacts', appId, 'users', this.state.user.uid, colName); 
             },
 
             shuffleArray: function(array) {
@@ -403,8 +381,7 @@
             shuffleQuestionOptions: function(q) {
                 if (!q.options || q.options.length === 0) return q;
                 const originalCorrectText = q.options[q.correctAnswer];
-                let shuffledOptions = [...q.options];
-                shuffledOptions = this.shuffleArray(shuffledOptions);
+                let shuffledOptions = this.shuffleArray([...q.options]);
                 const newCorrectIndex = shuffledOptions.indexOf(originalCorrectText);
                 return { ...q, options: shuffledOptions, correctAnswer: newCorrectIndex };
             },
@@ -442,41 +419,31 @@
                 }, 1000);
             },
 
-            navigate: function(view, params = {}) {
-                this.stopTimer();
-                if (this.state.isRecording) {
-                    this.stopAudioRecording();
+            navigate: async function(view, params = {}, force = false) {
+                // Check if user is trying to leave an active test
+                if (!force && this.state.isTesting && !['test_run', 'test_run_review'].includes(view)) {
+                    const confirmLeave = await this.showConfirm("Cảnh báo thoát", "Bạn đang làm bài thi. Tiến trình và dữ liệu sẽ không được lưu nếu bạn rời đi. Bạn có chắc chắn muốn thoát?");
+                    if (!confirmLeave) return;
+                    this.state.isTesting = false; // Granted permission to leave
                 }
 
-                if (params.category) {
-                    this.state.activeCategory = params.category;
-                }
+                this.stopTimer();
+                if (this.state.isRecording) this.stopAudioRecording();
+                if (params.category) this.state.activeCategory = params.category;
 
                 this.state.currentView = view;
                 const contentArea = document.getElementById('app-content');
 
                 switch(view) {
-                    case 'home':
-                        contentArea.innerHTML = this.views.home();
-                        break;
-                    case 'admin_dashboard':
-                        contentArea.innerHTML = this.views.adminDashboard();
-                        break;
-                    case 'admin_manage':
-                        this.loadAdminQuestions(this.state.activeCategory);
-                        break;
-                    case 'test_start':
-                        contentArea.innerHTML = this.views.testStart(this.state.activeCategory);
-                        break;
-                    case 'test_run':
-                        this.startTestSession(this.state.activeCategory);
-                        break;
-                    case 'history':
-                        this.loadHistory();
-                        break;
-                    case 'vocab_book':
-                        this.loadVocabBook();
-                        break;
+                    case 'home': contentArea.innerHTML = this.views.home(); break;
+                    case 'admin_dashboard': contentArea.innerHTML = this.views.adminDashboard(); break;
+                    case 'admin_manage': this.loadAdminQuestions(this.state.activeCategory); break;
+                    case 'test_start': contentArea.innerHTML = this.views.testStart(this.state.activeCategory); break;
+                    case 'test_run': this.startTestSession(this.state.activeCategory); break;
+                    case 'test_run_review': this.renderCurrentQuestion(); break;
+                    case 'history': this.loadHistory(); break;
+                    case 'vocab_book': this.loadVocabBook(); break;
+                    case 'grading_criteria': contentArea.innerHTML = this.views.gradingCriteria(); break;
                 }
             },
 
@@ -486,7 +453,6 @@
                 try {
                     let rawQuestions = [];
                     const snapshot = await getDocs(query(this.getPublicRef(`questions_${categoryId}`)));
-                    
                     snapshot.forEach(doc => rawQuestions.push({ id: doc.id, ...doc.data() }));
 
                     if (rawQuestions.length === 0) {
@@ -505,64 +471,41 @@
                         grammarPart = this.shuffleArray(grammarPart).map(q => this.shuffleQuestionOptions(q));
                         grammarPart = grammarPart.map(q => ({ ...q, part: 'Grammar' }));
 
-                        // Logic gộp 5 từ vựng thành 1 câu hỏi Matching và sinh 10 đáp án
                         const createVocabGroups = (pool, pNum) => {
                             pool = this.shuffleArray(pool);
                             let groups = [];
                             while (pool.length > 0) {
                                 let count = Math.min(5, pool.length);
                                 let selected = pool.splice(0, count);
-                                
-                                // Tìm các từ khác trong DB để làm đáp án nhiễu (Dummies)
                                 let targetSubType = pNum === 1 ? 'vocab_matching_p1' : 'vocab_matching_p2';
                                 let otherPool = rawQuestions.filter(q => q.subType === targetSubType && !selected.find(s => s.id === q.id));
                                 otherPool = this.shuffleArray(otherPool);
                                 
-                                // Cố gắng lấy thêm đủ dummy để tổng có 10 options
                                 let dummies = otherPool.slice(0, 10 - count);
-                                
-                                let allOptions = [...selected.map(s => s.target), ...dummies.map(d => d.target)];
-                                allOptions = this.shuffleArray(allOptions);
+                                let allOptions = this.shuffleArray([...selected.map(s => s.target), ...dummies.map(d => d.target)]);
                                 
                                 groups.push({
-                                    isVocabMatching: true,
-                                    subType: targetSubType,
-                                    part: pNum === 1 ? 'Vocab Part 1' : 'Vocab Part 2',
-                                    pairs: selected.map(s => ({ word: s.word, target: s.target })),
-                                    options: allOptions
+                                    isVocabMatching: true, subType: targetSubType, part: pNum === 1 ? 'Vocab Part 1' : 'Vocab Part 2',
+                                    pairs: selected.map(s => ({ word: s.word, target: s.target })), options: allOptions
                                 });
                             }
                             return groups;
                         };
 
-                        let vGroups1 = createVocabGroups(vocabMatch1, 1);
-                        let vGroups2 = createVocabGroups(vocabMatch2, 2);
-
-                        preparedQuestions = [...grammarPart, ...vGroups1, ...vGroups2];
+                        preparedQuestions = [...grammarPart, ...createVocabGroups(vocabMatch1, 1), ...createVocabGroups(vocabMatch2, 2)];
                     } else if (categoryId === 'reading') {
                         rawQuestions.sort((a, b) => (new Date(a.createdAt) - new Date(b.createdAt))); 
-                        
                         rawQuestions.forEach(doc => {
                             let subQs = doc.subQuestions || [];
                             if (subQs.length === 0 && doc.text) {
                                 subQs = [{ text: doc.text, options: doc.options, correctAnswer: doc.correctAnswer, explanation: doc.explanation }];
                             }
-                            
                             subQs.forEach((subQ, idx) => {
-                                let flatQ = {
-                                    id: `${doc.id}_${idx}`,
-                                    passageId: doc.id,
-                                    passageTitle: doc.passageTitle,
-                                    passage: doc.passage,
-                                    isReadingGroup: true,
-                                    subQuestionIndex: idx,
-                                    totalSubQuestions: subQs.length,
-                                    text: subQ.text,
-                                    options: subQ.options,
-                                    correctAnswer: subQ.correctAnswer,
-                                    explanation: subQ.explanation
-                                };
-                                preparedQuestions.push(this.shuffleQuestionOptions(flatQ));
+                                preparedQuestions.push(this.shuffleQuestionOptions({
+                                    id: `${doc.id}_${idx}`, passageId: doc.id, passageTitle: doc.passageTitle, passage: doc.passage,
+                                    isReadingGroup: true, subQuestionIndex: idx, totalSubQuestions: subQs.length,
+                                    text: subQ.text, options: subQ.options, correctAnswer: subQ.correctAnswer, explanation: subQ.explanation
+                                }));
                             });
                         });
                     } else if (categoryId === 'speaking' || categoryId === 'writing') {
@@ -572,80 +515,60 @@
                     }
 
                     this.state.test = {
-                        questions: preparedQuestions,
-                        currentIndex: 0,
+                        questions: preparedQuestions, currentIndex: 0,
                         answers: new Array(preparedQuestions.length).fill(null),
                         writingAnswers: new Array(preparedQuestions.length).fill(''),
                         speakingAudioBlobs: new Array(preparedQuestions.length).fill(null),
                         listeningPlayCounts: new Array(preparedQuestions.length).fill(0),
-                        startTime: new Date(),
-                        isReviewMode: false
+                        startTime: new Date(), isReviewMode: false
                     };
+                    
+                    this.state.isTesting = true;
 
-                    const categoryConfig = CATEGORIES[categoryId];
-                    if (categoryConfig.timeLimit) {
-                        this.startTimer(categoryConfig.timeLimit);
-                    }
-
+                    if (CATEGORIES[categoryId].timeLimit) this.startTimer(CATEGORIES[categoryId].timeLimit);
                     this.renderCurrentQuestion();
 
                 } catch (error) {
                     console.error("Test start error:", error);
                     this.showNotification("Không thể khởi tạo bài thi", "error");
-                    this.navigate('home');
+                    this.navigate('home', {}, true);
                 }
             },
 
             handleAudioEnded: function(qIndex) {
                 const btnText = document.getElementById(`play-btn-text-${qIndex}`);
-                if (btnText) {
-                    const played = this.state.test.listeningPlayCounts[qIndex] || 0;
-                    btnText.innerText = played >= 2 ? 'Đã Hết Lượt Nghe' : 'Phát Lại Audio';
-                }
+                const played = this.state.test.listeningPlayCounts[qIndex] || 0;
+                if (btnText) btnText.innerText = played >= 2 ? 'Đã Hết Lượt Nghe' : 'Phát Lại Audio';
+                
                 const btn = document.getElementById(`play-btn-${qIndex}`);
-                if (btn && this.state.test.listeningPlayCounts[qIndex] >= 2) {
+                if (btn && played >= 2) {
                     btn.disabled = true;
                     btn.className = 'px-6 py-3 bg-gray-400 text-white font-bold rounded-2xl cursor-not-allowed opacity-60 flex items-center';
                 }
             },
-
-            handleAudioError: function(qIndex) {
-                this.showNotification("Lỗi tải file audio. Vui lòng kiểm tra lại đường dẫn file mp3.", "error");
-            },
+            handleAudioError: function(qIndex) { this.showNotification("Lỗi tải file audio.", "error"); },
 
             playListeningAudio: function(qIndex) {
                 const test = this.state.test;
                 const played = test.listeningPlayCounts[qIndex] || 0;
-
-                if (played >= 2) {
-                    this.showNotification("Bạn đã hết 2 lượt nghe cho câu hỏi này!", "warning");
-                    return;
-                }
+                if (played >= 2) return this.showNotification("Bạn đã hết 2 lượt nghe!", "warning");
 
                 const audioEl = document.getElementById(`audio-player-${qIndex}`);
-                if (audioEl) {
-                    if (!audioEl.paused) return;
-
+                if (audioEl && audioEl.paused) {
                     audioEl.currentTime = 0;
                     audioEl.play().then(() => {
                         test.listeningPlayCounts[qIndex] = played + 1;
-                        const btnText = document.getElementById(`play-btn-text-${qIndex}`);
                         const counterText = document.getElementById(`play-counter-${qIndex}`);
-                        
+                        const btnText = document.getElementById(`play-btn-text-${qIndex}`);
                         if (counterText) counterText.innerText = `Đã nghe ${test.listeningPlayCounts[qIndex]}/2 lần`;
                         if (btnText) btnText.innerText = 'Đang phát...';
-                    }).catch(e => {
-                        this.showNotification("Không thể phát audio. Kiểm tra lại URL.", "error");
-                    });
+                    }).catch(() => this.showNotification("Không thể phát audio.", "error"));
                 }
             },
 
             toggleAudioRecording: async function() {
-                if (this.state.isRecording) {
-                    this.stopAudioRecording();
-                } else {
-                    await this.startAudioRecording();
-                }
+                if (this.state.isRecording) this.stopAudioRecording();
+                else await this.startAudioRecording();
             },
 
             startAudioRecording: async function() {
@@ -654,29 +577,21 @@
                     this.state.audioChunks = [];
                     this.state.mediaRecorder = new MediaRecorder(stream);
 
-                    this.state.mediaRecorder.ondataavailable = (event) => {
-                        if (event.data.size > 0) this.state.audioChunks.push(event.data);
-                    };
-
+                    this.state.mediaRecorder.ondataavailable = e => { if (e.data.size > 0) this.state.audioChunks.push(e.data); };
                     this.state.mediaRecorder.onstop = () => {
-                        const audioBlob = new Blob(this.state.audioChunks, { type: 'audio/webm' });
                         const reader = new FileReader();
-                        reader.readAsDataURL(audioBlob);
+                        reader.readAsDataURL(new Blob(this.state.audioChunks, { type: 'audio/webm' }));
                         reader.onloadend = () => {
-                            const base64Audio = reader.result;
-                            const currentIndex = this.state.test.currentIndex;
-                            this.state.test.speakingAudioBlobs[currentIndex] = base64Audio;
-                            this.state.test.answers[currentIndex] = { selected: true, isCorrect: true };
+                            const b64 = reader.result;
+                            const idx = this.state.test.currentIndex;
+                            this.state.test.speakingAudioBlobs[idx] = b64;
+                            this.state.test.answers[idx] = { selected: true, isCorrect: true };
                             
-                            const audioPreview = document.getElementById('audio-recording-preview');
-                            if (audioPreview) {
-                                audioPreview.src = base64Audio;
-                                audioPreview.classList.remove('hidden');
-                            }
-                            this.showNotification("Đã ghi âm bài nói thành công!", "success");
+                            const preview = document.getElementById('audio-recording-preview');
+                            if (preview) { preview.src = b64; preview.classList.remove('hidden'); }
+                            this.showNotification("Đã lưu ghi âm!", "success");
                         };
                     };
-
                     this.state.mediaRecorder.start();
                     this.state.isRecording = true;
 
@@ -686,18 +601,15 @@
                         recBtn.className = 'px-6 py-3 bg-rose-600 text-white font-bold rounded-2xl pulse-recording flex items-center shadow-lg';
                     }
                     const statusText = document.getElementById('recording-status-text');
-                    if (statusText) statusText.innerText = '🔴 Đang ghi âm bài nói của bạn... Hãy phát âm rõ ràng.';
-
-                } catch (err) {
-                    this.showNotification("Không thể kết nối Micro. Vui lòng cấp quyền truy cập Mic.", "error");
-                }
+                    if (statusText) statusText.innerText = '🔴 Đang ghi âm...';
+                } catch (err) { this.showNotification("Lỗi Micro.", "error"); }
             },
 
             stopAudioRecording: function() {
                 if (this.state.mediaRecorder && this.state.isRecording) {
                     this.state.mediaRecorder.stop();
                     this.state.isRecording = false;
-                    this.state.mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                    this.state.mediaRecorder.stream.getTracks().forEach(t => t.stop());
 
                     const recBtn = document.getElementById('record-mic-btn');
                     if (recBtn) {
@@ -705,7 +617,7 @@
                         recBtn.className = 'px-6 py-3 bg-indigo-600 text-white font-bold rounded-2xl flex items-center shadow-md hover:bg-indigo-700';
                     }
                     const statusText = document.getElementById('recording-status-text');
-                    if (statusText) statusText.innerText = '✅ Đã hoàn thành ghi âm.';
+                    if (statusText) statusText.innerText = '✅ Đã ghi âm xong.';
                 }
             },
 
@@ -715,52 +627,20 @@
 
                 const question = test.questions[test.currentIndex];
                 const isCorrect = (optionIndex === question.correctAnswer);
+                test.answers[test.currentIndex] = { selected: optionIndex, isCorrect: isCorrect };
 
-                test.answers[test.currentIndex] = {
-                    selected: optionIndex,
-                    isCorrect: isCorrect
-                };
-
-                this.applyFeedbackStyles(question, optionIndex, isCorrect);
-            },
-
-            selectVocabMatching: function(pairIndex, value) {
-                const test = this.state.test;
-                if (test.isReviewMode) return;
-                
-                if (!test.answers[test.currentIndex]) {
-                    test.answers[test.currentIndex] = { selected: [], isCorrect: false };
-                }
-                
-                test.answers[test.currentIndex].selected[pairIndex] = value;
-            },
-
-            saveWritingInput: function(val) {
-                const test = this.state.test;
-                test.writingAnswers[test.currentIndex] = val;
-                
-                const wordCount = val.trim() ? val.trim().split(/\s+/).length : 0;
-                const counterEl = document.getElementById('word-counter');
-                if (counterEl) counterEl.innerText = `${wordCount} từ`;
-                
-                test.answers[test.currentIndex] = { selected: true, isCorrect: true };
-            },
-
-            applyFeedbackStyles: function(question, selectedIndex, isCorrect) {
                 const buttons = document.querySelectorAll('.option-btn');
-                
                 buttons.forEach((btn, idx) => {
                     btn.classList.remove('hover:border-indigo-300', 'hover:bg-indigo-50', 'dark:hover:border-indigo-500', 'dark:hover:bg-indigo-900/20', 'cursor-pointer');
                     btn.classList.add('cursor-default');
                     btn.onclick = null;
-                    
                     const iconBox = btn.querySelector('.icon-container');
                     
                     if (idx === question.correctAnswer) {
                         btn.classList.add('correct');
                         iconBox.innerHTML = '<i class="fas fa-check"></i>';
                         iconBox.className = 'icon-container w-8 h-8 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center mr-4 shrink-0 text-sm';
-                    } else if (idx === selectedIndex && !isCorrect) {
+                    } else if (idx === optionIndex && !isCorrect) {
                         btn.classList.add('incorrect');
                         iconBox.innerHTML = '<i class="fas fa-times"></i>';
                         iconBox.className = 'icon-container w-8 h-8 rounded-full bg-rose-500 text-white font-bold flex items-center justify-center mr-4 shrink-0 text-sm';
@@ -768,64 +648,55 @@
                         btn.classList.add('opacity-40');
                     }
                 });
+            },
 
-                const feedbackArea = document.getElementById('feedback-area');
-                if (feedbackArea) feedbackArea.classList.remove('hidden');
+            selectVocabMatching: function(pairIndex, value) {
+                const test = this.state.test;
+                if (test.isReviewMode) return;
+                if (!test.answers[test.currentIndex]) test.answers[test.currentIndex] = { selected: [], isCorrect: false };
+                test.answers[test.currentIndex].selected[pairIndex] = value;
+            },
+
+            saveWritingInput: function(val) {
+                const test = this.state.test;
+                test.writingAnswers[test.currentIndex] = val;
+                const wordCount = val.trim() ? val.trim().split(/\s+/).length : 0;
+                const counterEl = document.getElementById('word-counter');
+                if (counterEl) counterEl.innerText = `${wordCount} từ`;
+                test.answers[test.currentIndex] = { selected: true, isCorrect: true };
             },
 
             renderCurrentQuestion: function() {
                 const test = this.state.test;
                 const question = test.questions[test.currentIndex];
-                const cat = CATEGORIES[this.state.activeCategory];
-
-                if (!question) {
-                    this.finishTest();
-                    return;
-                }
+                if (!question) return this.finishTest();
 
                 document.getElementById('app-content').innerHTML = this.views.testInterface(
-                    question,
-                    test.currentIndex,
-                    test.questions.length,
-                    cat,
-                    test.answers[test.currentIndex]
+                    question, test.currentIndex, test.questions.length, CATEGORIES[this.state.activeCategory], test.answers[test.currentIndex]
                 );
             },
 
             nextQuestion: function() {
-                if (this.state.isRecording) {
-                    this.stopAudioRecording();
-                }
-
+                if (this.state.isRecording) this.stopAudioRecording();
                 const test = this.state.test;
-                const catId = this.state.activeCategory;
                 const currentQ = test.questions[test.currentIndex];
 
                 if (currentQ.isVocabMatching) {
                     const ans = test.answers[test.currentIndex];
-                    const selectedCount = (ans && ans.selected) ? ans.selected.filter(x => x && x !== '').length : 0;
-                    if (selectedCount < currentQ.pairs.length) {
-                        this.showNotification(`Vui lòng ghép đủ ${currentQ.pairs.length} từ trước khi chuyển câu`, "warning");
-                        return;
+                    if (!ans || !ans.selected || ans.selected.filter(x => x).length < currentQ.pairs.length) {
+                        return this.showNotification(`Vui lòng ghép đủ từ`, "warning");
                     }
-                } else if (!['writing', 'speaking'].includes(catId) && test.answers[test.currentIndex] === null) {
-                    this.showNotification("Vui lòng chọn đáp án trước khi chuyển câu", "warning");
-                    return;
+                } else if (!['writing', 'speaking'].includes(this.state.activeCategory) && test.answers[test.currentIndex] === null) {
+                    return this.showNotification("Vui lòng chọn đáp án", "warning");
                 }
 
                 test.currentIndex++;
-
-                if (test.currentIndex >= test.questions.length) {
-                    this.finishTest();
-                } else {
-                    this.renderCurrentQuestion();
-                }
+                if (test.currentIndex >= test.questions.length) this.finishTest();
+                else this.renderCurrentQuestion();
             },
 
             prevQuestion: function() {
-                if (this.state.isRecording) {
-                    this.stopAudioRecording();
-                }
+                if (this.state.isRecording) this.stopAudioRecording();
                 const test = this.state.test;
                 if (test.currentIndex > 0) {
                     test.currentIndex--;
@@ -836,23 +707,18 @@
             finishTest: async function() {
                 this.stopTimer();
                 if (this.state.isRecording) this.stopAudioRecording();
-
-                this.renderLoading("Đang tổng hợp điểm và lưu bài thi...");
+                this.state.isTesting = false; // Mark test as finished
+                this.renderLoading("Đang lưu bài thi...");
                 
                 const test = this.state.test;
-                let correctCount = 0;
-                let total = 0;
+                let correctCount = 0, total = 0;
 
                 test.questions.forEach((q, i) => {
                     const ans = test.answers[i];
                     if (q.isVocabMatching) {
-                        total += q.pairs.length; // Mỗi cặp từ ghép đúng tính 1 điểm
+                        total += q.pairs.length;
                         if (ans && ans.selected) {
-                            ans.selected.forEach((sel, idx) => {
-                                if (sel === q.pairs[idx].target) {
-                                    correctCount++;
-                                }
-                            });
+                            ans.selected.forEach((sel, idx) => { if (sel === q.pairs[idx].target) correctCount++; });
                         }
                     } else {
                         total += 1;
@@ -864,24 +730,15 @@
                 const timeTakenSec = Math.round((new Date() - test.startTime) / 1000);
 
                 const record = {
-                    categoryId: this.state.activeCategory,
-                    categoryName: CATEGORIES[this.state.activeCategory].name,
-                    correctCount: correctCount,
-                    totalQuestions: total,
-                    score: percentage,
-                    timeTakenSec: timeTakenSec,
-                    date: new Date().toISOString(),
-                    questions: test.questions,
-                    answers: test.answers,
-                    writingAnswers: test.writingAnswers,
-                    speakingAudioBlobs: test.speakingAudioBlobs
+                    categoryId: this.state.activeCategory, categoryName: CATEGORIES[this.state.activeCategory].name,
+                    correctCount, totalQuestions: total, score: percentage, timeTakenSec,
+                    date: new Date().toISOString(), questions: test.questions, answers: test.answers,
+                    writingAnswers: test.writingAnswers, speakingAudioBlobs: test.speakingAudioBlobs
                 };
 
                 try {
                     await addDoc(this.getPrivateRef('test_history'), record);
-                } catch (e) {
-                    console.error("Lỗi lưu lịch sử thi:", e);
-                }
+                } catch (e) { console.error("Lỗi lưu:", e); }
 
                 this.renderResultScreen(correctCount, total, percentage, timeTakenSec);
             },
@@ -895,30 +752,30 @@
                 document.getElementById('app-content').innerHTML = `
                     <div class="max-w-2xl mx-auto mt-6 fade-in">
                         <div class="glass-panel rounded-3xl p-8 text-center relative overflow-hidden shadow-xl">
-                            <div class="w-20 h-20 mx-auto rounded-full bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 text-3xl mb-4 border border-indigo-100 dark:border-indigo-800">
+                            <div class="w-20 h-20 mx-auto rounded-full bg-indigo-50 dark:bg-slate-800 flex items-center justify-center text-indigo-600 dark:text-indigo-400 text-3xl mb-4">
                                 <i class="fas fa-trophy"></i>
                             </div>
                             <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-1">Hoàn Thành Bài Thi!</h2>
                             <p class="text-gray-500 dark:text-dark-textMuted mb-6">${cat.name}</p>
 
                             ${['writing', 'speaking'].includes(cat.id) ? `
-                                <div class="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 p-4 rounded-2xl mb-6 text-sm text-left leading-relaxed">
-                                    <i class="fas fa-circle-check mr-2 text-emerald-600"></i> Bài thi tự luận/ghi âm bài nói của bạn đã được lưu trữ thành công.
+                                <div class="bg-emerald-50 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 p-4 rounded-2xl mb-6 text-sm text-left">
+                                    <i class="fas fa-circle-check mr-2"></i> Bài thi tự luận/ghi âm của bạn đã được lưu trữ.
                                 </div>
                             ` : `
                                 <div class="bg-gray-50 dark:bg-dark-bg p-6 rounded-2xl mb-6 border border-gray-100 dark:border-dark-border">
                                     <div class="text-5xl font-black ${percentage >= 70 ? 'text-emerald-500' : 'text-indigo-600'} mb-2">${percentage}%</div>
-                                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">Trả lời đúng ${correct} / ${total} câu hỏi</p>
-                                    <p class="text-xs text-gray-400 mt-1">Thời gian làm bài: ${timeStr}</p>
+                                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">Đúng ${correct} / ${total} câu</p>
+                                    <p class="text-xs text-gray-400 mt-1">Thời gian: ${timeStr}</p>
                                 </div>
                             `}
 
                             <div class="flex flex-col sm:flex-row justify-center gap-3">
-                                <button onclick="app.navigate('home')" class="px-6 py-3 bg-gray-100 dark:bg-dark-bg text-gray-700 dark:text-gray-300 rounded-xl font-bold hover:bg-gray-200 transition-colors">
-                                    <i class="fas fa-house mr-2"></i> Trang chủ
+                                <button onclick="app.navigate('home', {}, true)" class="px-6 py-3 bg-gray-100 dark:bg-dark-bg text-gray-700 dark:text-gray-300 rounded-xl font-bold hover:bg-gray-200">
+                                    Trang chủ
                                 </button>
-                                <button onclick="app.startTestSession('${cat.id}')" class="px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-200 dark:shadow-none transition-colors">
-                                    <i class="fas fa-rotate-right mr-2"></i> Thi lại ngay
+                                <button onclick="app.startTestSession('${cat.id}')" class="px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-lg">
+                                    Thi lại ngay
                                 </button>
                             </div>
                         </div>
@@ -934,8 +791,7 @@
                     snapshot.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
 
                     list.sort((a, b) => {
-                        const partA = a.part || 1;
-                        const partB = b.part || 1;
+                        const partA = a.part || 1; const partB = b.part || 1;
                         if (partA !== partB) return partA - partB;
                         return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
                     });
@@ -943,56 +799,35 @@
                     this.state.adminQuestions = list;
                     document.getElementById('app-content').innerHTML = this.views.adminManage(categoryId, list);
                 } catch (error) {
-                    console.error("Admin load error:", error);
-                    this.showNotification("Lỗi tải danh sách câu hỏi", "error");
-                    this.navigate('admin_dashboard');
+                    this.showNotification("Lỗi tải câu hỏi", "error");
+                    this.navigate('admin_dashboard', {}, true);
                 }
             },
 
             filterAdminQuestions: function(term, categoryId) {
                 term = term.toLowerCase().trim();
                 const filtered = this.state.adminQuestions.filter(q => {
-                    const text = (q.text || '').toLowerCase();
-                    const passage = (q.passage || '').toLowerCase();
-                    const passageTitle = (q.passageTitle || '').toLowerCase();
-                    const word = (q.word || '').toLowerCase();
-                    const target = (q.target || '').toLowerCase();
-                    return text.includes(term) || passage.includes(term) || passageTitle.includes(term) || word.includes(term) || target.includes(term);
+                    const t = [q.text, q.passage, q.passageTitle, q.word, q.target].map(x => (x || '').toLowerCase()).join(' ');
+                    return t.includes(term);
                 });
                 
                 const container = document.getElementById('admin-questions-container');
                 const badge = document.getElementById('question-total-badge');
-                if (container) {
-                    container.innerHTML = this.views.adminQuestionList(filtered, categoryId);
-                }
-                if (badge) {
-                    badge.innerText = `Tìm thấy: ${filtered.length} câu`;
-                }
+                if (container) container.innerHTML = this.views.adminQuestionList(filtered, categoryId);
+                if (badge) badge.innerText = `Tìm thấy: ${filtered.length} câu`;
             },
 
             toggleGrammarFormFields: function(val) {
                 const isMCQ = (val === 'grammar' || val === 'vocab');
-                const mcqEl = document.getElementById('mcq_fields');
-                const vocabEl = document.getElementById('vocab_fields');
-                const qText = document.getElementById('q_text_input');
+                document.getElementById('mcq_fields').style.display = isMCQ ? 'block' : 'none';
+                document.getElementById('vocab_fields').style.display = !isMCQ ? 'block' : 'none';
                 
-                if (mcqEl) mcqEl.style.display = isMCQ ? 'block' : 'none';
-                if (vocabEl) vocabEl.style.display = !isMCQ ? 'block' : 'none';
+                const label = document.getElementById('vocab_target_label');
+                if (label) label.innerHTML = val === 'vocab_matching_p2' ? 'Định nghĩa' : 'Từ đồng nghĩa';
                 
-                const vocabLabel = document.getElementById('vocab_target_label');
-                if (vocabLabel) {
-                    vocabLabel.innerHTML = val === 'vocab_matching_p2' ? 'Định nghĩa (Tương ứng với từ chính)' : 'Từ đồng nghĩa (Tương ứng với từ chính)';
-                }
-                
-                if (isMCQ) {
-                    if (qText) qText.setAttribute('required', 'true');
-                    document.getElementById('v_word_input')?.removeAttribute('required');
-                    document.getElementById('v_target_input')?.removeAttribute('required');
-                } else {
-                    if (qText) qText.removeAttribute('required');
-                    document.getElementById('v_word_input')?.setAttribute('required', 'true');
-                    document.getElementById('v_target_input')?.setAttribute('required', 'true');
-                }
+                document.getElementById('q_text_input').required = isMCQ;
+                document.getElementById('v_word_input').required = !isMCQ;
+                document.getElementById('v_target_input').required = !isMCQ;
             },
 
             addReadingSubQuestion: function(containerId, data = null) {
@@ -1005,867 +840,804 @@
                 const opts = d.options || ['','',''];
 
                 const div = document.createElement('div');
-                div.className = "reading-sub-question bg-gray-50 dark:bg-dark-bg p-4 rounded-xl border border-gray-200 dark:border-gray-700 relative mb-4 shadow-sm";
+                div.className = "reading-sub-question bg-gray-50 dark:bg-slate-800/50 p-5 rounded-xl border border-gray-200 dark:border-slate-700 relative mb-4";
                 div.innerHTML = `
-                    <button type="button" onclick="this.parentElement.remove()" class="absolute top-2 right-2 text-rose-500 hover:text-rose-700 p-2"><i class="fas fa-times"></i></button>
-                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">Nội dung câu hỏi</label>
-                    <textarea name="sub_q_text[]" rows="2" required class="w-full bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-xl p-2.5 text-sm dark:text-white mb-3 resize-none">${d.text || ''}</textarea>
+                    <button type="button" onclick="this.parentElement.remove()" class="absolute top-3 right-3 text-rose-500 hover:text-rose-700 p-1"><i class="fas fa-times"></i></button>
+                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2 uppercase tracking-wide">Nội dung câu hỏi</label>
+                    <textarea name="sub_q_text[]" rows="2" required class="w-full bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-xl p-3 text-sm dark:text-white mb-4 focus:ring-2 focus:ring-indigo-500 outline-none transition-all">${d.text || ''}</textarea>
                     
-                    <div class="space-y-2 mb-3">
+                    <div class="space-y-3 mb-4">
                         ${[0,1,2].map(i => `
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs font-bold text-gray-500 w-5">${String.fromCharCode(65+i)}</span>
-                                <input type="text" name="sub_opt_${i}[]" value="${opts[i] || ''}" required class="flex-1 bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-lg p-2 text-sm dark:text-white">
-                                <input type="radio" name="sub_correct_${cid}" value="${i}" ${d.correctAnswer === i || (i===0 && !d.options) ? 'checked' : ''} required class="w-4 h-4 text-indigo-600">
+                            <div class="flex items-center gap-3">
+                                <span class="text-xs font-black text-gray-400 bg-gray-100 dark:bg-slate-700 w-6 h-6 flex items-center justify-center rounded-md">${String.fromCharCode(65+i)}</span>
+                                <input type="text" name="sub_opt_${i}[]" value="${opts[i] || ''}" required class="flex-1 bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-lg p-2.5 text-sm dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                                <input type="radio" name="sub_correct_${cid}" value="${i}" ${d.correctAnswer === i || (i===0 && !d.options) ? 'checked' : ''} class="w-5 h-5 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
                             </div>
                         `).join('')}
                     </div>
-                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Giải thích (Tùy chọn)</label>
-                    <input type="text" name="sub_explanation[]" value="${d.explanation || ''}" class="w-full bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-lg p-2 text-sm dark:text-white">
+                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2 uppercase tracking-wide">Giải thích (Tùy chọn)</label>
+                    <textarea name="sub_explain[]" rows="2" class="w-full bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-xl p-3 text-sm dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all">${d.explanation || ''}</textarea>
                 `;
                 container.appendChild(div);
             },
-
-            saveAdminQuestion: async function(event, categoryId, isEdit = false, docId = null) {
-                event.preventDefault();
-                const form = event.target;
-                const submitBtn = form.querySelector('button[type="submit"]');
-
-                submitBtn.disabled = true;
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Đang lưu...';
-                submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
-
-                let qObj = {
-                    part: form.q_part ? parseInt(form.q_part.value) : 1
-                };
-
-                if (!isEdit) {
-                    qObj.createdAt = new Date().toISOString();
-                }
+            
+            saveAdminQuestion: async function(e, categoryId) {
+                e.preventDefault();
+                const fd = new FormData(e.target);
+                const qId = fd.get('qId');
+                let data = { updatedAt: new Date().toISOString() };
+                if (!qId) data.createdAt = new Date().toISOString();
 
                 if (categoryId === 'grammar') {
-                    qObj.subType = form.sub_type.value;
-                    if (qObj.subType === 'vocab_matching_p1' || qObj.subType === 'vocab_matching_p2') {
-                        qObj.word = form.v_word.value.trim();
-                        qObj.target = form.v_target.value.trim();
-                        // Xóa các key không cần thiết nếu sửa từ câu trắc nghiệm sang
-                        delete qObj.text; delete qObj.options; delete qObj.correctAnswer;
+                    data.subType = fd.get('subType');
+                    if (data.subType === 'grammar') {
+                        data.text = fd.get('text');
+                        data.options = [fd.get('opt0'), fd.get('opt1'), fd.get('opt2')];
+                        data.correctAnswer = parseInt(fd.get('correctAnswer'));
                     } else {
-                        qObj.text = form.q_text.value.trim();
-                        qObj.options = [form.opt_0.value, form.opt_1.value, form.opt_2.value];
-                        qObj.correctAnswer = parseInt(form.correct_opt.value);
-                        qObj.explanation = form.q_explanation ? form.q_explanation.value.trim() : '';
-                        delete qObj.word; delete qObj.target;
+                        data.word = fd.get('word'); data.target = fd.get('target');
                     }
-                }
-
-                if (categoryId === 'listening') {
-                    qObj.text = form.q_text.value.trim();
-                    if (form.audio_url) qObj.audioUrl = form.audio_url.value.trim();
-                    qObj.options = [form.opt_0.value, form.opt_1.value, form.opt_2.value];
-                    qObj.correctAnswer = parseInt(form.correct_opt.value);
-                    qObj.explanation = form.q_explanation ? form.q_explanation.value.trim() : '';
-                }
-
-                if (categoryId === 'speaking') {
-                    qObj.text = form.q_text.value.trim();
-                    qObj.subQuestion = form.q_sub_question ? form.q_sub_question.value.trim() : '';
-                    let imgArr = [];
-                    if (form.q_image1 && form.q_image1.value.trim()) imgArr.push(form.q_image1.value.trim());
-                    if (form.q_image2 && form.q_image2.value.trim()) imgArr.push(form.q_image2.value.trim());
-                    qObj.images = imgArr;
-                }
-                
-                if (categoryId === 'writing') {
-                     qObj.text = form.q_text.value.trim();
-                }
-
-                if (categoryId === 'reading') {
-                    qObj.passageTitle = form.q_passage_title ? form.q_passage_title.value.trim() : 'Bài đọc';
-                    qObj.passage = form.q_passage.value.trim();
-                    
-                    const blocks = form.querySelectorAll('.reading-sub-question');
-                    if (blocks.length === 0) {
-                        this.showNotification("Vui lòng thêm ít nhất 1 câu hỏi cho đoạn văn này!", "warning");
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
-                        return;
-                    }
-                    
-                    qObj.subQuestions = Array.from(blocks).map(block => {
-                        const radioChecked = block.querySelector(`input[type="radio"]:checked`);
-                        return {
-                            text: block.querySelector('[name="sub_q_text[]"]').value.trim(),
-                            options: [
-                                block.querySelector('[name="sub_opt_0[]"]').value.trim(),
-                                block.querySelector('[name="sub_opt_1[]"]').value.trim(),
-                                block.querySelector('[name="sub_opt_2[]"]').value.trim()
-                            ],
-                            correctAnswer: radioChecked ? parseInt(radioChecked.value) : 0,
-                            explanation: block.querySelector('[name="sub_explanation[]"]').value.trim()
-                        };
+                } else if (categoryId === 'reading') {
+                    data.passageTitle = fd.get('passageTitle'); data.passage = fd.get('passage');
+                    let subQs = [];
+                    document.querySelectorAll('.reading-sub-question').forEach((node, i) => {
+                        const cid = node.querySelector('input[type="radio"]').name.split('_')[2];
+                        subQs.push({
+                            text: fd.getAll('sub_q_text[]')[i],
+                            options: [fd.getAll('sub_opt_0[]')[i], fd.getAll('sub_opt_1[]')[i], fd.getAll('sub_opt_2[]')[i]],
+                            correctAnswer: parseInt(fd.get(`sub_correct_${cid}`) || '0'),
+                            explanation: fd.getAll('sub_explain[]')[i] || ''
+                        });
                     });
+                    data.subQuestions = subQs;
+                } else if (categoryId === 'listening') {
+                     data.audioUrl = fd.get('audioUrl'); data.text = fd.get('text');
+                     data.options = [fd.get('opt0'), fd.get('opt1'), fd.get('opt2')];
+                     data.correctAnswer = parseInt(fd.get('correctAnswer'));
+                     data.part = parseInt(fd.get('part') || 1);
+                } else if (categoryId === 'writing' || categoryId === 'speaking') {
+                     data.part = parseInt(fd.get('part') || 1); data.text = fd.get('text');
+                     if (categoryId === 'speaking') data.imageUrl = fd.get('imageUrl') || '';
                 }
 
                 try {
-                    if (isEdit && docId) {
-                        await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', `questions_${categoryId}`, docId), qObj);
-                        this.showNotification("Cập nhật câu hỏi thành công!", "success");
-                    } else {
-                        await addDoc(this.getPublicRef(`questions_${categoryId}`), qObj);
-                        this.showNotification("Thêm câu hỏi mới thành công!", "success");
-                    }
+                    this.renderLoading('Đang lưu...');
+                    if (qId) await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', `questions_${categoryId}`, qId), data);
+                    else await addDoc(this.getPublicRef(`questions_${categoryId}`), data);
+                    this.showNotification("Lưu thành công", "success");
                     this.closeModal();
                     this.loadAdminQuestions(categoryId);
-                } catch (e) {
-                    console.error("Save error:", e);
-                    this.showNotification("Lỗi khi lưu câu hỏi", "error");
-                    
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
-                }
+                } catch (err) { this.showNotification("Lỗi: " + err.message, "error"); }
             },
 
-            deleteAdminQuestion: async function(categoryId, docId) {
-                if (!await this.showConfirm("Xóa câu hỏi", "Bạn có chắc chắn muốn xóa dữ liệu này khỏi kho đề?")) return;
+            deleteAdminQuestion: async function(qId, categoryId) {
+                if (!await this.showConfirm("Xóa Câu Hỏi", "Bạn chắc chắn muốn xóa vĩnh viễn câu hỏi này?")) return;
                 try {
-                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', `questions_${categoryId}`, docId));
-                    this.showNotification("Đã xóa thành công", "success");
-                    
-                    const cardEl = document.getElementById(`q-card-${docId}`);
-                    if (cardEl) {
-                        cardEl.style.transition = 'all 0.3s ease';
-                        cardEl.style.opacity = '0';
-                        cardEl.style.transform = 'scale(0.95)';
-                        setTimeout(() => {
-                            cardEl.remove();
-                            const countBadge = document.getElementById('question-total-badge');
-                            if (countBadge) {
-                                const currentCount = parseInt(countBadge.innerText.replace(/\D/g, '') || '0');
-                                if (currentCount > 0) countBadge.innerText = `Tổng: ${currentCount - 1} mục`;
-                            }
-                        }, 300);
-                    }
-                } catch (e) {
-                    this.showNotification("Không thể xóa", "error");
-                }
+                    this.renderLoading('Đang xóa...');
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', `questions_${categoryId}`, qId));
+                    this.showNotification("Đã xóa", "success");
+                    this.loadAdminQuestions(categoryId);
+                } catch (err) { this.showNotification("Lỗi: " + err.message, "error"); }
             },
 
-            editAdminQuestion: function(categoryId, docId) {
-                const qData = this.state.adminQuestions.find(q => q.id === docId);
-                if (!qData) {
-                    this.showNotification("Không tìm thấy dữ liệu câu hỏi!", "error");
-                    return;
-                }
-                this.showModal(`Chỉnh sửa (${CATEGORIES[categoryId].name})`, this.views.questionForm(categoryId, qData, true, docId));
-                
-                if (categoryId === 'reading') {
-                    let subQs = qData.subQuestions || [];
-                    if (subQs.length === 0 && qData.text) {
-                        subQs = [{ text: qData.text, options: qData.options, correctAnswer: qData.correctAnswer, explanation: qData.explanation }];
-                    }
+            editQuestion: function(q, categoryId) { this.openAdminQuestionModal(categoryId, q); },
+            
+            openAdminQuestionModal: function(categoryId, q = null) {
+                const title = q ? 'Chỉnh sửa Câu Hỏi' : 'Thêm Câu Hỏi Mới';
+                let formHtml = `<form onsubmit="app.saveAdminQuestion(event, '${categoryId}')" class="space-y-5">
+                    <input type="hidden" name="qId" value="${q ? q.id : ''}">`;
+
+                if (categoryId === 'grammar') {
+                    const st = q ? q.subType || 'grammar' : 'grammar';
+                    formHtml += `
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Loại câu hỏi</label>
+                            <select name="subType" onchange="app.toggleGrammarFormFields(this.value)" class="w-full bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-xl p-3 text-sm dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">
+                                <option value="grammar" ${st === 'grammar' ? 'selected' : ''}>Trắc nghiệm Ngữ pháp</option>
+                                <option value="vocab_matching_p1" ${st === 'vocab_matching_p1' ? 'selected' : ''}>Từ vựng Part 1</option>
+                                <option value="vocab_matching_p2" ${st === 'vocab_matching_p2' ? 'selected' : ''}>Từ vựng Part 2</option>
+                            </select>
+                        </div>
+                        <div id="mcq_fields" style="display: ${st === 'grammar' ? 'block' : 'none'};" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2 uppercase">Câu hỏi</label>
+                                <textarea name="text" id="q_text_input" rows="3" placeholder="Nhập nội dung câu hỏi..." class="w-full bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-xl p-3 text-sm dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">${q && st==='grammar' ? q.text : ''}</textarea>
+                            </div>
+                            <div class="space-y-3 bg-gray-50 dark:bg-slate-800/50 p-4 rounded-xl border border-gray-200 dark:border-slate-700">
+                                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-2">Đáp án (Chọn đúng)</label>
+                                ${[0,1,2].map(i => `
+                                    <div class="flex items-center gap-3">
+                                        <span class="font-black text-gray-400 bg-white dark:bg-slate-700 w-8 h-8 flex items-center justify-center rounded-lg shadow-sm">${String.fromCharCode(65+i)}</span>
+                                        <input type="text" name="opt${i}" value="${q && st==='grammar' ? q.options[i] : ''}" class="flex-1 bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-xl p-2.5 text-sm dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">
+                                        <input type="radio" name="correctAnswer" value="${i}" ${q && st==='grammar' && q.correctAnswer===i ? 'checked' : (i===0?'checked':'')} class="w-5 h-5 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div id="vocab_fields" style="display: ${st !== 'grammar' ? 'block' : 'none'};" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2 uppercase">Từ chính</label>
+                                <input type="text" name="word" id="v_word_input" placeholder="Ví dụ: Abundant" value="${q && st!=='grammar' ? q.word : ''}" class="w-full bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-xl p-3 text-sm dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2 uppercase" id="vocab_target_label">Định nghĩa / Đồng nghĩa</label>
+                                <input type="text" name="target" id="v_target_input" placeholder="Nhập đáp án đúng..." value="${q && st!=='grammar' ? q.target : ''}" class="w-full bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-xl p-3 text-sm dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">
+                            </div>
+                        </div>`;
+                } else if (categoryId === 'reading') {
+                    this.readingQCounter = 0;
+                    formHtml += `
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2 uppercase">Tiêu đề đoạn văn</label>
+                            <input type="text" name="passageTitle" value="${q ? q.passageTitle || '' : ''}" placeholder="Nhập tiêu đề..." required class="w-full bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-xl p-3 text-sm dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2 uppercase">Nội dung đoạn văn</label>
+                            <textarea name="passage" rows="6" placeholder="Nhập nội dung bài đọc..." class="w-full bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-xl p-3 text-sm dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none custom-scrollbar">${q ? q.passage || '' : ''}</textarea>
+                        </div>
+                        <div class="pt-4 border-t border-gray-200 dark:border-slate-700">
+                            <div class="mb-4 flex justify-between items-center">
+                                <label class="block text-sm font-extrabold text-gray-900 dark:text-white uppercase tracking-wide">Danh sách câu hỏi phụ</label>
+                                <button type="button" onclick="app.addReadingSubQuestion('sub-q-container')" class="px-4 py-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 rounded-lg text-sm font-bold hover:bg-indigo-200 dark:hover:bg-indigo-900/50 transition-colors"><i class="fas fa-plus mr-1"></i> Thêm câu</button>
+                            </div>
+                            <div id="sub-q-container" class="space-y-4 max-h-[50vh] overflow-y-auto custom-scrollbar pr-2"></div>
+                        </div>`;
+                    
                     setTimeout(() => {
-                        const container = document.getElementById('reading-sub-qs-container');
-                        if (container) {
-                            subQs.forEach(sub => this.addReadingSubQuestion('reading-sub-qs-container', sub));
-                        }
+                        if (q && q.subQuestions) q.subQuestions.forEach(sq => this.addReadingSubQuestion('sub-q-container', sq));
+                        else this.addReadingSubQuestion('sub-q-container');
                     }, 50);
+                } else if (categoryId === 'listening') {
+                     formHtml += `
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2 uppercase">Part</label>
+                                <input type="number" name="part" min="1" max="4" value="${q ? q.part || 1 : 1}" required class="w-full bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-xl p-3 text-sm dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2 uppercase">Audio URL (.mp3)</label>
+                                <input type="url" name="audioUrl" value="${q ? q.audioUrl || '' : ''}" placeholder="https://..." required class="w-full bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-xl p-3 text-sm dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2 uppercase">Nội dung câu hỏi</label>
+                            <textarea name="text" rows="2" required class="w-full bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-xl p-3 text-sm dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">${q ? q.text : ''}</textarea>
+                        </div>
+                        <div class="space-y-3 bg-gray-50 dark:bg-slate-800/50 p-4 rounded-xl border border-gray-200 dark:border-slate-700">
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-2">Đáp án (Chọn đúng)</label>
+                            ${[0,1,2].map(i => `
+                                <div class="flex items-center gap-3">
+                                    <span class="font-black text-gray-400 bg-white dark:bg-slate-700 w-8 h-8 flex items-center justify-center rounded-lg shadow-sm">${String.fromCharCode(65+i)}</span>
+                                    <input type="text" name="opt${i}" value="${q ? q.options[i] : ''}" required class="flex-1 bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-xl p-2.5 text-sm dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">
+                                    <input type="radio" name="correctAnswer" value="${i}" ${q && q.correctAnswer===i ? 'checked' : (i===0?'checked':'')} class="w-5 h-5 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                                </div>
+                            `).join('')}
+                        </div>
+                     `;
+                } else if (categoryId === 'writing' || categoryId === 'speaking') {
+                     formHtml += `
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2 uppercase">Part</label>
+                            <input type="number" name="part" min="1" max="4" value="${q ? q.part || 1 : 1}" required class="w-full bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-xl p-3 text-sm dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2 uppercase">Nội dung đề bài</label>
+                            <textarea name="text" rows="5" required class="w-full bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-xl p-3 text-sm dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">${q ? q.text : ''}</textarea>
+                        </div>
+                     `;
+                     if (categoryId === 'speaking') {
+                         formHtml += `
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2 uppercase">Image URL (Tùy chọn)</label>
+                                <input type="url" name="imageUrl" value="${q ? q.imageUrl || '' : ''}" placeholder="https://..." class="w-full bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-xl p-3 text-sm dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">
+                            </div>
+                         `;
+                     }
                 }
+
+                formHtml += `
+                    <div class="pt-5 mt-2 border-t border-gray-200 dark:border-slate-700 flex justify-end gap-3 sticky bottom-0 bg-white dark:bg-dark-bg pb-2">
+                        <button type="button" onclick="app.closeModal()" class="px-6 py-3 bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-xl font-bold transition-colors">Hủy</button>
+                        <button type="submit" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-md transition-all">Lưu câu hỏi</button>
+                    </div></form>`;
+                this.showModal(title, formHtml);
             },
 
             loadHistory: async function() {
-                this.renderLoading("Đang tải lịch sử thi...");
+                this.renderLoading("Đang tải lịch sử...");
                 try {
-                    const snapshot = await getDocs(query(this.getPrivateRef('test_history')));
+                    const snap = await getDocs(query(this.getPrivateRef('test_history')));
                     let records = [];
-                    snapshot.forEach(doc => records.push({ id: doc.id, ...doc.data() }));
+                    snap.forEach(doc => records.push({ id: doc.id, ...doc.data() }));
                     records.sort((a, b) => new Date(b.date) - new Date(a.date));
-                    
-                    this.state.historyRecords = records;
-                    document.getElementById('app-content').innerHTML = this.views.historyList(records);
-                } catch (e) {
-                    this.showNotification("Lỗi nạp lịch sử thi", "error");
-                    this.navigate('home');
+                    document.getElementById('app-content').innerHTML = this.views.history(records);
+                } catch (e) { 
+                    this.showNotification("Không thể tải lịch sử", "error");
+                    this.navigate('home', {}, true); 
                 }
             },
-
-            deleteHistoryRecord: async function(recordId) {
-                if (!await this.showConfirm("Xóa lịch sử", "Bạn có chắc chắn muốn xóa kết quả bài thi này?")) return;
-                try {
-                    await deleteDoc(doc(db, 'artifacts', appId, 'users', this.state.user.uid, 'test_history', recordId));
-                    this.showNotification("Đã xóa lịch sử thi", "success");
-                    this.loadHistory();
-                } catch (e) {
-                    this.showNotification("Không thể xóa lịch sử", "error");
-                }
-            },
-
-            reviewHistoryRecord: function(recordId) {
-                const record = this.state.historyRecords.find(r => r.id === recordId);
-                if (!record || !record.questions || record.questions.length === 0) {
-                    this.showNotification("Bài thi này không chứa dữ liệu câu hỏi để xem lại", "warning");
-                    return;
-                }
-
+            
+            reviewTest: function(record, onlyWrong = false) {
                 this.state.activeCategory = record.categoryId;
-                this.state.test = {
-                    questions: record.questions,
-                    currentIndex: 0,
-                    answers: record.answers || new Array(record.questions.length).fill(null),
-                    writingAnswers: record.writingAnswers || new Array(record.questions.length).fill(''),
-                    speakingAudioBlobs: record.speakingAudioBlobs || new Array(record.questions.length).fill(null),
-                    listeningPlayCounts: new Array(record.questions.length).fill(2),
-                    startTime: new Date(),
-                    isReviewMode: true
-                };
+                let questionsToReview = record.questions;
+                let answersToReview = record.answers || [];
+                let writingToReview = record.writingAnswers || [];
+                let speakingToReview = record.speakingAudioBlobs || [];
 
-                this.renderCurrentQuestion();
-                
-                setTimeout(() => {
-                    const currentAns = record.answers ? record.answers[0] : null;
-                    const question = record.questions[0];
-                    if (currentAns !== null && currentAns !== undefined && typeof currentAns === 'object' && !question.isVocabMatching && question.options) {
-                        this.applyFeedbackStyles(question, currentAns.selected, currentAns.isCorrect);
+                if (onlyWrong) {
+                    questionsToReview = [];
+                    let newAnswers = [];
+                    let newWriting = [];
+                    let newSpeaking = [];
+
+                    record.questions.forEach((q, i) => {
+                        const ans = record.answers ? record.answers[i] : null;
+                        let isCorrect = false;
+
+                        if (q.isVocabMatching) {
+                            isCorrect = true;
+                            if (!ans || !ans.selected) {
+                                isCorrect = false;
+                            } else {
+                                q.pairs.forEach((p, idx) => {
+                                    if (ans.selected[idx] !== p.target) isCorrect = false;
+                                });
+                            }
+                        } else if (['writing', 'speaking'].includes(record.categoryId)) {
+                            isCorrect = true; // For subjective parts, they don't count as "wrong" automatically here
+                        } else {
+                            isCorrect = ans && ans.isCorrect;
+                        }
+
+                        if (!isCorrect) {
+                            questionsToReview.push(q);
+                            newAnswers.push(ans);
+                            if (record.writingAnswers) newWriting.push(record.writingAnswers[i]);
+                            if (record.speakingAudioBlobs) newSpeaking.push(record.speakingAudioBlobs[i]);
+                        }
+                    });
+
+                    if (questionsToReview.length === 0) {
+                        this.showNotification("Tuyệt vời! Không có câu nào sai để lọc.", "success");
+                        return;
                     }
-                }, 100);
-            },
-
-            loadVocabBook: async function() {
-                this.renderLoading("Đang tải sổ tay từ vựng...");
-                try {
-                    const snapshot = await getDocs(query(this.getPrivateRef('vocab_book')));
-                    let words = [];
-                    snapshot.forEach(doc => words.push({ id: doc.id, ...doc.data() }));
-                    words.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-                    document.getElementById('app-content').innerHTML = this.views.vocabBook(words);
-                } catch (e) {
-                    this.showNotification("Lỗi nạp sổ tay từ vựng", "error");
-                    this.navigate('home');
+                    
+                    answersToReview = newAnswers;
+                    writingToReview = newWriting;
+                    speakingToReview = newSpeaking;
                 }
-            },
 
-            saveVocabWord: async function(event) {
-                event.preventDefault();
-                const form = event.target;
-                const data = {
-                    word: form.word.value.trim(),
-                    type: form.type.value,
-                    meaning: form.meaning.value.trim(),
-                    example: form.example.value.trim(),
-                    createdAt: new Date().toISOString()
+                this.state.test = {
+                    questions: questionsToReview, 
+                    answers: answersToReview,
+                    writingAnswers: writingToReview, 
+                    speakingAudioBlobs: speakingToReview,
+                    listeningPlayCounts: [], 
+                    currentIndex: 0, 
+                    isReviewMode: true,
+                    onlyWrong: onlyWrong
                 };
-
-                try {
-                    await addDoc(this.getPrivateRef('vocab_book'), data);
-                    this.showNotification("Đã thêm từ mới vào sổ tay", "success");
-                    this.loadVocabBook();
-                    this.closeModal();
-                } catch (e) {
-                    this.showNotification("Không thể lưu từ vựng", "error");
-                }
+                this.navigate('test_run_review');
             },
 
-            deleteVocabWord: async function(id) {
-                if (!await this.showConfirm("Xóa từ vựng", "Xóa từ này khỏi sổ tay của bạn?")) return;
-                try {
-                    await deleteDoc(doc(db, 'artifacts', appId, 'users', this.state.user.uid, 'vocab_book', id));
-                    this.showNotification("Đã xóa từ vựng", "success");
-                    this.loadVocabBook();
-                } catch (e) {
-                    this.showNotification("Lỗi khi xóa", "error");
-                }
+            loadVocabBook: function() {
+                document.getElementById('app-content').innerHTML = `
+                    <div class="max-w-4xl mx-auto fade-in text-center py-20">
+                        <h2 class="text-3xl font-extrabold mb-4">Sổ Tay Từ Vựng</h2>
+                        <p class="text-gray-500">Tính năng đang phát triển.</p>
+                        <button onclick="app.navigate('home', {}, true)" class="mt-6 px-6 py-2.5 bg-indigo-600 text-white rounded-xl">Quay lại</button>
+                    </div>
+                `;
             },
-
+            
             views: {
                 home: function() {
                     let html = `
-                        <div class="text-center mb-10 fade-in mt-4">
-                            <h1 class="text-3xl sm:text-5xl font-black text-gray-900 dark:text-white mb-3 tracking-tight">
-                                HỆ THỐNG LUYỆN THI <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600">TIẾNG ANH</span>
-                            </h1>
-                            <p class="text-base sm:text-lg text-gray-600 dark:text-dark-textMuted max-w-2xl mx-auto">
-                                Hệ thống luyện tập các kỹ năng Nghe, Nói, Đọc, Viết và Ngữ pháp tiếng Anh
-                            </p>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 fade-in max-w-6xl mx-auto">
-                    `;
-
-                    for (const [key, cat] of Object.entries(CATEGORIES)) {
-                        html += `
-                            <div class="glass-panel rounded-3xl p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer group flex flex-col justify-between" onclick="app.navigate('test_start', {category: '${key}'})">
-                                <div>
-                                    <div class="flex items-center justify-between mb-4">
-                                        <div class="${cat.color} w-14 h-14 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
-                                            <i class="fas ${cat.icon}"></i>
-                                        </div>
-                                        <span class="text-xs font-bold uppercase tracking-wider px-3 py-1 bg-gray-100 dark:bg-dark-bg text-gray-600 dark:text-gray-300 rounded-full">
-                                            ${cat.timeLimit ? `${cat.timeLimit / 60} Phút` : 'Tự Do'}
-                                        </span>
+                        <div class="fade-in max-w-6xl mx-auto">
+                            <div class="text-center mb-10 mt-4">
+                                <h1 class="text-4xl sm:text-5xl font-black text-gray-900 dark:text-white mb-4 tracking-tight">Hệ Thống Luyện Thi</h1>
+                                <p class="text-lg text-gray-500 dark:text-dark-textMuted max-w-2xl mx-auto">Chọn kỹ năng bên dưới để bắt đầu bài kiểm tra mô phỏng thực tế.</p>
+                            </div>
+                            
+                            <!-- Tiêu chí chấm điểm banner -->
+                            <div class="mb-10 max-w-4xl mx-auto cursor-pointer" onclick="app.navigate('grading_criteria')">
+                                <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-6 sm:p-8 text-white shadow-xl hover:-translate-y-1 transition-all flex flex-col sm:flex-row items-center gap-6 border border-indigo-400">
+                                    <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center text-3xl shrink-0 backdrop-blur-sm">
+                                        <i class="fas fa-clipboard-check"></i>
                                     </div>
-                                    <h3 class="text-xl font-extrabold text-gray-900 dark:text-white mb-2 group-hover:${cat.textClass} transition-colors">${cat.name}</h3>
-                                    <p class="text-gray-500 dark:text-dark-textMuted text-sm mb-6 leading-relaxed">${cat.desc}</p>
-                                </div>
-                                <div class="${cat.textClass} font-bold text-sm flex items-center pt-4 border-t border-gray-100 dark:border-dark-border">
-                                    Vào luyện tập <i class="fas fa-arrow-right ml-2 group-hover:translate-x-2 transition-transform"></i>
-                                </div>
-                            </div>
-                        `;
-                    }
-                    html += `</div>`;
-                    return html;
-                },
-
-                testStart: function(categoryId) {
-                    const cat = CATEGORIES[categoryId];
-                    return `
-                        <div class="max-w-xl mx-auto mt-8 fade-in">
-                            <div class="glass-panel rounded-3xl p-8 text-center relative overflow-hidden shadow-2xl">
-                                <div class="${cat.color} w-20 h-20 rounded-3xl flex items-center justify-center text-white text-3xl mx-auto mb-4 shadow-xl">
-                                    <i class="fas ${cat.icon}"></i>
-                                </div>
-                                <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-2">${cat.name}</h2>
-                                <p class="text-gray-500 dark:text-dark-textMuted text-sm mb-6">${cat.desc}</p>
-
-                                <div class="bg-gray-50 dark:bg-dark-bg p-5 rounded-2xl text-left text-xs text-gray-600 dark:text-gray-300 mb-6 space-y-2 border border-gray-100 dark:border-dark-border">
-                                    ${cat.id === 'grammar' ? `
-                                        <div class="flex items-start"><i class="fas fa-clock text-blue-500 mr-2 mt-0.5"></i> <strong>Thời gian:</strong> 25 phút đếm ngược.</div>
-                                        <div class="flex items-start"><i class="fas fa-list-ol text-blue-500 mr-2 mt-0.5"></i> Gồm Trắc nghiệm Ngữ pháp và Ghép từ vựng (đồng nghĩa/định nghĩa).</div>
-                                    ` : ''}
-                                    ${cat.id === 'reading' ? `
-                                        <div class="flex items-start"><i class="fas fa-clock text-emerald-500 mr-2 mt-0.5"></i> <strong>Thời gian làm bài:</strong> 40 phút.</div>
-                                    ` : ''}
-                                </div>
-
-                                <div class="flex gap-3">
-                                    <button onclick="app.navigate('home')" class="w-1/3 py-3 bg-gray-100 dark:bg-dark-bg text-gray-700 dark:text-gray-300 rounded-xl font-bold hover:bg-gray-200">Trở về</button>
-                                    <button onclick="app.navigate('test_run')" class="w-2/3 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-200 dark:shadow-none">Bắt Đầu Làm Bài</button>
+                                    <div class="flex-1 text-center sm:text-left">
+                                        <h2 class="text-2xl font-bold mb-1">Tiêu chí chấm điểm Aptis</h2>
+                                        <p class="text-indigo-100 text-sm">Hướng dẫn chi tiết thang điểm Speaking và Writing theo khung CEFR.</p>
+                                    </div>
+                                    <span class="px-5 py-2.5 bg-white text-indigo-700 font-bold rounded-xl whitespace-nowrap inline-flex items-center hover:bg-indigo-50 transition-colors">
+                                        Xem chi tiết <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                                    </span>
                                 </div>
                             </div>
-                        </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     `;
-                },
-
-                testInterface: function(question, currentIndex, total, cat, currentAnswer) {
-                    const isWriting = cat.id === 'writing';
-                    const isSpeaking = cat.id === 'speaking';
-                    const isListening = cat.id === 'listening';
-                    const isReading = cat.id === 'reading';
-
-                    let progress = ((currentIndex + 1) / total) * 100;
-                    const recordedAudio = app.state.test.speakingAudioBlobs[currentIndex];
-                    const playedCount = app.state.test.listeningPlayCounts[currentIndex] || 0;
-
-                    let html = `
-                        <div class="fade-in max-w-5xl mx-auto pb-12">
-                            <!-- Top Status Header -->
-                            <div class="mb-6 bg-white dark:bg-dark-panel p-4 rounded-2xl shadow-sm border border-gray-200 dark:border-dark-border flex flex-col sm:flex-row items-center justify-between gap-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="${cat.color} w-9 h-9 rounded-xl flex items-center justify-center text-white text-base font-bold">
+                    Object.values(CATEGORIES).forEach(cat => {
+                        html += `
+                            <div onclick="app.navigate('test_start', {category: '${cat.id}'})" class="glass-panel rounded-3xl p-6 cursor-pointer hover:-translate-y-1.5 transition-all duration-300 group hover:shadow-xl">
+                                <div class="flex justify-between items-start mb-6">
+                                    <div class="w-14 h-14 rounded-2xl ${cat.color} flex items-center justify-center text-white text-2xl shadow-lg group-hover:scale-110 transition-transform">
                                         <i class="fas ${cat.icon}"></i>
                                     </div>
-                                    <div>
-                                        <h4 class="font-extrabold text-gray-900 dark:text-white text-sm">${cat.name}</h4>
-                                        <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400">
-                                            ${question.part ? (String(question.part).includes('Vocab') ? question.part : 'PART ' + question.part) : 'PART 1'}
-                                        </span>
-                                    </div>
                                 </div>
-
-                                ${cat.timeLimit ? `
-                                    <div class="flex items-center bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 font-mono font-extrabold px-4 py-2 rounded-xl border border-rose-200 dark:border-rose-900">
-                                        <i class="fas fa-stopwatch mr-2 text-base"></i>
-                                        <span id="test-timer-display">--:--</span>
-                                    </div>
-                                ` : ''}
-
-                                <div class="flex items-center w-full sm:w-auto gap-3">
-                                    <span class="text-xs font-bold text-gray-500 whitespace-nowrap">Câu ${currentIndex + 1}/${total}</span>
-                                    <div class="w-32 h-2.5 bg-gray-100 dark:bg-dark-bg rounded-full overflow-hidden">
-                                        <div class="h-full ${cat.color} transition-all duration-300" style="width: ${progress}%"></div>
-                                    </div>
-                                </div>
+                                <h3 class="text-2xl font-extrabold text-gray-900 dark:text-white mb-2">${cat.name}</h3>
+                                <p class="text-sm text-gray-500 dark:text-dark-textMuted line-clamp-3">${cat.desc.replace(/<br>/g, ' ')}</p>
                             </div>
-
-                            <!-- Main Interface Body -->
-                            <div class="grid grid-cols-1 ${isReading ? 'lg:grid-cols-2' : ''} gap-6">
-                                
-                                ${isReading ? `
-                                    <div class="glass-panel rounded-3xl p-6 shadow-xl h-fit max-h-[75vh] overflow-y-auto custom-scrollbar border border-emerald-100 dark:border-emerald-900/30">
-                                        <div class="font-extrabold text-sm text-emerald-600 dark:text-emerald-400 mb-3 flex items-center border-b border-gray-100 dark:border-dark-border pb-2">
-                                            <i class="fas fa-book-open mr-2"></i> ${question.passageTitle || 'Nội dung bài đọc chính'}
-                                        </div>
-                                        <div class="text-gray-800 dark:text-gray-200 text-sm leading-relaxed whitespace-pre-wrap">
-                                            ${question.passage || 'Chưa có nội dung đoạn văn bài đọc.'}
-                                        </div>
-                                    </div>
-                                ` : ''}
-
-                                <!-- Right / Primary Panel -->
-                                <div class="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl relative flex flex-col justify-between">
-                                    <div>
-                                        <!-- Interactive Areas -->
-                                        ${question.isVocabMatching ? `
-                                            <div class="mb-4 text-center">
-                                                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Vocabulary Matching</h3>
-                                                <p class="text-sm text-gray-500">Hãy chọn ${question.subType === 'vocab_matching_p2' ? 'định nghĩa' : 'từ đồng nghĩa'} phù hợp với từ chính bên dưới.</p>
-                                            </div>
-                                            <div class="space-y-4">
-                                                <div class="flex font-bold text-sm text-gray-500 mb-2 border-b border-gray-200 dark:border-dark-border pb-2 px-2">
-                                                    <div class="w-1/2">Từ chính</div>
-                                                    <div class="w-1/2 pl-2">Danh sách lựa chọn</div>
-                                                </div>
-                                                ${question.pairs.map((pair, idx) => {
-                                                    const selectedVal = (app.state.test.answers[currentIndex] && app.state.test.answers[currentIndex].selected) ? app.state.test.answers[currentIndex].selected[idx] : '';
-                                                    const isReview = app.state.test.isReviewMode;
-                                                    const isCorrectPair = isReview ? selectedVal === pair.target : null;
-                                                    
-                                                    return `
-                                                    <div class="flex items-center gap-4 bg-white dark:bg-dark-panel p-3.5 rounded-xl border-2 ${isReview ? (isCorrectPair ? 'border-emerald-400 bg-emerald-50 dark:bg-emerald-900/20' : 'border-rose-400 bg-rose-50 dark:bg-rose-900/20') : 'border-gray-100 dark:border-dark-border'} shadow-sm">
-                                                        <div class="w-1/2 font-bold text-teal-700 dark:text-teal-400 text-lg flex items-center">
-                                                            <div class="w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900/40 flex justify-center items-center mr-3 text-sm shrink-0">${idx+1}</div>
-                                                            ${pair.word}
-                                                        </div>
-                                                        <div class="w-1/2 relative">
-                                                            <select onchange="app.selectVocabMatching(${idx}, this.value)" class="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-lg p-2.5 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 cursor-pointer shadow-sm transition-all" ${isReview ? 'disabled' : ''}>
-                                                                <option value="">-- Click để chọn --</option>
-                                                                ${question.options.map(opt => `
-                                                                    <option value="${opt.replace(/"/g, '&quot;')}" ${selectedVal === opt ? 'selected' : ''}>${opt}</option>
-                                                                `).join('')}
-                                                            </select>
-                                                            ${isReview ? `
-                                                                <div class="text-xs mt-2 font-bold ${isCorrectPair ? 'text-emerald-600' : 'text-rose-600'} bg-white dark:bg-dark-panel p-2 rounded-lg border ${isCorrectPair ? 'border-emerald-200' : 'border-rose-200'}">
-                                                                    ${isCorrectPair ? '<i class="fas fa-check-circle mr-1"></i> Chính xác' : `<i class="fas fa-times-circle mr-1"></i> Sai. Đáp án đúng: <span class="font-normal italic">${pair.target}</span>`}
-                                                                </div>
-                                                            ` : ''}
-                                                        </div>
-                                                    </div>
-                                                    `;
-                                                }).join('')}
-                                            </div>
-                                        ` : `
-                                            <!-- Standard Question rendering for Reading/Listening/Speaking/Writing/Grammar MCQ -->
-                                            ${isListening ? `
-                                                <div class="mb-6 bg-purple-50 dark:bg-purple-900/20 rounded-2xl p-4 border border-purple-100 flex flex-col items-center gap-3">
-                                                    ${question.audioUrl ? `
-                                                        <audio id="audio-player-${currentIndex}" src="${question.audioUrl}" preload="auto" class="hidden" onended="app.handleAudioEnded(${currentIndex})" onerror="app.handleAudioError(${currentIndex})"></audio>
-                                                        <button id="play-btn-${currentIndex}" onclick="app.playListeningAudio(${currentIndex})" class="px-6 py-3 bg-purple-600 text-white font-bold rounded-2xl flex items-center hover:bg-purple-700 ${playedCount >= 2 ? 'opacity-60 cursor-not-allowed bg-gray-400' : ''}" ${playedCount >= 2 ? 'disabled' : ''}>
-                                                            <i class="fas fa-play mr-2"></i> <span id="play-btn-text-${currentIndex}">${playedCount >= 2 ? 'Đã Hết Lượt Nghe' : 'Phát Audio MP3'}</span>
-                                                        </button>
-                                                        <span id="play-counter-${currentIndex}" class="text-xs font-bold text-purple-600">Đã nghe ${playedCount}/2 lần</span>
-                                                    ` : '<div class="text-rose-500 font-bold text-sm">Lỗi: Không có Audio.</div>'}
-                                                </div>
-                                            ` : ''}
-
-                                            ${isReading ? `
-                                                <div class="inline-block px-3 py-1 mb-3 bg-emerald-100 text-emerald-800 rounded-lg text-xs font-bold tracking-wide border border-emerald-200">
-                                                    Câu hỏi ${question.subQuestionIndex + 1} / ${question.totalSubQuestions} của bài đọc
-                                                </div>
-                                            ` : ''}
-
-                                            <h3 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-6 leading-relaxed">
-                                                ${question.text}
-                                                ${question.subQuestion ? `<div class="text-sm font-normal text-gray-500 mt-2 italic">${question.subQuestion}</div>` : ''}
-                                            </h3>
-
-                                            ${isWriting ? `
-                                                <div class="relative">
-                                                    <textarea id="writing-input" rows="8" class="w-full bg-gray-50 dark:bg-dark-panel border border-gray-200 dark:border-dark-border rounded-2xl p-4 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 resize-none transition-all" placeholder="Nhập câu trả lời của bạn..." oninput="app.saveWritingInput(this.value)" ${app.state.test.isReviewMode ? 'readonly' : ''}>${app.state.test.writingAnswers[currentIndex] || ''}</textarea>
-                                                    <div class="absolute bottom-3 right-4 text-xs font-bold text-gray-400" id="word-counter">
-                                                        ${(app.state.test.writingAnswers[currentIndex] || '').trim().split(/\s+/).filter(w=>w.length>0).length} từ
-                                                    </div>
-                                                </div>
-                                            ` : isSpeaking ? `
-                                                <div class="bg-rose-50 dark:bg-rose-950/20 rounded-2xl p-6 border border-rose-100 flex flex-col items-center gap-4">
-                                                    ${!app.state.test.isReviewMode ? `
-                                                        <button id="record-mic-btn" onclick="app.toggleAudioRecording()" class="px-6 py-3 bg-indigo-600 text-white font-bold rounded-2xl flex items-center hover:bg-indigo-700 transition-all">
-                                                            <i class="fas fa-microphone mr-2"></i> ${recordedAudio ? 'Ghi Âm Lại' : 'Bắt Đầu Ghi Âm'}
-                                                        </button>
-                                                        <p id="recording-status-text" class="text-sm text-gray-500 font-medium">${recordedAudio ? '✅ Đã có bản ghi âm.' : 'Bấm để ghi âm câu trả lời.'}</p>
-                                                    ` : '<div class="text-indigo-500 font-bold text-sm"><i class="fas fa-info-circle mr-1"></i> Chế độ xem lại bài thi</div>'}
-                                                    <audio id="audio-recording-preview" controls class="w-full mt-4 ${recordedAudio ? '' : 'hidden'}" src="${recordedAudio || ''}"></audio>
-                                                </div>
-                                            ` : `
-                                                <div class="space-y-3">
-                                                    ${question.options ? question.options.map((opt, idx) => `
-                                                        <div class="option-btn border-2 border-gray-100 dark:border-dark-border bg-white dark:bg-dark-panel p-4 rounded-2xl flex items-center cursor-pointer hover:border-indigo-300 hover:bg-indigo-50" onclick="app.selectOption(${idx})">
-                                                            <div class="icon-container w-8 h-8 rounded-full border-2 border-gray-200 flex items-center justify-center mr-4 shrink-0 text-sm font-bold text-gray-400">
-                                                                ${String.fromCharCode(65 + idx)}
-                                                            </div>
-                                                            <span class="text-gray-700 dark:text-gray-200 font-medium">${opt}</span>
-                                                        </div>
-                                                    `).join('') : ''}
-                                                </div>
-                                                <div id="feedback-area" class="hidden mt-6 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded-r-xl">
-                                                    <h5 class="font-bold text-blue-800 flex items-center mb-1"><i class="fas fa-lightbulb mr-2"></i> Giải thích đáp án:</h5>
-                                                    <p class="text-sm text-blue-900 dark:text-blue-200">${question.explanation || 'Không có giải thích chi tiết.'}</p>
-                                                </div>
-                                            `}
-                                        `}
-                                    </div>
-                                    
-                                    <div class="mt-8 flex justify-between items-center pt-4 border-t border-gray-100 dark:border-dark-border">
-                                        <button onclick="app.prevQuestion()" class="${currentIndex === 0 ? 'invisible' : ''} px-5 py-2.5 bg-gray-100 dark:bg-dark-bg text-gray-700 dark:text-gray-300 font-bold rounded-xl hover:bg-gray-200 transition-colors">
-                                            <i class="fas fa-chevron-left mr-1"></i> Câu trước
-                                        </button>
-                                        <button onclick="app.nextQuestion()" class="px-6 py-2.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 shadow-md transition-colors">
-                                            ${currentIndex === total - 1 ? 'Nộp bài <i class="fas fa-flag-checkered ml-1"></i>' : 'Tiếp theo <i class="fas fa-chevron-right ml-1"></i>'}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                        `;
+                    });
+                    html += `</div></div>`;
                     return html;
                 },
-                
+
                 adminDashboard: function() {
                     let html = `
-                        <div class="max-w-4xl mx-auto fade-in">
-                            <div class="flex items-center justify-between mb-8">
+                        <div class="fade-in max-w-6xl mx-auto">
+                            <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
                                 <div>
-                                    <h2 class="text-2xl font-black text-gray-900 dark:text-white">NGÂN HÀNG CÂU HỎI</h2>
-                                    <p class="text-gray-500 dark:text-dark-textMuted text-sm mt-1">Hệ thống quản lý câu hỏi.</p>
+                                    <h2 class="text-3xl font-black text-gray-900 dark:text-white mb-2">Quản Trị Hệ Thống</h2>
+                                    <p class="text-gray-500 dark:text-gray-400">Quản lý ngân hàng câu hỏi và dữ liệu bài thi</p>
                                 </div>
+                                <button onclick="app.navigate('home', {}, true)" class="px-5 py-2.5 bg-white dark:bg-dark-panel border border-gray-200 dark:border-dark-border text-gray-700 dark:text-gray-300 rounded-xl font-bold hover:bg-gray-50 dark:hover:bg-slate-800 shadow-sm transition-all flex items-center">
+                                    <i class="fas fa-sign-out-alt mr-2 text-gray-400"></i> Thoát quản trị
+                                </button>
                             </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     `;
-                    for (const [key, cat] of Object.entries(CATEGORIES)) {
+                    Object.values(CATEGORIES).forEach(cat => {
                         html += `
-                            <div class="glass-panel p-5 rounded-2xl flex items-center justify-between hover:shadow-lg transition-all cursor-pointer border border-gray-200 dark:border-dark-border" onclick="app.navigate('admin_manage', {category: '${key}'})">
-                                <div class="flex items-center gap-4">
-                                    <div class="${cat.color} w-12 h-12 rounded-xl flex items-center justify-center text-white text-xl">
-                                        <i class="fas ${cat.icon}"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="font-bold text-gray-900 dark:text-white">${cat.name}</h3>
-                                        <p class="text-xs text-gray-500">Quản lý câu hỏi</p>
-                                    </div>
+                            <div onclick="app.navigate('admin_manage', {category: '${cat.id}'})" class="bg-white dark:bg-dark-panel rounded-3xl p-6 border border-gray-100 dark:border-dark-border cursor-pointer hover:border-indigo-400 dark:hover:border-indigo-500 hover:-translate-y-1 transition-all group shadow-sm hover:shadow-md relative overflow-hidden">
+                                <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 dark:bg-indigo-900/10 rounded-bl-full -z-10 opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                                <div class="w-14 h-14 rounded-2xl ${cat.color} text-white flex items-center justify-center text-2xl mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                                    <i class="fas ${cat.icon}"></i>
                                 </div>
-                                <i class="fas fa-chevron-right text-gray-300"></i>
+                                <h3 class="font-extrabold text-gray-900 dark:text-white text-xl mb-1">${cat.name}</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Quản lý kho câu hỏi</p>
+                                <div class="mt-4 flex items-center text-indigo-600 dark:text-indigo-400 text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity transform -translate-x-2 group-hover:translate-x-0">
+                                    Chi tiết <i class="fas fa-arrow-right ml-2"></i>
+                                </div>
                             </div>
                         `;
-                    }
+                    });
                     html += `</div></div>`;
                     return html;
                 },
 
                 adminManage: function(categoryId, questions) {
                     const cat = CATEGORIES[categoryId];
-                    let html = `
-                        <div class="max-w-6xl mx-auto fade-in">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
-                                <div class="flex items-center gap-3">
-                                    <button onclick="app.navigate('admin_dashboard')" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-dark-bg hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-colors">
-                                        <i class="fas fa-arrow-left"></i>
-                                    </button>
-                                    <div>
-                                        <h2 class="text-xl font-black text-gray-900 dark:text-white flex items-center">
-                                            <i class="fas ${cat.icon} ${cat.textClass} mr-2"></i> ${cat.name}
-                                        </h2>
-                                        <span id="question-total-badge" class="text-xs font-bold text-gray-500">Tổng: ${questions.length} mục</span>
+                    return `
+                        <div class="fade-in max-w-6xl mx-auto">
+                            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                                <div class="flex items-center gap-4">
+                                    <button onclick="app.navigate('admin_dashboard')" class="w-10 h-10 bg-white dark:bg-dark-panel border border-gray-200 dark:border-dark-border text-gray-500 rounded-xl hover:bg-gray-50 flex items-center justify-center transition-colors shadow-sm"><i class="fas fa-arrow-left"></i></button>
+                                    <h2 class="text-2xl font-extrabold flex items-center gap-2 text-gray-900 dark:text-white">
+                                        Quản lý ${cat.name}
+                                    </h2>
+                                </div>
+                                <div class="flex gap-3 w-full md:w-auto">
+                                    <div class="relative flex-1 md:w-64">
+                                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                        <input type="text" placeholder="Tìm kiếm..." onkeyup="app.filterAdminQuestions(this.value, '${categoryId}')" class="w-full bg-white dark:bg-dark-panel border border-gray-200 dark:border-dark-border rounded-xl pl-9 pr-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none shadow-sm text-gray-700 dark:text-gray-300">
                                     </div>
+                                    <button onclick="app.openAdminQuestionModal('${categoryId}')" class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-md transition-colors whitespace-nowrap"><i class="fas fa-plus mr-1.5"></i> Thêm</button>
                                 </div>
-                                <button onclick="app.showModal('Thêm mới dữ liệu', app.views.questionForm('${categoryId}'))" class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-md">
-                                    <i class="fas fa-plus mr-1.5"></i> Thêm mới
-                                </button>
                             </div>
-
-                            <div class="mb-6 relative">
-                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <i class="fas fa-search text-gray-400"></i>
-                                </div>
-                                <input type="text" id="admin-search-input" oninput="app.filterAdminQuestions(this.value, '${categoryId}')" placeholder="Tìm kiếm câu hỏi, từ vựng, bài đọc..." class="block w-full pl-11 pr-4 py-3.5 border-2 border-transparent bg-white dark:bg-dark-panel rounded-2xl shadow-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-indigo-500 sm:text-sm transition-all duration-300">
+                            <div class="mb-4">
+                                <span id="question-total-badge" class="px-3 py-1 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 rounded-lg text-xs font-bold">Tổng: ${questions.length} câu</span>
                             </div>
-
-                            <div id="admin-questions-container">
-                                ${app.views.adminQuestionList(questions, categoryId)}
+                            <div class="bg-white dark:bg-dark-panel border border-gray-200 dark:border-dark-border rounded-2xl overflow-hidden shadow-sm" id="admin-questions-container">
+                                ${this.adminQuestionList(questions, categoryId)}
                             </div>
                         </div>
                     `;
-                    return html;
                 },
 
                 adminQuestionList: function(questions, categoryId) {
-                    if (questions.length === 0) {
-                        return `
-                            <div class="text-center py-16 glass-panel rounded-3xl border border-dashed border-gray-300 dark:border-gray-700">
-                                <div class="text-4xl text-gray-300 mb-4"><i class="fas fa-box-open"></i></div>
-                                <p class="text-gray-500 font-medium">Không tìm thấy dữ liệu.</p>
-                            </div>
-                        `;
-                    }
-                    return `
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            ${questions.map((q, i) => `
-                                <div id="q-card-${q.id}" class="bg-white dark:bg-dark-panel p-5 rounded-2xl border border-gray-200 dark:border-dark-border shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow group">
-                                    <div>
-                                        <div class="flex justify-between items-start mb-3">
-                                            <div class="flex gap-2 items-center">
-                                                <span class="text-[11px] font-extrabold px-2.5 py-1 bg-indigo-50 text-indigo-600 rounded-lg uppercase tracking-wider">
-                                                    Part ${q.part || (q.subType === 'vocab_matching_p1' ? '1 (Vocab)' : q.subType === 'vocab_matching_p2' ? '2 (Vocab)' : 1)}
-                                                </span>
-                                            </div>
-                                            <div class="flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-                                                <button onclick="app.editAdminQuestion('${categoryId}', '${q.id}')" class="w-8 h-8 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center hover:bg-blue-100" title="Chỉnh sửa"><i class="fas fa-edit"></i></button>
-                                                <button onclick="app.deleteAdminQuestion('${categoryId}', '${q.id}')" class="w-8 h-8 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center hover:bg-rose-100" title="Xóa"><i class="fas fa-trash"></i></button>
-                                            </div>
-                                        </div>
-                                        
-                                        ${categoryId === 'reading' ? `
-                                            <p class="font-bold text-emerald-700 dark:text-emerald-400 text-sm mb-1"><i class="fas fa-book-open mr-1"></i> ${q.passageTitle || 'Bài đọc'}</p>
-                                            <p class="text-xs text-gray-500 line-clamp-2 mb-3">${q.passage || ''}</p>
-                                            <div class="text-[11px] font-bold text-indigo-500 bg-indigo-50 px-2 py-1 rounded inline-block">
-                                                Bao gồm ${q.subQuestions ? q.subQuestions.length : (q.text ? 1 : 0)} câu hỏi phụ
-                                            </div>
-                                        ` : (q.subType === 'vocab_matching_p1' || q.subType === 'vocab_matching_p2') ? `
-                                            <div class="bg-teal-50 dark:bg-teal-900/20 p-3 rounded-xl border border-teal-100 dark:border-teal-800 mb-3">
-                                                <p class="font-bold text-teal-800 dark:text-teal-300 text-sm mb-1"><i class="fas fa-puzzle-piece mr-1.5"></i> Từ chính: ${q.word}</p>
-                                                <p class="text-xs text-teal-600 dark:text-teal-400"><i class="fas fa-arrow-right mr-1.5"></i> Mục tiêu: ${q.target}</p>
-                                            </div>
-                                        ` : `
-                                            <p class="font-medium text-sm text-gray-800 dark:text-gray-200 line-clamp-3 mb-3">${q.text || '<em>(Không có nội dung text)</em>'}</p>
-                                            ${q.options ? `
-                                                <div class="text-xs text-gray-500 space-y-1.5 p-3 bg-gray-50 dark:bg-dark-bg rounded-xl">
-                                                    ${q.options.map((opt, idx) => `
-                                                        <div class="${idx === q.correctAnswer ? 'text-emerald-600 font-bold' : ''}">
-                                                            ${String.fromCharCode(65+idx)}. ${opt}
-                                                        </div>
-                                                    `).join('')}
-                                                </div>
-                                            ` : ''}
-                                        `}
+                    if (questions.length === 0) return `
+                        <div class="p-16 text-center flex flex-col items-center">
+                            <div class="w-20 h-20 bg-gray-50 dark:bg-slate-800 rounded-full flex items-center justify-center text-3xl text-gray-400 mb-4 border border-gray-100 dark:border-slate-700"><i class="fas fa-inbox"></i></div>
+                            <p class="text-gray-500 font-medium text-lg">Chưa có câu hỏi nào trong mục này.</p>
+                            <p class="text-sm text-gray-400 mt-2">Bấm "Thêm" để tạo câu hỏi đầu tiên.</p>
+                        </div>`;
+                        
+                    let html = `
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-gray-50 dark:bg-slate-800/80 border-b border-gray-200 dark:border-slate-700 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                        <th class="p-4 w-16 text-center">#</th>
+                                        <th class="p-4 w-32 text-center">Phân loại</th>
+                                        <th class="p-4">Nội dung</th>
+                                        <th class="p-4 w-28 text-center">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100 dark:divide-slate-700 bg-white dark:bg-dark-panel">`;
+                    
+                    questions.forEach((q, i) => {
+                        let typeBadge = '';
+                        if (categoryId === 'grammar') {
+                            const st = q.subType || 'grammar';
+                            if (st === 'grammar') typeBadge = '<span class="px-2.5 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 rounded-md text-[10px] font-bold">Ngữ pháp</span>';
+                            else if (st === 'vocab_matching_p1') typeBadge = '<span class="px-2.5 py-1 bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 rounded-md text-[10px] font-bold">Từ vựng P1</span>';
+                            else typeBadge = '<span class="px-2.5 py-1 bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-900/30 dark:text-fuchsia-400 rounded-md text-[10px] font-bold">Từ vựng P2</span>';
+                        } else if (q.part) {
+                            typeBadge = `<span class="px-2.5 py-1 bg-gray-100 text-gray-700 dark:bg-slate-700 dark:text-gray-300 rounded-md text-[10px] font-bold">Part ${q.part}</span>`;
+                        } else {
+                             typeBadge = `<span class="px-2.5 py-1 bg-gray-100 text-gray-700 dark:bg-slate-700 dark:text-gray-300 rounded-md text-[10px] font-bold">Chung</span>`;
+                        }
+
+                        const previewText = (q.text || q.passageTitle || q.passage || q.word || '').replace(/<[^>]*>?/gm, '').substring(0, 100) + '...';
+
+                        html += `
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-slate-800/30 transition-colors group">
+                                <td class="p-4 text-center text-sm font-medium text-gray-400">${i+1}</td>
+                                <td class="p-4 text-center">${typeBadge}</td>
+                                <td class="p-4">
+                                    <div class="text-sm text-gray-800 dark:text-gray-200 line-clamp-2 leading-relaxed">${previewText}</div>
+                                </td>
+                                <td class="p-4">
+                                    <div class="flex items-center justify-center gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
+                                        <button onclick='app.editQuestion(${JSON.stringify(q).replace(/'/g, "&#39;")}, "${categoryId}")' class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 flex items-center justify-center transition-colors shadow-sm" title="Sửa"><i class="fas fa-edit text-sm"></i></button>
+                                        <button onclick="app.deleteAdminQuestion('${q.id}', '${categoryId}')" class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 dark:bg-rose-900/30 dark:text-rose-400 dark:hover:bg-rose-900/50 flex items-center justify-center transition-colors shadow-sm" title="Xóa"><i class="fas fa-trash text-sm"></i></button>
                                     </div>
-                                </div>
-                            `).join('')}
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    html += `</tbody></table></div>`;
+                    return html;
+                },
+
+                testStart: function(categoryId) {
+                    const cat = CATEGORIES[categoryId];
+                    return `
+                        <div class="max-w-3xl mx-auto fade-in mt-10 text-center">
+                            <div class="w-24 h-24 mx-auto rounded-3xl ${cat.color} flex items-center justify-center text-white text-5xl shadow-xl rotate-3 mb-6"><i class="fas ${cat.icon}"></i></div>
+                            <h2 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-3">Bài thi ${cat.name}</h2>
+                            <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-xl mx-auto">${cat.desc}</p>
+                            
+                            <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/50 rounded-xl p-4 mb-8 text-sm text-yellow-800 dark:text-yellow-500 flex items-start text-left max-w-lg mx-auto">
+                                <i class="fas fa-info-circle mt-0.5 mr-3"></i>
+                                <span>Lưu ý: Không tải lại trang (reload/F5) trong quá trình làm bài để tránh mất dữ liệu bài thi của bạn.</span>
+                            </div>
+
+                            <button onclick="app.navigate('test_run')" class="px-8 py-4 bg-indigo-600 text-white text-lg rounded-2xl font-black shadow-lg hover:bg-indigo-700 hover:-translate-y-1 transition-all">Bắt Đầu Thi <i class="fas fa-play ml-2 text-sm"></i></button>
                         </div>
                     `;
                 },
 
-                questionForm: function(categoryId, qData = null, isEdit = false, docId = null) {
-                    const isReading = categoryId === 'reading';
-                    const isListening = categoryId === 'listening';
-                    const isSpeaking = categoryId === 'speaking';
-                    const isGrammar = categoryId === 'grammar';
-                    const q = qData || {};
-
-                    if (isGrammar) {
-                        setTimeout(() => app.toggleGrammarFormFields(q.subType || 'grammar'), 50);
-                    }
-
-                    if (isReading) {
-                        setTimeout(() => { if (!isEdit) app.addReadingSubQuestion('reading-sub-qs-container'); }, 50);
-                        return `
-                            <form onsubmit="app.saveAdminQuestion(event, '${categoryId}', ${isEdit}, '${docId || ''}')" class="space-y-5">
-                                <input type="hidden" name="q_part" value="${q.part || 1}">
-                                <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 shadow-sm">
-                                    <h4 class="font-black text-emerald-800 mb-4 border-b border-emerald-200 pb-2"><i class="fas fa-file-lines mr-2"></i>NỘI DUNG ĐOẠN VĂN</h4>
-                                    <div class="space-y-3">
-                                        <div>
-                                            <label class="block text-xs font-bold text-emerald-800 mb-1">Tiêu Đề Bài Đọc</label>
-                                            <input type="text" name="q_passage_title" value="${q.passageTitle || ''}" class="w-full bg-white border border-emerald-200 rounded-xl p-2 text-sm focus:ring-emerald-500">
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-bold text-emerald-800 mb-1">Nội dung đoạn văn</label>
-                                            <textarea name="q_passage" rows="6" required class="w-full bg-white border border-emerald-200 rounded-xl p-3 text-sm focus:ring-emerald-500 resize-y">${q.passage || ''}</textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="pt-2">
-                                    <div class="flex justify-between items-center mb-3">
-                                        <h4 class="font-black text-gray-800 text-sm"><i class="fas fa-list-check mr-2"></i>CÁC CÂU HỎI TRẮC NGHIỆM</h4>
-                                        <button type="button" onclick="app.addReadingSubQuestion('reading-sub-qs-container')" class="px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-lg text-xs font-bold">
-                                            <i class="fas fa-plus mr-1"></i> Thêm câu hỏi
-                                        </button>
-                                    </div>
-                                    <div id="reading-sub-qs-container" class="space-y-4"></div>
-                                </div>
-                                <div class="flex justify-end gap-3 pt-4 border-t mt-6">
-                                    <button type="button" onclick="app.closeModal()" class="px-5 py-2.5 text-gray-600 font-bold hover:bg-gray-100 rounded-xl">Hủy</button>
-                                    <button type="submit" class="px-6 py-2.5 bg-emerald-600 text-white font-bold rounded-xl shadow-md">Lưu Đề Đọc</button>
-                                </div>
-                            </form>
-                        `;
-                    }
-
+                gradingCriteria: function() {
                     return `
-                        <form onsubmit="app.saveAdminQuestion(event, '${categoryId}', ${isEdit}, '${docId || ''}')" class="space-y-5">
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Part</label>
-                                    <input type="number" name="q_part" min="1" max="4" value="${q.part || 1}" required class="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-xl p-2.5 text-sm dark:text-white">
-                                </div>
-                                ${isGrammar ? `
-                                    <div>
-                                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Loại Hình Câu Hỏi</label>
-                                        <select name="sub_type" onchange="app.toggleGrammarFormFields(this.value)" class="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-xl p-2.5 text-sm dark:text-white">
-                                            <option value="grammar" ${q.subType === 'grammar' ? 'selected' : ''}>Grammar (Trắc nghiệm Part 1)</option>
-                                            <option value="vocab" ${q.subType === 'vocab' ? 'selected' : ''}>Vocabulary (Trắc nghiệm Cũ)</option>
-                                            <option value="vocab_matching_p1" ${q.subType === 'vocab_matching_p1' ? 'selected' : ''}>Vocabulary Part 1: Ghép từ đồng nghĩa</option>
-                                            <option value="vocab_matching_p2" ${q.subType === 'vocab_matching_p2' ? 'selected' : ''}>Vocabulary Part 2: Hoàn thành định nghĩa</option>
-                                        </select>
-                                    </div>
-                                ` : ''}
-                            </div>
-
-                            ${isListening ? `
-                                <div>
-                                    <label class="block text-xs font-bold text-purple-700 mb-1"><i class="fas fa-link mr-1"></i> Link file Audio MP3</label>
-                                    <input type="url" name="audio_url" value="${q.audioUrl || ''}" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-sm">
-                                </div>
-                            ` : ''}
-
-                            <!-- MCQ TEXT FIELDS -->
-                            <div id="mcq_fields" style="display:block;">
-                                <div class="mb-4">
-                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Nội dung câu hỏi</label>
-                                    <textarea id="q_text_input" name="q_text" rows="2" class="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-xl p-3 text-sm dark:text-white resize-none">${q.text || ''}</textarea>
-                                </div>
-                                
-                                ${['grammar', 'listening'].includes(categoryId) ? `
-                                    <div class="bg-gray-100 dark:bg-dark-bg p-4 rounded-xl border border-gray-200 dark:border-dark-border space-y-3">
-                                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2 border-b border-gray-200 dark:border-gray-700 pb-2">Đáp án (3 Lựa chọn)</label>
-                                        ${[0,1,2].map(i => `
-                                            <div class="flex items-center gap-2">
-                                                <span class="text-xs font-bold text-gray-500 w-6">${String.fromCharCode(65+i)}</span>
-                                                <input type="text" name="opt_${i}" value="${q.options ? q.options[i] : ''}" class="flex-1 bg-white dark:bg-dark-panel border border-gray-300 dark:border-dark-border rounded-lg p-2 text-sm dark:text-white">
-                                                <input type="radio" name="correct_opt" value="${i}" ${q.correctAnswer === i || (i===0 && !q.options) ? 'checked' : ''} class="w-4 h-4 text-indigo-600">
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                    <div class="mt-4">
-                                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Giải thích (Tùy chọn)</label>
-                                        <textarea name="q_explanation" rows="2" class="w-full bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-xl p-2.5 text-sm dark:text-white resize-none">${q.explanation || ''}</textarea>
-                                    </div>
-                                ` : ''}
-                            </div>
-
-                            <!-- VOCABULARY FIELDS -->
-                            ${isGrammar ? `
-                                <div id="vocab_fields" style="display:none;" class="bg-teal-50 dark:bg-teal-900/20 p-5 rounded-2xl border border-teal-200 dark:border-teal-800 shadow-sm space-y-4">
-                                    <div class="text-xs font-bold text-teal-600 bg-teal-100 dark:bg-teal-900/50 inline-block px-3 py-1 rounded-full mb-2">
-                                        <i class="fas fa-puzzle-piece mr-1"></i> Tính năng Tạo đề thông minh
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-bold text-teal-900 dark:text-teal-400 mb-1">Từ chính (Main Word)</label>
-                                        <input type="text" id="v_word_input" name="v_word" value="${q.word || ''}" class="w-full bg-white dark:bg-dark-panel border border-teal-300 dark:border-teal-700 rounded-xl p-3 text-sm dark:text-white focus:ring-2 focus:ring-teal-500">
-                                    </div>
-                                    <div>
-                                        <label id="vocab_target_label" class="block text-xs font-bold text-teal-900 dark:text-teal-400 mb-1">Từ đồng nghĩa (Target)</label>
-                                        <input type="text" id="v_target_input" name="v_target" value="${q.target || ''}" class="w-full bg-white dark:bg-dark-panel border border-teal-300 dark:border-teal-700 rounded-xl p-3 text-sm dark:text-white focus:ring-2 focus:ring-teal-500">
-                                    </div>
-                                    <p class="text-[11px] text-teal-700 dark:text-teal-500 mt-2 italic"><i class="fas fa-info-circle mr-1"></i> Hệ thống sẽ tự động trộn các từ này và tạo ra danh sách 10 lựa chọn khi thi.</p>
-                                </div>
-                            ` : ''}
-
-                            <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-dark-border">
-                                <button type="button" onclick="app.closeModal()" class="px-5 py-2.5 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-100 dark:hover:bg-dark-bg rounded-xl">Hủy</button>
-                                <button type="submit" class="px-6 py-2.5 bg-indigo-600 text-white font-bold rounded-xl shadow-md hover:bg-indigo-700 transition-all">Lưu Câu Hỏi</button>
-                            </div>
-                        </form>
-                    `;
-                },
-
-                historyList: function(records) {
-                    let html = `
-                        <div class="max-w-4xl mx-auto fade-in">
-                            <div class="flex items-center justify-between mb-8">
-                                <div>
-                                    <h2 class="text-2xl font-black text-gray-900 dark:text-white">Lịch Sử Luyện Thi</h2>
-                                </div>
-                                <button onclick="app.navigate('home')" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-dark-bg hover:bg-gray-200 flex items-center justify-center text-gray-600">
-                                    <i class="fas fa-house"></i>
+                        <div class="max-w-7xl mx-auto fade-in">
+                            <header class="mb-10 text-center relative">
+                                <button onclick="app.navigate('home', {}, true)" class="absolute left-0 top-0 px-4 py-2 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 rounded-xl font-bold hover:bg-gray-200 text-sm hidden sm:flex items-center transition-colors">
+                                    <i class="fas fa-arrow-left mr-2"></i> Trở về
                                 </button>
+                                <h1 class="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600 mb-4 inline-block">
+                                    Tiêu chí chấm điểm Aptis
+                                </h1>
+                                <p class="text-gray-500 dark:text-slate-400 text-sm md:text-base max-w-2xl mx-auto mt-2">
+                                    Hướng dẫn chi tiết thang điểm Speaking và Writing theo khung tham chiếu Châu Âu (CEFR).
+                                </p>
+                            </header>
+
+                            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                                <button onclick="app.filterLevelCriteria('all')" id="btn-all" class="criteria-btn active px-6 py-2 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-medium transition-colors shadow-[0_0_15px_rgba(37,99,235,0.5)] border border-blue-400">Tất cả</button>
+                                <button onclick="app.filterLevelCriteria('A2')" id="btn-A2" class="criteria-btn px-6 py-2 rounded-full bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-600 dark:text-slate-300 font-medium transition-colors border border-gray-200 dark:border-slate-600">A2</button>
+                                <button onclick="app.filterLevelCriteria('B1')" id="btn-B1" class="criteria-btn px-6 py-2 rounded-full bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-600 dark:text-slate-300 font-medium transition-colors border border-gray-200 dark:border-slate-600">B1</button>
+                                <button onclick="app.filterLevelCriteria('B2')" id="btn-B2" class="criteria-btn px-6 py-2 rounded-full bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-600 dark:text-slate-300 font-medium transition-colors border border-gray-200 dark:border-slate-600">B2</button>
                             </div>
 
-                            ${records.length === 0 ? `
-                                <div class="text-center py-16 glass-panel rounded-3xl border border-dashed border-gray-300">
-                                    <div class="text-4xl text-gray-300 mb-4"><i class="fas fa-clock"></i></div>
-                                    <p class="text-gray-500 font-medium">Bạn chưa có bài thi nào được lưu.</p>
-                                </div>
-                            ` : `
-                                <div class="space-y-4">
-                                    ${records.map(r => {
-                                        const d = new Date(r.date);
-                                        const dateStr = `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()} ${d.getHours()}:${d.getMinutes().toString().padStart(2,'0')}`;
-                                        const isTextBased = ['writing', 'speaking'].includes(r.categoryId);
-                                        
-                                        return `
-                                        <div class="glass-panel p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-gray-200">
-                                            <div class="flex items-center gap-4">
-                                                <div class="${CATEGORIES[r.categoryId].color} w-12 h-12 rounded-xl flex items-center justify-center text-white text-xl">
-                                                    <i class="fas ${CATEGORIES[r.categoryId].icon}"></i>
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                <section class="glass-panel rounded-2xl p-6 shadow-2xl">
+                                    <div class="flex items-center gap-3 mb-6 border-b border-gray-200 dark:border-slate-700 pb-4">
+                                        <svg class="w-8 h-8 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white tracking-wide">WRITING</h2>
+                                    </div>
+                                    <div class="space-y-6 custom-scrollbar overflow-y-auto max-h-[800px] pr-2">
+                                        <div class="bg-gray-50 dark:bg-slate-800/50 rounded-xl p-5 border border-gray-200 dark:border-slate-700">
+                                            <div class="flex flex-col md:flex-row gap-4">
+                                                <div class="md:w-1/3">
+                                                    <h3 class="text-lg font-bold text-blue-600 dark:text-blue-300">PART 1</h3>
+                                                    <p class="text-sm text-gray-500 dark:text-slate-400 mt-2">Viết câu trả lời ngắn (1-5 từ). Bạn cần viết 5 năm thông tin.</p>
                                                 </div>
-                                                <div>
-                                                    <h3 class="font-bold text-gray-900 dark:text-white text-lg">${r.categoryName}</h3>
-                                                    <p class="text-xs text-gray-500 mb-1">${dateStr}</p>
-                                                    <div class="flex gap-3 text-xs font-semibold">
-                                                        ${!isTextBased ? `
-                                                            <span class="${r.score >= 70 ? 'text-emerald-600' : 'text-rose-600'}">Đúng: ${r.correctCount}/${r.totalQuestions} (${r.score}%)</span>
-                                                        ` : `<span class="text-indigo-600">Đã hoàn thành</span>`}
+                                                <div class="md:w-2/3 space-y-3 text-sm">
+                                                    <div class="criteria-item level-below-a2 p-3 bg-white dark:bg-slate-900/50 rounded-lg border-l-2 border-red-500 shadow-sm dark:shadow-none">
+                                                        <span class="font-bold text-red-500 dark:text-red-400">A0 - A1.2:</span> Không có hoặc 1-4 câu hiểu được. Lỗi cản trở việc hiểu.
+                                                    </div>
+                                                    <div class="criteria-item level-A2 p-3 bg-white dark:bg-slate-900/50 rounded-lg border-l-2 border-blue-500 shadow-sm dark:shadow-none">
+                                                        <span class="font-semibold text-blue-500 dark:text-sky-400">Trên A2:</span> Tất cả 5 câu trả lời đều có thể hiểu được hoàn toàn. Hoàn thành nhiệm vụ trọn vẹn.
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="flex gap-2">
-                                                <button onclick="app.reviewHistoryRecord('${r.id}')" class="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 text-sm">Xem lại</button>
-                                                <button onclick="app.deleteHistoryRecord('${r.id}')" class="w-10 h-10 bg-rose-50 text-rose-600 rounded-xl flex justify-center items-center hover:bg-rose-100"><i class="fas fa-trash"></i></button>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section class="glass-panel rounded-2xl p-6 shadow-2xl">
+                                    <div class="flex items-center gap-3 mb-6 border-b border-gray-200 dark:border-slate-700 pb-4">
+                                        <svg class="w-8 h-8 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white tracking-wide">SPEAKING</h2>
+                                    </div>
+                                    <div class="space-y-6 custom-scrollbar overflow-y-auto max-h-[800px] pr-2">
+                                        <div class="bg-gray-50 dark:bg-slate-800/50 rounded-xl p-5 border border-gray-200 dark:border-slate-700">
+                                            <div class="flex flex-col md:flex-row gap-4">
+                                                <div class="md:w-1/3">
+                                                    <h3 class="text-lg font-bold text-purple-600 dark:text-purple-300">PART 1</h3>
+                                                    <p class="text-sm text-gray-500 dark:text-slate-400 mt-2">Personal Information: Trả lời 3 câu hỏi (30s/câu).</p>
+                                                </div>
+                                                <div class="md:w-2/3 space-y-3 text-sm">
+                                                    <div class="criteria-item level-below-a2 p-3 bg-white dark:bg-slate-900/50 rounded-lg border-l-2 border-red-500 shadow-sm dark:shadow-none">
+                                                        <span class="font-bold text-red-500 dark:text-red-400">A0 - A1.2:</span> Lạc đề, phát âm khó hiểu. Ngắt nghỉ cản trở hiểu.
+                                                    </div>
+                                                    <div class="criteria-item level-A2 p-3 bg-white dark:bg-slate-900/50 rounded-lg border-l-2 border-blue-500 shadow-sm dark:shadow-none">
+                                                        <span class="font-semibold text-blue-500 dark:text-sky-400">A2.1 - A2.2:</span> Trả lời 2-3 câu. Cấu trúc đơn giản nhưng có lỗi cơ bản. Phát âm dễ nhận lỗi, gây căng thẳng.
+                                                    </div>
+                                                    <div class="criteria-item level-B1 level-B2 p-3 bg-white dark:bg-slate-900/50 rounded-lg border-l-2 border-purple-500 shadow-sm dark:shadow-none">
+                                                        <span class="font-semibold text-purple-600 dark:text-purple-400">B1 hoặc hơn:</span> Có khả năng trên trình độ A2.
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        `;
-                                    }).join('')}
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    `;
+                },
+
+                testInterface: function(q, index, total, cat, answer) {
+                    let html = `
+                        <div class="max-w-4xl mx-auto fade-in">
+                            <div class="flex flex-col sm:flex-row justify-between items-center bg-white dark:bg-dark-panel p-4 rounded-2xl shadow-sm border border-gray-200 dark:border-dark-border mb-6 gap-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl ${cat.color} flex items-center justify-center text-white text-lg"><i class="fas ${cat.icon}"></i></div>
+                                    <div>
+                                        <h3 class="font-bold text-gray-900 dark:text-white">${cat.name}</h3>
+                                        <div class="text-xs text-gray-500">
+                                            Câu ${index + 1} / ${total} ${q.part ? `<span class="bg-gray-100 dark:bg-slate-700 px-1.5 py-0.5 rounded ml-1 text-[10px]">Part ${q.part}</span>` : ''}
+                                            ${app.state.test.isReviewMode && app.state.test.onlyWrong ? '<span class="text-rose-500 font-bold ml-2"><i class="fas fa-filter"></i> Đang lọc câu sai</span>' : ''}
+                                        </div>
+                                    </div>
                                 </div>
-                            `}
+                                ${cat.timeLimit && !app.state.test.isReviewMode ? `
+                                    <div class="bg-gray-100 dark:bg-dark-bg px-4 py-2 rounded-xl font-mono font-bold text-lg text-gray-700 dark:text-gray-300 flex items-center shadow-inner">
+                                        <i class="fas fa-hourglass-half mr-2 text-indigo-500"></i><span id="test-timer-display">--:--</span>
+                                    </div>` : ''}
+                            </div>
+                            <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2.5 mb-8 shadow-inner overflow-hidden">
+                                <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 h-2.5 rounded-full transition-all duration-300" style="width: ${((index) / total) * 100}%"></div>
+                            </div>
+                    `;
+
+                    if (q.isReadingGroup) {
+                        html += `
+                            <div class="flex flex-col lg:flex-row gap-6 mb-8">
+                                <div class="lg:w-1/2 bg-white dark:bg-dark-panel border border-gray-200 dark:border-dark-border p-6 rounded-2xl shadow-sm h-[500px] flex flex-col">
+                                    <h4 class="font-bold text-lg text-indigo-700 dark:text-indigo-400 mb-4 border-b border-gray-100 dark:border-dark-border pb-2">${q.passageTitle}</h4>
+                                    <div class="overflow-y-auto custom-scrollbar flex-1 text-gray-800 dark:text-gray-200 font-serif leading-loose text-justify text-[15px]">${q.passage.replace(/\n/g, '<br/>')}</div>
+                                </div>
+                                <div class="lg:w-1/2">
+                                    <div class="bg-indigo-50 dark:bg-slate-800 p-5 rounded-2xl mb-6"><p class="font-semibold text-gray-800 dark:text-white"><span class="text-indigo-600 mr-2">[Câu ${q.subQuestionIndex + 1}/${q.totalSubQuestions}]</span> ${q.text}</p></div>
+                                    <div class="space-y-3">
+                                        ${q.options.map((opt, i) => `
+                                            <button onclick="app.selectOption(${i})" class="option-btn w-full text-left p-4 rounded-2xl border-2 ${answer && answer.selected === i ? (answer.isCorrect ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20' : 'border-rose-500 bg-rose-50 dark:bg-rose-900/20') : 'border-gray-200 dark:border-dark-border bg-white dark:bg-dark-panel'} flex items-center transition-colors shadow-sm">
+                                                <div class="icon-container w-8 h-8 rounded-full border-2 ${answer && answer.selected === i ? 'border-transparent' : 'border-gray-300'} text-gray-500 font-bold flex items-center justify-center mr-4 shrink-0 transition-colors">${String.fromCharCode(65+i)}</div>
+                                                <span class="font-medium">${opt}</span>
+                                            </button>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } else if (q.isVocabMatching) {
+                        html += `
+                            <div class="bg-white dark:bg-dark-panel p-6 sm:p-8 rounded-3xl shadow-sm mb-8 border border-gray-200 dark:border-dark-border">
+                                <h3 class="text-xl font-bold mb-6 pb-4 border-b border-gray-100 dark:border-slate-700"><i class="fas fa-link text-indigo-500 mr-2"></i> Ghép từ vựng</h3>
+                                <div class="space-y-5">
+                                    ${q.pairs.map((pair, pIdx) => `
+                                        <div class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 bg-gray-50 dark:bg-slate-800/50 rounded-xl border border-gray-100 dark:border-slate-700">
+                                            <div class="sm:w-1/3 font-bold text-lg text-indigo-700 dark:text-indigo-400 border-l-4 border-indigo-500 pl-3">${pair.word}</div>
+                                            <div class="sm:w-2/3">
+                                                <select onchange="app.selectVocabMatching(${pIdx}, this.value)" ${app.state.test.isReviewMode ? 'disabled' : ''} class="w-full p-3 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none transition-shadow disabled:opacity-70 disabled:bg-gray-100 dark:disabled:bg-slate-800">
+                                                    <option value="">-- Chọn đáp án --</option>
+                                                    ${q.options.map(opt => `<option value="${opt}" ${answer && answer.selected && answer.selected[pIdx] === opt ? 'selected' : ''}>${opt}</option>`).join('')}
+                                                </select>
+                                                ${app.state.test.isReviewMode ? `<div class="mt-2 text-xs font-bold ${answer && answer.selected && answer.selected[pIdx] === pair.target ? 'text-emerald-500' : 'text-rose-500'} bg-white dark:bg-slate-900 inline-block px-2 py-1 rounded shadow-sm">${answer && answer.selected && answer.selected[pIdx] === pair.target ? '<i class="fas fa-check mr-1"></i> Chính xác' : '<i class="fas fa-times mr-1"></i> Sai. Đáp án: ' + pair.target}</div>` : ''}
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    } else if (cat.id === 'listening') {
+                         html += `
+                            <div class="bg-white dark:bg-dark-panel p-6 sm:p-8 rounded-3xl shadow-sm mb-8 text-center border border-gray-200 dark:border-dark-border">
+                                <audio id="audio-player-${index}" onended="app.handleAudioEnded(${index})" src="${q.audioUrl}" class="hidden"></audio>
+                                <div class="mb-8 flex flex-col items-center">
+                                    <div class="w-20 h-20 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 rounded-full flex items-center justify-center text-4xl mb-4 shadow-inner"><i class="fas fa-headphones-alt"></i></div>
+                                    <button id="play-btn-${index}" onclick="app.playListeningAudio(${index})" class="px-8 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-lg flex items-center gap-3 transition-transform transform active:scale-95">
+                                        <i class="fas fa-play-circle text-xl"></i> <span id="play-btn-text-${index}">Phát Audio</span>
+                                    </button>
+                                    <p id="play-counter-${index}" class="text-xs font-bold text-rose-500 mt-4 px-4 py-1.5 rounded-full bg-rose-50 dark:bg-rose-900/30 border border-rose-100 dark:border-rose-800">Lượt nghe: ${app.state.test.listeningPlayCounts[index] || 0} / 2</p>
+                                </div>
+                                <div class="text-left bg-indigo-50 dark:bg-slate-800 p-5 rounded-2xl mb-6 shadow-inner"><p class="font-semibold text-lg text-gray-800 dark:text-white">${q.text}</p></div>
+                                <div class="space-y-3 text-left">
+                                    ${q.options.map((opt, i) => `
+                                        <button onclick="app.selectOption(${i})" class="option-btn w-full text-left p-4 rounded-2xl border-2 ${answer && answer.selected === i ? (answer.isCorrect ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20' : 'border-rose-500 bg-rose-50 dark:bg-rose-900/20') : 'border-gray-200 dark:border-dark-border bg-white dark:bg-dark-panel'} flex items-center transition-colors shadow-sm">
+                                            <div class="icon-container w-8 h-8 rounded-full border-2 ${answer && answer.selected === i ? 'border-transparent' : 'border-gray-300'} text-gray-500 font-bold flex items-center justify-center mr-4 shrink-0 transition-colors">${String.fromCharCode(65+i)}</div>
+                                            <span class="font-medium">${opt}</span>
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    } else if (cat.id === 'writing') {
+                         html += `
+                            <div class="bg-white dark:bg-dark-panel p-6 sm:p-8 rounded-3xl shadow-sm mb-8 border border-gray-200 dark:border-dark-border">
+                                <div class="bg-orange-50 dark:bg-slate-800 p-5 rounded-2xl mb-6"><p class="font-serif text-lg whitespace-pre-wrap text-gray-800 dark:text-gray-200">${q.text}</p></div>
+                                <div class="relative">
+                                    <textarea id="writing-input" oninput="app.saveWritingInput(this.value)" ${app.state.test.isReviewMode ? 'disabled' : ''} class="w-full h-64 p-5 rounded-2xl border border-gray-300 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 font-serif resize-none focus:ring-2 focus:ring-indigo-500 outline-none transition-shadow disabled:opacity-70 disabled:cursor-not-allowed" placeholder="Nhập câu trả lời...">${app.state.test.writingAnswers[index] || ''}</textarea>
+                                    <div class="absolute bottom-4 right-4 bg-white dark:bg-slate-800 px-3 py-1.5 rounded-lg text-xs font-bold shadow border border-gray-100 dark:border-slate-600"><span id="word-counter">${app.state.test.writingAnswers[index] ? app.state.test.writingAnswers[index].trim().split(/\s+/).length : 0} từ</span></div>
+                                </div>
+                            </div>
+                         `;
+                    } else if (cat.id === 'speaking') {
+                        html += `
+                            <div class="bg-white dark:bg-dark-panel p-6 sm:p-8 rounded-3xl shadow-sm mb-8 flex flex-col items-center border border-gray-200 dark:border-dark-border">
+                                ${q.imageUrl ? `<img src="${q.imageUrl}" class="max-h-72 rounded-2xl shadow-md mb-6 object-cover border border-gray-200 dark:border-slate-700">` : ''}
+                                <div class="w-full bg-rose-50 dark:bg-slate-800 p-5 rounded-2xl mb-8 text-center"><p class="font-serif text-xl font-medium text-gray-800 dark:text-gray-200">${q.text}</p></div>
+                                <div class="flex flex-col items-center p-8 bg-gray-50 dark:bg-slate-800/50 w-full rounded-2xl border border-gray-200 dark:border-slate-700">
+                                    ${!app.state.test.isReviewMode ? `
+                                        <button id="record-mic-btn" onclick="app.toggleAudioRecording()" class="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-lg mb-4 flex items-center text-lg transition-transform transform active:scale-95"><i class="fas fa-microphone mr-3"></i> Bắt đầu Ghi Âm</button>
+                                        <p id="recording-status-text" class="text-sm font-bold text-gray-500 mb-4">Nhấn nút để bắt đầu ghi âm.</p>
+                                    ` : ''}
+                                    <audio id="audio-recording-preview" controls class="${app.state.test.speakingAudioBlobs[index] ? '' : 'hidden'} mt-4 w-full max-w-md" src="${app.state.test.speakingAudioBlobs[index] || ''}"></audio>
+                                    ${app.state.test.isReviewMode && !app.state.test.speakingAudioBlobs[index] ? '<p class="text-gray-400 italic">Không có bản ghi âm.</p>' : ''}
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        html += `
+                            <div class="bg-white dark:bg-dark-panel p-6 sm:p-8 rounded-3xl shadow-sm mb-8 border border-gray-200 dark:border-dark-border">
+                                <div class="bg-blue-50 dark:bg-slate-800 p-6 rounded-2xl mb-8 shadow-inner"><p class="font-semibold text-xl text-gray-800 dark:text-white">${q.text}</p></div>
+                                <div class="space-y-4">
+                                    ${q.options.map((opt, i) => `
+                                        <button onclick="app.selectOption(${i})" class="option-btn w-full text-left p-5 rounded-2xl border-2 ${answer && answer.selected === i ? (answer.isCorrect ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20' : 'border-rose-500 bg-rose-50 dark:bg-rose-900/20') : 'border-gray-200 dark:border-dark-border bg-white dark:bg-dark-panel'} flex items-center transition-colors shadow-sm">
+                                            <div class="icon-container w-10 h-10 rounded-full border-2 ${answer && answer.selected === i ? 'border-transparent' : 'border-gray-300'} text-gray-500 font-bold flex items-center justify-center mr-5 shrink-0 text-base transition-colors">${String.fromCharCode(65+i)}</div>
+                                            <span class="text-lg font-medium">${opt}</span>
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    if (app.state.test.isReviewMode && q.explanation) {
+                         html += `
+                            <div class="mb-8 p-5 bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500 rounded-r-xl shadow-sm">
+                                <h4 class="font-bold text-yellow-800 dark:text-yellow-500 mb-1 flex items-center"><i class="fas fa-lightbulb mr-2"></i> Giải thích:</h4>
+                                <p class="text-sm text-gray-700 dark:text-gray-300 ml-6">${q.explanation}</p>
+                            </div>
+                         `;
+                    }
+
+                    html += `
+                            <div class="flex justify-between bg-gray-50 dark:bg-slate-800 p-4 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm items-center">
+                                <button onclick="app.prevQuestion()" class="px-6 py-2.5 rounded-xl font-bold bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-200 shadow-sm border border-gray-300 dark:border-slate-600 hover:bg-gray-100 dark:hover:bg-slate-600 transition-colors ${index === 0 ? 'opacity-50 cursor-not-allowed' : ''}"><i class="fas fa-arrow-left mr-2"></i> Câu trước</button>
+                                ${app.state.test.isReviewMode ? `
+                                    <button onclick="app.navigate('history', {}, true)" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-md transition-colors">Đóng lại <i class="fas fa-times ml-2"></i></button>
+                                ` : `
+                                    <button onclick="app.nextQuestion()" class="px-8 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-md transition-colors">${index === total - 1 ? 'Nộp Bài <i class="fas fa-paper-plane ml-2"></i>' : 'Tiếp theo <i class="fas fa-arrow-right ml-2"></i>'}</button>
+                                `}
+                            </div>
                         </div>
                     `;
                     return html;
                 },
 
-                vocabBook: function(words) {
+                history: function(records) {
                     let html = `
-                        <div class="max-w-4xl mx-auto fade-in">
-                            <div class="flex items-center justify-between mb-8">
-                                <div>
-                                    <h2 class="text-2xl font-black text-gray-900 dark:text-white">Sổ Tay Từ Vựng</h2>
-                                </div>
-                                <button onclick="app.navigate('home')" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-dark-bg hover:bg-gray-200 flex items-center justify-center text-gray-600">
-                                    <i class="fas fa-house"></i>
+                        <div class="max-w-5xl mx-auto fade-in">
+                            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                                <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">Lịch Sử Làm Bài</h2>
+                                <button onclick="app.navigate('home', {}, true)" class="px-5 py-2.5 bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 rounded-xl font-bold hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors shadow-sm flex items-center">
+                                    <i class="fas fa-home mr-2 text-gray-500"></i> Trang chủ
                                 </button>
                             </div>
-                            
-                            <div class="glass-panel p-6 rounded-3xl mb-8 border border-gray-200">
-                                <form onsubmit="app.saveVocabWord(event)" class="flex flex-col sm:flex-row gap-3">
-                                    <input type="text" name="word" placeholder="Từ vựng mới" required class="flex-1 bg-gray-50 border border-gray-300 rounded-xl p-3 text-sm focus:ring-indigo-500">
-                                    <select name="type" class="w-full sm:w-32 bg-gray-50 border border-gray-300 rounded-xl p-3 text-sm focus:ring-indigo-500">
-                                        <option value="noun">(n)</option>
-                                        <option value="verb">(v)</option>
-                                        <option value="adj">(adj)</option>
-                                        <option value="adv">(adv)</option>
-                                    </select>
-                                    <input type="text" name="meaning" placeholder="Nghĩa..." required class="flex-1 bg-gray-50 border border-gray-300 rounded-xl p-3 text-sm focus:ring-indigo-500">
-                                    <input type="text" name="example" placeholder="Ví dụ (Tùy chọn)" class="flex-1 bg-gray-50 border border-gray-300 rounded-xl p-3 text-sm focus:ring-indigo-500">
-                                    <button type="submit" class="px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-md whitespace-nowrap"><i class="fas fa-plus mr-1"></i> Lưu</button>
-                                </form>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                ${words.map(w => `
-                                    <div class="bg-white dark:bg-dark-panel p-5 rounded-2xl border border-gray-200 dark:border-dark-border shadow-sm relative group">
-                                        <button onclick="app.deleteVocabWord('${w.id}')" class="absolute top-3 right-3 text-gray-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fas fa-trash"></i></button>
-                                        <div class="font-black text-lg text-indigo-700 dark:text-indigo-400 mb-1">${w.word} <span class="text-xs font-normal text-gray-500">${w.type}</span></div>
-                                        <div class="text-sm font-bold text-gray-800 dark:text-gray-200 mb-2">${w.meaning}</div>
-                                        ${w.example ? `<div class="text-xs text-gray-500 italic border-l-2 border-indigo-200 pl-2 py-1 bg-gray-50 dark:bg-dark-bg/50 rounded-r-lg">${w.example}</div>` : ''}
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
                     `;
+                    
+                    if (records.length === 0) {
+                        html += `
+                            <div class="glass-panel p-16 rounded-3xl text-center shadow-sm">
+                                <div class="w-24 h-24 bg-gray-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl text-gray-300 dark:text-gray-600 shadow-inner">
+                                    <i class="fas fa-folder-open"></i>
+                                </div>
+                                <p class="text-gray-500 dark:text-gray-400 mb-8 font-medium text-lg">Bạn chưa có bài thi nào trong lịch sử.</p>
+                                <button onclick="app.navigate('home', {}, true)" class="px-8 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-lg transition-transform transform active:scale-95">Làm bài ngay <i class="fas fa-rocket ml-2"></i></button>
+                            </div>
+                        `;
+                    } else {
+                        html += `<div class="grid gap-5">`;
+                        records.forEach(r => {
+                            const date = new Date(r.date);
+                            const dateStr = `${date.getDate().toString().padStart(2,'0')}/${(date.getMonth()+1).toString().padStart(2,'0')}/${date.getFullYear()} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
+                            const correct = r.correctCount || 0;
+                            const total = r.totalQuestions || 0;
+                            const incorrect = total - correct;
+                            const score = r.score || 0;
+                            const isPassed = score >= 50;
+                            const isSubjective = ['writing', 'speaking'].includes(r.categoryId);
+
+                            const cat = CATEGORIES[r.categoryId] || { icon: 'fa-file', color: 'bg-gray-500', name: r.categoryName || 'Bài thi' };
+
+                            html += `
+                                <div class="bg-white dark:bg-dark-panel p-5 rounded-2xl border border-gray-200 dark:border-dark-border shadow-sm flex flex-col lg:flex-row items-center justify-between gap-5 hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-md transition-all group">
+                                    <div class="flex items-center gap-4 w-full lg:w-auto">
+                                        <div class="w-14 h-14 rounded-2xl ${cat.color} text-white flex items-center justify-center text-2xl shrink-0 shadow group-hover:scale-105 transition-transform">
+                                            <i class="fas ${cat.icon}"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-lg text-gray-900 dark:text-white mb-0.5">${cat.name}</h4>
+                                            <div class="flex items-center gap-4 text-xs font-medium text-gray-500 dark:text-gray-400">
+                                                <span><i class="far fa-calendar-alt mr-1"></i> ${dateStr}</span>
+                                                <span><i class="fas fa-stopwatch mr-1"></i> ${Math.floor(r.timeTakenSec/60)}p ${r.timeTakenSec%60}s</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex flex-wrap sm:flex-nowrap items-center gap-4 w-full lg:w-auto justify-between lg:justify-end">
+                                        <div class="flex items-center bg-gray-50 dark:bg-slate-800/50 rounded-xl border border-gray-100 dark:border-slate-700 shadow-inner overflow-hidden">
+                                            ${isSubjective ? `
+                                                <div class="px-5 py-2.5 text-center bg-emerald-50 dark:bg-emerald-900/20 w-full sm:w-auto">
+                                                    <div class="text-[10px] text-emerald-600 dark:text-emerald-400 uppercase font-bold tracking-wider mb-1">Trạng thái</div>
+                                                    <div class="font-bold text-emerald-700 dark:text-emerald-300"><i class="fas fa-check-circle mr-1"></i> Đã lưu bài</div>
+                                                </div>
+                                            ` : `
+                                                <div class="px-4 py-2 text-center bg-white dark:bg-slate-800 border-r border-gray-100 dark:border-slate-700 min-w-[70px]">
+                                                    <div class="text-[10px] text-gray-500 uppercase font-bold tracking-wider mb-1">Điểm</div>
+                                                    <div class="font-black text-lg ${isPassed ? 'text-emerald-500' : 'text-rose-500'} leading-none">${score}%</div>
+                                                </div>
+                                                <div class="px-4 py-2 text-center bg-emerald-50/50 dark:bg-emerald-900/10 border-r border-gray-100 dark:border-slate-700 min-w-[70px]">
+                                                    <div class="text-[10px] text-emerald-600 dark:text-emerald-500 uppercase font-bold tracking-wider mb-1">Đúng</div>
+                                                    <div class="font-bold text-emerald-600 dark:text-emerald-400 leading-none">${correct}</div>
+                                                </div>
+                                                <div class="px-4 py-2 text-center bg-rose-50/50 dark:bg-rose-900/10 min-w-[70px]">
+                                                    <div class="text-[10px] text-rose-600 dark:text-rose-500 uppercase font-bold tracking-wider mb-1">Sai</div>
+                                                    <div class="font-bold text-rose-600 dark:text-rose-400 leading-none">${incorrect}</div>
+                                                </div>
+                                            `}
+                                        </div>
+                                        
+                                        <div class="flex gap-2 w-full sm:w-auto shrink-0">
+                                            <button onclick='app.reviewTest(${JSON.stringify(r).replace(/'/g, "&#39;")}, false)' class="flex-1 sm:flex-none px-4 py-2.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-xl font-bold hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors shadow-sm text-sm">
+                                                Xem lại
+                                            </button>
+                                            ${!isSubjective ? `
+                                            <button onclick='app.reviewTest(${JSON.stringify(r).replace(/'/g, "&#39;")}, true)' class="flex-1 sm:flex-none px-4 py-2.5 bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 rounded-xl font-bold hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors shadow-sm text-sm flex items-center justify-center whitespace-nowrap" title="Lọc và chỉ hiển thị những câu làm sai">
+                                                <i class="fas fa-filter mr-1.5 opacity-70"></i> Câu sai
+                                            </button>
+                                            ` : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        html += `</div>`;
+                    }
+                    html += `</div>`;
                     return html;
                 }
             }
         };
+
+        // Make app accessible globally for onclick handlers
+        window.app = app;
     </script>
 </body>
 </html>
