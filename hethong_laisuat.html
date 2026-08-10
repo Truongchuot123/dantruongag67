@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinTrack Pro - Tiết Kiệm & Kiểm Kê</title>
+    <title>FinTrack Pro - Tiết Kiệm & Kiểm Kê Tiền Mặt</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- html2pdf.js for PDF Generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <!-- FontAwesome -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
@@ -23,12 +23,24 @@
                     },
                     colors: {
                         brand: {
-                            500: '#6366f1', // Indigo
+                            500: '#6366f1',
                             600: '#4f46e5',
                         },
                         counter: {
-                            500: '#10b981', // Emerald
+                            400: '#34d399',
+                            500: '#10b981',
                             600: '#059669',
+                            700: '#047857',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternative',
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { boxShadow: '0 0 15px rgba(16, 185, 129, 0.2)' },
+                            '100%': { boxShadow: '0 0 30px rgba(16, 185, 129, 0.5)' }
                         }
                     }
                 }
@@ -39,7 +51,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #020617; }
@@ -53,17 +65,25 @@
         
         /* Modern Glass Panel */
         .glass-panel {
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.6);
+        }
+
+        .glass-panel-emerald {
+            background: rgba(6, 78, 59, 0.25);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            box-shadow: 0 15px 35px -10px rgba(16, 185, 129, 0.15);
         }
 
         /* Animations */
         .fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -72,101 +92,307 @@
         input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
 
-        /* Print formatting */
-        @media print {
-            @page { size: A4 portrait; margin: 12mm; }
-            body * { visibility: hidden; }
-            .print-only, .print-only * { visibility: visible; }
-            .print-only { position: absolute; left: 0; top: 0; width: 100%; }
-            html, body { height: auto !important; background: white !important; color: black !important; }
-            table.print-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-            table.print-table th, table.print-table td { border: 1px solid #000; padding: 6px; font-size: 12px; }
-            table.print-table th { background-color: #f1f5f9 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; }
+        /* Modern input field styles */
+        .input-dark {
+            background-color: rgba(2, 6, 23, 0.8);
+            border: 1px solid rgba(51, 65, 85, 0.8);
+            color: #ffffff;
+            transition: all 0.2s ease;
         }
-        .print-only { display: none; }
-        
-        /* Cấu hình vùng chứa báo cáo chuẩn bị xuất PDF (ẩn khỏi giao diện) */
+        .input-dark:focus {
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            outline: none;
+        }
+
+        /* PDF Export Styling - Sharp Black Text on White Background */
         #pdf-export-container {
             position: absolute;
             left: -9999px;
             top: -9999px;
-            z-index: -9999; /* Đảm bảo luôn nằm dưới mọi lớp giao diện khi đưa về 0,0 */
-            width: 210mm; /* Khổ A4 */
-            background: white;
-            color: black;
-            padding: 15mm;
+            z-index: -9999;
+            width: 210mm;
+            background: #ffffff !important;
+            color: #000000 !important;
+            padding: 15mm 18mm;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', Arial, sans-serif;
         }
-        #pdf-export-container table.print-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        #pdf-export-container table.print-table th, #pdf-export-container table.print-table td { border: 1px solid #000; padding: 6px; font-size: 14px; }
-        #pdf-export-container table.print-table th { background-color: #f1f5f9; font-weight: bold; text-align: center; }
+        #pdf-export-container * {
+            color: #000000 !important;
+            border-color: #000000 !important;
+        }
+        #pdf-export-container table.pdf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #000000 !important;
+        }
+        #pdf-export-container table.pdf-table th, 
+        #pdf-export-container table.pdf-table td {
+            border: 1px solid #000000 !important;
+            padding: 7px 8px;
+            font-size: 12px;
+            line-height: 1.3;
+        }
+        #pdf-export-container table.pdf-table th {
+            background-color: #f1f5f9 !important;
+            font-weight: 700;
+            text-align: center;
+        }
     </style>
 </head>
 <body class="h-full flex flex-col font-sans antialiased overflow-x-hidden text-slate-200 relative">
 
-    <header class="bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/80 sticky top-0 z-40 no-print">
+    <header class="bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/80 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col sm:flex-row justify-between items-center h-auto sm:h-20 py-4 sm:py-0 gap-4">
                 
                 <!-- Logo & Brand -->
                 <div class="flex items-center gap-3">
-                    <div class="p-2.5 bg-gradient-to-br from-indigo-500 via-purple-500 to-emerald-500 text-white rounded-xl shadow-lg shadow-indigo-500/20">
-                        <i class="fa-solid fa-layer-group text-xl"></i>
+                    <div class="p-2.5 bg-gradient-to-br from-emerald-500 via-teal-500 to-indigo-600 text-white rounded-2xl shadow-lg shadow-emerald-500/20">
+                        <i class="fa-solid fa-vault text-2xl"></i>
                     </div>
                     <div>
-                        <h1 class="font-extrabold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">FinTrack Pro</h1>
-                        <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-widest">dantruongag.id.vn</p>
+                        <h1 class="font-black text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-emerald-400">FinTrack Pro</h1>
+                        <p class="text-[11px] text-emerald-400 font-bold uppercase tracking-widest">Kiểm Kê Tiền Mặt & Tiết Kiệm</p>
                     </div>
                 </div>
 
                 <!-- Main Module Navigation -->
-                <div class="flex bg-slate-900/80 p-1.5 rounded-2xl border border-slate-800 shadow-inner">
-                    <button id="module-savings" onclick="switchModule('savings')" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 transition-all shadow-md flex items-center gap-2">
-                        <i class="fa-solid fa-piggy-bank"></i> Lãi Tiết Kiệm
+                <div class="flex bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 shadow-inner">
+                    <button id="module-counter" onclick="switchModule('counter')" class="px-5 py-2.5 rounded-xl text-sm font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition-all shadow-md flex items-center gap-2">
+                        <i class="fa-solid fa-money-bill-wave"></i> Kiểm Kê Tiền Mặt
                     </button>
-                    <button id="module-counter" onclick="switchModule('counter')" class="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-money-bills"></i> Tiền Mặt
+                    <button id="module-savings" onclick="switchModule('savings')" class="px-5 py-2.5 rounded-xl text-sm font-extrabold text-slate-400 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-piggy-bank"></i> Lãi Tiết Kiệm
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- Sub-Navigations -->
-        <div id="subnav-savings" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-wrap gap-2 border-t border-slate-800/50 bg-slate-950/50">
-            <button id="tab-dashboard" onclick="switchTab('dashboard')" class="px-4 py-2 rounded-lg text-sm font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 transition-all flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Tổng quan</button>
-            <button id="tab-transactions" onclick="switchTab('transactions')" class="px-4 py-2 rounded-lg text-sm font-bold text-slate-400 hover:text-slate-200 transition-all flex items-center gap-2"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử</button>
-            <button id="tab-settings" onclick="switchTab('settings')" class="px-4 py-2 rounded-lg text-sm font-bold text-slate-400 hover:text-slate-200 transition-all flex items-center gap-2"><i class="fa-solid fa-sliders"></i> Cấu hình</button>
+        <div id="subnav-counter" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-wrap justify-between items-center gap-4 border-t border-slate-800/50 bg-slate-950/60">
+            <div class="flex gap-2">
+                <button id="tab-counter-input" onclick="switchTab('counter-input')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-slate-200 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-keyboard"></i> Nhập Liệu Kiểm Kê
+                </button>
+                <button id="tab-counter-stats" onclick="switchTab('counter-stats')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-slate-200 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie"></i> Thống Kê Tổng & Biểu Đồ
+                </button>
+            </div>
+            <button onclick="triggerPrint()" class="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-400 text-white px-5 py-2.5 rounded-xl text-xs font-extrabold transition shadow-lg shadow-emerald-600/30 active:scale-95 flex items-center gap-2 border border-emerald-400/30">
+                <i class="fa-solid fa-file-pdf text-sm"></i> Xuất Báo Cáo PDF (Chữ Đen)
+            </button>
         </div>
 
-        <div id="subnav-counter" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-wrap justify-between items-center gap-4 border-t border-slate-800/50 bg-slate-950/50">
-            <div class="flex gap-2">
-                <button id="tab-counter-input" onclick="switchTab('counter-input')" class="px-4 py-2 rounded-lg text-sm font-bold text-slate-400 hover:text-slate-200 transition-all flex items-center gap-2"><i class="fa-solid fa-keyboard"></i> Kiểm kê</button>
-                <button id="tab-counter-stats" onclick="switchTab('counter-stats')" class="px-4 py-2 rounded-lg text-sm font-bold text-slate-400 hover:text-slate-200 transition-all flex items-center gap-2"><i class="fa-solid fa-chart-line"></i> Thống kê & Biểu đồ</button>
-            </div>
-            <button onclick="triggerPrint()" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-lg shadow-emerald-600/20 flex items-center gap-2">
-                <i class="fa-solid fa-file-pdf"></i> Xuất Báo Cáo
-            </button>
+        <div id="subnav-savings" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-wrap gap-2 border-t border-slate-800/50 bg-slate-950/60">
+            <button id="tab-dashboard" onclick="switchTab('dashboard')" class="px-4 py-2 rounded-xl text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 transition-all flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Tổng quan</button>
+            <button id="tab-transactions" onclick="switchTab('transactions')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-slate-200 transition-all flex items-center gap-2"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử</button>
+            <button id="tab-settings" onclick="switchTab('settings')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-slate-200 transition-all flex items-center gap-2"><i class="fa-solid fa-sliders"></i> Cấu hình</button>
         </div>
     </header>
 
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 no-print">
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-        <div id="module-savings-container" class="space-y-8 fade-in">
+        <div id="module-counter-container" class="space-y-8 fade-in">
             
+            <!-- Hero Total Quỹ Tiền Mặt Banner -->
+            <div class="bg-gradient-to-r from-slate-900 via-emerald-950 to-slate-900 border border-emerald-500/40 p-6 sm:p-8 rounded-3xl shadow-2xl relative overflow-hidden glass-panel-emerald">
+                <div class="absolute -right-6 -bottom-6 text-emerald-500/10 text-9xl pointer-events-none"><i class="fa-solid fa-coins"></i></div>
+                <div class="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                            <h2 class="text-xs font-black text-emerald-400 uppercase tracking-widest">Tổng Quỹ Tiền Mặt Lũy Kế</h2>
+                        </div>
+                        <div class="flex items-baseline gap-3">
+                            <span class="text-4xl sm:text-5xl lg:text-6xl font-black text-white font-mono-num tracking-tight drop-shadow-md" id="counter-grand-total">0 ₫</span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-emerald-200/90 mt-3 font-semibold bg-emerald-950/80 inline-block px-4 py-1.5 rounded-xl border border-emerald-500/30" id="counter-grand-words">Bằng chữ: Không đồng</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 w-full lg:w-auto">
+                        <div class="bg-slate-950/70 p-4 rounded-2xl border border-emerald-500/20 text-center backdrop-blur-md">
+                            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">Số Lần Kiểm Kê</p>
+                            <p class="text-2xl font-black text-emerald-400 font-mono-num" id="counter-total-sessions">0</p>
+                        </div>
+                        <div class="bg-slate-950/70 p-4 rounded-2xl border border-emerald-500/20 text-center backdrop-blur-md">
+                            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">Tổng Số Tờ Giấy Bạc</p>
+                            <p class="text-2xl font-black text-emerald-400 font-mono-num" id="counter-total-bills">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 1: Nhập Liệu Kiểm Kê -->
+            <div id="view-counter-input" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- Input Table for Current Counting Session (Ascending Denomination) -->
+                <div class="lg:col-span-8 glass-panel rounded-3xl overflow-hidden flex flex-col border border-slate-800">
+                    <div class="p-5 sm:p-6 border-b border-slate-800/80 bg-slate-900/60 flex flex-wrap justify-between items-center gap-3">
+                        <div>
+                            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-arrow-up-1-9 text-emerald-400"></i> Bảng Đếm Tiền Mặt (Mệnh Giá Tăng Dần)
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-0.5">Nhập số lượng tờ tương ứng với từng mệnh giá từ 1.000 ₫ đến 500.000 ₫</p>
+                        </div>
+                        <button onclick="clearCurrentBatch()" class="text-xs font-bold text-slate-400 hover:text-rose-400 bg-slate-800/60 hover:bg-rose-500/10 px-3 py-1.5 rounded-xl border border-slate-700 transition">
+                            <i class="fa-solid fa-rotate-left mr-1"></i> Xóa trắng mẻ đếm
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto flex-grow">
+                        <table class="w-full text-left border-collapse min-w-[550px]">
+                            <thead>
+                                <tr class="bg-slate-950/90 border-b border-slate-800 text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                                    <th class="p-4 w-12 text-center">STT</th>
+                                    <th class="p-4 w-36 text-right">Mệnh Giá (VNĐ)</th>
+                                    <th class="p-4 text-center">Số Lượng (Tờ)</th>
+                                    <th class="p-4 text-right">Thành Tiền (VNĐ)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="denom-table-body" class="divide-y divide-slate-800/50 text-sm">
+                                <!-- Populated dynamically by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Table Footer Summary -->
+                    <div class="p-5 sm:p-6 bg-slate-900/90 border-t border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                            <input type="number" id="custom-denom-input" placeholder="Mệnh giá mới (VNĐ)..." class="px-3.5 py-2 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white font-mono-num outline-none focus:border-emerald-500 w-full sm:w-44">
+                            <button onclick="addCustomDenom()" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1 shrink-0 border border-slate-700">
+                                <i class="fa-solid fa-plus"></i> Thêm
+                            </button>
+                        </div>
+                        <div class="text-right w-full sm:w-auto">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider mr-2">Tổng mẻ đếm này:</span>
+                            <span class="text-2xl font-black text-emerald-400 font-mono-num" id="current-batch-total">0 ₫</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Session Save & History Sidebar -->
+                <div class="lg:col-span-4 space-y-6">
+                    <!-- Save Card -->
+                    <div class="glass-panel p-6 rounded-3xl border border-slate-800">
+                        <h3 class="text-sm font-extrabold text-white mb-4 border-b border-slate-800 pb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-floppy-disk text-emerald-400"></i> Lưu Kết Quả Đếm Lần Này
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Ngày đếm tiền</label>
+                                <input type="date" id="counter-date" class="input-dark w-full px-4 py-2.5 rounded-xl text-sm text-white font-mono-num">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Ghi chú kiểm kê</label>
+                                <input type="text" id="counter-note" placeholder="Ví dụ: Kiểm kê bàn giao ca sáng..." class="input-dark w-full px-4 py-2.5 rounded-xl text-sm text-white">
+                            </div>
+                            <button onclick="saveCounterSession()" class="w-full bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold py-3.5 rounded-xl transition shadow-lg shadow-emerald-600/30 active:scale-95 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Lưu & Cộng Dồn Quỹ
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Recent Sessions List -->
+                    <div class="glass-panel p-6 rounded-3xl border border-slate-800">
+                        <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+                            <h3 class="text-sm font-extrabold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-history text-emerald-400"></i> Lịch Sử Đếm Tiền
+                            </h3>
+                            <button onclick="confirmClearCounter()" class="text-[11px] text-rose-400 hover:text-rose-300 font-bold transition flex items-center gap-1">
+                                <i class="fa-solid fa-trash-can"></i> Xóa hết
+                            </button>
+                        </div>
+                        <div id="counter-sessions-list" class="space-y-3 max-h-[380px] overflow-y-auto pr-1">
+                            <!-- Dynamic Content -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Thống Kê Tổng & Biểu Đồ -->
+            <div id="view-counter-stats" class="hidden space-y-8">
+                
+                <!-- BẢNG THỐNG KÊ TỔNG CÁC MỆNH GIÁ QUA TẤT CẢ LẦN ĐẾM -->
+                <div class="glass-panel rounded-3xl overflow-hidden border border-slate-800">
+                    <div class="p-6 border-b border-slate-800 bg-slate-900/60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h3 class="text-lg font-black text-white flex items-center gap-2">
+                                <i class="fa-solid fa-calculator text-emerald-400"></i> Bảng Thống Kê Tổng Các Mệnh Giá Qua Tất Cả Các Lần Đếm
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">Tổng hợp toàn bộ số lượng tờ và trị giá tích lũy theo từng mệnh giá (Sắp xếp tăng dần)</p>
+                        </div>
+                        <span class="bg-emerald-500/20 text-emerald-400 text-xs font-extrabold px-3 py-1.5 rounded-xl border border-emerald-500/30">
+                            Lũy Kế Toàn Bộ
+                        </span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[700px]">
+                            <thead>
+                                <tr class="bg-slate-950/80 border-b border-slate-800 text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                                    <th class="p-4 w-12 text-center">STT</th>
+                                    <th class="p-4 w-40 text-right">Mệnh Giá (VNĐ)</th>
+                                    <th class="p-4 w-48 text-center">Tổng Số Tờ (Tích Lũy)</th>
+                                    <th class="p-4 text-right">Tổng Thành Tiền (VNĐ)</th>
+                                    <th class="p-4 text-center w-36">Tỷ Trọng (%)</th>
+                                    <th class="p-4 w-48">Thanh Biểu Diễn</th>
+                                </tr>
+                            </thead>
+                            <tbody id="aggregate-denom-table-body" class="divide-y divide-slate-800/50 text-sm font-mono-num">
+                                <!-- Dynamic JS -->
+                            </tbody>
+                            <tfoot id="aggregate-denom-table-foot" class="bg-slate-900/90 font-mono-num font-extrabold">
+                                <!-- Dynamic JS Footer -->
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Bar Chart: Denomination breakdown -->
+                    <div class="glass-panel p-6 rounded-3xl border border-slate-800">
+                        <h3 class="text-sm font-extrabold text-white mb-6 border-b border-slate-800 pb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-bar text-emerald-400"></i> Cơ Cấu Số Tờ Theo Mệnh Giá (Tăng Dần)
+                        </h3>
+                        <div class="h-[360px] relative">
+                            <canvas id="counterDenomChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Line Chart: Cash balance evolution across counting sessions -->
+                    <div class="glass-panel p-6 rounded-3xl border border-slate-800">
+                        <h3 class="text-sm font-extrabold text-white mb-6 border-b border-slate-800 pb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line text-emerald-400"></i> Diễn Biến Giá Trị Qua Các Lần Đếm
+                        </h3>
+                        <div class="h-[360px] relative">
+                            <canvas id="counterTrendChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Module Savings (Tiết Kiệm Ngân Hàng) -->
+        <div id="module-savings-container" class="hidden space-y-8 fade-in">
             <div id="view-dashboard" class="space-y-8">
                 <!-- Top Actions & Filters -->
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-slate-900/40 p-4 rounded-2xl border border-slate-800/80 gap-4 glass-panel">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-slate-900/60 p-5 rounded-3xl border border-slate-800 gap-4 glass-panel">
                     <div>
-                        <h2 class="text-lg font-extrabold text-white">HỆ THỐNG TÍNH LÃI SUẤT TIẾT KIỆM NGÂN HÀNG</h2>
-                        <p class="text-xs text-slate-400 mt-1">Hệ thống tính toán lũy tiến theo từng ngày</p>
+                        <h2 class="text-base font-extrabold text-white">HỆ THỐNG TÍNH LÃI SUẤT TIẾT KIỆM NGÂN HÀNG</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Tự động tính lãi lũy tiến theo từng mốc gửi tiền</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-3">
-                        <div class="inline-flex rounded-xl p-1 bg-slate-950 border border-slate-800">
-                            <button id="btn-calc-today" onclick="setCalculationTarget('today')" class="px-4 py-2 rounded-lg text-xs font-bold transition-all bg-indigo-600 text-white shadow-md">
+                        <div class="inline-flex rounded-2xl p-1 bg-slate-950 border border-slate-800">
+                            <button id="btn-calc-today" onclick="setCalculationTarget('today')" class="px-4 py-2 rounded-xl text-xs font-extrabold transition-all bg-indigo-600 text-white shadow-md">
                                 Tính đến Hôm nay
                             </button>
-                            <button id="btn-calc-end" onclick="setCalculationTarget('end')" class="px-4 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-slate-200">
+                            <button id="btn-calc-end" onclick="setCalculationTarget('end')" class="px-4 py-2 rounded-xl text-xs font-extrabold transition-all text-slate-400 hover:text-slate-200">
                                 Cuối kỳ hạn
                             </button>
                         </div>
@@ -176,105 +402,103 @@
                     </div>
                 </div>
 
-                <!-- Summary Cards -->
+                <!-- Savings Summary Cards -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="glass-panel p-6 rounded-2xl hover:border-indigo-500/30 transition duration-300 group">
+                    <div class="glass-panel p-6 rounded-3xl hover:border-indigo-500/40 transition duration-300 group">
                         <div class="flex justify-between items-center mb-4">
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Gốc Đã Gửi</span>
-                            <div class="w-10 h-10 bg-indigo-500/10 text-indigo-400 rounded-xl flex items-center justify-center group-hover:scale-110 transition">
+                            <span class="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Tổng Gốc Đã Gửi</span>
+                            <div class="w-10 h-10 bg-indigo-500/10 text-indigo-400 rounded-2xl flex items-center justify-center group-hover:scale-110 transition">
                                 <i class="fa-solid fa-vault"></i>
                             </div>
                         </div>
-                        <p class="text-2xl font-extrabold text-white font-mono-num" id="card-total-principal">0 ₫</p>
+                        <p class="text-2xl font-black text-white font-mono-num" id="card-total-principal">0 ₫</p>
                     </div>
 
-                    <div class="glass-panel p-6 rounded-2xl hover:border-emerald-500/30 transition duration-300 group">
+                    <div class="glass-panel p-6 rounded-3xl hover:border-emerald-500/40 transition duration-300 group">
                         <div class="flex justify-between items-center mb-4">
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Lãi Sinh Ra</span>
-                            <div class="w-10 h-10 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center group-hover:scale-110 transition">
+                            <span class="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Tổng Lãi Sinh Ra</span>
+                            <div class="w-10 h-10 bg-emerald-500/10 text-emerald-400 rounded-2xl flex items-center justify-center group-hover:scale-110 transition">
                                 <i class="fa-solid fa-arrow-trend-up"></i>
                             </div>
                         </div>
-                        <p class="text-2xl font-extrabold text-emerald-400 font-mono-num" id="card-total-interest">0 ₫</p>
+                        <p class="text-2xl font-black text-emerald-400 font-mono-num" id="card-total-interest">0 ₫</p>
                     </div>
 
-                    <div class="glass-panel p-6 rounded-2xl hover:border-purple-500/30 transition duration-300 group">
+                    <div class="glass-panel p-6 rounded-3xl hover:border-purple-500/40 transition duration-300 group">
                         <div class="flex justify-between items-center mb-4">
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tổng Số Dư</span>
-                            <div class="w-10 h-10 bg-purple-500/10 text-purple-400 rounded-xl flex items-center justify-center group-hover:scale-110 transition">
+                            <span class="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Tổng Số Dư Lũy Kế</span>
+                            <div class="w-10 h-10 bg-purple-500/10 text-purple-400 rounded-2xl flex items-center justify-center group-hover:scale-110 transition">
                                 <i class="fa-solid fa-sack-dollar"></i>
                             </div>
                         </div>
-                        <p class="text-2xl font-extrabold text-purple-400 font-mono-num" id="card-current-balance">0 ₫</p>
+                        <p class="text-2xl font-black text-purple-400 font-mono-num" id="card-current-balance">0 ₫</p>
                     </div>
 
-                    <div class="glass-panel p-6 rounded-2xl hover:border-amber-500/30 transition duration-300 group">
+                    <div class="glass-panel p-6 rounded-3xl hover:border-amber-500/40 transition duration-300 group">
                         <div class="flex justify-between items-center mb-4">
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Hiệu Suất Sinh Lời</span>
-                            <div class="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center group-hover:scale-110 transition">
+                            <span class="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Tỷ Lệ Sinh Lời</span>
+                            <div class="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-2xl flex items-center justify-center group-hover:scale-110 transition">
                                 <i class="fa-solid fa-percent"></i>
                             </div>
                         </div>
-                        <p class="text-2xl font-extrabold text-amber-400 font-mono-num" id="card-yield">0%</p>
+                        <p class="text-2xl font-black text-amber-400 font-mono-num" id="card-yield">0%</p>
                     </div>
                 </div>
 
-                <!-- Time Progress & Timeline -->
+                <!-- Timeline Progress -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <!-- Progress -->
-                    <div class="glass-panel p-6 rounded-2xl flex flex-col justify-center">
+                    <div class="glass-panel p-6 rounded-3xl flex flex-col justify-center">
                         <div class="flex justify-between items-end mb-4">
                             <div>
-                                <h3 class="text-sm font-bold text-white mb-1">Tiến độ kỳ hạn gửi</h3>
-                                <p class="text-xs text-slate-400">Tổng thời gian: <span id="time-widget-duration" class="font-bold text-indigo-400">12 tháng</span></p>
+                                <h3 class="text-sm font-extrabold text-white mb-1">Tiến độ kỳ hạn gửi</h3>
+                                <p class="text-xs text-slate-400">Thời gian quy định: <span id="time-widget-duration" class="font-extrabold text-indigo-400">12 tháng</span></p>
                             </div>
                         </div>
-                        <div class="w-full bg-slate-950 rounded-full h-3.5 border border-slate-800 overflow-hidden mb-4 shadow-inner">
+                        <div class="w-full bg-slate-950 rounded-full h-4 border border-slate-800 overflow-hidden mb-4 shadow-inner">
                             <div id="time-widget-progress-bar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-full rounded-full transition-all duration-1000 relative">
                                 <div class="absolute right-0 top-0 bottom-0 w-4 bg-white/20 blur-[2px]"></div>
                             </div>
                         </div>
-                        <div class="flex justify-between text-xs font-semibold">
+                        <div class="flex justify-between text-xs font-bold">
                             <span class="text-slate-400">Đã qua: <span id="time-widget-elapsed" class="text-white">0 tháng</span></span>
                             <span class="text-slate-400">Còn lại: <span id="time-widget-remaining" class="text-purple-400">12 tháng</span></span>
                         </div>
                     </div>
 
-                    <!-- Timeline Slider -->
-                    <div class="glass-panel p-6 rounded-2xl">
+                    <div class="glass-panel p-6 rounded-3xl">
                         <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-sm font-bold text-white"><i class="fa-solid fa-timeline text-indigo-400 mr-2"></i>Tra cứu mốc thời gian</h3>
-                            <span class="bg-indigo-500/20 text-indigo-300 px-3 py-1 rounded-lg font-bold text-xs border border-indigo-500/30" id="slider-month-label">Khởi đầu (T0)</span>
+                            <h3 class="text-sm font-extrabold text-white"><i class="fa-solid fa-timeline text-indigo-400 mr-2"></i>Mốc thời gian tra cứu</h3>
+                            <span class="bg-indigo-500/20 text-indigo-300 px-3 py-1 rounded-xl font-bold text-xs border border-indigo-500/30" id="slider-month-label">Khởi đầu (T0)</span>
                         </div>
-                        <input type="range" id="timeline-slider" min="0" max="12" value="12" oninput="updateSliderView(this.value)" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500 mb-6">
+                        <input type="range" id="timeline-slider" min="0" max="12" value="12" oninput="updateSliderView(this.value)" class="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500 mb-6">
                         
-                        <div class="grid grid-cols-2 gap-4 text-sm bg-slate-950/50 p-4 rounded-xl border border-slate-800/50">
+                        <div class="grid grid-cols-2 gap-4 text-sm bg-slate-950/60 p-4 rounded-2xl border border-slate-800/80">
                             <div>
                                 <span class="text-xs text-slate-400 block mb-1">Tổng gốc</span>
                                 <span class="font-extrabold text-white font-mono-num" id="slider-val-principal">0 ₫</span>
                             </div>
                             <div>
-                                <span class="text-xs text-slate-400 block mb-1">Lãi + Gốc</span>
+                                <span class="text-xs text-slate-400 block mb-1">Tổng gốc + Lãi</span>
                                 <span class="font-extrabold text-indigo-400 font-mono-num" id="slider-val-total">0 ₫</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Chart -->
-                <div class="glass-panel p-6 rounded-2xl h-[400px]">
+                <!-- Savings Chart -->
+                <div class="glass-panel p-6 rounded-3xl h-[380px]">
                     <canvas id="growthChart"></canvas>
                 </div>
 
-                <!-- Monthly Table -->
-                <div class="glass-panel rounded-2xl overflow-hidden">
+                <!-- Savings Monthly Table -->
+                <div class="glass-panel rounded-3xl overflow-hidden border border-slate-800">
                     <div class="p-6 border-b border-slate-800/80">
-                        <h3 class="text-lg font-bold text-white">Bảng chi tiết tăng trưởng theo tháng</h3>
+                        <h3 class="text-base font-extrabold text-white">Bảng chi tiết tăng trưởng theo từng tháng</h3>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse min-w-[800px]">
                             <thead>
-                                <tr class="bg-slate-950/60 border-b border-slate-800 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                <tr class="bg-slate-950/80 border-b border-slate-800 text-[11px] font-black text-slate-400 uppercase tracking-wider">
                                     <th class="p-4">Thời điểm</th>
                                     <th class="p-4">Ngày mốc</th>
                                     <th class="p-4 text-right">Gốc nộp thêm</th>
@@ -285,91 +509,89 @@
                                 </tr>
                             </thead>
                             <tbody id="monthly-table-body" class="divide-y divide-slate-800/50 text-sm font-mono-num">
-                                <!-- Populated dynamically -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
+            <!-- Savings Transactions View -->
             <div id="view-transactions" class="hidden space-y-8">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Form -->
-                    <div class="glass-panel p-6 rounded-2xl h-fit sticky top-24">
-                        <h3 class="text-lg font-bold text-white mb-6 border-b border-slate-800 pb-4"><i class="fa-solid fa-plus-circle text-indigo-400 mr-2"></i>Thêm Khoản Gửi</h3>
+                    <div class="glass-panel p-6 rounded-3xl h-fit sticky top-24">
+                        <h3 class="text-base font-extrabold text-white mb-6 border-b border-slate-800 pb-4"><i class="fa-solid fa-plus-circle text-indigo-400 mr-2"></i>Thêm Khoản Gửi Mới</h3>
                         <form id="transaction-form" onsubmit="handleSavingsSubmit(event)" class="space-y-5">
                             <div>
-                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Số tiền nộp (VND)</label>
-                                <input type="text" id="tx-amount" oninput="formatCurrencyInput(this)" required placeholder="Ví dụ: 5.000.000" class="w-full px-4 py-3 bg-slate-950/60 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition font-mono-num font-bold text-white text-lg">
+                                <label class="block text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-2">Số tiền nộp (VNĐ)</label>
+                                <input type="text" id="tx-amount" oninput="formatCurrencyInput(this)" required placeholder="Ví dụ: 10.000.000" class="input-dark w-full px-4 py-3 rounded-2xl font-mono-num font-extrabold text-white text-lg">
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Ngày nộp</label>
-                                <input type="date" id="tx-date" required class="w-full px-4 py-3 bg-slate-950/60 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition text-white font-mono-num">
+                                <label class="block text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-2">Ngày gửi tiền</label>
+                                <input type="date" id="tx-date" required class="input-dark w-full px-4 py-3 rounded-2xl text-white font-mono-num">
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Ghi chú</label>
-                                <input type="text" id="tx-note" placeholder="Tùy chọn..." class="w-full px-4 py-3 bg-slate-950/60 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition text-white">
+                                <label class="block text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-2">Ghi chú</label>
+                                <input type="text" id="tx-note" placeholder="Tùy chọn..." class="input-dark w-full px-4 py-3 rounded-2xl text-white">
                             </div>
-                            <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-indigo-600/20 active:scale-95">
-                                Ghi Nhận Số Dư
+                            <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold py-3.5 rounded-2xl transition shadow-lg shadow-indigo-600/30 active:scale-95">
+                                Ghi Nhận Khoản Gửi
                             </button>
                         </form>
                     </div>
 
-                    <!-- List -->
-                    <div class="glass-panel p-6 rounded-2xl lg:col-span-2">
+                    <div class="glass-panel p-6 rounded-3xl lg:col-span-2">
                         <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
-                            <h3 class="text-lg font-bold text-white">Lịch sử nộp tiền</h3>
-                            <span id="tx-count" class="bg-indigo-500/20 text-indigo-300 text-xs font-bold px-3 py-1 rounded-lg border border-indigo-500/30">0 khoản</span>
+                            <h3 class="text-base font-extrabold text-white">Lịch sử nộp tiền gửi tiết kiệm</h3>
+                            <span id="tx-count" class="bg-indigo-500/20 text-indigo-300 text-xs font-extrabold px-3 py-1 rounded-xl border border-indigo-500/30">0 khoản</span>
                         </div>
                         <div id="grouped-tx-container" class="space-y-6">
-                            <!-- Populated dynamically -->
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Savings Settings View -->
             <div id="view-settings" class="hidden">
-                <div class="glass-panel p-8 rounded-2xl max-w-3xl mx-auto">
-                    <h3 class="text-xl font-extrabold text-white mb-2"><i class="fa-solid fa-gears text-indigo-400 mr-2"></i>Cài đặt Thông số Lãi suất</h3>
-                    <p class="text-sm text-slate-400 mb-8 pb-6 border-b border-slate-800">Cấu hình thời gian, kỳ hạn và các mức lãi suất bậc thang.</p>
+                <div class="glass-panel p-8 rounded-3xl max-w-3xl mx-auto border border-slate-800">
+                    <h3 class="text-xl font-black text-white mb-2"><i class="fa-solid fa-gears text-indigo-400 mr-2"></i>Cài đặt Thông số Lãi suất</h3>
+                    <p class="text-xs text-slate-400 mb-8 pb-6 border-b border-slate-800">Cấu hình ngày bắt đầu, kỳ hạn và mức lãi suất bậc thang.</p>
 
                     <form id="settings-form" onsubmit="handleSettingsSubmit(event)" class="space-y-8">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Ngày bắt đầu gửi</label>
-                                <input type="date" id="config-start-date" required class="w-full px-4 py-3 bg-slate-950/60 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition text-white font-mono-num">
+                                <label class="block text-xs font-extrabold text-slate-400 uppercase mb-2">Ngày bắt đầu gửi</label>
+                                <input type="date" id="config-start-date" required class="input-dark w-full px-4 py-3 rounded-2xl text-white font-mono-num">
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Kỳ hạn gửi (Tháng)</label>
-                                <input type="number" id="config-duration" min="1" max="120" required class="w-full px-4 py-3 bg-slate-950/60 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition text-white font-mono-num">
+                                <label class="block text-xs font-extrabold text-slate-400 uppercase mb-2">Kỳ hạn gửi (Tháng)</label>
+                                <input type="number" id="config-duration" min="1" max="120" required class="input-dark w-full px-4 py-3 rounded-2xl text-white font-mono-num">
                             </div>
                         </div>
 
-                        <div class="bg-slate-950/40 p-6 rounded-xl border border-slate-800/80">
-                            <h4 class="font-bold text-white mb-6 text-sm uppercase tracking-widest text-indigo-400">Mức Lãi Suất Cấu Hình</h4>
+                        <div class="bg-slate-950/60 p-6 rounded-2xl border border-slate-800">
+                            <h4 class="font-extrabold text-white mb-6 text-xs uppercase tracking-widest text-indigo-400">Mức Lãi Suất Áp Dụng</h4>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div class="space-y-3">
-                                    <label class="block text-xs font-bold text-slate-300">Giai đoạn 1 (Tháng 1-6)</label>
+                                    <label class="block text-xs font-bold text-slate-300">Giai đoạn 1 (Tháng 1 - Tháng 6)</label>
                                     <div class="relative">
-                                        <input type="number" id="config-rate-1" step="0.01" required class="w-full pr-12 pl-4 py-3 bg-slate-900 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition text-white font-mono-num text-lg font-bold">
-                                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">%</span>
+                                        <input type="number" id="config-rate-1" step="0.01" required class="input-dark w-full pr-12 pl-4 py-3 rounded-2xl text-white font-mono-num text-lg font-bold">
+                                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">% / năm</span>
                                     </div>
                                 </div>
                                 <div class="space-y-3">
                                     <label class="block text-xs font-bold text-slate-300">Giai đoạn 2 (Tháng 7 trở đi)</label>
                                     <div class="relative">
-                                        <input type="number" id="config-rate-2" step="0.01" required class="w-full pr-12 pl-4 py-3 bg-slate-900 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition text-white font-mono-num text-lg font-bold">
-                                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">%</span>
+                                        <input type="number" id="config-rate-2" step="0.01" required class="input-dark w-full pr-12 pl-4 py-3 rounded-2xl text-white font-mono-num text-lg font-bold">
+                                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">% / năm</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="flex justify-end pt-4 border-t border-slate-800">
-                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 px-8 rounded-xl transition shadow-lg shadow-indigo-600/20 active:scale-95 flex items-center gap-2">
-                                <i class="fa-solid fa-floppy-disk"></i> Lưu cấu hình
+                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold py-3.5 px-8 rounded-2xl transition shadow-lg shadow-indigo-600/30 active:scale-95 flex items-center gap-2">
+                                <i class="fa-solid fa-floppy-disk"></i> Lưu Cấu Hình
                             </button>
                         </div>
                     </form>
@@ -377,241 +599,143 @@
             </div>
         </div>
 
-        <div id="module-counter-container" class="hidden space-y-8 fade-in">
-            
-            <!-- Shared Hero Banner -->
-            <div class="bg-gradient-to-br from-emerald-900/90 via-teal-900/90 to-slate-900/90 backdrop-blur-xl border border-emerald-500/30 p-8 rounded-3xl shadow-2xl relative overflow-hidden">
-                <div class="absolute -right-10 -top-10 text-emerald-500/10 text-9xl"><i class="fa-solid fa-money-bill-wave"></i></div>
-                <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div>
-                        <h2 class="text-sm font-bold text-emerald-400 uppercase tracking-widest mb-2">Tổng Quỹ Tiền Mặt Đã Kiểm Kê</h2>
-                        <div class="flex items-baseline gap-3">
-                            <span class="text-4xl md:text-5xl font-extrabold text-white font-mono-num drop-shadow-md" id="counter-grand-total">0</span>
-                            <span class="text-xl font-bold text-emerald-400">VNĐ</span>
-                        </div>
-                        <p class="text-sm text-emerald-200/70 mt-2 font-medium bg-emerald-950/50 inline-block px-3 py-1 rounded-lg border border-emerald-800/50" id="counter-grand-words">Không đồng</p>
-                    </div>
-                    <div class="flex gap-4">
-                        <div class="bg-slate-950/60 p-4 rounded-2xl border border-emerald-500/20 text-center min-w-[120px] backdrop-blur-sm">
-                            <p class="text-xs text-slate-400 font-bold mb-1">Số lần đếm</p>
-                            <p class="text-2xl font-bold text-white font-mono-num" id="counter-total-sessions">0</p>
-                        </div>
-                        <div class="bg-slate-950/60 p-4 rounded-2xl border border-emerald-500/20 text-center min-w-[120px] backdrop-blur-sm">
-                            <p class="text-xs text-slate-400 font-bold mb-1">Tổng số tờ</p>
-                            <p class="text-2xl font-bold text-white font-mono-num" id="counter-total-bills">0</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="view-counter-input" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <!-- Main Input Table -->
-                <div class="lg:col-span-8 glass-panel rounded-2xl overflow-hidden flex flex-col">
-                    <div class="p-6 border-b border-slate-800/80 bg-slate-900/50 flex justify-between items-center">
-                        <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fa-solid fa-list-ol text-emerald-400"></i> Bảng Nhập Mệnh Giá</h3>
-                        <button onclick="clearCurrentBatch()" class="text-xs font-bold text-slate-400 hover:text-rose-400 transition">Xóa trắng bảng</button>
-                    </div>
-                    <div class="overflow-x-auto flex-grow">
-                        <table class="w-full text-left border-collapse min-w-[500px]">
-                            <thead>
-                                <tr class="bg-slate-950/80 border-b border-slate-800 text-xs font-bold text-slate-400 uppercase">
-                                    <th class="p-4 w-12 text-center">STT</th>
-                                    <th class="p-4 w-40 text-right">Mệnh giá (VND)</th>
-                                    <th class="p-4 w-48 text-center">Số lượng (Tờ)</th>
-                                    <th class="p-4 text-right">Thành tiền</th>
-                                </tr>
-                            </thead>
-                            <tbody id="denom-table-body" class="divide-y divide-slate-800/50">
-                                <!-- Populated by JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="p-6 bg-slate-900/80 border-t border-slate-800 flex justify-between items-center">
-                        <div class="flex items-center gap-2">
-                            <input type="number" id="custom-denom-input" placeholder="Thêm mệnh giá..." class="px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-sm text-white font-mono-num outline-none focus:border-emerald-500 w-36">
-                            <button onclick="addCustomDenom()" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-lg text-sm font-bold transition"><i class="fa-solid fa-plus"></i></button>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-sm font-bold text-slate-400 mr-4">Tổng mẻ đếm này:</span>
-                            <span class="text-2xl font-extrabold text-emerald-400 font-mono-num" id="current-batch-total">0 ₫</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Session Sidebar -->
-                <div class="lg:col-span-4 space-y-6">
-                    <div class="glass-panel p-6 rounded-2xl">
-                        <h3 class="text-sm font-bold text-white mb-4 border-b border-slate-800 pb-3">Lưu Kết Quả Kiểm Kê</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-400 mb-1">Ngày kiểm kê</label>
-                                <input type="date" id="counter-date" class="w-full px-4 py-2.5 bg-slate-950/60 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition text-white text-sm font-mono-num">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-400 mb-1">Ghi chú (Tùy chọn)</label>
-                                <input type="text" id="counter-note" placeholder="Ví dụ: Kiểm kê kho A..." class="w-full px-4 py-2.5 bg-slate-950/60 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition text-white text-sm">
-                            </div>
-                            <button onclick="saveCounterSession()" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-emerald-600/20 active:scale-95 flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-cloud-arrow-up"></i> Lưu & Cộng Dồn
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="glass-panel p-6 rounded-2xl flex-grow">
-                        <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
-                            <h3 class="text-sm font-bold text-white">Lịch Sử Các Lần Đếm</h3>
-                            <button onclick="confirmClearCounter()" class="text-xs text-rose-400 hover:text-rose-300 font-bold transition flex items-center gap-1"><i class="fa-solid fa-trash-can"></i> Xóa hết</button>
-                        </div>
-                        <div id="counter-sessions-list" class="space-y-3 max-h-[400px] overflow-y-auto pr-2">
-                            <!-- Populated by JS -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="view-counter-stats" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Bar Chart: Denominations -->
-                <div class="glass-panel p-6 rounded-2xl">
-                    <h3 class="text-sm font-bold text-white mb-6 border-b border-slate-800 pb-2">Cơ Cấu Mệnh Giá (Tổng Số Lượng Tờ)</h3>
-                    <div class="h-[400px]">
-                        <canvas id="counterDenomChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Line Chart: Trend -->
-                <div class="glass-panel p-6 rounded-2xl">
-                    <h3 class="text-sm font-bold text-white mb-6 border-b border-slate-800 pb-2">Biểu Đồ Lịch Sử Các Lần Kiểm Kê (Giá Trị)</h3>
-                    <div class="h-[400px]">
-                        <canvas id="counterTrendChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </main>
 
-    <!-- XỬ LÝ LỖI TRẮNG TRANG: Vùng chứa này vẫn ẩn (-9999px), nhưng khi xuất PDF, script sẽ nhân bản (clone) nó ra tọa độ (0,0) -->
+    <!-- KHU VỰC CHUẨN BỊ XUẤT PDF CHỮ MÀU ĐEN (Bản In Chuẩn A4) -->
     <div id="pdf-export-container">
-        <h1 style="text-align: center; font-size: 24px; margin-bottom: 5px;">BIÊN BẢN KIỂM KÊ TIỀN MẶT</h1>
-        <p style="text-align: center; font-size: 14px; color: #555; margin-top: 0;">Ngày xuất báo cáo: <span id="printDateStr"></span></p>
+        <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom: 20px;">
+            <h1 style="font-size: 22px; font-weight: 900; margin: 0 0 6px 0; text-transform: uppercase; letter-spacing: 1px;">BIÊN BẢN KIỂM KÊ TIỀN MẶT</h1>
+            <p style="font-size: 13px; margin: 0; font-style: italic;">Thời điểm lập báo cáo: <span id="printDateStr"></span></p>
+        </div>
         
-        <div style="margin-top: 20px; border: 1px solid #000; padding: 15px; background: #f8fafc;">
-            <table style="width: 100%; border: none;">
+        <!-- Summary Block -->
+        <div style="border: 1px solid #000; padding: 12px 16px; margin-bottom: 20px; background-color: #f8fafc;">
+            <table style="width: 100%; border: none !important;">
                 <tr>
-                    <td style="width: 50%; border: none; padding: 5px;"><strong>Tổng số lần đếm:</strong> <span id="printSessionCountStr">0</span></td>
-                    <td style="width: 50%; border: none; padding: 5px; text-align: right;"><strong>Tổng số tờ:</strong> <span id="printTotalBills">0</span></td>
+                    <td style="border: none !important; padding: 4px 0; font-size: 13px;"><strong>Tổng số lần đếm:</strong> <span id="printSessionCountStr">0</span> lần</td>
+                    <td style="border: none !important; padding: 4px 0; font-size: 13px; text-align: right;"><strong>Tổng số tờ tiền:</strong> <span id="printTotalBills">0</span> tờ</td>
                 </tr>
                 <tr>
-                    <td colspan="2" style="border: none; padding: 5px; font-size: 18px;"><strong>Tổng quỹ tiền mặt:</strong> <span id="printGrandTotalStr">0</span></td>
+                    <td colspan="2" style="border: none !important; padding: 6px 0 2px 0; font-size: 16px;"><strong>TỔNG QUỸ TIỀN MẶT:</strong> <span id="printGrandTotalStr" style="font-weight: 800; font-size: 18px;">0 ₫</span></td>
                 </tr>
                 <tr>
-                    <td colspan="2" style="border: none; padding: 5px; font-style: italic;"><strong>Bằng chữ:</strong> <span id="printTotalInWords"></span></td>
+                    <td colspan="2" style="border: none !important; padding: 2px 0; font-size: 13px; font-style: italic;"><strong>Bằng chữ:</strong> <span id="printTotalInWords"></span></td>
                 </tr>
             </table>
         </div>
 
-        <h3 style="margin-top: 30px; font-size: 16px;">1. BẢNG TỔNG HỢP THEO MỆNH GIÁ</h3>
-        <table class="print-table">
+        <h3 style="font-size: 14px; font-weight: 800; text-transform: uppercase; margin: 20px 0 8px 0; border-left: 4px solid #000; padding-left: 8px;">1. BẢNG THỐNG KÊ TỔNG CÁC MỆNH GIÁ (TĂNG DẦN)</h3>
+        <table class="pdf-table">
             <thead>
                 <tr>
-                    <th style="width: 10%;">STT</th>
-                    <th style="width: 30%;">Mệnh giá (VND)</th>
-                    <th style="width: 25%;">Tổng số lượng (Tờ)</th>
-                    <th style="width: 35%;">Thành tiền</th>
+                    <th style="width: 8%;">STT</th>
+                    <th style="width: 30%;">Mệnh giá (VNĐ)</th>
+                    <th style="width: 27%;">Tổng số lượng (Tờ)</th>
+                    <th style="width: 35%;">Tổng thành tiền (VNĐ)</th>
                 </tr>
             </thead>
             <tbody id="printTableBody">
+                <!-- Dynamic Content -->
             </tbody>
             <tfoot>
-                <tr>
-                    <th colspan="3" style="text-align: right;">TỔNG CỘNG:</th>
-                    <th style="text-align: right; font-size: 16px;" id="printGrandTotal">0</th>
+                <tr style="background-color: #f1f5f9; font-weight: bold;">
+                    <th colspan="2" style="text-align: right; font-weight: 800;">TỔNG CỘNG LŨY KẾ:</th>
+                    <th style="text-align: center; font-weight: 800;" id="printFooterTotalBills">0</th>
+                    <th style="text-align: right; font-size: 14px; font-weight: 800;" id="printGrandTotal">0 ₫</th>
                 </tr>
             </tfoot>
         </table>
 
-        <h3 style="margin-top: 30px; font-size: 16px;">2. CHI TIẾT CÁC LẦN KIỂM KÊ</h3>
-        <table class="print-table">
+        <h3 style="font-size: 14px; font-weight: 800; text-transform: uppercase; margin: 25px 0 8px 0; border-left: 4px solid #000; padding-left: 8px;">2. CHI TIẾT CÁC LẦN KIỂM KÊ LỊCH SỬ</h3>
+        <table class="pdf-table">
             <thead>
                 <tr>
-                    <th style="width: 10%;">Lần</th>
-                    <th style="width: 20%;">Ngày</th>
-                    <th style="width: 35%;">Ghi chú</th>
-                    <th style="width: 15%;">Số tờ</th>
-                    <th style="width: 20%;">Trị giá</th>
+                    <th style="width: 8%;">STT</th>
+                    <th style="width: 18%;">Ngày đếm</th>
+                    <th style="width: 34%;">Ghi chú</th>
+                    <th style="width: 18%;">Số tờ</th>
+                    <th style="width: 22%;">Trị giá (VNĐ)</th>
                 </tr>
             </thead>
             <tbody id="printSessionsBody">
+                <!-- Dynamic Content -->
             </tbody>
         </table>
         
-        <div style="margin-top: 50px; display: flex; justify-content: space-between;">
-            <div style="text-align: center; width: 40%;">
-                <p style="font-weight: bold; margin-bottom: 60px;">Người lập biểu</p>
-                <p>_______________________</p>
+        <!-- Signatures Block -->
+        <div style="margin-top: 40px; display: flex; justify-content: space-between; page-break-inside: avoid;">
+            <div style="text-align: center; width: 45%;">
+                <p style="font-weight: 800; margin-bottom: 60px; text-transform: uppercase; font-size: 12px;">Người Lập Báo Cáo<br><span style="font-weight: normal; font-size: 11px; text-transform: none;">(Ký và ghi rõ họ tên)</span></p>
+                <p>___________________________</p>
             </div>
-            <div style="text-align: center; width: 40%;">
-                <p style="font-weight: bold; margin-bottom: 60px;">Thủ quỹ / Quản lý</p>
-                <p>_______________________</p>
+            <div style="text-align: center; width: 45%;">
+                <p style="font-weight: 800; margin-bottom: 60px; text-transform: uppercase; font-size: 12px;">Thủ Quỹ / Xác Nhận Quản Lý<br><span style="font-weight: normal; font-size: 11px; text-transform: none;">(Ký và ghi rõ họ tên)</span></p>
+                <p>___________________________</p>
             </div>
         </div>
     </div>
 
-    <div id="pdf-preview-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm hidden items-center justify-center p-4">
+    <!-- Modal Xem Trước PDF -->
+    <div id="pdf-preview-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4 sm:p-6">
         <div class="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-5xl h-[90vh] flex flex-col shadow-2xl overflow-hidden">
             <!-- Modal Header -->
-            <div class="flex justify-between items-center p-4 border-b border-slate-800 bg-slate-950/50">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fa-solid fa-file-pdf text-rose-500"></i> Xem trước Báo Cáo PDF</h3>
-                <div class="flex items-center gap-3">
-                    <button onclick="printFromPreview()" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-2">
+            <div class="flex justify-between items-center p-4 sm:p-5 border-b border-slate-800 bg-slate-950/80">
+                <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-file-pdf text-emerald-400"></i> Xem Trước Báo Cáo PDF Chữ Màu Đen
+                </h3>
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <button onclick="printFromPreview()" class="bg-slate-800 hover:bg-slate-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 border border-slate-700">
                         <i class="fa-solid fa-print"></i> In Trực Tiếp
                     </button>
-                    <a id="btn-download-pdf" href="#" download="Bao_Cao_Kiem_Ke.pdf" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-sm font-bold transition shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-download"></i> Tải Xuống
+                    <a id="btn-download-pdf" href="#" download="Bao_Cao_Kiem_Ke.pdf" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-extrabold transition shadow-lg flex items-center gap-2">
+                        <i class="fa-solid fa-download"></i> Tải PDF
                     </a>
-                    <button onclick="closePDFModal()" class="text-slate-400 hover:text-white p-2 transition ml-2">
+                    <button onclick="closePDFModal()" class="text-slate-400 hover:text-white p-2 transition ml-1">
                         <i class="fa-solid fa-xmark text-xl"></i>
                     </button>
                 </div>
             </div>
             <!-- Modal Body -->
-            <div class="flex-grow relative bg-slate-800/50 p-4">
-                <div id="pdf-loading" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900 z-10">
+            <div class="flex-grow relative bg-slate-950/50 p-3 sm:p-4">
+                <div id="pdf-loading" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90 z-10 backdrop-blur-sm">
                     <div class="w-12 h-12 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin mb-4"></div>
-                    <p class="text-emerald-400 font-bold animate-pulse">Đang trích xuất dữ liệu và tạo PDF...</p>
+                    <p class="text-emerald-400 font-bold animate-pulse text-sm">Đang xuất file PDF chữ màu đen sắc nét...</p>
                 </div>
-                <iframe id="pdf-iframe" class="w-full h-full rounded-xl bg-white shadow-inner transition-opacity duration-500 opacity-0" src=""></iframe>
+                <iframe id="pdf-iframe" class="w-full h-full rounded-2xl bg-white shadow-inner transition-opacity duration-500 opacity-0" src=""></iframe>
             </div>
         </div>
     </div>
 
-    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2"></div>
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
 
-    <!-- Khởi tạo dữ liệu và Script -->
+    <!-- Global Application Scripts -->
     <script>
-        // --- STREAMING_CHUNK:Khởi tạo dữ liệu và Biến Global ---
-        const LOCAL_STORAGE_KEY = 'fintrack_pro_data_v1';
+        const LOCAL_STORAGE_KEY = 'fintrack_pro_data_v2';
+        
         let appData = {
             savings: { config: { startDate: '', duration: 12, rate1: 5.5, rate2: 6.5 }, transactions: [] },
             counter: { sessions: [], customDenoms: [] }
         };
 
-        const defaultDenoms = [500000, 200000, 100000, 50000, 20000, 10000, 5000, 2000, 1000];
+        // MỆNH GIÁ SẮP XẾP TĂNG DẦN THEO YÊU CẦU (1.000 ₫ đến 500.000 ₫)
+        const defaultDenoms = [1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000];
+        
         let currentCounterBatch = {};
-        let currentModule = 'savings';
-        let currentTabSavings = 'dashboard';
+        let currentModule = 'counter';
         let currentTabCounter = 'counter-input';
+        let currentTabSavings = 'dashboard';
         
         let growthChartInstance = null;
         let counterDenomChartInstance = null;
         let counterTrendChartInstance = null;
-        let calcTarget = 'end'; // 'end' hoặc 'today'
+        let calcTarget = 'end';
 
         document.addEventListener('DOMContentLoaded', () => {
             loadData();
-            initSavings();
             initCounter();
-            switchModule('savings');
+            initSavings();
+            switchModule('counter');
             
             // Set default dates
             const today = new Date().toISOString().split('T')[0];
@@ -620,7 +744,6 @@
             if(!appData.savings.config.startDate) document.getElementById('config-start-date').value = today;
         });
 
-        // --- STREAMING_CHUNK:Utility Functions ---
         function saveData() { localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(appData)); }
         function loadData() {
             const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -630,7 +753,7 @@
                     appData = { ...appData, ...parsed };
                     if(!appData.counter.sessions) appData.counter.sessions = [];
                     if(!appData.counter.customDenoms) appData.counter.customDenoms = [];
-                } catch(e) { console.error("Lỗi đọc dữ liệu", e); }
+                } catch(e) { console.error("Lỗi đọc dữ liệu local storage", e); }
             }
         }
 
@@ -650,11 +773,11 @@
         function showToast(msg, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            const bg = type === 'success' ? 'bg-emerald-500/90' : (type === 'error' ? 'bg-rose-500/90' : 'bg-indigo-500/90');
-            const icon = type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-circle-exclamation' : 'fa-info-circle');
+            const bg = type === 'success' ? 'bg-emerald-600/90' : (type === 'error' ? 'bg-rose-600/90' : 'bg-indigo-600/90');
+            const icon = type === 'success' ? 'fa-circle-check' : (type === 'error' ? 'fa-circle-exclamation' : 'fa-info-circle');
             
-            toast.className = `${bg} text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 transform translate-y-10 opacity-0 transition-all duration-300 backdrop-blur-md font-bold text-sm border border-white/10`;
-            toast.innerHTML = `<i class="fa-solid ${icon} text-lg"></i> ${msg}`;
+            toast.className = `${bg} text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 transform translate-y-10 opacity-0 transition-all duration-300 backdrop-blur-md font-bold text-xs border border-white/20 z-50`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i> ${msg}`;
             container.appendChild(toast);
             
             requestAnimationFrame(() => { toast.classList.remove('translate-y-10', 'opacity-0'); });
@@ -664,59 +787,435 @@
             }, 3000);
         }
 
-        // --- STREAMING_CHUNK:Navigation & UI State ---
         function switchModule(module) {
             currentModule = module;
-            document.getElementById('module-savings').className = `px-5 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${module === 'savings' ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`;
-            document.getElementById('module-counter').className = `px-5 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${module === 'counter' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`;
+            document.getElementById('module-counter').className = `px-5 py-2.5 rounded-xl text-sm font-extrabold transition-all flex items-center gap-2 ${module === 'counter' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`;
+            document.getElementById('module-savings').className = `px-5 py-2.5 rounded-xl text-sm font-extrabold transition-all flex items-center gap-2 ${module === 'savings' ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`;
 
-            document.getElementById('subnav-savings').style.display = module === 'savings' ? 'flex' : 'none';
             document.getElementById('subnav-counter').style.display = module === 'counter' ? 'flex' : 'none';
+            document.getElementById('subnav-savings').style.display = module === 'savings' ? 'flex' : 'none';
 
-            if (module === 'savings') {
-                document.getElementById('module-savings-container').classList.remove('hidden');
-                document.getElementById('module-counter-container').classList.add('hidden');
-                switchTab(currentTabSavings);
-            } else {
-                document.getElementById('module-savings-container').classList.add('hidden');
+            if (module === 'counter') {
                 document.getElementById('module-counter-container').classList.remove('hidden');
+                document.getElementById('module-savings-container').classList.add('hidden');
                 switchTab(currentTabCounter);
-                renderDenomTable();
-                updateCounterUI();
+            } else {
+                document.getElementById('module-counter-container').classList.add('hidden');
+                document.getElementById('module-savings-container').classList.remove('hidden');
+                switchTab(currentTabSavings);
             }
         }
 
         function switchTab(tabId) {
-            if (currentModule === 'savings') {
-                currentTabSavings = tabId;
-                ['dashboard', 'transactions', 'settings'].forEach(t => {
-                    document.getElementById(`view-${t}`).classList.add('hidden');
-                    const btn = document.getElementById(`tab-${t}`);
-                    btn.className = `px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${t === tabId ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30' : 'text-slate-400 hover:text-slate-200'}`;
-                });
-                document.getElementById(`view-${tabId}`).classList.remove('hidden');
-                if (tabId === 'dashboard') updateSavingsDashboard();
-            } else {
+            if (currentModule === 'counter') {
                 currentTabCounter = tabId;
                 ['counter-input', 'counter-stats'].forEach(t => {
-                    document.getElementById(`view-${t}`).classList.add('hidden');
+                    const el = document.getElementById(`view-${t}`);
                     const btn = document.getElementById(`tab-${t}`);
-                    btn.className = `px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${t === tabId ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'text-slate-400 hover:text-slate-200'}`;
+                    if (t === tabId) {
+                        el.classList.remove('hidden');
+                        btn.className = `px-4 py-2 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm`;
+                    } else {
+                        el.classList.add('hidden');
+                        btn.className = `px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 text-slate-400 hover:text-slate-200`;
+                    }
                 });
-                document.getElementById(`view-${tabId}`).classList.remove('hidden');
                 
-                // Hiển thị dạng grid lưới khi tab đang là stats
                 if (tabId === 'counter-stats') {
-                    document.getElementById('view-counter-stats').classList.remove('hidden');
-                    document.getElementById('view-counter-stats').style.display = 'grid'; // Force grid
+                    renderAggregateDenomTable();
                     updateCounterCharts();
                 } else {
-                    document.getElementById('view-counter-stats').style.display = '';
+                    renderDenomTable();
                 }
+            } else {
+                currentTabSavings = tabId;
+                ['dashboard', 'transactions', 'settings'].forEach(t => {
+                    const el = document.getElementById(`view-${t}`);
+                    const btn = document.getElementById(`tab-${t}`);
+                    if (t === tabId) {
+                        el.classList.remove('hidden');
+                        btn.className = `px-4 py-2 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 shadow-sm`;
+                    } else {
+                        el.classList.add('hidden');
+                        btn.className = `px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 text-slate-400 hover:text-slate-200`;
+                    }
+                });
+                if (tabId === 'dashboard') updateSavingsDashboard();
             }
         }
 
-        // --- STREAMING_CHUNK:Module Lãi Tiết Kiệm (Savings) ---
+        function initCounter() {
+            renderDenomTable();
+            updateCounterUI();
+        }
+
+        // Lấy danh sách mệnh giá được SẮP XẾP TĂNG DẦN (a - b)
+        function getSortedDenoms() {
+            const all = [...new Set([...defaultDenoms, ...appData.counter.customDenoms])];
+            return all.sort((a, b) => a - b);
+        }
+
+        function renderDenomTable() {
+            const tbody = document.getElementById('denom-table-body');
+            const denoms = getSortedDenoms(); // Mệnh giá TĂNG DẦN
+            
+            let html = '';
+            let stt = 1;
+            denoms.forEach(denom => {
+                const count = currentCounterBatch[denom] || '';
+                const total = (currentCounterBatch[denom] || 0) * denom;
+                const isCustom = !defaultDenoms.includes(denom);
+                
+                html += `
+                <tr class="hover:bg-slate-900/50 transition border-b border-slate-800/40">
+                    <td class="p-4 text-center font-bold text-slate-500">${stt++}</td>
+                    <td class="p-4 text-right">
+                        <span class="font-black text-white text-base font-mono-num inline-flex justify-end items-center gap-2">
+                            ${isCustom ? `<button onclick="removeCustomDenom(${denom})" title="Xóa mệnh giá tùy chỉnh" class="text-rose-500/60 hover:text-rose-500 text-xs"><i class="fa-solid fa-xmark"></i></button>` : ''}
+                            ${denom.toLocaleString('vi-VN')} ₫
+                        </span>
+                    </td>
+                    <td class="p-4">
+                        <div class="flex items-center justify-center gap-1.5 max-w-[260px] mx-auto">
+                            <button onclick="adjustDenomCount(${denom}, -1)" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-rose-600 hover:text-white transition flex items-center justify-center text-slate-300 font-extrabold text-sm border border-slate-700 shadow-sm">-</button>
+                            <input type="number" min="0" value="${count}" placeholder="0" oninput="setDenomCount(${denom}, this.value)" class="w-20 text-center bg-slate-950 border border-slate-700 rounded-xl py-1.5 text-emerald-400 font-mono-num font-extrabold outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-base">
+                            <button onclick="adjustDenomCount(${denom}, 1)" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-emerald-600 hover:text-white transition flex items-center justify-center text-slate-300 font-extrabold text-sm border border-slate-700 shadow-sm">+</button>
+                            
+                            <!-- Quick add buttons -->
+                            <div class="hidden sm:flex items-center gap-1 ml-1">
+                                <button onclick="adjustDenomCount(${denom}, 5)" class="px-2 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-[11px] font-extrabold text-emerald-400/80 border border-slate-800">+5</button>
+                                <button onclick="adjustDenomCount(${denom}, 10)" class="px-2 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-[11px] font-extrabold text-emerald-400/80 border border-slate-800">+10</button>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="p-4 text-right font-black ${total > 0 ? 'text-emerald-400' : 'text-slate-600'} font-mono-num text-base">${total > 0 ? formatVND(total) : '0 ₫'}</td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function adjustDenomCount(denom, delta) {
+            let current = currentCounterBatch[denom] || 0;
+            current += delta;
+            if (current < 0) current = 0;
+            currentCounterBatch[denom] = current;
+            renderDenomTable();
+            updateCurrentBatchTotal();
+        }
+
+        function setDenomCount(denom, val) {
+            const count = parseInt(val);
+            if (isNaN(count) || count < 0) {
+                delete currentCounterBatch[denom];
+            } else {
+                currentCounterBatch[denom] = count;
+            }
+            updateCurrentBatchTotal();
+        }
+
+        function updateCurrentBatchTotal() {
+            let total = 0;
+            for (let denom in currentCounterBatch) {
+                total += parseInt(denom) * (currentCounterBatch[denom] || 0);
+            }
+            document.getElementById('current-batch-total').innerText = formatVND(total);
+        }
+
+        function clearCurrentBatch() {
+            currentCounterBatch = {};
+            renderDenomTable();
+            updateCurrentBatchTotal();
+            showToast("Đã xóa trắng mẻ đếm", "info");
+        }
+
+        function addCustomDenom() {
+            const input = document.getElementById('custom-denom-input');
+            const val = parseVND(input.value);
+            if (val > 0 && !defaultDenoms.includes(val) && !appData.counter.customDenoms.includes(val)) {
+                appData.counter.customDenoms.push(val);
+                saveData();
+                input.value = '';
+                renderDenomTable();
+                showToast(`Đã thêm mệnh giá ${formatVND(val)}`);
+            } else if (val <= 0) {
+                showToast("Mệnh giá không hợp lệ", "error");
+            }
+        }
+
+        function removeCustomDenom(denom) {
+            appData.counter.customDenoms = appData.counter.customDenoms.filter(d => d !== denom);
+            delete currentCounterBatch[denom];
+            saveData();
+            renderDenomTable();
+            updateCurrentBatchTotal();
+            showToast("Đã xóa mệnh giá tùy chỉnh", "info");
+        }
+
+        function saveCounterSession() {
+            let hasData = false;
+            for (let d in currentCounterBatch) {
+                if (currentCounterBatch[d] > 0) { hasData = true; break; }
+            }
+            if (!hasData) return showToast("Vui lòng nhập ít nhất 1 số lượng tờ tiền!", "error");
+
+            const session = {
+                id: Date.now().toString(),
+                date: document.getElementById('counter-date').value,
+                note: document.getElementById('counter-note').value,
+                counts: { ...currentCounterBatch }
+            };
+
+            appData.counter.sessions.push(session);
+            saveData();
+            
+            showToast("Đã lưu & cộng dồn kết quả đếm tiền thành công!");
+            clearCurrentBatch();
+            document.getElementById('counter-note').value = '';
+            updateCounterUI();
+        }
+
+        function deleteCounterSession(id) {
+            appData.counter.sessions = appData.counter.sessions.filter(s => s.id !== id);
+            saveData();
+            updateCounterUI();
+            showToast("Đã xóa kết quả kiểm kê", "info");
+        }
+        
+        function confirmClearCounter() {
+            if(confirm("Bạn có chắc chắn muốn xóa toàn bộ lịch sử kiểm kê tiền mặt?")) {
+                appData.counter.sessions = [];
+                saveData();
+                updateCounterUI();
+                showToast("Đã xóa toàn bộ lịch sử đếm tiền", "info");
+            }
+        }
+
+        function calculateCounterStats() {
+            const sessions = appData.counter.sessions;
+            let grandTotal = 0;
+            let totalBills = 0;
+            const denomSums = {};
+
+            sessions.forEach(s => {
+                for (let d in s.counts) {
+                    const denom = parseInt(d);
+                    const count = s.counts[d] || 0;
+                    if(!denomSums[denom]) denomSums[denom] = 0;
+                    denomSums[denom] += count;
+                    totalBills += count;
+                    grandTotal += denom * count;
+                }
+            });
+
+            return { grandTotal, totalBills, denomSums, sessions };
+        }
+
+        // BẢNG THỐNG KÊ TỔNG CÁC MỆNH GIÁ QUA TẤT CẢ LẦN ĐẾM (SẮP XẾP TĂNG DẦN)
+        function renderAggregateDenomTable() {
+            const stats = calculateCounterStats();
+            const tbody = document.getElementById('aggregate-denom-table-body');
+            const tfoot = document.getElementById('aggregate-denom-table-foot');
+            const denoms = getSortedDenoms(); // Sắp xếp tăng dần
+
+            let html = '';
+            let stt = 1;
+            let activeDenomCount = 0;
+
+            denoms.forEach(denom => {
+                const totalBillsForDenom = stats.denomSums[denom] || 0;
+                const totalValForDenom = denom * totalBillsForDenom;
+                const ratioPct = stats.grandTotal > 0 ? ((totalValForDenom / stats.grandTotal) * 100).toFixed(1) : 0;
+                
+                if (totalBillsForDenom > 0) activeDenomCount++;
+
+                html += `
+                <tr class="hover:bg-slate-900/50 transition">
+                    <td class="p-4 text-center font-bold text-slate-500">${stt++}</td>
+                    <td class="p-4 text-right font-black text-white text-base">${denom.toLocaleString('vi-VN')} ₫</td>
+                    <td class="p-4 text-center font-bold text-slate-200">${totalBillsForDenom.toLocaleString('vi-VN')} tờ</td>
+                    <td class="p-4 text-right font-black text-emerald-400 text-base">${formatVND(totalValForDenom)}</td>
+                    <td class="p-4 text-center font-bold text-amber-400">${ratioPct}%</td>
+                    <td class="p-4">
+                        <div class="w-full bg-slate-950 rounded-full h-2.5 overflow-hidden border border-slate-800">
+                            <div class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full transition-all duration-500" style="width: ${Math.min(100, Math.max(0, ratioPct))}%"></div>
+                        </div>
+                    </td>
+                </tr>`;
+            });
+
+            if (activeDenomCount === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center p-8 text-slate-500 font-bold">Chưa có dữ liệu kiểm kê nào được ghi nhận.</td></tr>`;
+                tfoot.innerHTML = '';
+                return;
+            }
+
+            tbody.innerHTML = html;
+            tfoot.innerHTML = `
+                <tr class="border-t-2 border-slate-700 bg-slate-900/90 text-white">
+                    <td colspan="2" class="p-4 text-right font-black uppercase tracking-wider text-xs">TỔNG CỘNG LŨY KẾ:</td>
+                    <td class="p-4 text-center font-black text-emerald-400 text-base">${stats.totalBills.toLocaleString('vi-VN')} tờ</td>
+                    <td class="p-4 text-right font-black text-emerald-400 text-lg">${formatVND(stats.grandTotal)}</td>
+                    <td class="p-4 text-center text-amber-400">100%</td>
+                    <td class="p-4"></td>
+                </tr>`;
+        }
+
+        // ĐỌC SỐ TIỀN THÀNH CHỮ TIẾNG VIỆT
+        const ChuSo = [" không ", " một ", " hai ", " ba ", " bốn ", " năm ", " sáu ", " bảy ", " tám ", " chín "];
+        function docso(so) {
+            if (so === 0) return "Không đồng";
+            let chuoi = "", hauto = "";
+            do {
+                let ty = so % 1000000000;
+                so = Math.floor(so / 1000000000);
+                if (so > 0) chuoi = docblock(ty, true) + hauto + chuoi;
+                else chuoi = docblock(ty, false) + hauto + chuoi;
+                hauto = " tỷ";
+            } while (so > 0);
+            chuoi = chuoi.trim();
+            if (chuoi.length > 0) chuoi = chuoi.substring(0, 1).toUpperCase() + chuoi.substring(1) + " đồng chẵn.";
+            return chuoi;
+        }
+        function docblock(so, daydu) {
+            let chuoi = "";
+            let tram = Math.floor(so / 100); so = so % 100;
+            let chuc = Math.floor(so / 10); let donvi = so % 10;
+            if (daydu || tram > 0) { chuoi = " " + ChuSo[tram] + " trăm"; chuoi += dachuc(chuc, donvi, true); }
+            else chuoi = dachuc(chuc, donvi, false);
+            return chuoi;
+        }
+        function dachuc(chuc, donvi, daydu) {
+            let chuoi = "";
+            if (chuc == 0 && donvi > 0) { if (daydu) chuoi += " lẻ"; chuoi += " " + ChuSo[donvi]; }
+            if (chuc == 1) { chuoi += " mười"; if (donvi == 5) chuoi += " lăm"; else if (donvi > 0) chuoi += " " + ChuSo[donvi]; }
+            if (chuc > 1) { chuoi += " " + ChuSo[chuc] + " mươi"; if (donvi == 1) chuoi += " mốt"; else if (donvi == 5) chuoi += " lăm"; else if (donvi > 0) chuoi += " " + ChuSo[donvi]; }
+            return chuoi;
+        }
+        function numberToWords(n) { return docso(n); }
+
+        function updateCounterUI() {
+            const stats = calculateCounterStats();
+            
+            // Hero Banner Updates
+            document.getElementById('counter-grand-total').innerText = stats.grandTotal.toLocaleString('vi-VN') + ' ₫';
+            document.getElementById('counter-grand-words').innerText = "Bằng chữ: " + numberToWords(stats.grandTotal);
+            document.getElementById('counter-total-sessions').innerText = appData.counter.sessions.length;
+            document.getElementById('counter-total-bills').innerText = stats.totalBills.toLocaleString('vi-VN');
+
+            // Render Recent Sessions List
+            const container = document.getElementById('counter-sessions-list');
+            if (appData.counter.sessions.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-slate-500 font-semibold text-xs border border-dashed border-slate-800 rounded-2xl">Chưa có lịch sử kiểm kê.</div>`;
+            } else {
+                let html = '';
+                [...appData.counter.sessions].reverse().forEach((s) => {
+                    let stotal = 0, sbills = 0;
+                    for (let d in s.counts) { stotal += parseInt(d) * (s.counts[d] || 0); sbills += (s.counts[d] || 0); }
+                    html += `
+                    <div class="p-3.5 bg-slate-950/60 rounded-2xl border border-slate-800 flex justify-between items-center group hover:border-emerald-500/40 transition">
+                        <div>
+                            <p class="font-extrabold text-white text-base font-mono-num">${formatVND(stotal)}</p>
+                            <p class="text-[11px] text-slate-400 mt-0.5 font-medium">${formatDate(s.date)} • ${sbills} tờ ${s.note ? `• ${s.note}` : ''}</p>
+                        </div>
+                        <button onclick="deleteCounterSession('${s.id}')" title="Xóa lần kiểm kê này" class="text-slate-600 hover:text-rose-500 p-2 rounded-xl hover:bg-rose-500/10 transition opacity-0 group-hover:opacity-100">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>`;
+                });
+                container.innerHTML = html;
+            }
+
+            if(currentTabCounter === 'counter-stats') {
+                renderAggregateDenomTable();
+                updateCounterCharts();
+            }
+        }
+
+        function updateCounterCharts() {
+            const stats = calculateCounterStats();
+            const denoms = getSortedDenoms(); // MỆNH GIÁ TĂNG DẦN
+            
+            // 1. Denom Bar Chart (TĂNG DẦN)
+            const labels1 = denoms.map(d => (d >= 1000 ? (d/1000) + 'k' : d));
+            const data1 = denoms.map(d => stats.denomSums[d] || 0);
+            
+            const ctx1 = document.getElementById('counterDenomChart').getContext('2d');
+            if(counterDenomChartInstance) counterDenomChartInstance.destroy();
+            counterDenomChartInstance = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: labels1,
+                    datasets: [{
+                        label: 'Số lượng (Tờ)',
+                        data: data1,
+                        backgroundColor: '#10b981',
+                        borderRadius: 6,
+                        hoverBackgroundColor: '#34d399'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { weight: 'bold' } } },
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `Số lượng: ${ctx.raw.toLocaleString('vi-VN')} tờ`
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 2. Trend Line Chart
+            const sessions = [...appData.counter.sessions].sort((a,b) => new Date(a.date) - new Date(b.date));
+            const labels2 = sessions.map((s,i) => `Lần ${i+1} (${formatDate(s.date)})`);
+            const data2 = sessions.map(s => {
+                let t = 0; for(let d in s.counts) t += parseInt(d)*(s.counts[d] || 0); return t;
+            });
+
+            const ctx2 = document.getElementById('counterTrendChart').getContext('2d');
+            if(counterTrendChartInstance) counterTrendChartInstance.destroy();
+            counterTrendChartInstance = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: labels2,
+                    datasets: [{
+                        label: 'Trị giá đếm được',
+                        data: data2,
+                        borderColor: '#0ea5e9',
+                        backgroundColor: 'rgba(14, 165, 233, 0.15)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#0ea5e9',
+                        pointBorderColor: '#ffffff',
+                        pointRadius: 5,
+                        fill: true,
+                        tension: 0.35
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', callback: (v) => (v/1000000) + 'M' } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `Thành tiền: ${formatVND(ctx.raw)}`
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
         function initSavings() {
             const conf = appData.savings.config;
             if(conf.startDate) document.getElementById('config-start-date').value = conf.startDate;
@@ -735,7 +1234,7 @@
                 rate2: parseFloat(document.getElementById('config-rate-2').value)
             };
             saveData();
-            showToast("Đã lưu cấu hình lãi suất");
+            showToast("Đã lưu cấu hình lãi suất tiết kiệm");
             switchTab('dashboard');
         }
 
@@ -743,7 +1242,7 @@
             e.preventDefault();
             const amtStr = document.getElementById('tx-amount').value;
             const amt = parseVND(amtStr);
-            if(amt <= 0) return showToast("Số tiền không hợp lệ", "error");
+            if(amt <= 0) return showToast("Số tiền gửi không hợp lệ", "error");
 
             const tx = {
                 id: Date.now().toString(),
@@ -752,14 +1251,13 @@
                 note: document.getElementById('tx-note').value
             };
             appData.savings.transactions.push(tx);
-            // Sort by date ascending
             appData.savings.transactions.sort((a,b) => new Date(a.date) - new Date(b.date));
             saveData();
             
             document.getElementById('tx-amount').value = '';
             document.getElementById('tx-note').value = '';
             
-            showToast("Đã ghi nhận khoản nộp");
+            showToast("Đã ghi nhận khoản gửi tiền mới");
             renderSavingsTransactions();
         }
 
@@ -767,16 +1265,16 @@
             appData.savings.transactions = appData.savings.transactions.filter(t => t.id !== id);
             saveData();
             renderSavingsTransactions();
-            showToast("Đã xóa khoản nộp", "info");
+            showToast("Đã xóa khoản gửi tiền", "info");
         }
 
         function confirmClearSavings() {
-            if(confirm("Bạn có chắc chắn muốn xóa toàn bộ dữ liệu Tiết Kiệm? Hành động này không thể hoàn tác.")) {
+            if(confirm("Bạn có chắc muốn xóa toàn bộ dữ liệu gửi tiết kiệm?")) {
                 appData.savings.transactions = [];
                 saveData();
                 renderSavingsTransactions();
                 updateSavingsDashboard();
-                showToast("Đã xóa dữ liệu tiết kiệm", "info");
+                showToast("Đã xóa toàn bộ dữ liệu tiết kiệm", "info");
             }
         }
 
@@ -786,11 +1284,10 @@
             document.getElementById('tx-count').innerText = `${txs.length} khoản`;
             
             if (txs.length === 0) {
-                container.innerHTML = `<div class="text-center py-10 text-slate-500 font-bold border-2 border-dashed border-slate-800 rounded-xl bg-slate-900/30">Chưa có khoản tiền nào được ghi nhận.</div>`;
+                container.innerHTML = `<div class="text-center py-10 text-slate-500 font-bold border border-dashed border-slate-800 rounded-2xl">Chưa có khoản gửi tiết kiệm nào.</div>`;
                 return;
             }
 
-            // Group by Month-Year
             const groups = {};
             [...txs].reverse().forEach(tx => {
                 const date = new Date(tx.date);
@@ -802,21 +1299,21 @@
             let html = '';
             for(const [month, items] of Object.entries(groups)) {
                 let monthTotal = items.reduce((s, t) => s + t.amount, 0);
-                html += `<div class="bg-slate-900/50 rounded-xl border border-slate-800 overflow-hidden">
-                            <div class="px-4 py-3 bg-slate-800/50 flex justify-between items-center border-b border-slate-700/50">
-                                <span class="font-bold text-slate-300 text-sm"><i class="fa-regular fa-calendar-days mr-2"></i>${month}</span>
-                                <span class="font-bold text-indigo-400 text-sm">+${formatVND(monthTotal)}</span>
+                html += `<div class="bg-slate-950/60 rounded-2xl border border-slate-800 overflow-hidden">
+                            <div class="px-4 py-3 bg-slate-900/80 flex justify-between items-center border-b border-slate-800">
+                                <span class="font-extrabold text-slate-300 text-xs"><i class="fa-regular fa-calendar-days mr-2 text-indigo-400"></i>${month}</span>
+                                <span class="font-extrabold text-indigo-400 text-sm">+${formatVND(monthTotal)}</span>
                             </div>
                             <div class="divide-y divide-slate-800/50">`;
                 items.forEach(tx => {
                     html += `
-                        <div class="p-4 flex justify-between items-center hover:bg-slate-800/30 transition group">
+                        <div class="p-4 flex justify-between items-center hover:bg-slate-900/40 transition group">
                             <div>
-                                <p class="font-bold text-white text-lg font-mono-num">${formatVND(tx.amount)}</p>
+                                <p class="font-black text-white text-lg font-mono-num">${formatVND(tx.amount)}</p>
                                 <p class="text-xs text-slate-400 mt-1">${formatDate(tx.date)} ${tx.note ? ` • ${tx.note}` : ''}</p>
                             </div>
-                            <button onclick="deleteSavingsTx('${tx.id}')" class="text-slate-600 hover:text-rose-500 p-2 rounded-lg bg-slate-900 hover:bg-rose-500/10 transition opacity-0 group-hover:opacity-100">
-                                <i class="fa-solid fa-trash"></i>
+                            <button onclick="deleteSavingsTx('${tx.id}')" class="text-slate-600 hover:text-rose-500 p-2 rounded-xl hover:bg-rose-500/10 transition opacity-0 group-hover:opacity-100">
+                                <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </div>`;
                 });
@@ -825,11 +1322,10 @@
             container.innerHTML = html;
         }
 
-        // --- STREAMING_CHUNK:Lõi Tính Toán Lãi Suất (Core Logic) ---
         function setCalculationTarget(target) {
             calcTarget = target;
-            document.getElementById('btn-calc-today').className = `px-4 py-2 rounded-lg text-xs font-bold transition-all ${target === 'today' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'}`;
-            document.getElementById('btn-calc-end').className = `px-4 py-2 rounded-lg text-xs font-bold transition-all ${target === 'end' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'}`;
+            document.getElementById('btn-calc-today').className = `px-4 py-2 rounded-xl text-xs font-extrabold transition-all ${target === 'today' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'}`;
+            document.getElementById('btn-calc-end').className = `px-4 py-2 rounded-xl text-xs font-extrabold transition-all ${target === 'end' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'}`;
             updateSavingsDashboard();
         }
 
@@ -846,8 +1342,6 @@
             endDate.setMonth(endDate.getMonth() + conf.duration);
             
             const today = new Date();
-            // Nếu chọn tính tới hôm nay, và hôm nay nhỏ hơn ngày kết thúc thì lấy hôm nay. 
-            // Nếu hôm nay vượt quá ngày kết thúc, thì max là ngày kết thúc.
             let limitDate = endDate;
             if (calcTarget === 'today' && today < endDate) {
                 limitDate = today;
@@ -857,27 +1351,20 @@
             let totalPrincipalAcc = 0;
             let totalInterestAcc = 0;
             
-            // Xây dựng mốc thời gian từng tháng từ tháng 0 đến duration
             for (let month = 0; month <= conf.duration; month++) {
                 const currentMonthDate = new Date(startDate);
                 currentMonthDate.setMonth(currentMonthDate.getMonth() + month);
                 
-                // Nếu mốc tháng này vượt qua limitDate, ta dừng tính toán tương lai (chỉ gán giá trị 0 cho phần lãi)
                 const isPastLimit = currentMonthDate > limitDate;
-
-                // Rate áp dụng cho tháng này
                 const currentRate = (month < 6) ? conf.rate1 : conf.rate2;
                 
-                // Tìm các khoản nộp trong tháng này (từ mốc tháng trước đến mốc tháng này)
                 const prevMonthDate = new Date(startDate);
                 if (month > 0) prevMonthDate.setMonth(prevMonthDate.getMonth() + month - 1);
                 
                 let addedPrincipal = 0;
                 txs.forEach(tx => {
                     const d = new Date(tx.date);
-                    // Khoản nộp thuộc tháng này
                     if ((month === 0 && d <= currentMonthDate) || (month > 0 && d > prevMonthDate && d <= currentMonthDate)) {
-                        // Chỉ cộng dồn vốn nếu ngày nộp <= limitDate
                         if (d <= limitDate) {
                             addedPrincipal += tx.amount;
                         }
@@ -886,13 +1373,10 @@
 
                 totalPrincipalAcc += addedPrincipal;
                 
-                // Tính lãi cho tháng này (dựa trên số dư lũy kế hiện tại)
                 let interestThisMonth = 0;
                 if (month > 0 && !isPastLimit) {
-                    // Để đơn giản, tính lãi theo tháng: (Gốc * Lãi suất / 100) / 12
                     interestThisMonth = (totalPrincipalAcc * currentRate / 100) / 12;
                     
-                    // Nếu limitDate rơi vào giữa tháng, tính lãi theo ngày
                     if (limitDate < currentMonthDate && limitDate > prevMonthDate) {
                         const daysInMonth = (currentMonthDate - prevMonthDate) / (1000 * 60 * 60 * 24);
                         const daysActive = (limitDate - prevMonthDate) / (1000 * 60 * 60 * 24);
@@ -926,26 +1410,23 @@
             const slider = document.getElementById('timeline-slider');
             
             if (!res) {
-                // Reset UI
                 document.getElementById('card-total-principal').innerText = '0 ₫';
                 document.getElementById('card-total-interest').innerText = '0 ₫';
                 document.getElementById('card-current-balance').innerText = '0 ₫';
                 document.getElementById('card-yield').innerText = '0%';
-                document.getElementById('monthly-table-body').innerHTML = `<tr><td colspan="7" class="text-center p-4 text-slate-500">Chưa đủ dữ liệu để tính toán.</td></tr>`;
+                document.getElementById('monthly-table-body').innerHTML = `<tr><td colspan="7" class="text-center p-6 text-slate-500 font-bold">Chưa đủ dữ liệu để tính toán.</td></tr>`;
                 slider.max = 12; slider.value = 12;
                 return;
             }
 
             calculatedMonthlyData = res.monthlyData;
             
-            // Cập nhật Cards
             document.getElementById('card-total-principal').innerText = formatVND(res.finalPrincipal);
             document.getElementById('card-total-interest').innerText = formatVND(res.finalInterest);
             document.getElementById('card-current-balance').innerText = formatVND(res.finalBalance);
             const yieldPct = res.finalPrincipal > 0 ? ((res.finalInterest / res.finalPrincipal) * 100).toFixed(2) : 0;
             document.getElementById('card-yield').innerText = `${yieldPct}%`;
 
-            // Cập nhật Widgets thời gian
             const totalMonths = appData.savings.config.duration;
             document.getElementById('time-widget-duration').innerText = `${totalMonths} tháng`;
             
@@ -964,22 +1445,20 @@
             document.getElementById('time-widget-elapsed').innerText = `${monthsElapsed} tháng`;
             document.getElementById('time-widget-remaining').innerText = `${Math.max(0, totalMonths - monthsElapsed)} tháng`;
 
-            // Cập nhật Slider
             slider.max = totalMonths;
             slider.value = res.monthlyData.findIndex(d => d.date >= res.limitDate) !== -1 ? res.monthlyData.findIndex(d => d.date >= res.limitDate) : totalMonths;
             if (slider.value == -1) slider.value = totalMonths;
             updateSliderView(slider.value);
 
-            // Cập nhật Bảng
             let tbody = '';
             res.monthlyData.forEach(d => {
                 const opacity = d.isFuture ? 'opacity-40' : '';
-                const badge = d.monthIndex === 0 ? '<span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 text-xs">Mở sổ</span>' : `Tháng ${d.monthIndex}`;
+                const badge = d.monthIndex === 0 ? '<span class="px-2 py-0.5 rounded-lg bg-indigo-500/20 text-indigo-300 text-xs font-extrabold">Mở sổ</span>' : `Tháng ${d.monthIndex}`;
                 
-                tbody += `<tr class="${opacity} hover:bg-slate-800/30 transition">
+                tbody += `<tr class="${opacity} hover:bg-slate-900/40 transition">
                     <td class="p-4 font-bold text-white">${badge}</td>
                     <td class="p-4 text-slate-400">${formatDate(d.date.toISOString().split('T')[0])}</td>
-                    <td class="p-4 text-right ${d.addedPrincipal > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}">+${d.addedPrincipal > 0 ? formatVND(d.addedPrincipal) : '-'}</td>
+                    <td class="p-4 text-right ${d.addedPrincipal > 0 ? 'text-emerald-400 font-bold' : 'text-slate-600'}">+${d.addedPrincipal > 0 ? formatVND(d.addedPrincipal) : '-'}</td>
                     <td class="p-4 text-right text-slate-300">${formatVND(d.accumulatedPrincipal)}</td>
                     <td class="p-4 text-center text-amber-400">${d.rate}%</td>
                     <td class="p-4 text-right text-indigo-400 font-bold">+${formatVND(d.interestGenerated)}</td>
@@ -987,8 +1466,6 @@
                 </tr>`;
             });
             document.getElementById('monthly-table-body').innerHTML = tbody;
-
-            // Cập nhật Chart
             updateGrowthChart(res.monthlyData);
         }
 
@@ -1020,18 +1497,14 @@
                         {
                             label: 'Gốc Lũy Kế',
                             data: principals,
-                            backgroundColor: '#4f46e5', // indigo-600
-                            borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 4, bottomRight: 4 },
-                            barPercentage: 0.6,
-                            categoryPercentage: 0.8
+                            backgroundColor: '#4f46e5',
+                            borderRadius: 4
                         },
                         {
                             label: 'Lãi Sinh Ra',
                             data: interests,
-                            backgroundColor: '#10b981', // emerald-500
-                            borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 4, bottomRight: 4 },
-                            barPercentage: 0.6,
-                            categoryPercentage: 0.8
+                            backgroundColor: '#10b981',
+                            borderRadius: 4
                         }
                     ]
                 },
@@ -1043,313 +1516,13 @@
                         y: { stacked: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', callback: (v) => (v/1000000) + 'M' } }
                     },
                     plugins: {
-                        legend: { labels: { color: '#e2e8f0', usePointStyle: true, boxWidth: 8 } },
-                        tooltip: {
-                            backgroundColor: 'rgba(15,23,42,0.9)',
-                            titleColor: '#fff',
-                            bodyColor: '#cbd5e1',
-                            borderColor: 'rgba(255,255,255,0.1)',
-                            borderWidth: 1,
-                            callbacks: { label: (ctx) => `${ctx.dataset.label}: ${formatVND(ctx.raw)}` }
-                        }
-                    },
-                    interaction: { mode: 'index', intersect: false }
+                        legend: { labels: { color: '#e2e8f0', usePointStyle: true } }
+                    }
                 }
             });
         }
 
 
-        // --- STREAMING_CHUNK:Module Kiểm Kê Tiền Mặt (Counter) ---
-        function initCounter() {
-            renderDenomTable();
-            updateCounterUI();
-        }
-
-        function renderDenomTable() {
-            const tbody = document.getElementById('denom-table-body');
-            const allDenoms = [...new Set([...defaultDenoms, ...appData.counter.customDenoms])].sort((a,b) => b-a);
-            
-            let html = '';
-            let stt = 1;
-            allDenoms.forEach(denom => {
-                const count = currentCounterBatch[denom] || '';
-                const total = (currentCounterBatch[denom] || 0) * denom;
-                const isCustom = !defaultDenoms.includes(denom);
-                
-                html += `
-                <tr class="hover:bg-slate-800/30 transition">
-                    <td class="p-4 text-center font-bold text-slate-500">${stt++}</td>
-                    <td class="p-4 text-right">
-                        <span class="font-extrabold text-white text-lg font-mono-num flex justify-end items-center gap-2">
-                            ${isCustom ? `<button onclick="removeCustomDenom(${denom})" class="text-rose-500/50 hover:text-rose-500 text-xs"><i class="fa-solid fa-xmark"></i></button>` : ''}
-                            ${denom.toLocaleString('vi-VN')}
-                        </span>
-                    </td>
-                    <td class="p-4">
-                        <div class="flex items-center justify-center gap-2 max-w-[150px] mx-auto">
-                            <button onclick="adjustDenomCount(${denom}, -1)" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-rose-500 hover:text-white transition flex items-center justify-center text-slate-400 font-bold">-</button>
-                            <input type="number" min="0" value="${count}" oninput="setDenomCount(${denom}, this.value)" class="w-20 text-center bg-slate-950 border border-slate-700 rounded-lg py-1.5 text-white font-mono-num font-bold outline-none focus:border-emerald-500">
-                            <button onclick="adjustDenomCount(${denom}, 1)" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-emerald-500 hover:text-white transition flex items-center justify-center text-slate-400 font-bold">+</button>
-                        </div>
-                    </td>
-                    <td class="p-4 text-right font-extrabold text-emerald-400 font-mono-num text-lg">${total > 0 ? formatVND(total) : '-'}</td>
-                </tr>`;
-            });
-            tbody.innerHTML = html;
-        }
-
-        function adjustDenomCount(denom, delta) {
-            let current = currentCounterBatch[denom] || 0;
-            current += delta;
-            if (current < 0) current = 0;
-            currentCounterBatch[denom] = current;
-            renderDenomTable();
-            updateCurrentBatchTotal();
-        }
-
-        function setDenomCount(denom, val) {
-            const count = parseInt(val);
-            if (isNaN(count) || count < 0) {
-                delete currentCounterBatch[denom];
-            } else {
-                currentCounterBatch[denom] = count;
-            }
-            renderDenomTable();
-            updateCurrentBatchTotal();
-        }
-
-        function updateCurrentBatchTotal() {
-            let total = 0;
-            for (let denom in currentCounterBatch) {
-                total += parseInt(denom) * currentCounterBatch[denom];
-            }
-            document.getElementById('current-batch-total').innerText = formatVND(total);
-        }
-
-        function clearCurrentBatch() {
-            currentCounterBatch = {};
-            renderDenomTable();
-            updateCurrentBatchTotal();
-        }
-
-        function addCustomDenom() {
-            const input = document.getElementById('custom-denom-input');
-            const val = parseVND(input.value);
-            if (val > 0 && !defaultDenoms.includes(val) && !appData.counter.customDenoms.includes(val)) {
-                appData.counter.customDenoms.push(val);
-                saveData();
-                input.value = '';
-                renderDenomTable();
-            }
-        }
-        function removeCustomDenom(denom) {
-            appData.counter.customDenoms = appData.counter.customDenoms.filter(d => d !== denom);
-            delete currentCounterBatch[denom];
-            saveData();
-            renderDenomTable();
-            updateCurrentBatchTotal();
-        }
-
-        function saveCounterSession() {
-            // Check if empty
-            if (Object.keys(currentCounterBatch).length === 0 || Object.values(currentCounterBatch).every(v => v === 0)) {
-                return showToast("Bảng kiểm kê đang trống!", "error");
-            }
-
-            const session = {
-                id: Date.now().toString(),
-                date: document.getElementById('counter-date').value,
-                note: document.getElementById('counter-note').value,
-                counts: { ...currentCounterBatch }
-            };
-
-            appData.counter.sessions.push(session);
-            saveData();
-            
-            showToast("Đã lưu kết quả kiểm kê!");
-            clearCurrentBatch();
-            document.getElementById('counter-note').value = '';
-            updateCounterUI();
-        }
-
-        function deleteCounterSession(id) {
-            appData.counter.sessions = appData.counter.sessions.filter(s => s.id !== id);
-            saveData();
-            updateCounterUI();
-            showToast("Đã xóa kết quả kiểm kê", "info");
-        }
-        
-        function confirmClearCounter() {
-            if(confirm("Bạn có chắc muốn xóa tất cả lịch sử kiểm kê?")) {
-                appData.counter.sessions = [];
-                saveData();
-                updateCounterUI();
-            }
-        }
-
-        function calculateCounterStats() {
-            const sessions = appData.counter.sessions;
-            let grandTotal = 0;
-            let totalBills = 0;
-            const denomSums = {};
-
-            sessions.forEach(s => {
-                for (let d in s.counts) {
-                    const denom = parseInt(d);
-                    const count = s.counts[d];
-                    if(!denomSums[denom]) denomSums[denom] = 0;
-                    denomSums[denom] += count;
-                    totalBills += count;
-                    grandTotal += denom * count;
-                }
-            });
-
-            return { grandTotal, totalBills, denomSums, sessions };
-        }
-
-        // Convert number to Vietnamese Words (Simplified version for context)
-        const ChuSo=new Array(" không "," một "," hai "," ba "," bốn "," năm "," sáu "," bảy "," tám "," chín ");
-        const Tien=new Array( "", " nghìn", " triệu", " tỷ", " nghìn tỷ", " triệu tỷ");
-        function docso(so) {
-            if(so==0) return "Không đồng";
-            var chuoi="", hauto="";
-            do {
-                ty=so%1000000000;
-                so=Math.floor(so/1000000000);
-                if(so>0) chuoi = docblock(ty,true) + hauto + chuoi;
-                else chuoi = docblock(ty,false) + hauto + chuoi;
-                hauto=" tỷ";
-            } while(so>0);
-            chuoi = chuoi.trim();
-            if(chuoi.length>0) chuoi = chuoi.substring(0,1).toUpperCase() + chuoi.substring(1) + " đồng chẵn.";
-            return chuoi;
-        }
-        function docblock(so, daydu) {
-            var chuoi="";
-            tram=Math.floor(so/100); so=so%100;
-            chuc=Math.floor(so/10); donvi=so%10;
-            if(daydu || tram>0) { chuoi=" " + ChuSo[tram] + " trăm"; chuoi+=dachuc(chuc,donvi,true); }
-            else chuoi=dachuc(chuc,donvi,false);
-            return chuoi;
-        }
-        function dachuc(chuc, donvi, daydu) {
-            var chuoi="";
-            if(chuc==0 && donvi>0) { if(daydu) chuoi+=" lẻ"; chuoi+=" "+ChuSo[donvi]; }
-            if(chuc==1) { chuoi+=" mười"; if(donvi==5) chuoi+=" lăm"; else if(donvi>0) chuoi+=" "+ChuSo[donvi]; }
-            if(chuc>1) { chuoi+=" "+ChuSo[chuc]+" mươi"; if(donvi==1) chuoi+=" mốt"; else if(donvi==5) chuoi+=" lăm"; else if(donvi>0) chuoi+=" "+ChuSo[donvi]; }
-            return chuoi;
-        }
-        function numberToWords(n) { return docso(n); }
-
-
-        function updateCounterUI() {
-            const stats = calculateCounterStats();
-            
-            // Hero Banner
-            document.getElementById('counter-grand-total').innerText = stats.grandTotal.toLocaleString('vi-VN');
-            document.getElementById('counter-grand-words').innerText = numberToWords(stats.grandTotal);
-            document.getElementById('counter-total-sessions').innerText = appData.counter.sessions.length;
-            document.getElementById('counter-total-bills').innerText = stats.totalBills.toLocaleString('vi-VN');
-
-            // Sessions List
-            const container = document.getElementById('counter-sessions-list');
-            if (appData.counter.sessions.length === 0) {
-                container.innerHTML = `<div class="text-center py-6 text-slate-500 font-medium">Chưa có lịch sử.</div>`;
-            } else {
-                let html = '';
-                [...appData.counter.sessions].reverse().forEach((s, i) => {
-                    let stotal = 0, sbills = 0;
-                    for (let d in s.counts) { stotal += parseInt(d)*s.counts[d]; sbills += s.counts[d]; }
-                    html += `
-                    <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-700/50 flex justify-between items-center group hover:border-emerald-500/50 transition">
-                        <div>
-                            <p class="font-bold text-white text-lg font-mono-num">${formatVND(stotal)}</p>
-                            <p class="text-xs text-slate-400 mt-1">${formatDate(s.date)} • ${sbills} tờ ${s.note ? `• ${s.note}` : ''}</p>
-                        </div>
-                        <button onclick="deleteCounterSession('${s.id}')" class="text-rose-500 hover:text-white p-2 rounded-lg hover:bg-rose-500 transition opacity-0 group-hover:opacity-100">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </div>`;
-                });
-                container.innerHTML = html;
-            }
-
-            if(currentTabCounter === 'counter-stats') {
-                updateCounterCharts();
-            }
-        }
-
-        function updateCounterCharts() {
-            const stats = calculateCounterStats();
-            
-            // 1. Denom Chart
-            const allDenoms = Object.keys(stats.denomSums).map(Number).sort((a,b)=>b-a);
-            const labels1 = allDenoms.map(d => (d/1000) + 'k');
-            const data1 = allDenoms.map(d => stats.denomSums[d]);
-            
-            const ctx1 = document.getElementById('counterDenomChart').getContext('2d');
-            if(counterDenomChartInstance) counterDenomChartInstance.destroy();
-            counterDenomChartInstance = new Chart(ctx1, {
-                type: 'bar',
-                data: {
-                    labels: labels1,
-                    datasets: [{
-                        label: 'Số lượng tờ',
-                        data: data1,
-                        backgroundColor: '#10b981',
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    scales: {
-                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
-                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } }
-                    },
-                    plugins: { legend: { display: false } }
-                }
-            });
-
-            // 2. Trend Chart
-            const sessions = [...appData.counter.sessions].sort((a,b) => new Date(a.date) - new Date(b.date));
-            const labels2 = sessions.map((s,i) => `Lần ${i+1}`);
-            const data2 = sessions.map(s => {
-                let t = 0; for(let d in s.counts) t += parseInt(d)*s.counts[d]; return t;
-            });
-
-            const ctx2 = document.getElementById('counterTrendChart').getContext('2d');
-            if(counterTrendChartInstance) counterTrendChartInstance.destroy();
-            counterTrendChartInstance = new Chart(ctx2, {
-                type: 'line',
-                data: {
-                    labels: labels2,
-                    datasets: [{
-                        label: 'Giá trị kiểm kê',
-                        data: data2,
-                        borderColor: '#0ea5e9', // sky-500
-                        backgroundColor: 'rgba(14, 165, 233, 0.1)',
-                        borderWidth: 2,
-                        pointBackgroundColor: '#0ea5e9',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: '#0ea5e9',
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    scales: {
-                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
-                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', callback: (v) => (v/1000000) + 'M' } }
-                    },
-                    plugins: { legend: { display: false } }
-                }
-            });
-        }
-
-
-        // --- STREAMING_CHUNK:Quản lý Báo cáo PDF ---
         let currentPdfBlobUrl = null;
 
         function triggerPrint() {
@@ -1359,35 +1532,53 @@
                 return;
             }
 
-            // 1. Cập nhật dữ liệu vào khuôn mẫu HTML gốc
+            // Populate Text PDF Data
             document.getElementById('printGrandTotalStr').innerText = stats.grandTotal.toLocaleString('vi-VN') + ' ₫';
             document.getElementById('printTotalInWords').innerText = numberToWords(stats.grandTotal);
             document.getElementById('printSessionCountStr').innerText = appData.counter.sessions.length;
-            document.getElementById('printDateStr').innerText = new Date().toLocaleDateString('vi-VN');
+            document.getElementById('printDateStr').innerText = new Date().toLocaleDateString('vi-VN') + ' ' + new Date().toLocaleTimeString('vi-VN');
             
+            // Build Aggregate Denominations Table in PDF (MỆNH GIÁ TĂNG DẦN)
             let tbody = '', stt = 1;
-            const allDenoms = [...new Set([...defaultDenoms, ...appData.counter.customDenoms])].sort((a,b) => b-a);
-            allDenoms.forEach(denom => {
-                if(stats.denomSums[denom] > 0) {
-                    tbody += `<tr><td style="text-align:center">${stt++}</td><td style="text-align:right">${denom.toLocaleString('vi-VN')}</td>
-                              <td style="text-align:center">${stats.denomSums[denom].toLocaleString('vi-VN')}</td>
-                              <td style="text-align:right">${(denom*stats.denomSums[denom]).toLocaleString('vi-VN')} ₫</td></tr>`;
+            const denoms = getSortedDenoms(); // SẮP XẾP TĂNG DẦN
+            
+            denoms.forEach(denom => {
+                const bCount = stats.denomSums[denom] || 0;
+                if(bCount > 0) {
+                    tbody += `<tr>
+                        <td style="text-align:center; font-weight:bold;">${stt++}</td>
+                        <td style="text-align:right; font-weight:bold;">${denom.toLocaleString('vi-VN')} ₫</td>
+                        <td style="text-align:center; font-weight:bold;">${bCount.toLocaleString('vi-VN')}</td>
+                        <td style="text-align:right; font-weight:bold;">${(denom * bCount).toLocaleString('vi-VN')} ₫</td>
+                    </tr>`;
                 }
             });
+
             document.getElementById('printTableBody').innerHTML = tbody;
             document.getElementById('printTotalBills').innerText = stats.totalBills.toLocaleString('vi-VN');
+            document.getElementById('printFooterTotalBills').innerText = stats.totalBills.toLocaleString('vi-VN') + ' tờ';
             document.getElementById('printGrandTotal').innerText = stats.grandTotal.toLocaleString('vi-VN') + ' ₫';
             
+            // Build Sessions History Table in PDF
             let sessionsBody = '';
             appData.counter.sessions.forEach((s, idx) => {
-                let sc = 0, ss = 0; for(let d in s.counts) { sc += s.counts[d]; ss += parseInt(d)*s.counts[d]; }
-                sessionsBody += `<tr><td style="text-align:center">${idx + 1}</td><td>${formatDate(s.date)}</td>
-                                 <td>${s.note || '-'}</td><td style="text-align:center">${sc.toLocaleString('vi-VN')}</td>
-                                 <td style="text-align:right">${ss.toLocaleString('vi-VN')} ₫</td></tr>`;
+                let sc = 0, ss = 0; 
+                for(let d in s.counts) { 
+                    const cnt = s.counts[d] || 0;
+                    sc += cnt; 
+                    ss += parseInt(d) * cnt; 
+                }
+                sessionsBody += `<tr>
+                    <td style="text-align:center; font-weight:bold;">${idx + 1}</td>
+                    <td style="text-align:center;">${formatDate(s.date)}</td>
+                    <td>${s.note || '-'}</td>
+                    <td style="text-align:center; font-weight:bold;">${sc.toLocaleString('vi-VN')}</td>
+                    <td style="text-align:right; font-weight:bold;">${ss.toLocaleString('vi-VN')} ₫</td>
+                </tr>`;
             });
             document.getElementById('printSessionsBody').innerHTML = sessionsBody;
             
-            // 2. Mở Modal hiển thị trạng thái đang tải
+            // Show PDF Modal Preview
             const modal = document.getElementById('pdf-preview-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
@@ -1396,33 +1587,26 @@
             iframe.style.opacity = '0';
             document.getElementById('pdf-loading').style.display = 'flex';
 
-            // 3. XỬ LÝ LỖI TRẮNG TRANG
-            // Tạo một bản sao (clone) của khung báo cáo và dán nó ở tọa độ (0,0) ngay trên cùng trang
-            // Điều này đảm bảo thư viện html2canvas (chụp ảnh màn hình) không bị cắt lẹm nội dung 
-            // do người dùng đang cuộn trang hoặc phần tử nằm ngoài view (-9999px)
+            // Clone container to coordinate (0,0) for sharp black text PDF generation
             const sourceElement = document.getElementById('pdf-export-container');
             const cloneElement = sourceElement.cloneNode(true);
-            cloneElement.id = 'pdf-export-clone'; // Đổi tạm ID để không trùng lặp
+            cloneElement.id = 'pdf-export-clone';
             
-            // Ép vị trí cố định
             cloneElement.style.left = '0px';
             cloneElement.style.top = '0px';
-            cloneElement.style.zIndex = '-9999'; // Nằm dưới lớp nền trang web, người dùng sẽ không thấy 
+            cloneElement.style.zIndex = '-9999';
             cloneElement.style.display = 'block';
             document.body.appendChild(cloneElement);
 
             const opt = {
-                margin:       10, // Margin in mm
-                filename:     `Bao_Cao_Kiem_Ke_${new Date().toLocaleDateString('vi-VN').replace(/\//g, '-')}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                // Thêm scrollY: 0, scrollX: 0 để đảm bảo chụp chuẩn xác từ mốc 0,0
+                margin:       10,
+                filename:     `Bao_Cao_Kiem_Ke_Tien_Mat_${new Date().toLocaleDateString('vi-VN').replace(/\//g, '-')}.pdf`,
+                image:        { type: 'jpeg', quality: 1.0 },
                 html2canvas:  { scale: 2, useCORS: true, logging: false, scrollY: 0, scrollX: 0 },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
-            // Tiến hành xuất từ thẻ Clone
             html2pdf().set(opt).from(cloneElement).output('bloburl').then(function(pdfUrl) {
-                // Xóa thẻ clone đi sau khi đã chụp thành công để dọn dẹp bộ nhớ
                 if (document.body.contains(cloneElement)) {
                     document.body.removeChild(cloneElement);
                 }
@@ -1431,23 +1615,21 @@
                 iframe.src = pdfUrl;
                 document.getElementById('btn-download-pdf').href = pdfUrl;
                 
-                // Khi iframe đã nạp xong PDF
                 iframe.onload = function() {
                     document.getElementById('pdf-loading').style.display = 'none';
                     iframe.style.opacity = '1';
                 };
                 
-                // Dự phòng trường hợp onload bị kẹt
                 setTimeout(() => {
                     document.getElementById('pdf-loading').style.display = 'none';
                     iframe.style.opacity = '1';
-                }, 2000);
+                }, 1800);
             }).catch(err => {
                 if (document.body.contains(cloneElement)) {
                     document.body.removeChild(cloneElement);
                 }
-                console.error("Lỗi khởi tạo PDF", err);
-                showToast("Lỗi khi tạo PDF. Vui lòng thử lại.", "error");
+                console.error("Lỗi tạo PDF", err);
+                showToast("Lỗi khi trích xuất PDF", "error");
                 closePDFModal();
             });
         }
@@ -1465,7 +1647,7 @@
             if (iframe && iframe.contentWindow) {
                 iframe.contentWindow.print();
             } else {
-                showToast("Vui lòng tải xuống để in nếu trình duyệt chặn.", "info");
+                showToast("Vui lòng ấn tải xuống file PDF để thực hiện in.", "info");
             }
         }
     </script>
