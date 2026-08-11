@@ -410,7 +410,7 @@
         // CONFIGURATION
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbykgN9Mf37KxqMZx2XW1mqPJJ3jVunAWVEljUAszFJVwMLxDXJpDHg6cvpdkMHR2v_iKQ/exec";
 
-        const firebaseConfig = {
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
             apiKey: "AIzaSyDSU-0sQqaFGHQcMyjJLs_wt0GLVPAXKig",
             authDomain: "vstep-c02b6.firebaseapp.com",
             projectId: "vstep-c02b6",
@@ -422,7 +422,7 @@
         const app_fb = initializeApp(firebaseConfig);
         const auth = getAuth(app_fb);
         const db = getFirestore(app_fb);
-        const appId = 'english-vocab-app';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'english-vocab-app';
 
         // APPLICATION STATE
         let state = {
@@ -997,7 +997,7 @@
                     <div class="text-center mb-10 animate-fadeIn">
                         <span class="text-[10px] bg-purple-950/80 text-purple-300 font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-purple-800/60 shadow-lg">Luyện Tập Tương Tác</span>
                         <h2 class="text-3xl font-black text-white mt-3 mb-2">Đấu Trường Từ Vựng</h2>
-                        <p class="text-slate-400 text-sm max-w-md mx-auto">Chọn chế độ rèn luyện phản xạ để củng cố ghi nhớ từ vựng hiệu quả.</p>
+                        <p class="text-slate-400 text-sm max-w-md mx-auto">Chế độ này sẽ ưu tiên lấy "Các từ đã thuộc" của bạn để rèn luyện phản xạ và củng cố ghi nhớ.</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1516,12 +1516,16 @@
 
             playAudio: playAudio,
 
+            // EDITED: Now filters to only include words that are in "myWords" (Từ đã thuộc)
             startPractice: (type, mode = 'en-vi') => {
-                if (state.allWords.length === 0) {
-                    showToast("Kho từ vựng chưa sẵn sàng!", "error");
+                // Determine saved IDs to map against full word objects for robust data
+                const savedMap = new Set(state.myWords.map(m => String(m.id)));
+                let sourcePool = state.allWords.filter(w => savedMap.has(String(w.id)));
+
+                if (sourcePool.length === 0) {
+                    showToast("Bạn chưa có 'Từ đã thuộc' nào để luyện tập! Hãy lưu thêm từ tại thư viện.", "error");
                     return;
                 }
-                let sourcePool = [...state.allWords];
                 
                 sourcePool = sourcePool.sort(() => Math.random() - 0.5);
                 const pool = sourcePool.slice(0, Math.min(15, sourcePool.length));
@@ -1619,34 +1623,32 @@
             }
         };
 
+        // COMPLETED: Adding closing logic for keydown and app initialization
         document.addEventListener('keydown', (e) => {
-            if (state.activeTab === 'practice' && state.practice.gameType && !state.practice.isFinished) {
-                if (document.activeElement && document.activeElement.tagName === 'INPUT' && document.activeElement.id !== 'spelling-input') {
-                    return;
-                }
-
-                if (e.code === 'Space') {
-                    if (state.practice.gameType === 'flashcard') {
-                        e.preventDefault();
-                        window.app.flipCard();
+            if (state.activeTab === 'practice' && state.practice.gameType) {
+                if (e.code === 'Space' && state.practice.gameType === 'flashcard') {
+                    e.preventDefault();
+                    window.app.flipCard();
+                } else if (e.code === 'ArrowRight' || e.code === 'Enter') {
+                    // Enter check handles both quiz/flashcard next step and spelling logic validation
+                    if (state.practice.gameType !== 'spelling' || state.practice.spellingChecked) {
+                         window.app.nextPracticeItem();
                     }
-                } else if (e.key === 'ArrowRight') {
-                    e.preventDefault();
-                    window.app.nextPracticeItem();
-                } else if (e.key === 'ArrowLeft') {
-                    e.preventDefault();
-                    window.app.prevPracticeItem();
+                } else if (e.code === 'ArrowLeft') {
+                    if (state.practice.gameType !== 'spelling') {
+                         window.app.prevPracticeItem();
+                    }
                 }
             }
         });
 
+        // Initialize App on DOM Load
         document.addEventListener('DOMContentLoaded', () => {
             renderNav();
-            updateStreak();
             setupAuth();
             fetchSheetData();
+            updateStreak();
         });
-
     </script>
 </body>
 </html>
