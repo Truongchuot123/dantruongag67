@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Luyện thi Aptis Writing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#121212',
+                        darkcard: '#1e1e1e',
+                        darkborder: '#333333'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .loader { border: 3px solid rgba(156, 163, 175, 0.3); border-top: 3px solid #3b82f6; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .tab-active { border-bottom: 2px solid #3b82f6; color: #3b82f6; font-weight: 600; }
+        .tab-inactive { color: #6b7280; }
+        .dark .tab-inactive { color: #9ca3af; }
+        .tab-inactive:hover { color: #374151; }
+        .dark .tab-inactive:hover { color: #f3f4f6; }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-darkbg text-gray-800 dark:text-gray-200 min-h-screen flex flex-col transition-colors duration-200">
+
+    <nav class="bg-white dark:bg-darkcard shadow-sm border-b border-gray-200 dark:border-darkborder sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center cursor-pointer" onclick="navigate('dashboard')">
+                    <i class="fas fa-pen-nib text-blue-600 text-2xl mr-2"></i>
+                    <span class="font-bold text-xl text-gray-900 dark:text-white tracking-tight hidden sm:block">Aptis<span class="text-blue-600">Practice</span></span>
+                </div>
+                <div class="flex items-center space-x-2 sm:space-x-4">
+                    <button onclick="navigate('dashboard')" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-2 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors">Trang chủ</button>
+                    <button onclick="navigate('history')" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-2 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors"><i class="fas fa-history mr-1"></i> <span class="hidden sm:inline">Lịch sử</span></button>
+                    <button onclick="navigate('admin')" class="bg-blue-50 dark:bg-gray-800 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-gray-700 px-3 sm:px-4 py-2 rounded-md text-sm font-medium transition-colors border border-blue-200 dark:border-gray-700">
+                        <i class="fas fa-cog mr-1"></i> <span class="hidden sm:inline">Quản trị</span>
+                    </button>
+                    <button onclick="toggleDarkMode()" class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <i id="theme-icon" class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-container" class="flex-grow flex flex-col w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex items-center justify-center h-64">
+            <div class="loader mr-3"></div>
+            <span class="text-gray-500 dark:text-gray-400 font-medium">Đang khởi tạo hệ thống...</span>
+        </div>
+    </main>
+
+    <div id="custom-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-darkcard rounded-lg p-6 max-w-sm w-full mx-auto shadow-xl transform transition-all border border-gray-200 dark:border-darkborder">
+            <h3 id="modal-title" class="text-lg font-bold text-gray-900 dark:text-white mb-2">Thông báo</h3>
+            <p id="modal-message" class="text-sm text-gray-600 dark:text-gray-300 mb-6"></p>
+            <div class="flex justify-end space-x-3" id="modal-actions">
+                <button onclick="closeModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, query, addDoc, updateDoc, deleteDoc, serverTimestamp, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const userFirebaseConfig = {
+            apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
+            authDomain: "dulieuweb-6541e.firebaseapp.com",
+            projectId: "dulieuweb-6541e",
+            storageBucket: "dulieuweb-6541e.firebasestorage.app",
+            messagingSenderId: "215480268517",
+            appId: "1:215480268517:web:16600eafd6839fee5dc60c"
+        };
+        
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : userFirebaseConfig;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'aptis-practice-default';
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        const state = {
+            view: 'dashboard', 
+            topics: [],
+            history: [],
+            currentTopic: null,
+            searchQuery: '',
+            practiceState: {
+                tab: 'part2', 
+                selectedVersions: { part2: 0, part3: 0, part4: 0 },
+                answers: {},
+                notes: {},
+                showNotes: {} 
+            },
+            adminState: {
+                editingTopicId: null,
+                formData: {}
+            },
+            isDarkMode: true
+        };
+
+        window.toggleDarkMode = () => {
+            state.isDarkMode = !state.isDarkMode;
+            applyTheme();
+        };
+
+        const applyTheme = () => {
+            const htmlClass = document.documentElement.classList;
+            const icon = document.getElementById('theme-icon');
+            if (state.isDarkMode) {
+                htmlClass.add('dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                htmlClass.remove('dark');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        };
+
+        const showModal = (title, message, actionsHtml = null) => {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').innerHTML = message;
+            const actionsContainer = document.getElementById('modal-actions');
+            if (actionsHtml) {
+                actionsContainer.innerHTML = actionsHtml;
+            } else {
+                actionsContainer.innerHTML = `<button onclick="closeModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">Đóng</button>`;
+            }
+            const modal = document.getElementById('custom-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+        
+        window.closeModal = () => {
+            const modal = document.getElementById('custom-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        };
+
+        const countWords = (text) => {
+            if (!text) return 0;
+            return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+        };
+
+        const escapeHtml = (str) => {
+            if(typeof str !== 'string') return '';
+            return str.replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        };
+
+        // Local Storage Utilities for Practice
+        const saveDraftLocally = () => {
+            if(state.currentTopic) {
+                const draftKey = `aptis_draft_${state.currentTopic.id}`;
+                localStorage.setItem(draftKey, JSON.stringify(state.practiceState));
+            }
+        };
+
+        const loadDraftLocally = (topicId) => {
+            const draftStr = localStorage.getItem(`aptis_draft_${topicId}`);
+            if (draftStr) {
+                try {
+                    const draft = JSON.parse(draftStr);
+                    // Merge with default to ensure structure exists
+                    state.practiceState = {
+                        tab: draft.tab || 'part2',
+                        selectedVersions: draft.selectedVersions || { part2: 0, part3: 0, part4: 0 },
+                        answers: draft.answers || {},
+                        notes: draft.notes || {},
+                        showNotes: draft.showNotes || {}
+                    };
+                } catch(e) { console.error("Error parsing local draft"); }
+            } else {
+                state.practiceState = {
+                    tab: 'part2', 
+                    selectedVersions: { part2: 0, part3: 0, part4: 0 },
+                    answers: {}, notes: {}, showNotes: {} 
+                };
+            }
+        };
+
+        window.navigate = (view, payload = null) => {
+            state.view = view;
+            if (view === 'practice' && payload) {
+                state.currentTopic = state.topics.find(t => t.id === payload);
+                loadDraftLocally(payload); // Load bản nháp khi vào làm
+            }
+            if (view === 'admin-form') {
+                if (payload) { // Edit
+                    const topic = state.topics.find(t => t.id === payload);
+                    state.adminState.editingTopicId = payload;
+                    const formData = JSON.parse(JSON.stringify(topic));
+                    if (!Array.isArray(formData.part2)) formData.part2 = [formData.part2];
+                    if (!Array.isArray(formData.part3)) formData.part3 = [formData.part3];
+                    if (!Array.isArray(formData.part4)) formData.part4 = [formData.part4];
+                    state.adminState.formData = formData;
+                } else { // Create
+                    state.adminState.editingTopicId = null;
+                    state.adminState.formData = getEmptyTopicTemplate();
+                }
+            }
+            if (view === 'history') fetchHistory();
+            render();
+            window.scrollTo(0, 0);
+        };
+
+        const getEmptyTopicTemplate = () => ({
+            title: '',
+            part2: [{ question: '' }],
+            part3: [{ intro: '', q1: '', q2: '', q3: '' }],
+            part4: [{ intro: '', informalPrompt: '', formalPrompt: '' }]
+        });
+
+        async function initialize() {
+            applyTheme(); 
+            try {
+                if (typeof __initial_auth_token !== 'undefined') {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                
+                // Fetch Topics from Firebase (Admin/Public data)
+                const topicsRef = collection(db, 'artifacts', appId, 'public', 'data', 'aptis_topics');
+                onSnapshot(topicsRef, (snapshot) => {
+                    const topics = [];
+                    snapshot.forEach(doc => topics.push({ id: doc.id, ...doc.data() }));
+                    state.topics = topics.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+                    if (state.view !== 'history') render();
+                }, (error) => {
+                    showModal("Lỗi", "Không thể tải danh sách đề từ server. Vui lòng kiểm tra kết nối.");
+                    render(); 
+                });
+            } catch (error) {
+                showModal("Lỗi khởi tạo", "Không thể kết nối đến máy chủ.");
+            }
+        }
+
+        function render() {
+            const container = document.getElementById('app-container');
+            container.innerHTML = ''; 
+            switch (state.view) {
+                case 'dashboard': container.appendChild(renderDashboard()); break;
+                case 'practice': container.appendChild(renderPracticeArea()); break;
+                case 'admin': container.appendChild(renderAdminList()); break;
+                case 'admin-form': container.appendChild(renderAdminForm()); break;
+                case 'history': container.appendChild(renderHistory()); break;
+                default: container.innerHTML = '<div class="text-center py-10">404 Not Found</div>';
+            }
+        }
+
+        function renderDashboard() {
+            const div = document.createElement('div');
+            div.className = 'w-full animation-fade-in flex flex-col items-center';
+            
+            let filteredTopics = state.topics;
+            if (state.searchQuery) {
+                const lowerQ = state.searchQuery.toLowerCase();
+                filteredTopics = state.topics.filter(t => t.title.toLowerCase().includes(lowerQ));
+            }
+
+            let html = `
+                <div class="w-full max-w-5xl mb-8 text-center px-4">
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Luyện tập Aptis Writing</h1>
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">Chọn một chủ đề bên dưới để bắt đầu bài thi thử. Hệ thống sẽ tự động lưu lại phiên bản và bài làm của bạn.</p>
+                    <div class="relative max-w-xl mx-auto mb-10">
+                        <input type="text" id="searchInput" value="${state.searchQuery}" placeholder="Tìm kiếm chủ đề..." class="w-full pl-12 pr-4 py-3 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkcard text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-colors">
+                        <i class="fas fa-search absolute left-4 top-3.5 text-gray-400 dark:text-gray-500 text-lg"></i>
+                    </div>
+                </div>
+                <div class="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+            `;
+
+            if (filteredTopics.length === 0) {
+                html += `<div class="col-span-full text-center py-10 text-gray-500 bg-white dark:bg-darkcard rounded-xl shadow-sm border border-gray-100 dark:border-darkborder">Không tìm thấy chủ đề nào.</div>`;
+            } else {
+                filteredTopics.forEach(topic => {
+                    const hasDraft = !!localStorage.getItem(`aptis_draft_${topic.id}`);
+                    html += `
+                        <div class="bg-white dark:bg-darkcard rounded-xl shadow-sm border border-gray-200 dark:border-darkborder p-6 flex flex-col justify-between group transition-all hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 relative overflow-hidden">
+                            ${hasDraft ? `<div class="absolute top-0 right-0 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-[10px] font-bold px-2 py-1 rounded-bl-lg">ĐANG LÀM DỞ</div>` : ''}
+                            <div>
+                                <div class="w-12 h-12 bg-blue-50 dark:bg-gray-800 text-blue-600 dark:text-blue-400 rounded-lg flex items-center justify-center text-xl mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors"><i class="fas fa-file-alt"></i></div>
+                                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">${topic.title}</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Gồm Part 2, 3 và 4. Chuẩn format Aptis.</p>
+                            </div>
+                            <button onclick="navigate('practice', '${topic.id}')" class="w-full py-2.5 bg-gray-50 dark:bg-gray-800 hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white text-gray-700 dark:text-gray-300 font-medium rounded-lg transition-colors border border-gray-200 dark:border-gray-700 hover:border-transparent">${hasDraft ? 'Tiếp tục làm bài' : 'Bắt đầu làm bài'}</button>
+                        </div>
+                    `;
+                });
+            }
+
+            html += `</div>`;
+            div.innerHTML = html;
+
+            setTimeout(() => {
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) {
+                    searchInput.addEventListener('input', (e) => {
+                        state.searchQuery = e.target.value;
+                        render();
+                        setTimeout(() => {
+                            const newSearchInput = document.getElementById('searchInput');
+                            if (newSearchInput) {
+                                newSearchInput.focus();
+                                newSearchInput.setSelectionRange(newSearchInput.value.length, newSearchInput.value.length);
+                            }
+                        }, 0);
+                    });
+                }
+            }, 0);
+
+            return div;
+        }
+
+        window.isPartComplete = (partId) => {
+            const vIdx = state.practiceState.selectedVersions[partId] || 0;
+            const ans = state.practiceState.answers;
+            if (partId === 'part2') return countWords(ans[`p2_v${vIdx}`]) > 0;
+            if (partId === 'part3') return countWords(ans[`p3q1_v${vIdx}`]) > 0 && countWords(ans[`p3q2_v${vIdx}`]) > 0 && countWords(ans[`p3q3_v${vIdx}`]) > 0;
+            if (partId === 'part4') return countWords(ans[`p4inf_v${vIdx}`]) > 0 && countWords(ans[`p4form_v${vIdx}`]) > 0;
+            return false;
+        };
+
+        function renderPracticeArea() {
+            const div = document.createElement('div');
+            div.className = 'w-full max-w-5xl mx-auto bg-white dark:bg-darkcard rounded-xl shadow-sm border border-gray-200 dark:border-darkborder overflow-hidden transition-colors';
+            
+            const t = state.currentTopic;
+            if (!t) return div;
+
+            const tabs = [
+                { id: 'part2', label: 'Part 2', icon: 'fa-align-left' },
+                { id: 'part3', label: 'Part 3', icon: 'fa-comments' },
+                { id: 'part4', label: 'Part 4', icon: 'fa-envelope' }
+            ];
+
+            let html = `
+                <div class="bg-gray-50 dark:bg-[#181818] border-b border-gray-200 dark:border-darkborder px-4 sm:px-6 py-4 flex justify-between items-center">
+                    <h2 class="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200 truncate pr-4">Chủ đề: <span class="text-blue-600 dark:text-blue-400">${t.title}</span></h2>
+                    <div class="flex items-center space-x-3">
+                        <span id="auto-save-status" class="text-xs text-gray-400 italic hidden"><i class="fas fa-check text-green-500 mr-1"></i>Đã lưu nháp</span>
+                        <button onclick="navigate('dashboard')" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"><i class="fas fa-times text-xl"></i></button>
+                    </div>
+                </div>
+
+                <div class="flex border-b border-gray-200 dark:border-darkborder overflow-x-auto hide-scrollbar">
+                    ${tabs.map(tab => {
+                        const isComplete = window.isPartComplete(tab.id);
+                        return `
+                            <button id="tab-btn-${tab.id}" onclick="changePracticeTab('${tab.id}')" 
+                                    class="flex-1 min-w-[120px] py-4 text-center font-medium flex items-center justify-center gap-2 ${state.practiceState.tab === tab.id ? 'tab-active bg-blue-50/50 dark:bg-blue-900/20' : 'tab-inactive hover:bg-gray-50 dark:hover:bg-gray-800'} transition-colors whitespace-nowrap">
+                                <span><i class="fas ${tab.icon} mr-1"></i> ${tab.label}</span>
+                                <span id="tab-check-container-${tab.id}">
+                                    ${isComplete ? `<i class="fas fa-check-circle text-green-500"></i>` : ''}
+                                </span>
+                            </button>
+                        `;
+                    }).join('')}
+                </div>
+
+                <div class="p-4 sm:p-6 md:p-8 min-h-[500px]">
+            `;
+
+            const partId = state.practiceState.tab;
+            let partData = t[partId];
+            if (!Array.isArray(partData)) partData = [partData];
+
+            const vIdx = state.practiceState.selectedVersions[partId] || 0;
+            const currentV = partData[vIdx];
+
+            if (partData.length > 1) {
+                html += `<div class="mb-6 flex flex-wrap gap-2 pb-4 border-b border-gray-100 dark:border-gray-800">
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400 py-1.5 mr-2">Chọn phiên bản:</span>`;
+                partData.forEach((_, idx) => {
+                    const active = idx === vIdx;
+                    html += `
+                        <button onclick="changeVersion('${partId}', ${idx})" 
+                                class="px-4 py-1.5 text-sm font-medium rounded-full transition-all border ${active ? 'bg-blue-600 text-white border-blue-600 shadow-sm transform scale-105' : 'bg-white dark:bg-[#2a2a2a] text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'}">
+                            Phiên bản ${idx + 1}
+                        </button>
+                    `;
+                });
+                html += `</div>`;
+            }
+
+            const renderInputSection = (title, instruction, baseKey, minWords, maxWords, placeholder) => {
+                const key = `${baseKey}_v${vIdx}`;
+                const isNotesVisible = state.practiceState.showNotes[key] || false;
+                const noteDisplayClass = isNotesVisible ? 'block' : 'hidden';
+                const answerColSpan = isNotesVisible ? 'lg:col-span-8' : 'lg:col-span-12';
+                const iconClass = isNotesVisible ? 'fa-chevron-up' : 'fa-chevron-down';
+                const toggleText = isNotesVisible ? 'Ẩn nháp' : 'Mở nháp';
+                
+                const ansValue = state.practiceState.answers[key] || '';
+                const noteValue = state.practiceState.notes[key] || '';
+
+                return `
+                    <div class="mb-6 bg-white dark:bg-[#1a1a1a] rounded-lg border border-gray-200 dark:border-darkborder p-4 transition-all">
+                        <div class="mb-3 border-b border-gray-100 dark:border-gray-800 pb-2 flex justify-between items-start flex-col sm:flex-row gap-2">
+                            <div>
+                                <h4 class="font-bold text-gray-800 dark:text-gray-200">${title}</h4>
+                                ${instruction ? `<p class="text-sm text-gray-600 dark:text-gray-400 mt-1">${instruction}</p>` : ''}
+                            </div>
+                            <button onclick="toggleNotesDOM('${key}')" class="flex-shrink-0 text-xs flex items-center text-blue-600 dark:text-blue-400 font-medium px-3 py-1.5 rounded-md bg-blue-50 dark:bg-blue-900/30 border border-transparent hover:border-blue-200 dark:hover:border-blue-800 transition-colors">
+                                <i class="fas fa-lightbulb mr-1.5 text-yellow-500"></i> <span id="toggle-text-${key}">${toggleText}</span> <i id="toggle-icon-${key}" class="fas ${iconClass} ml-1.5"></i>
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                            <div id="note-container-${key}" class="lg:col-span-4 ${noteDisplayClass}">
+                                <label class="block text-xs font-semibold text-gray-500 mb-1 uppercase">Ghi chú ý chính</label>
+                                <textarea oninput="handleNoteInput(this, '${key}')" class="w-full h-24 lg:h-[calc(100%-24px)] bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-700/50 rounded-lg p-2 text-sm text-gray-700 dark:text-gray-300 focus:ring-1 focus:ring-yellow-400 focus:border-yellow-400 resize-y transition-colors" placeholder="Ghi chú keywords...">${noteValue}</textarea>
+                            </div>
+                            <div id="answer-container-${key}" class="${answerColSpan} transition-all duration-200">
+                                <label class="block text-xs font-semibold text-gray-500 mb-1 uppercase"><i class="fas fa-pen mr-1 text-blue-500"></i> Bài làm của bạn</label>
+                                ${createTextArea(key, ansValue, minWords, maxWords, placeholder, 'rows-4 lg:rows-5')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            };
+
+            if (partId === 'part2') {
+                html += `
+                    <div class="mb-6 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded-r-md">
+                        <p class="font-semibold text-blue-900 dark:text-blue-300 mb-1">Hướng dẫn:</p>
+                        <p class="text-sm text-blue-800 dark:text-blue-200">You are a new member of the <strong>${t.title}</strong>. Fill in the form. Write in sentences. Use <strong class="text-red-600 dark:text-red-400">20-30 words</strong>.</p>
+                    </div>
+                    ${renderInputSection('Form Question:', currentV.question || 'No question provided.', 'p2', 20, 30, 'Write your answer here...')}
+                    <div class="mt-8 flex justify-end">
+                        <button onclick="changePracticeTab('part3')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors w-full sm:w-auto">Tiếp theo (Part 3) <i class="fas fa-arrow-right ml-2"></i></button>
+                    </div>
+                `;
+            }
+            else if (partId === 'part3') {
+                html += `
+                    <div class="mb-6 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded-r-md">
+                        <p class="font-semibold text-blue-900 dark:text-blue-300 mb-1">Hướng dẫn:</p>
+                        <p class="text-sm text-blue-800 dark:text-blue-200">${currentV.intro || ''}</p>
+                        <p class="text-sm text-blue-800 dark:text-blue-200 mt-1">Use <strong class="text-red-600 dark:text-red-400">30-40 words</strong> per answer.</p>
+                    </div>
+                    <div class="space-y-2">
+                        ${renderInputSection('Question 1:', currentV.q1, 'p3q1', 30, 40, 'Write your answer to member 1...')}
+                        ${renderInputSection('Question 2:', currentV.q2, 'p3q2', 30, 40, 'Write your answer to member 2...')}
+                        ${renderInputSection('Question 3:', currentV.q3, 'p3q3', 30, 40, 'Write your answer to member 3...')}
+                    </div>
+                    <div class="mt-8 flex flex-col sm:flex-row justify-between gap-4">
+                        <button onclick="changePracticeTab('part2')" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white px-4 py-2 font-medium bg-gray-100 dark:bg-gray-800 rounded-lg sm:bg-transparent"><i class="fas fa-arrow-left mr-2"></i> Quay lại</button>
+                        <button onclick="changePracticeTab('part4')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">Tiếp theo (Part 4) <i class="fas fa-arrow-right ml-2"></i></button>
+                    </div>
+                `;
+            }
+            else if (partId === 'part4') {
+                html += `
+                    <div class="mb-6 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded-r-md">
+                        <p class="font-semibold text-blue-900 dark:text-blue-300 mb-1">Tình huống:</p>
+                        <p class="text-sm text-blue-800 dark:text-blue-200 whitespace-pre-line">${currentV.intro || ''}</p>
+                    </div>
+                    <div class="space-y-6">
+                        ${renderInputSection('Email 1 (Informal)', `Write an email to your friend. Use <strong class="text-red-600 dark:text-red-400">about 50 words</strong>.<br><span class="italic text-gray-500 dark:text-gray-400">${currentV.informalPrompt || ''}</span>`, 'p4inf', 40, 60, 'Hi [Name],...')}
+                        ${renderInputSection('Email 2 (Formal)', `Write an email to the authority/manager. Use <strong class="text-red-600 dark:text-red-400">120-150 words</strong>.<br><span class="italic text-gray-500 dark:text-gray-400">${currentV.formalPrompt || ''}</span>`, 'p4form', 120, 150, 'Dear Sir/Madam,...')}
+                    </div>
+                    <div class="mt-8 flex flex-col sm:flex-row justify-between items-center border-t border-gray-200 dark:border-darkborder pt-6 gap-4">
+                         <button onclick="changePracticeTab('part3')" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white px-4 py-2 font-medium w-full sm:w-auto text-center"><i class="fas fa-arrow-left mr-2"></i> Quay lại</button>
+                         <button onclick="submitPractice()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-bold shadow-lg transition-transform transform hover:scale-105 flex items-center w-full sm:w-auto justify-center">
+                            <i class="fas fa-save mr-2"></i> Nộp & Lưu Lịch Sử
+                        </button>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+            div.innerHTML = html;
+            return div;
+        }
+
+        window.changePracticeTab = (tabId) => {
+            state.practiceState.tab = tabId;
+            saveDraftLocally();
+            render();
+        };
+
+        window.changeVersion = (partId, vIdx) => {
+            state.practiceState.selectedVersions[partId] = vIdx;
+            saveDraftLocally();
+            render();
+        };
+
+        window.toggleNotesDOM = (key) => {
+            state.practiceState.showNotes[key] = !state.practiceState.showNotes[key];
+            saveDraftLocally();
+
+            const isVisible = state.practiceState.showNotes[key];
+            const noteContainer = document.getElementById(`note-container-${key}`);
+            const answerContainer = document.getElementById(`answer-container-${key}`);
+            const toggleText = document.getElementById(`toggle-text-${key}`);
+            const toggleIcon = document.getElementById(`toggle-icon-${key}`);
+            
+            if (isVisible) {
+                noteContainer.classList.remove('hidden'); noteContainer.classList.add('block');
+                answerContainer.classList.remove('lg:col-span-12'); answerContainer.classList.add('lg:col-span-8');
+                toggleText.innerText = 'Ẩn nháp';
+                toggleIcon.classList.remove('fa-chevron-down'); toggleIcon.classList.add('fa-chevron-up');
+            } else {
+                noteContainer.classList.add('hidden'); noteContainer.classList.remove('block');
+                answerContainer.classList.add('lg:col-span-12'); answerContainer.classList.remove('lg:col-span-8');
+                toggleText.innerText = 'Mở nháp';
+                toggleIcon.classList.remove('fa-chevron-up'); toggleIcon.classList.add('fa-chevron-down');
+            }
+        };
+
+        let saveTimeout;
+        const triggerAutoSaveUI = () => {
+            saveDraftLocally();
+            const el = document.getElementById('auto-save-status');
+            if(el) {
+                el.classList.remove('hidden');
+                clearTimeout(saveTimeout);
+                saveTimeout = setTimeout(() => el.classList.add('hidden'), 2000);
+            }
+        };
+
+        window.handleInput = (element, key, min, max) => {
+            const val = element.value;
+            state.practiceState.answers[key] = val;
+            triggerAutoSaveUI();
+            
+            const count = countWords(val);
+            const counterDiv = document.getElementById(`counter-${key}`);
+            let colorClass = 'text-gray-500 dark:text-gray-400';
+            if (count > max) colorClass = 'text-red-600 dark:text-red-400 font-bold';
+            else if (count >= min && count <= max) colorClass = 'text-green-600 dark:text-green-400 font-medium';
+            else if (count > 0 && count < min) colorClass = 'text-yellow-600 dark:text-yellow-400';
+
+            counterDiv.className = `text-sm text-right mt-1 transition-colors ${colorClass}`;
+            counterDiv.innerHTML = `${count} từ <span class="text-gray-400 font-normal ml-1">(${min}-${max})</span>`;
+
+            // Realtime Update Checkmark
+            const partId = state.practiceState.tab;
+            const checkContainer = document.getElementById(`tab-check-container-${partId}`);
+            if (checkContainer) {
+                if (window.isPartComplete(partId)) {
+                    checkContainer.innerHTML = `<i class="fas fa-check-circle text-green-500"></i>`;
+                } else {
+                    checkContainer.innerHTML = '';
+                }
+            }
+        };
+
+        window.handleNoteInput = (element, key) => { 
+            state.practiceState.notes[key] = element.value; 
+            triggerAutoSaveUI();
+        };
+
+        const createTextArea = (key, value, min, max, placeholder, rowsClass = 'rows-3') => {
+            const count = countWords(value);
+            let colorClass = 'text-gray-500 dark:text-gray-400';
+            if (count > max) colorClass = 'text-red-600 dark:text-red-400 font-bold';
+            else if (count >= min && count <= max) colorClass = 'text-green-600 dark:text-green-400 font-medium';
+            else if (count > 0 && count < min) colorClass = 'text-yellow-600 dark:text-yellow-400';
+
+            return `
+                <div class="relative h-full flex flex-col">
+                    <textarea oninput="handleInput(this, '${key}', ${min}, ${max})" class="flex-grow w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#252525] rounded-lg p-3 focus:ring-2 focus:ring-blue-500 resize-y shadow-sm transition-colors text-gray-700 dark:text-gray-200 ${rowsClass}" placeholder="${placeholder}">${value}</textarea>
+                    <div id="counter-${key}" class="text-sm text-right mt-1 ${colorClass}">${count} từ <span class="text-gray-400 font-normal ml-1">(${min}-${max})</span></div>
+                </div>
+            `;
+        };
+
+        window.submitPractice = async () => {
+            const confirmHtml = `
+                <div class="flex justify-end space-x-2">
+                    <button id="btn-cancel-submit" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold py-2 px-4 rounded">Xem lại</button>
+                    <button id="btn-confirm-submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Nộp & Lưu</button>
+                </div>
+            `;
+            showModal("Xác nhận nộp bài", "Bài làm của bạn sẽ được lưu cục bộ vào lịch sử trên trình duyệt này.", confirmHtml);
+
+            document.getElementById('btn-cancel-submit').onclick = () => closeModal();
+            document.getElementById('btn-confirm-submit').onclick = () => {
+                closeModal();
+                try {
+                    // Logic Lưu Local Storage
+                    const historyStr = localStorage.getItem('aptis_submissions_history') || '[]';
+                    const historyArr = JSON.parse(historyStr);
+                    
+                    const newSubmission = {
+                        id: 'sub_' + Date.now().toString(),
+                        topicId: state.currentTopic.id,
+                        topicTitle: state.currentTopic.title,
+                        answers: state.practiceState.answers,
+                        notes: state.practiceState.notes,
+                        selectedVersions: state.practiceState.selectedVersions,
+                        submittedAt: Date.now()
+                    };
+
+                    historyArr.push(newSubmission);
+                    localStorage.setItem('aptis_submissions_history', JSON.stringify(historyArr));
+                    
+                    // Xóa bản nháp sau khi đã nộp
+                    localStorage.removeItem(`aptis_draft_${state.currentTopic.id}`);
+
+                    const successActions = `<button onclick="navigate('history'); closeModal();" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded">Xem Lịch Sử</button>`;
+                    showModal("Thành công", "Bài làm của bạn đã được lưu cục bộ thành công!", successActions);
+                } catch (error) {
+                    showModal("Lỗi nộp bài", "Không thể lưu bài làm vào Local Storage. Hãy kiểm tra dung lượng trình duyệt.");
+                }
+            };
+        };
+
+        function fetchHistory() {
+            try {
+                const historyStr = localStorage.getItem('aptis_submissions_history') || '[]';
+                let historyArr = JSON.parse(historyStr);
+                
+                // Sort by newest first
+                state.history = historyArr.sort((a, b) => (b.submittedAt || 0) - (a.submittedAt || 0));
+                
+                if(state.view === 'history') render();
+            } catch (error) {
+                showModal("Lỗi", "Không thể tải lịch sử từ bộ nhớ cục bộ.");
+            }
+        }
+
+        function renderHistory() {
+            const div = document.createElement('div');
+            div.className = 'w-full max-w-5xl mx-auto animation-fade-in';
+            
+            let html = `
+                <div class="flex items-center justify-between mb-8 border-b border-gray-200 dark:border-darkborder pb-4">
+                    <div class="flex items-center">
+                        <button onclick="navigate('dashboard')" class="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 mr-4"><i class="fas fa-arrow-left text-xl"></i></button>
+                        <div>
+                            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Lịch sử làm bài</h1>
+                            <p class="text-gray-500 dark:text-gray-400 mt-1">Dữ liệu được lưu cục bộ trên trình duyệt này</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            if (state.history.length === 0) {
+                html += `
+                    <div class="bg-white dark:bg-darkcard rounded-xl shadow-sm border border-gray-200 dark:border-darkborder p-10 text-center">
+                        <div class="text-gray-400 text-5xl mb-4"><i class="fas fa-box-open"></i></div>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Chưa có dữ liệu</h3>
+                        <p class="text-gray-500 dark:text-gray-400">Bạn chưa nộp bài luyện tập nào. Hãy bắt đầu ngay nhé!</p>
+                        <button onclick="navigate('dashboard')" class="mt-4 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-4 py-2 rounded-md transition-colors">Đến trang Luyện tập</button>
+                    </div>
+                `;
+            } else {
+                html += `<div class="space-y-6">`;
+                state.history.forEach((item, index) => {
+                    const date = item.submittedAt ? new Date(item.submittedAt).toLocaleString('vi-VN') : 'Unknown Time';
+                    
+                    const v2 = item.selectedVersions?.part2 || 0;
+                    const v3 = item.selectedVersions?.part3 || 0;
+                    const v4 = item.selectedVersions?.part4 || 0;
+
+                    const getAns = (k, v) => item.answers?.[`${k}_v${v}`] || item.answers?.[k] || '';
+
+                    const p2Ans = getAns('p2', v2);
+                    const p3q1Ans = getAns('p3q1', v3); const p3q2Ans = getAns('p3q2', v3); const p3q3Ans = getAns('p3q3', v3);
+                    const p4infAns = getAns('p4inf', v4); const p4formAns = getAns('p4form', v4);
+
+                    const w_p2 = countWords(p2Ans);
+                    const w_p3 = countWords(p3q1Ans) + countWords(p3q2Ans) + countWords(p3q3Ans);
+                    const w_p4 = countWords(p4infAns) + countWords(p4formAns);
+                    
+                    html += `
+                        <div class="bg-white dark:bg-darkcard rounded-xl shadow-sm border border-gray-200 dark:border-darkborder overflow-hidden relative">
+                            <div class="absolute top-0 right-0 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 hover:text-red-500 cursor-pointer px-3 py-2 rounded-bl-lg transition-colors z-10" onclick="deleteLocalHistory(${index})" title="Xóa lịch sử này">
+                                <i class="fas fa-trash-alt"></i>
+                            </div>
+                            <div class="bg-gray-50 dark:bg-[#1a1a1a] px-6 py-4 cursor-pointer flex justify-between items-center border-b border-gray-200 dark:border-darkborder pt-8 sm:pt-4" onclick="toggleHistoryDetail('hist-${item.id}')">
+                                <div><h3 class="font-bold text-lg text-gray-900 dark:text-white">${item.topicTitle}</h3><p class="text-sm text-gray-500 dark:text-gray-400"><i class="far fa-clock mr-1"></i> ${date}</p></div>
+                                <div class="flex items-center">
+                                    <div class="hidden md:flex space-x-3 mr-4 text-xs">
+                                        <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded">P2: ${w_p2} words</span>
+                                        <span class="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-1 rounded">P3: ${w_p3} words</span>
+                                        <span class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded">P4: ${w_p4} words</span>
+                                    </div>
+                                    <i id="icon-hist-${item.id}" class="fas fa-chevron-down text-gray-400 transition-transform"></i>
+                                </div>
+                            </div>
+                            <div id="hist-${item.id}" class="hidden p-6 space-y-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 pb-2 mb-3 flex items-center">Part 2 <span class="text-xs font-normal text-gray-500 ml-2">(Phiên bản ${v2 + 1})</span></h4>
+                                        <div class="bg-gray-50 dark:bg-[#222] p-3 rounded-md text-sm text-gray-700 dark:text-gray-300">
+                                            <span class="font-bold text-gray-500 dark:text-gray-400 text-xs uppercase">Answer:</span><br>
+                                            ${p2Ans || '<i class="text-gray-400">Trống</i>'}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 pb-2 mb-3 flex items-center">Part 3 <span class="text-xs font-normal text-gray-500 ml-2">(Phiên bản ${v3 + 1})</span></h4>
+                                        <div class="space-y-2">
+                                            <div class="bg-gray-50 dark:bg-[#222] p-2 rounded-md text-sm text-gray-700 dark:text-gray-300"><span class="text-xs text-gray-500">Q1:</span> ${p3q1Ans}</div>
+                                            <div class="bg-gray-50 dark:bg-[#222] p-2 rounded-md text-sm text-gray-700 dark:text-gray-300"><span class="text-xs text-gray-500">Q2:</span> ${p3q2Ans}</div>
+                                            <div class="bg-gray-50 dark:bg-[#222] p-2 rounded-md text-sm text-gray-700 dark:text-gray-300"><span class="text-xs text-gray-500">Q3:</span> ${p3q3Ans}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 pb-2 mb-3 flex items-center">Part 4 <span class="text-xs font-normal text-gray-500 ml-2">(Phiên bản ${v4 + 1})</span></h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="bg-gray-50 dark:bg-[#222] p-3 rounded-md text-sm text-gray-700 dark:text-gray-300">
+                                            <span class="font-bold text-gray-500 dark:text-gray-400 text-xs uppercase mb-1 block">Informal Email:</span>
+                                            <div class="whitespace-pre-wrap">${p4infAns || '<i class="text-gray-400">Trống</i>'}</div>
+                                        </div>
+                                        <div class="bg-gray-50 dark:bg-[#222] p-3 rounded-md text-sm text-gray-700 dark:text-gray-300">
+                                            <span class="font-bold text-gray-500 dark:text-gray-400 text-xs uppercase mb-1 block">Formal Email:</span>
+                                            <div class="whitespace-pre-wrap">${p4formAns || '<i class="text-gray-400">Trống</i>'}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+            div.innerHTML = html;
+            return div;
+        }
+
+        window.deleteLocalHistory = (index) => {
+            const confirmHtml = `
+                <div class="flex justify-end space-x-2">
+                    <button id="btn-cancel-del" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white font-bold py-2 px-4 rounded">Hủy</button>
+                    <button id="btn-confirm-del" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Xóa bỏ</button>
+                </div>
+            `;
+            showModal("Xóa bài làm", "Bạn có chắc muốn xóa bài làm này khỏi lịch sử cục bộ?", confirmHtml);
+            document.getElementById('btn-cancel-del').onclick = () => closeModal();
+            document.getElementById('btn-confirm-del').onclick = () => {
+                state.history.splice(index, 1);
+                localStorage.setItem('aptis_submissions_history', JSON.stringify(state.history));
+                closeModal();
+                render();
+            };
+        };
+
+        window.toggleHistoryDetail = (id) => {
+            const el = document.getElementById(id);
+            const icon = document.getElementById(`icon-${id}`);
+            el.classList.toggle('hidden');
+            icon.style.transform = el.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+        };
+
+        window.updateAdminData = (part, index, field, value) => {
+            if (state.adminState.formData[part] && state.adminState.formData[part][index]) {
+                state.adminState.formData[part][index][field] = value;
+            }
+        };
+
+        window.addAdminVersion = (part) => {
+            const template = part === 'part2' ? { question: '' } : part === 'part3' ? { intro: '', q1: '', q2: '', q3: '' } : { intro: '', informalPrompt: '', formalPrompt: '' };
+            state.adminState.formData[part].push(template);
+            render();
+        };
+
+        window.removeAdminVersion = (part, index) => {
+            state.adminState.formData[part].splice(index, 1);
+            render();
+        };
+
+        function renderAdminPart(partKey, title, badgeClass, badgeText) {
+            const versions = state.adminState.formData[partKey] || [];
+            const inputClass = "w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-[#252525] text-gray-900 dark:text-gray-100 transition-colors";
+            const labelClass = "block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2";
+
+            let html = `
+                <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-5">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4 border-b border-gray-200 dark:border-gray-700 pb-2 gap-2">
+                        <div class="flex items-center">
+                            <span class="${badgeClass} text-xs font-bold px-2 py-1 rounded mr-2">${badgeText}</span>
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">${title}</h3>
+                        </div>
+                        <button type="button" onclick="addAdminVersion('${partKey}')" class="text-blue-600 dark:text-blue-400 text-sm hover:underline font-medium"><i class="fas fa-plus"></i> Thêm phiên bản</button>
+                    </div>
+                    <div class="space-y-6">
+            `;
+
+            versions.forEach((v, i) => {
+                html += `<div class="bg-gray-50 dark:bg-[#1f1f1f] p-4 rounded-md border border-gray-200 dark:border-gray-800 relative shadow-sm">`;
+                if (versions.length > 1) {
+                    html += `<button type="button" onclick="removeAdminVersion('${partKey}', ${i})" class="absolute top-4 right-4 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"><i class="fas fa-trash-alt"></i> Xóa</button>`;
+                }
+                html += `<h4 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 border-l-4 border-blue-500 pl-2">Phiên bản ${i + 1}</h4>`;
+                
+                if (partKey === 'part2') {
+                    html += `<div><label class="${labelClass}">Nội dung câu hỏi</label><textarea rows="2" required class="${inputClass}" oninput="updateAdminData('${partKey}', ${i}, 'question', this.value)">${escapeHtml(v.question)}</textarea></div>`;
+                } else if (partKey === 'part3') {
+                    html += `
+                        <div class="mb-4"><label class="${labelClass}">Câu mở đầu tình huống</label><input type="text" value="${escapeHtml(v.intro)}" class="${inputClass} text-sm" oninput="updateAdminData('${partKey}', ${i}, 'intro', this.value)"></div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div><label class="block text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Câu hỏi 1</label><textarea rows="3" required class="${inputClass} text-sm" oninput="updateAdminData('${partKey}', ${i}, 'q1', this.value)">${escapeHtml(v.q1)}</textarea></div>
+                            <div><label class="block text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Câu hỏi 2</label><textarea rows="3" required class="${inputClass} text-sm" oninput="updateAdminData('${partKey}', ${i}, 'q2', this.value)">${escapeHtml(v.q2)}</textarea></div>
+                            <div><label class="block text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Câu hỏi 3</label><textarea rows="3" required class="${inputClass} text-sm" oninput="updateAdminData('${partKey}', ${i}, 'q3', this.value)">${escapeHtml(v.q3)}</textarea></div>
+                        </div>
+                    `;
+                } else if (partKey === 'part4') {
+                    html += `
+                        <div class="mb-4"><label class="${labelClass}">Tình huống chung</label><textarea rows="2" required class="${inputClass} text-sm" oninput="updateAdminData('${partKey}', ${i}, 'intro', this.value)">${escapeHtml(v.intro)}</textarea></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div><label class="${labelClass} text-xs">Yêu cầu Email 1 (Informal)</label><textarea rows="4" required class="${inputClass} text-sm" oninput="updateAdminData('${partKey}', ${i}, 'informalPrompt', this.value)">${escapeHtml(v.informalPrompt)}</textarea></div>
+                            <div><label class="${labelClass} text-xs">Yêu cầu Email 2 (Formal)</label><textarea rows="4" required class="${inputClass} text-sm" oninput="updateAdminData('${partKey}', ${i}, 'formalPrompt', this.value)">${escapeHtml(v.formalPrompt)}</textarea></div>
+                        </div>
+                    `;
+                }
+                html += `</div>`;
+            });
+
+            html += `</div></div>`;
+            return html;
+        }
+
+        function renderAdminForm() {
+            const div = document.createElement('div');
+            div.className = 'w-full max-w-4xl mx-auto bg-white dark:bg-darkcard rounded-xl shadow-sm border border-gray-200 dark:border-darkborder p-4 sm:p-6 md:p-8 animation-fade-in';
+            const isEdit = !!state.adminState.editingTopicId;
+            const data = state.adminState.formData;
+            const inputClass = "w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-[#252525] text-gray-900 dark:text-gray-100 transition-colors";
+            const labelClass = "block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2";
+
+            const html = `
+                <div class="flex items-center mb-6">
+                    <button onclick="navigate('admin')" class="text-gray-500 hover:text-gray-800 dark:hover:text-white mr-4"><i class="fas fa-arrow-left text-xl"></i></button>
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">${isEdit ? 'Chỉnh sửa đề' : 'Tạo đề thi mới'}</h2>
+                </div>
+                <form id="adminForm" class="space-y-6 sm:space-y-8" onsubmit="handleAdminSubmit(event)">
+                    <div class="bg-gray-50 dark:bg-[#1a1a1a] p-4 sm:p-5 rounded-lg border border-gray-200 dark:border-gray-700">
+                        <label class="${labelClass}">Tên chủ đề chung (VD: Travel Club)</label>
+                        <!-- Fix lỗi DOM: Đã chuyển oninput sang lấy trực tiếp giá trị khi Submit -->
+                        <input type="text" id="frm_title" value="${escapeHtml(data.title)}" required class="${inputClass}">
+                    </div>
+                    ${renderAdminPart('part2', 'Câu hỏi Form (20-30 words)', 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300', 'Part 2')}
+                    ${renderAdminPart('part3', 'Phòng Chat (3 câu, 30-40 words)', 'bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300', 'Part 3')}
+                    ${renderAdminPart('part4', 'Viết Email', 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300', 'Part 4')}
+                    <div class="flex flex-col-reverse sm:flex-row justify-end pt-4 gap-3">
+                        <button type="button" onclick="navigate('admin')" class="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">Hủy</button>
+                        <button type="submit" class="w-full sm:w-auto px-8 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shadow-sm font-medium transition-colors">
+                            <i class="fas fa-save mr-2"></i> ${isEdit ? 'Lưu Thay Đổi' : 'Tạo Đề Mới'}
+                        </button>
+                    </div>
+                </form>
+            `;
+            div.innerHTML = html;
+            return div;
+        }
+
+        window.handleAdminSubmit = async (e) => {
+            e.preventDefault();
+            if (!auth.currentUser) return;
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+            submitBtn.disabled = true;
+
+            // FIX: Lấy dữ liệu title trực tiếp từ DOM element
+            const titleInput = document.getElementById('frm_title').value.trim();
+
+            const newData = {
+                title: titleInput,
+                part2: state.adminState.formData.part2,
+                part3: state.adminState.formData.part3,
+                part4: state.adminState.formData.part4
+            };
+
+            try {
+                const topicsCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'aptis_topics');
+                if (state.adminState.editingTopicId) {
+                    newData.updatedAt = serverTimestamp();
+                    await updateDoc(doc(topicsCollectionRef, state.adminState.editingTopicId), newData);
+                    showModal("Thành công", "Đã cập nhật đề thi.");
+                } else {
+                    newData.createdAt = serverTimestamp();
+                    await addDoc(topicsCollectionRef, newData);
+                    showModal("Thành công", "Đã tạo đề thi mới.");
+                }
+                navigate('admin');
+            } catch (error) {
+                showModal("Lỗi lưu dữ liệu", "Lỗi: " + error.message);
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        };
+
+        function renderAdminList() {
+            const div = document.createElement('div');
+            div.className = 'w-full max-w-5xl mx-auto animation-fade-in px-2 sm:px-0';
+            
+            let html = `
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 border-b border-gray-200 dark:border-darkborder pb-4 gap-4">
+                    <div><h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Quản lý Đề thi</h1></div>
+                    <button onclick="navigate('admin-form')" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-sm flex items-center transition-colors">
+                        <i class="fas fa-plus mr-2"></i> Tạo đề mới
+                    </button>
+                </div>
+                <div class="bg-white dark:bg-darkcard rounded-xl shadow-sm border border-gray-200 dark:border-darkborder overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-800/50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tên chủ đề</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-darkcard divide-y divide-gray-200 dark:divide-gray-700">
+            `;
+
+            if (state.topics.length === 0) {
+                html += `<tr><td colspan="2" class="px-6 py-8 text-center text-gray-500">Chưa có đề thi nào.</td></tr>`;
+            } else {
+                state.topics.forEach(t => {
+                    html += `
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap"><div class="text-sm font-medium text-gray-900 dark:text-white truncate max-w-[250px] sm:max-w-md">${t.title}</div></td>
+                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <button onclick="navigate('admin-form', '${t.id}')" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 mr-4"><i class="fas fa-edit sm:mr-1"></i><span class="hidden sm:inline"> Sửa</span></button>
+                                <button onclick="deleteTopic('${t.id}')" class="text-red-600 dark:text-red-400 hover:text-red-900"><i class="fas fa-trash-alt sm:mr-1"></i><span class="hidden sm:inline"> Xóa</span></button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            html += `</tbody></table></div>`;
+            div.innerHTML = html;
+            return div;
+        }
+
+        window.deleteTopic = async (id) => {
+            const confirmHtml = `
+                <div class="flex justify-end space-x-2">
+                    <button id="btn-cancel-del" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white font-bold py-2 px-4 rounded">Hủy</button>
+                    <button id="btn-confirm-del" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Xóa</button>
+                </div>
+            `;
+            showModal("Xác nhận xóa", "Bạn có chắc chắn muốn xóa đề thi này không?", confirmHtml);
+            document.getElementById('btn-cancel-del').onclick = () => closeModal();
+            document.getElementById('btn-confirm-del').onclick = async () => {
+                closeModal();
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'aptis_topics', id));
+                } catch (error) {
+                    showModal("Lỗi", "Không thể xóa đề: " + error.message);
+                }
+            };
+        };
+
+        document.addEventListener('DOMContentLoaded', initialize);
+    </script>
+</body>
+</html>

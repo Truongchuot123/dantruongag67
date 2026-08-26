@@ -9,7 +9,8 @@
             "/PHCN/HĐTL/dung_cu_vltl.html",
             "/yhoccotruyen/tra_cuu_huyet.html",
             "/phong_luyen_thi_trac_nghiem.html",
-            "/APITIS.html"
+            "/APITIS.html",
+            "/WrittingAPTIS.html",
         ];
 
         let articlesDb = [];

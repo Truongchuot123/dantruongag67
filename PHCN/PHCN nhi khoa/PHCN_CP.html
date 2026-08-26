@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phục Hồi Chức Năng Bại Não</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDKs (v11.6.1 Compatibility mode) -->
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc; /* Nền sáng nhẹ nhàng */
+            color: #0f172a;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Content Formatting from HTML Editor */
+        .prose p { margin-bottom: 1em; line-height: 1.7; color: #334155; }
+        .prose ul { list-style-type: disc; margin-left: 1.5em; margin-bottom: 1em; color: #334155; }
+        .prose strong { color: #0f172a; font-weight: 700; }
+        .prose .text-cyan-400 { color: #0d9488 !important; } /* Ghi đè màu xanh cyan từ admin sang màu teal dễ nhìn hơn trên nền trắng */
+
+        /* Card Hover Effect */
+        .tech-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tech-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #5eead4;
+        }
+        
+        /* Loader */
+        .loader {
+            border-top-color: #0d9488;
+            -webkit-animation: spinner 1.5s linear infinite;
+            animation: spinner 1.5s linear infinite;
+        }
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden min-h-screen flex flex-col selection:bg-teal-200 selection:text-teal-900">
+
+    <!-- Hero Section -->
+    <header class="relative bg-gradient-to-br from-teal-500 to-blue-600 text-white py-16 sm:py-24 overflow-hidden">
+        <!-- Abstract Background Elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+            <div class="absolute -top-24 -left-24 w-96 h-96 bg-white opacity-10 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 right-0 w-80 h-80 bg-teal-300 opacity-20 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <span class="inline-block py-1 px-3 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-xs font-bold tracking-widest uppercase mb-4 shadow-sm">
+                Vật Lý Trị Liệu - Bệnh Lý
+            </span>
+            <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 drop-shadow-md">
+                Phục Hồi Chức Năng <span class="text-teal-100">Bại Não</span>
+            </h2>
+            <p class="max-w-2xl mx-auto text-sm sm:text-base text-teal-50 font-medium leading-relaxed">
+                Tổng hợp các kỹ thuật, bài tập vận động và hướng dẫn chi tiết dành cho trẻ bại não. Dữ liệu được cập nhật liên tục từ các chuyên gia y tế.
+            </p>
+            
+            <!-- Search Bar -->
+            <div class="mt-8 max-w-md mx-auto relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+                </div>
+                <input type="text" id="search-input" oninput="filterArticles()" placeholder="Tìm kiếm kỹ thuật, bài tập..." 
+                       class="w-full bg-white border-0 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-slate-800 shadow-lg focus:ring-4 focus:ring-teal-500/30 focus:outline-none transition-all placeholder:text-slate-400">
+            </div>
+        </div>
+    </header>
+
+    <!-- -->
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+        
+        <!-- Loading State -->
+        <div id="loading-state" class="flex flex-col items-center justify-center py-20">
+            <div class="loader ease-linear rounded-full border-4 border-t-4 border-slate-200 h-12 w-12 mb-4"></div>
+            <p class="text-slate-500 font-medium text-sm animate-pulse">Đang tải dữ liệu từ hệ thống...</p>
+        </div>
+
+        <!-- Articles Grid -->
+        <div id="articles-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+            <!-- Cards will be injected here -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden flex flex-col items-center justify-center py-16 text-center">
+            <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center text-slate-300 text-4xl mb-4">
+                <i class="fa-solid fa-folder-open"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-700 mb-1">Không tìm thấy dữ liệu</h3>
+            <p class="text-slate-500 text-sm">Chưa có bài viết nào trong chuyên mục này hoặc không khớp với tìm kiếm.</p>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest">© 2026 Hệ thống Phục Hồi Chức Năng</p>
+        </div>
+    </footer>
+
+    <!-- -->
+    <!-- Detail Modal -->
+    <div id="article-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-0 sm:p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white w-full h-full sm:h-auto sm:max-h-[90vh] sm:max-w-4xl sm:rounded-3xl shadow-2xl flex flex-col transform scale-95 transition-transform duration-300 overflow-hidden" id="modal-content-box">
+            
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between p-4 sm:p-6 border-b border-slate-100 bg-white sticky top-0 z-10">
+                <h3 id="modal-title" class="text-lg sm:text-xl font-extrabold text-slate-800 pr-4 leading-tight">Tiêu đề bài viết</h3>
+                <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-rose-100 text-slate-500 hover:text-rose-600 flex items-center justify-center transition-colors shrink-0">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body (Scrollable) -->
+            <div class="flex-grow overflow-y-auto p-4 sm:p-6 bg-slate-50">
+                
+                <!-- Videos Container -->
+                <div id="modal-videos" class="space-y-4 mb-6"></div>
+
+                <!-- Main Content -->
+                <div class="bg-white p-5 sm:p-8 rounded-2xl shadow-sm border border-slate-100">
+                    <div id="modal-body" class="prose max-w-none text-sm sm:text-base">
+                        <!-- HTML Content from Firebase -->
+                    </div>
+                </div>
+
+                <!-- PDFs / Attachments Container -->
+                <div id="modal-pdfs" class="mt-6 space-y-3"></div>
+                
+                <!-- External Link -->
+                <div id="modal-link" class="mt-6 hidden">
+                    <a id="modal-link-btn" href="#" target="_blank" class="inline-flex items-center gap-2 px-5 py-3 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl text-sm font-bold transition-colors border border-blue-100">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Xem bài viết gốc
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- -->
+    <script>
+        // FIREBASE INITIALIZATION CONFIG (Same as Admin)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
+            authDomain: "dulieuweb-6541e.firebaseapp.com",
+            projectId: "dulieuweb-6541e",
+            storageBucket: "dulieuweb-6541e.firebasestorage.app",
+            messagingSenderId: "215480268517",
+            appId: "1:215480268517:web:16600eafd6839fee5dc60c"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'dulieuweb-6541e';
+
+        // State
+        let allArticles = [];
+        
+        // References
+        const gridEl = document.getElementById('articles-grid');
+        const loadingEl = document.getElementById('loading-state');
+        const emptyEl = document.getElementById('empty-state');
+        const searchInput = document.getElementById('search-input');
+        const modal = document.getElementById('article-modal');
+        const modalBox = document.getElementById('modal-content-box');
+
+        // Khởi tạo Auth ẩn danh để đọc dữ liệu
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await auth.signInAnonymously();
+            } catch (e) {
+                console.warn("Lỗi xác thực, không thể lấy dữ liệu.", e);
+            }
+        });
+
+        // Lắng nghe trạng thái đăng nhập và tải dữ liệu
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                fetchCerebralPalsyData();
+            }
+        });
+
+        function fetchCerebralPalsyData() {
+            // Chỉ lấy các bài viết thuộc Vật lý trị liệu bệnh lý (vltl_benh_ly)
+            const articlesRef = db.collection('artifacts/' + appId + '/public/data/articles');
+            
+            articlesRef.where('disciplineKey', '==', 'vltl_benh_ly').onSnapshot((snapshot) => {
+                const tempArticles = [];
+                
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    // Chỉ lọc chuyên đề Bại não (vltl_benh_ly_6)
+                    if (data.categoryKey === 'vltl_benh_ly_6') {
+                        tempArticles.push({
+                            id: doc.id,
+                            ...data
+                        });
+                    }
+                });
+
+                // Sắp xếp theo thứ tự order
+                tempArticles.sort((a, b) => (a.order || 0) - (b.order || 0));
+                allArticles = tempArticles;
+                
+                loadingEl.classList.add('hidden');
+                filterArticles(); // Render ra UI
+                
+            }, (error) => {
+                console.error("Lỗi khi tải dữ liệu:", error);
+                loadingEl.innerHTML = `<p class="text-rose-500 font-bold">Lỗi kết nối cơ sở dữ liệu. Vui lòng tải lại trang.</p>`;
+            });
+        }
+
+        //        function filterArticles() {
+            const query = searchInput.value.toLowerCase().trim();
+            const filtered = allArticles.filter(art => (art.title || '').toLowerCase().includes(query));
+            
+            renderGrid(filtered);
+        }
+
+        function renderGrid(articles) {
+            gridEl.innerHTML = '';
+            
+            if (articles.length === 0) {
+                gridEl.classList.add('hidden');
+                emptyEl.classList.remove('hidden');
+                return;
+            }
+
+            gridEl.classList.remove('hidden');
+            emptyEl.classList.add('hidden');
+
+            articles.forEach(art => {
+                // Đếm số lượng media
+                const videoCount = art.videoUrls ? art.videoUrls.length : (art.videoUrl ? 1 : 0);
+                const pdfCount = art.pdfUrls ? art.pdfUrls.length : (art.pdfUrl ? 1 : 0);
+                
+                let mediaBadges = '';
+                if (videoCount > 0) {
+                    mediaBadges += `<span class="inline-flex items-center gap-1 px-2 py-1 bg-rose-50 text-rose-600 rounded-md text-[10px] font-bold"><i class="fa-solid fa-play"></i> ${videoCount} Video</span>`;
+                }
+                if (pdfCount > 0) {
+                    mediaBadges += `<span class="inline-flex items-center gap-1 px-2 py-1 bg-emerald-50 text-emerald-600 rounded-md text-[10px] font-bold"><i class="fa-solid fa-file-pdf"></i> ${pdfCount} Tài liệu</span>`;
+                }
+                if (videoCount === 0 && pdfCount === 0) {
+                    mediaBadges += `<span class="inline-flex items-center gap-1 px-2 py-1 bg-slate-100 text-slate-500 rounded-md text-[10px] font-bold"><i class="fa-solid fa-align-left"></i> Lý thuyết</span>`;
+                }
+
+                // Trích xuất văn bản thuần từ HTML để làm mô tả ngắn
+                let tempDiv = document.createElement("div");
+                tempDiv.innerHTML = art.content || '';
+                let textContent = tempDiv.textContent || tempDiv.innerText || "";
+                let snippet = textContent.length > 90 ? textContent.substring(0, 90) + '...' : (textContent || 'Bấm để xem chi tiết kỹ thuật...');
+
+                const card = document.createElement('div');
+                card.className = "tech-card bg-white border border-slate-200 rounded-2xl p-5 cursor-pointer flex flex-col h-full";
+                card.onclick = () => openModal(art.id);
+                
+                card.innerHTML = `
+                    <div class="flex-grow">
+                        <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-500 flex items-center justify-center text-lg mb-4">
+                            <i class="fa-solid fa-child-reaching"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-800 mb-2 leading-snug">${art.title}</h3>
+                        <p class="text-xs text-slate-500 mb-4 leading-relaxed">${snippet}</p>
+                    </div>
+                    <div class="mt-auto pt-4 border-t border-slate-100 flex flex-wrap gap-2">
+                        ${mediaBadges}
+                    </div>
+                `;
+                
+                gridEl.appendChild(card);
+            });
+        }
+
+        //        function openModal(id) {
+            const art = allArticles.find(a => a.id === id);
+            if (!art) return;
+
+            document.getElementById('modal-title').innerText = art.title || 'Chi tiết bài viết';
+            
+            // Xử lý Videos
+            const videoContainer = document.getElementById('modal-videos');
+            videoContainer.innerHTML = '';
+            let vUrls = art.videoUrls || [];
+            if (vUrls.length === 0 && art.videoUrl) vUrls = [{ url: art.videoUrl, label: 'Video hướng dẫn' }];
+            
+            if (vUrls.length > 0) {
+                vUrls.forEach(v => {
+                    videoContainer.innerHTML += `
+                        <div class="bg-black rounded-2xl overflow-hidden shadow-lg border border-slate-800 aspect-video relative">
+                            <iframe src="${v.url}" class="absolute top-0 left-0 w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        ${v.label ? `<p class="text-center text-sm font-bold text-slate-600 mt-2 mb-4">${v.label}</p>` : ''}
+                    `;
+                });
+            }
+
+            // Xử lý Content
+            const bodyContainer = document.getElementById('modal-body');
+            bodyContainer.innerHTML = art.content || '<p class="text-slate-400 italic">Chưa có nội dung mô tả chi tiết.</p>';
+
+            // Xử lý PDFs
+            const pdfContainer = document.getElementById('modal-pdfs');
+            pdfContainer.innerHTML = '';
+            let pUrls = art.pdfUrls || [];
+            if (pUrls.length === 0 && art.pdfUrl) pUrls = [{ url: art.pdfUrl, label: 'Tài liệu đính kèm' }];
+            
+            if (pUrls.length > 0) {
+                pdfContainer.innerHTML = `<h4 class="text-sm font-extrabold text-slate-800 mb-2 flex items-center gap-2"><i class="fa-solid fa-paperclip text-emerald-500"></i> Tài liệu đính kèm</h4>`;
+                pUrls.forEach(p => {
+                    pdfContainer.innerHTML += `
+                        <a href="${p.url}" target="_blank" class="flex items-center justify-between p-3 sm:p-4 bg-white border border-emerald-100 rounded-xl hover:bg-emerald-50 transition-colors group shadow-sm">
+                            <div class="flex items-center gap-3 overflow-hidden">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </div>
+                                <span class="text-sm font-bold text-slate-700 truncate group-hover:text-emerald-700">${p.label || 'Mở tài liệu PDF'}</span>
+                            </div>
+                            <i class="fa-solid fa-download text-emerald-400 group-hover:text-emerald-600 ml-2 shrink-0"></i>
+                        </a>
+                    `;
+                });
+            }
+
+            // Xử lý Link Bài Viết gốc
+            const linkDiv = document.getElementById('modal-link');
+            const linkBtn = document.getElementById('modal-link-btn');
+            if (art.articleUrl) {
+                linkDiv.classList.remove('hidden');
+                linkBtn.href = art.articleUrl;
+            } else {
+                linkDiv.classList.add('hidden');
+            }
+
+            // Hiển thị modal với Animation
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modalBox.classList.remove('scale-95');
+            modalBox.classList.add('scale-100');
+            document.body.style.overflow = 'hidden'; // Ngăn cuộn trang phía sau
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modalBox.classList.add('scale-95');
+            modalBox.classList.remove('scale-100');
+            document.body.style.overflow = ''; // Phục hồi cuộn trang
+            
+            // Tắt video khi đóng modal bằng cách xóa iframe
+            setTimeout(() => {
+                document.getElementById('modal-videos').innerHTML = '';
+            }, 300);
+        }
+
+        // Đóng modal khi click ra ngoài
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+    </script>
+</body>
+</html>
