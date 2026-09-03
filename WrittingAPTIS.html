@@ -170,6 +170,14 @@
             return str.replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         };
 
+        // Hàm tự động tìm và làm nổi bật số lượng từ (ví dụ: "30-40 words", "50 words")
+        const highlightWordCount = (text) => {
+            if (!text) return '';
+            // Match dạng số hoặc khoảng số đi kèm chữ "words"
+            const regex = /\b(\d+(?:\s*-\s*\d+)?\s*words)\b/gi;
+            return text.replace(regex, '<strong class="text-red-600 dark:text-red-400 font-bold">$1</strong>');
+        };
+
         // Local Storage Utilities for Practice
         const saveDraftLocally = () => {
             if(state.currentTopic) {
@@ -183,7 +191,6 @@
             if (draftStr) {
                 try {
                     const draft = JSON.parse(draftStr);
-                    // Merge with default to ensure structure exists
                     state.practiceState = {
                         tab: draft.tab || 'part2',
                         selectedVersions: draft.selectedVersions || { part2: 0, part3: 0, part4: 0 },
@@ -205,10 +212,10 @@
             state.view = view;
             if (view === 'practice' && payload) {
                 state.currentTopic = state.topics.find(t => t.id === payload);
-                loadDraftLocally(payload); // Load bản nháp khi vào làm
+                loadDraftLocally(payload); 
             }
             if (view === 'admin-form') {
-                if (payload) { // Edit
+                if (payload) {
                     const topic = state.topics.find(t => t.id === payload);
                     state.adminState.editingTopicId = payload;
                     const formData = JSON.parse(JSON.stringify(topic));
@@ -216,7 +223,7 @@
                     if (!Array.isArray(formData.part3)) formData.part3 = [formData.part3];
                     if (!Array.isArray(formData.part4)) formData.part4 = [formData.part4];
                     state.adminState.formData = formData;
-                } else { // Create
+                } else {
                     state.adminState.editingTopicId = null;
                     state.adminState.formData = getEmptyTopicTemplate();
                 }
@@ -242,7 +249,6 @@
                     await signInAnonymously(auth);
                 }
                 
-                // Fetch Topics from Firebase (Admin/Public data)
                 const topicsRef = collection(db, 'artifacts', appId, 'public', 'data', 'aptis_topics');
                 onSnapshot(topicsRef, (snapshot) => {
                     const topics = [];
@@ -344,6 +350,43 @@
             return false;
         };
 
+        // Nút toggle xem bài viết cũ
+        window.togglePastAnswers = (key) => {
+            const container = document.getElementById(`past-answers-${key}`);
+            if (!container) return;
+
+            if (!container.classList.contains('hidden')) {
+                container.classList.add('hidden');
+                return;
+            }
+
+            // Load data history
+            const historyStr = localStorage.getItem('aptis_submissions_history') || '[]';
+            const historyArr = JSON.parse(historyStr);
+            const topicId = state.currentTopic.id;
+            
+            // Lọc các bài viết cũ của chính câu hỏi (key) trong chủ đề này
+            const pastAnswers = historyArr
+                .filter(h => h.topicId === topicId && h.answers && h.answers[key] && h.answers[key].trim().length > 0)
+                .map(h => ({
+                    date: h.submittedAt ? new Date(h.submittedAt).toLocaleString('vi-VN') : 'Không rõ thời gian',
+                    text: h.answers[key]
+                }))
+                .sort((a,b) => b.date.localeCompare(a.date)); // Xếp mới nhất lên đầu (tạm qua chuỗi)
+
+            if (pastAnswers.length === 0) {
+                container.innerHTML = '<div class="text-gray-500 italic text-xs text-center py-2">Bạn chưa có lịch sử làm bài cho câu hỏi này.</div>';
+            } else {
+                container.innerHTML = pastAnswers.map((pa, idx) => `
+                    <div class="mb-3 border-b border-gray-200 dark:border-gray-700 pb-3 last:border-0 last:pb-0 last:mb-0">
+                        <span class="text-xs text-blue-600 dark:text-blue-400 font-semibold block mb-1"><i class="fas fa-clock mr-1"></i> Nộp lúc: ${pa.date}</span>
+                        <p class="text-gray-800 dark:text-gray-200 whitespace-pre-wrap text-sm bg-white dark:bg-[#1a1a1a] p-2 rounded border border-gray-100 dark:border-gray-800">${escapeHtml(pa.text)}</p>
+                    </div>
+                `).join('');
+            }
+            container.classList.remove('hidden');
+        };
+
         function renderPracticeArea() {
             const div = document.createElement('div');
             div.className = 'w-full max-w-5xl mx-auto bg-white dark:bg-darkcard rounded-xl shadow-sm border border-gray-200 dark:border-darkborder overflow-hidden transition-colors';
@@ -429,13 +472,17 @@
                             </button>
                         </div>
                         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-                            <div id="note-container-${key}" class="lg:col-span-4 ${noteDisplayClass}">
+                            <div id="note-container-${key}" class="lg:col-span-4 flex flex-col ${noteDisplayClass}">
                                 <label class="block text-xs font-semibold text-gray-500 mb-1 uppercase">Ghi chú ý chính</label>
-                                <textarea oninput="handleNoteInput(this, '${key}')" class="w-full h-24 lg:h-[calc(100%-24px)] bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-700/50 rounded-lg p-2 text-sm text-gray-700 dark:text-gray-300 focus:ring-1 focus:ring-yellow-400 focus:border-yellow-400 resize-y transition-colors" placeholder="Ghi chú keywords...">${noteValue}</textarea>
+                                <textarea oninput="handleNoteInput(this, '${key}')" class="w-full flex-grow min-h-[120px] bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-700/50 rounded-lg p-2 text-sm text-gray-700 dark:text-gray-300 focus:ring-1 focus:ring-yellow-400 focus:border-yellow-400 resize-y transition-colors" placeholder="Ghi chú keywords...">${noteValue}</textarea>
                             </div>
-                            <div id="answer-container-${key}" class="${answerColSpan} transition-all duration-200">
-                                <label class="block text-xs font-semibold text-gray-500 mb-1 uppercase"><i class="fas fa-pen mr-1 text-blue-500"></i> Bài làm của bạn</label>
-                                ${createTextArea(key, ansValue, minWords, maxWords, placeholder, 'rows-4 lg:rows-5')}
+                            <div id="answer-container-${key}" class="${answerColSpan} transition-all duration-200 flex flex-col h-full">
+                                <div class="flex justify-between items-center mb-1">
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase"><i class="fas fa-pen mr-1 text-blue-500"></i> Bài làm của bạn</label>
+                                    <button onclick="togglePastAnswers('${key}')" title="Xem các câu trả lời bạn đã lưu trước đây" class="text-xs text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded transition-colors flex items-center font-medium border border-blue-100 dark:border-blue-800"><i class="fas fa-history mr-1.5"></i> Lịch sử làm câu này</button>
+                                </div>
+                                ${createTextArea(key, ansValue, minWords, maxWords, placeholder, 'flex-grow min-h-[120px]')}
+                                <div id="past-answers-${key}" class="hidden mt-3 p-3 bg-gray-50 dark:bg-[#222] rounded-lg border border-gray-200 dark:border-gray-700 text-sm max-h-60 overflow-y-auto shadow-inner transition-all"></div>
                             </div>
                         </div>
                     </div>
@@ -446,25 +493,25 @@
                 html += `
                     <div class="mb-6 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded-r-md">
                         <p class="font-semibold text-blue-900 dark:text-blue-300 mb-1">Hướng dẫn:</p>
-                        <p class="text-sm text-blue-800 dark:text-blue-200">You are a new member of the <strong>${t.title}</strong>. Fill in the form. Write in sentences. Use <strong class="text-red-600 dark:text-red-400">20-30 words</strong>.</p>
+                        <p class="text-sm text-blue-800 dark:text-blue-200">You are a new member of the <strong>${t.title}</strong>. Fill in the form. Write in sentences. Use <strong class="text-red-600 dark:text-red-400 font-bold">20-30 words</strong>.</p>
                     </div>
-                    ${renderInputSection('Form Question:', currentV.question || 'No question provided.', 'p2', 20, 30, 'Write your answer here...')}
+                    ${renderInputSection('Form Question:', highlightWordCount(currentV.question) || 'No question provided.', 'p2', 20, 30, 'Write your answer here...')}
                     <div class="mt-8 flex justify-end">
                         <button onclick="changePracticeTab('part3')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors w-full sm:w-auto">Tiếp theo (Part 3) <i class="fas fa-arrow-right ml-2"></i></button>
                     </div>
                 `;
             }
             else if (partId === 'part3') {
+                // PART 3: Bỏ dòng Use 30-40 words cứng. Hệ thống sẽ tự Highlight từ trong DB
                 html += `
                     <div class="mb-6 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded-r-md">
-                        <p class="font-semibold text-blue-900 dark:text-blue-300 mb-1">Hướng dẫn:</p>
-                        <p class="text-sm text-blue-800 dark:text-blue-200">${currentV.intro || ''}</p>
-                        <p class="text-sm text-blue-800 dark:text-blue-200 mt-1">Use <strong class="text-red-600 dark:text-red-400">30-40 words</strong> per answer.</p>
+                        <p class="font-semibold text-blue-900 dark:text-blue-300 mb-1">Tình huống:</p>
+                        <p class="text-sm text-blue-800 dark:text-blue-200">${highlightWordCount(currentV.intro) || ''}</p>
                     </div>
                     <div class="space-y-2">
-                        ${renderInputSection('Question 1:', currentV.q1, 'p3q1', 30, 40, 'Write your answer to member 1...')}
-                        ${renderInputSection('Question 2:', currentV.q2, 'p3q2', 30, 40, 'Write your answer to member 2...')}
-                        ${renderInputSection('Question 3:', currentV.q3, 'p3q3', 30, 40, 'Write your answer to member 3...')}
+                        ${renderInputSection('Question 1:', highlightWordCount(currentV.q1), 'p3q1', 30, 40, 'Write your answer to member 1...')}
+                        ${renderInputSection('Question 2:', highlightWordCount(currentV.q2), 'p3q2', 30, 40, 'Write your answer to member 2...')}
+                        ${renderInputSection('Question 3:', highlightWordCount(currentV.q3), 'p3q3', 30, 40, 'Write your answer to member 3...')}
                     </div>
                     <div class="mt-8 flex flex-col sm:flex-row justify-between gap-4">
                         <button onclick="changePracticeTab('part2')" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white px-4 py-2 font-medium bg-gray-100 dark:bg-gray-800 rounded-lg sm:bg-transparent"><i class="fas fa-arrow-left mr-2"></i> Quay lại</button>
@@ -473,14 +520,15 @@
                 `;
             }
             else if (partId === 'part4') {
+                // PART 4: Bỏ hướng dẫn viết thư cứng. Highlight trực tiếp từ prompt của Admin
                 html += `
                     <div class="mb-6 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded-r-md">
                         <p class="font-semibold text-blue-900 dark:text-blue-300 mb-1">Tình huống:</p>
-                        <p class="text-sm text-blue-800 dark:text-blue-200 whitespace-pre-line">${currentV.intro || ''}</p>
+                        <p class="text-sm text-blue-800 dark:text-blue-200 whitespace-pre-line">${highlightWordCount(currentV.intro) || ''}</p>
                     </div>
                     <div class="space-y-6">
-                        ${renderInputSection('Email 1 (Informal)', `Write an email to your friend. Use <strong class="text-red-600 dark:text-red-400">about 50 words</strong>.<br><span class="italic text-gray-500 dark:text-gray-400">${currentV.informalPrompt || ''}</span>`, 'p4inf', 40, 60, 'Hi [Name],...')}
-                        ${renderInputSection('Email 2 (Formal)', `Write an email to the authority/manager. Use <strong class="text-red-600 dark:text-red-400">120-150 words</strong>.<br><span class="italic text-gray-500 dark:text-gray-400">${currentV.formalPrompt || ''}</span>`, 'p4form', 120, 150, 'Dear Sir/Madam,...')}
+                        ${renderInputSection('Email 1 (Informal)', `<span class="italic text-gray-600 dark:text-gray-300">${highlightWordCount(currentV.informalPrompt) || ''}</span>`, 'p4inf', 40, 60, 'Hi [Name],...')}
+                        ${renderInputSection('Email 2 (Formal)', `<span class="italic text-gray-600 dark:text-gray-300">${highlightWordCount(currentV.formalPrompt) || ''}</span>`, 'p4form', 120, 150, 'Dear Sir/Madam,...')}
                     </div>
                     <div class="mt-8 flex flex-col sm:flex-row justify-between items-center border-t border-gray-200 dark:border-darkborder pt-6 gap-4">
                          <button onclick="changePracticeTab('part3')" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white px-4 py-2 font-medium w-full sm:w-auto text-center"><i class="fas fa-arrow-left mr-2"></i> Quay lại</button>
@@ -519,12 +567,12 @@
             const toggleIcon = document.getElementById(`toggle-icon-${key}`);
             
             if (isVisible) {
-                noteContainer.classList.remove('hidden'); noteContainer.classList.add('block');
+                noteContainer.classList.remove('hidden'); noteContainer.classList.add('flex'); // Add flex back for full height
                 answerContainer.classList.remove('lg:col-span-12'); answerContainer.classList.add('lg:col-span-8');
                 toggleText.innerText = 'Ẩn nháp';
                 toggleIcon.classList.remove('fa-chevron-down'); toggleIcon.classList.add('fa-chevron-up');
             } else {
-                noteContainer.classList.add('hidden'); noteContainer.classList.remove('block');
+                noteContainer.classList.add('hidden'); noteContainer.classList.remove('flex');
                 answerContainer.classList.add('lg:col-span-12'); answerContainer.classList.remove('lg:col-span-8');
                 toggleText.innerText = 'Mở nháp';
                 toggleIcon.classList.remove('fa-chevron-up'); toggleIcon.classList.add('fa-chevron-down');
@@ -574,7 +622,7 @@
             triggerAutoSaveUI();
         };
 
-        const createTextArea = (key, value, min, max, placeholder, rowsClass = 'rows-3') => {
+        const createTextArea = (key, value, min, max, placeholder, customClasses = '') => {
             const count = countWords(value);
             let colorClass = 'text-gray-500 dark:text-gray-400';
             if (count > max) colorClass = 'text-red-600 dark:text-red-400 font-bold';
@@ -582,10 +630,8 @@
             else if (count > 0 && count < min) colorClass = 'text-yellow-600 dark:text-yellow-400';
 
             return `
-                <div class="relative h-full flex flex-col">
-                    <textarea oninput="handleInput(this, '${key}', ${min}, ${max})" class="flex-grow w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#252525] rounded-lg p-3 focus:ring-2 focus:ring-blue-500 resize-y shadow-sm transition-colors text-gray-700 dark:text-gray-200 ${rowsClass}" placeholder="${placeholder}">${value}</textarea>
-                    <div id="counter-${key}" class="text-sm text-right mt-1 ${colorClass}">${count} từ <span class="text-gray-400 font-normal ml-1">(${min}-${max})</span></div>
-                </div>
+                <textarea oninput="handleInput(this, '${key}', ${min}, ${max})" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#252525] rounded-lg p-3 focus:ring-2 focus:ring-blue-500 resize-y shadow-sm transition-colors text-gray-700 dark:text-gray-200 ${customClasses}" placeholder="${placeholder}">${value}</textarea>
+                <div id="counter-${key}" class="text-sm text-right mt-1 ${colorClass}">${count} từ <span class="text-gray-400 font-normal ml-1">(${min}-${max})</span></div>
             `;
         };
 
@@ -602,7 +648,6 @@
             document.getElementById('btn-confirm-submit').onclick = () => {
                 closeModal();
                 try {
-                    // Logic Lưu Local Storage
                     const historyStr = localStorage.getItem('aptis_submissions_history') || '[]';
                     const historyArr = JSON.parse(historyStr);
                     
@@ -619,7 +664,6 @@
                     historyArr.push(newSubmission);
                     localStorage.setItem('aptis_submissions_history', JSON.stringify(historyArr));
                     
-                    // Xóa bản nháp sau khi đã nộp
                     localStorage.removeItem(`aptis_draft_${state.currentTopic.id}`);
 
                     const successActions = `<button onclick="navigate('history'); closeModal();" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded">Xem Lịch Sử</button>`;
@@ -635,7 +679,6 @@
                 const historyStr = localStorage.getItem('aptis_submissions_history') || '[]';
                 let historyArr = JSON.parse(historyStr);
                 
-                // Sort by newest first
                 state.history = historyArr.sort((a, b) => (b.submittedAt || 0) - (a.submittedAt || 0));
                 
                 if(state.view === 'history') render();
@@ -853,12 +896,11 @@
                 <form id="adminForm" class="space-y-6 sm:space-y-8" onsubmit="handleAdminSubmit(event)">
                     <div class="bg-gray-50 dark:bg-[#1a1a1a] p-4 sm:p-5 rounded-lg border border-gray-200 dark:border-gray-700">
                         <label class="${labelClass}">Tên chủ đề chung (VD: Travel Club)</label>
-                        <!-- Fix lỗi DOM: Đã chuyển oninput sang lấy trực tiếp giá trị khi Submit -->
                         <input type="text" id="frm_title" value="${escapeHtml(data.title)}" required class="${inputClass}">
                     </div>
                     ${renderAdminPart('part2', 'Câu hỏi Form (20-30 words)', 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300', 'Part 2')}
-                    ${renderAdminPart('part3', 'Phòng Chat (3 câu, 30-40 words)', 'bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300', 'Part 3')}
-                    ${renderAdminPart('part4', 'Viết Email', 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300', 'Part 4')}
+                    ${renderAdminPart('part3', 'Phòng Chat (3 câu, tự động highlight Word Count)', 'bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300', 'Part 3')}
+                    ${renderAdminPart('part4', 'Viết Email (tự động highlight Word Count)', 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300', 'Part 4')}
                     <div class="flex flex-col-reverse sm:flex-row justify-end pt-4 gap-3">
                         <button type="button" onclick="navigate('admin')" class="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">Hủy</button>
                         <button type="submit" class="w-full sm:w-auto px-8 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shadow-sm font-medium transition-colors">
@@ -879,7 +921,6 @@
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
             submitBtn.disabled = true;
 
-            // FIX: Lấy dữ liệu title trực tiếp từ DOM element
             const titleInput = document.getElementById('frm_title').value.trim();
 
             const newData = {
