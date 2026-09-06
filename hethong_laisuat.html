@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang chủ - NGUYỄN MAI ĐAN TRƯỜNG</title>
+    <title>Hệ thống tính lãi suất - NGUYỄN MAI ĐAN TRƯỜNG</title>
     
     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
     <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
@@ -556,7 +556,9 @@
                             </div>
                             <div>
                                 <label class="block text-[11px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Ghi chú (Tùy chọn)</label>
-                                <input type="text" id="tx-note" placeholder="Nhập tại đây..." class="input-dark input-dark-indigo w-full px-4 py-3 rounded-xl text-white">
+                                <!-- Sử dụng datalist để tạo tính năng dropdown nhưng vẫn cho nhập liệu -->
+                                <input type="text" id="tx-note" list="tx-note-suggestions" placeholder="Nhập tại đây..." class="input-dark input-dark-indigo w-full px-4 py-3 rounded-xl text-white">
+                                <datalist id="tx-note-suggestions"></datalist>
                             </div>
                             <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold py-3.5 rounded-xl transition-all duration-300 shadow-lg shadow-indigo-600/25 btn-smooth mt-2">
                                 Ghi Nhận
@@ -566,9 +568,18 @@
 
                     <!-- Danh sách -->
                     <div class="glass-panel p-6 rounded-3xl lg:col-span-2">
-                        <div class="flex justify-between items-center mb-6 border-b border-slate-800/60 pb-4">
-                            <h3 class="text-sm font-extrabold text-white">Lịch sử dòng tiền</h3>
-                            <span id="tx-count" class="bg-indigo-500/10 text-indigo-300 text-xs font-bold px-3 py-1 rounded-xl border border-indigo-500/20">0 khoản</span>
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-slate-800/60 pb-4">
+                            <div class="flex items-center gap-3 w-full sm:w-auto">
+                                <h3 class="text-sm font-extrabold text-white whitespace-nowrap">Lịch sử dòng tiền</h3>
+                                <!-- Bộ lọc ghi chú mới -->
+                                <div class="relative w-full sm:w-40">
+                                    <select id="tx-filter-note" onchange="renderSavingsTransactions()" class="appearance-none bg-slate-900/60 border border-slate-700/50 rounded-lg pl-3 pr-8 py-1.5 text-xs text-slate-300 outline-none focus:border-indigo-500 cursor-pointer w-full">
+                                        <option value="">Tất cả ghi chú</option>
+                                    </select>
+                                    <i class="fa-solid fa-filter absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 text-[10px] pointer-events-none"></i>
+                                </div>
+                            </div>
+                            <span id="tx-count" class="bg-indigo-500/10 text-indigo-300 text-xs font-bold px-3 py-1 rounded-xl border border-indigo-500/20 whitespace-nowrap">0 khoản</span>
                         </div>
                         <div id="grouped-tx-container" class="space-y-5 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
                         </div>
@@ -1204,12 +1215,49 @@
             });
         }
 
+        // ================= NEW FUNCTIONS CHO DROPDOWN GHI CHÚ LỊCH SỬ TIẾT KIỆM =================
+        function getUniqueSavingsNotes() {
+            const notes = appData.savings.transactions.map(t => t.note).filter(n => n && n.trim() !== '');
+            return [...new Set(notes)];
+        }
+
+        function updateNoteDropdowns() {
+            const uniqueNotes = getUniqueSavingsNotes();
+            
+            // Cập nhật Datalist (cho form nhập liệu)
+            const datalist = document.getElementById('tx-note-suggestions');
+            if (datalist) {
+                datalist.innerHTML = uniqueNotes.map(n => `<option value="${n}">`).join('');
+            }
+            
+            // Cập nhật Filter Select (cho phần lịch sử)
+            const filterSelect = document.getElementById('tx-filter-note');
+            if (filterSelect) {
+                const currentVal = filterSelect.value;
+                let html = `<option value="">Tất cả ghi chú</option>`;
+                uniqueNotes.forEach(n => {
+                    html += `<option value="${n}">${n}</option>`;
+                });
+                filterSelect.innerHTML = html;
+                
+                // Giữ lại giá trị đang chọn nếu nó vẫn tồn tại sau khi update
+                if (uniqueNotes.includes(currentVal)) {
+                    filterSelect.value = currentVal;
+                } else {
+                    filterSelect.value = '';
+                }
+            }
+        }
+        // ======================================================================================
+
         function initSavings() {
             const conf = appData.savings.config;
             if(conf.startDate) document.getElementById('config-start-date').value = conf.startDate;
             document.getElementById('config-duration').value = conf.duration;
             document.getElementById('config-rate-1').value = conf.rate1;
             document.getElementById('config-rate-2').value = conf.rate2;
+            
+            updateNoteDropdowns(); // Khởi tạo dropdown khi load trang
             renderSavingsTransactions();
         }
 
@@ -1232,13 +1280,15 @@
             const amt = parseVND(amtStr);
             if(amt <= 0) return showToast("Số tiền không hợp lệ", "error");
 
-            const tx = { id: Date.now().toString(), amount: amt, date: document.getElementById('tx-date').value, note: document.getElementById('tx-note').value };
+            const tx = { id: Date.now().toString(), amount: amt, date: document.getElementById('tx-date').value, note: document.getElementById('tx-note').value.trim() };
             appData.savings.transactions.push(tx);
             appData.savings.transactions.sort((a,b) => parseLocalDate(a.date) - parseLocalDate(b.date));
             saveData();
             
             document.getElementById('tx-amount').value = ''; document.getElementById('tx-note').value = '';
             showToast("Đã thêm giao dịch gửi tiền");
+            
+            updateNoteDropdowns(); // Cập nhật lại dropdown sau khi thêm
             renderSavingsTransactions();
             updateSavingsDashboard();
         }
@@ -1246,6 +1296,8 @@
         function deleteSavingsTx(id) {
             appData.savings.transactions = appData.savings.transactions.filter(t => t.id !== id);
             saveData(); 
+            
+            updateNoteDropdowns(); // Cập nhật lại dropdown sau khi xoá
             renderSavingsTransactions();
             updateSavingsDashboard();
         }
@@ -1254,6 +1306,8 @@
             if(confirm("Bạn có chắc chắn muốn xóa tất cả dữ liệu")) {
                 appData.savings.transactions = [];
                 saveData(); 
+                
+                updateNoteDropdowns(); // Cập nhật lại dropdown khi reset data
                 renderSavingsTransactions(); 
                 updateSavingsDashboard();
             }
@@ -1261,11 +1315,18 @@
 
         function renderSavingsTransactions() {
             const container = document.getElementById('grouped-tx-container');
-            const txs = appData.savings.transactions;
+            let txs = appData.savings.transactions;
+            
+            // Xử lý logic lọc (Filter)
+            const filterValue = document.getElementById('tx-filter-note')?.value || '';
+            if (filterValue) {
+                txs = txs.filter(t => t.note === filterValue);
+            }
+
             document.getElementById('tx-count').innerText = `${txs.length} khoản`;
             
             if (txs.length === 0) {
-                container.innerHTML = `<div class="text-center py-10 text-slate-500 font-medium text-sm">Chưa có giao dịch nào.</div>`;
+                container.innerHTML = `<div class="text-center py-10 text-slate-500 font-medium text-sm">Chưa có giao dịch nào${filterValue ? ' phù hợp với bộ lọc.' : '.'}</div>`;
                 return;
             }
 
