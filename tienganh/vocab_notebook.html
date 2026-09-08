@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi" class="dark">
 <head>
@@ -126,7 +125,6 @@
                 </div>
                 <div>
                     <span class="font-black text-xl tracking-tight bg-gradient-to-r from-purple-300 via-fuchsia-300 to-indigo-300 bg-clip-text text-transparent">Vocab Premium</span>
-                    <p class="text-[9px] text-purple-400/90 font-bold uppercase tracking-widest -mt-0.5">Sổ Tay Thông Minh</p>
                 </div>
             </div>
             
@@ -553,7 +551,7 @@
                                 ${word.ipa ? `<span class="text-xs text-purple-400 font-mono font-bold">/${word.ipa}/</span>` : ''}
                                 ${!isUnknown ? `
                                 <button onclick="window.app.playAudio('${safeEnglish}')" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-300 hover:text-purple-300 bg-slate-950/80 hover:bg-slate-800 px-3 py-1 rounded-xl border border-slate-800 transition-all active:scale-95">
-                                    <i data-lucide="volume-2" class="w-3.5 h-3.5 text-purple-400"></i> Nghe đọc
+                                    <i data-lucide="volume-2" class="w-3.5 h-3.5 text-purple-400"></i> Nghe
                                 </button>
                                 ` : ''}
                             </div>
@@ -601,19 +599,19 @@
 
                     <div class="py-4 space-y-3">
                         <div class="flex items-baseline gap-2">
-                            <span class="text-xs font-black text-slate-500 uppercase tracking-wider">Nghĩa chính:</span>
+                            <span class="text-xs font-black text-slate-500 uppercase tracking-wider">Nghĩa:</span>
                             <span class="text-lg font-bold ${isUnknown ? 'text-slate-400 italic' : 'text-emerald-400'}">${word.vietnamese}</span>
                         </div>
 
                         ${word.definition ? `
                             <div class="bg-slate-950/50 p-3.5 rounded-2xl border border-slate-800/80">
-                                <p class="text-xs ${isUnknown ? 'text-amber-200/70' : 'text-slate-300'} font-medium leading-relaxed">${!isUnknown ? '<strong class="text-purple-400">Giải thích:</strong>' : ''} ${word.definition}</p>
+                                <p class="text-xs ${isUnknown ? 'text-amber-200/70' : 'text-slate-300'} font-medium leading-relaxed">${!isUnknown ? '<strong class="text-purple-400">Giải thích:</strong> ' : ''}${word.definition.replace(/(?:\r\n|\r|\n|\\n)/g, '<br>')}</p>
                             </div>
                         ` : ''}
 
                         ${!isUnknown && examplesHTML ? `
                             <div class="mt-2">
-                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Ví dụ thực tế:</p>
+                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Ví dụ:</p>
                                 <div class="bg-slate-950/30 p-3.5 rounded-2xl border border-slate-800/60 space-y-1">
                                     ${examplesHTML}
                                 </div>
@@ -1101,7 +1099,7 @@
                                     ${!isEnVi && word.ipa ? `<p class="text-purple-300 font-mono text-xs">/${word.ipa}/</p>` : ''}
                                 </div>
                                 <div class="text-left bg-black/40 p-4 rounded-2xl border border-white/10 my-2 space-y-2">
-                                    ${word.definition ? `<p class="text-xs text-purple-200"><strong class="text-white">Giải thích:</strong> ${word.definition}</p>` : ''}
+                                    ${word.definition ? `<p class="text-xs text-purple-200"><strong class="text-white">Định nghĩa:</strong> ${word.definition.replace(/(?:\r\n|\r|\n|\\n)/g, '<br>')}</p>` : ''}
                                     ${word.example ? `<div class="text-xs">${formatExamples(word.example)}</div>` : ''}
                                 </div>
                                 <button onclick="event.stopPropagation(); window.app.playAudio('${safeEnglish}')" class="py-2 px-4 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-bold mx-auto flex items-center gap-2 transition-all active:scale-95 shadow-lg shadow-purple-900/50">
