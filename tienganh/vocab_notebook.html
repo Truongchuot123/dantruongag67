@@ -46,6 +46,8 @@
         
         :root { color-scheme: dark; }
         
+        html { scroll-behavior: smooth; }
+        
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             background-color: #030712; 
@@ -125,6 +127,7 @@
                 </div>
                 <div>
                     <span class="font-black text-xl tracking-tight bg-gradient-to-r from-purple-300 via-fuchsia-300 to-indigo-300 bg-clip-text text-transparent">Vocab Premium</span>
+                    <p class="text-[9px] text-purple-400/90 font-bold uppercase tracking-widest -mt-0.5">Sổ Tay Thông Minh</p>
                 </div>
             </div>
             
@@ -402,33 +405,15 @@
     </button>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
         // CONFIGURATION
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbykgN9Mf37KxqMZx2XW1mqPJJ3jVunAWVEljUAszFJVwMLxDXJpDHg6cvpdkMHR2v_iKQ/exec";
 
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-            apiKey: "AIzaSyDSU-0sQqaFGHQcMyjJLs_wt0GLVPAXKig",
-            authDomain: "vstep-c02b6.firebaseapp.com",
-            projectId: "vstep-c02b6",
-            storageBucket: "vstep-c02b6.firebasestorage.app",
-            messagingSenderId: "5134797464",
-            appId: "1:5134797464:web:b4b5b13a58be4922fbdeed"
-        };
-
-        const app_fb = initializeApp(firebaseConfig);
-        const auth = getAuth(app_fb);
-        const db = getFirestore(app_fb);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'english-vocab-app';
-
         // APPLICATION STATE
         let state = {
-            user: null,
             activeTab: 'library',
             allWords: [], 
-            myWords: [],
+            // My Words stored locally by word ID
+            myWords: JSON.parse(localStorage.getItem('vocab_saved_words_v2') || '[]'),
             // Watchlist stored cleanly by word ID or English string fallback
             watchlist: JSON.parse(localStorage.getItem('vocab_watchlist_data_v2') || '[]'),
             pendingDeleteId: null,
@@ -551,7 +536,7 @@
                                 ${word.ipa ? `<span class="text-xs text-purple-400 font-mono font-bold">/${word.ipa}/</span>` : ''}
                                 ${!isUnknown ? `
                                 <button onclick="window.app.playAudio('${safeEnglish}')" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-300 hover:text-purple-300 bg-slate-950/80 hover:bg-slate-800 px-3 py-1 rounded-xl border border-slate-800 transition-all active:scale-95">
-                                    <i data-lucide="volume-2" class="w-3.5 h-3.5 text-purple-400"></i> Nghe
+                                    <i data-lucide="volume-2" class="w-3.5 h-3.5 text-purple-400"></i> Nghe đọc
                                 </button>
                                 ` : ''}
                             </div>
@@ -599,7 +584,7 @@
 
                     <div class="py-4 space-y-3">
                         <div class="flex items-baseline gap-2">
-                            <span class="text-xs font-black text-slate-500 uppercase tracking-wider">Nghĩa:</span>
+                            <span class="text-xs font-black text-slate-500 uppercase tracking-wider">Nghĩa chính:</span>
                             <span class="text-lg font-bold ${isUnknown ? 'text-slate-400 italic' : 'text-emerald-400'}">${word.vietnamese}</span>
                         </div>
 
@@ -611,7 +596,7 @@
 
                         ${!isUnknown && examplesHTML ? `
                             <div class="mt-2">
-                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Ví dụ:</p>
+                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Ví dụ thực tế:</p>
                                 <div class="bg-slate-950/30 p-3.5 rounded-2xl border border-slate-800/60 space-y-1">
                                     ${examplesHTML}
                                 </div>
@@ -623,13 +608,19 @@
                                 ${word.synonym ? `
                                     <div class="flex items-center gap-1.5 flex-wrap">
                                         <span class="text-slate-500 font-bold">Đồng nghĩa:</span>
-                                        ${word.synonym.split(',').map(s => `<span class="bg-purple-950/60 border border-purple-800/40 text-purple-300 text-[11px] font-semibold px-2.5 py-0.5 rounded-lg">${s.trim()}</span>`).join('')}
+                                        ${word.synonym.split(',').map(s => {
+                                            const safeWord = s.trim().replace(/'/g, "\\'");
+                                            return `<button onclick="window.app.searchWord('${safeWord}')" class="bg-purple-950/60 hover:bg-purple-600 border border-purple-800/40 hover:border-purple-500 text-purple-300 hover:text-white text-[11px] font-semibold px-3 py-1 rounded-lg transition-all active:scale-95 shadow-sm shadow-purple-900/20">${s.trim()}</button>`;
+                                        }).join('')}
                                     </div>
                                 ` : ''}
                                 ${word.antonym ? `
                                     <div class="flex items-center gap-1.5 flex-wrap">
                                         <span class="text-slate-500 font-bold">Trái nghĩa:</span>
-                                        ${word.antonym.split(',').map(a => `<span class="bg-rose-950/60 border border-rose-800/40 text-rose-300 text-[11px] font-semibold px-2.5 py-0.5 rounded-lg">${a.trim()}</span>`).join('')}
+                                        ${word.antonym.split(',').map(a => {
+                                            const safeWord = a.trim().replace(/'/g, "\\'");
+                                            return `<button onclick="window.app.searchWord('${safeWord}')" class="bg-rose-950/60 hover:bg-rose-600 border border-rose-800/40 hover:border-rose-500 text-rose-300 hover:text-white text-[11px] font-semibold px-3 py-1 rounded-lg transition-all active:scale-95 shadow-sm shadow-rose-900/20">${a.trim()}</button>`;
+                                        }).join('')}
                                     </div>
                                 ` : ''}
                             </div>
@@ -731,10 +722,10 @@
 
             // 4. Status filter
             if (state.library.filter === 'saved') {
-                const savedIds = new Set(state.myWords.map(m => String(m.id)));
+                const savedIds = new Set(state.myWords.map(String));
                 list = list.filter(w => !w.isUnknown && savedIds.has(String(w.id)));
             } else if (state.library.filter === 'unsaved') {
-                const savedIds = new Set(state.myWords.map(m => String(m.id)));
+                const savedIds = new Set(state.myWords.map(String));
                 list = list.filter(w => !w.isUnknown && !savedIds.has(String(w.id)));
             } else if (state.library.filter === 'watchlist') {
                 list = list.filter(w => w.isUnknown || isWordInWatchlist(w));
@@ -775,7 +766,7 @@
                 return;
             }
 
-            const savedMap = new Set(state.myWords.map(m => String(m.id)));
+            const savedMap = new Set(state.myWords.map(String));
 
             container.innerHTML = list.map(word => 
                 renderWordCard(word, savedMap.has(String(word.id)), isWordInWatchlist(word))
@@ -789,7 +780,7 @@
             const container = $('#mywords-list');
             if (!container) return;
 
-            const savedMap = new Set(state.myWords.map(m => String(m.id)));
+            const savedMap = new Set(state.myWords.map(String));
             const savedWordsFull = state.allWords.filter(w => savedMap.has(String(w.id)));
 
             if (savedWordsFull.length === 0) {
@@ -866,37 +857,6 @@
             if ($('#stat-watchlist')) $('#stat-watchlist').innerText = validWatchlistCount;
         };
 
-        const setupAuth = async () => {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    try {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } catch (tokenError) {
-                        await signInAnonymously(auth);
-                    }
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (error) {
-                console.error("Auth init error", error);
-            }
-
-            onAuthStateChanged(auth, (user) => {
-                state.user = user;
-                if (user) {
-                    const colRef = collection(db, 'artifacts', appId, 'users', user.uid, 'my_vocabulary');
-                    onSnapshot(colRef, (snap) => {
-                        state.myWords = snap.docs.map(d => d.data());
-                        if($('#mywords-count')) $('#mywords-count').innerText = `${state.myWords.length} từ`;
-                        if($('#stat-saved-words')) $('#stat-saved-words').innerText = state.myWords.length;
-                        if (state.activeTab === 'mywords') renderMyWords();
-                        if (state.activeTab === 'library') displayVocabulary();
-                        updateDashboardStats();
-                    }, (err) => console.error("Firestore sync error", err));
-                }
-            });
-        };
-
         const fetchSheetData = async () => {
             $('#loader').classList.remove('hidden');
             try {
@@ -958,14 +918,12 @@
                 const response = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: formData });
                 if (!response.ok) throw new Error("Xóa không thành công trên máy chủ.");
 
-                // Delete from user's saved firestore if saved
-                if (state.user) {
-                    const docRef = doc(db, 'artifacts', appId, 'users', state.user.uid, 'my_vocabulary', wordId);
-                    await deleteDoc(docRef).catch(() => {});
-                }
+                // Remove from local saved words
+                state.myWords = state.myWords.filter(item => String(item) !== String(wordId));
+                localStorage.setItem('vocab_saved_words_v2', JSON.stringify(state.myWords));
 
                 // Remove from local watchlist
-                state.watchlist = state.watchlist.filter(item => item !== wordId);
+                state.watchlist = state.watchlist.filter(item => String(item) !== String(wordId));
                 localStorage.setItem('vocab_watchlist_data_v2', JSON.stringify(state.watchlist));
 
                 await fetchSheetData();
@@ -1099,7 +1057,7 @@
                                     ${!isEnVi && word.ipa ? `<p class="text-purple-300 font-mono text-xs">/${word.ipa}/</p>` : ''}
                                 </div>
                                 <div class="text-left bg-black/40 p-4 rounded-2xl border border-white/10 my-2 space-y-2">
-                                    ${word.definition ? `<p class="text-xs text-purple-200"><strong class="text-white">Định nghĩa:</strong> ${word.definition.replace(/(?:\r\n|\r|\n|\\n)/g, '<br>')}</p>` : ''}
+                                    ${word.definition ? `<p class="text-xs text-purple-200"><strong class="text-white">Giải thích:</strong> ${word.definition.replace(/(?:\r\n|\r|\n|\\n)/g, '<br>')}</p>` : ''}
                                     ${word.example ? `<div class="text-xs">${formatExamples(word.example)}</div>` : ''}
                                 </div>
                                 <button onclick="event.stopPropagation(); window.app.playAudio('${safeEnglish}')" class="py-2 px-4 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-bold mx-auto flex items-center gap-2 transition-all active:scale-95 shadow-lg shadow-purple-900/50">
@@ -1410,28 +1368,26 @@
                 postToSheet(formData, Boolean(id));
             },
 
-            toggleSaveWord: async (wordId) => {
-                if (!state.user) {
-                    showToast("Đang kết nối tài khoản, vui lòng thử lại.", "error");
-                    return;
-                }
-                const docRef = doc(db, 'artifacts', appId, 'users', state.user.uid, 'my_vocabulary', String(wordId));
-                const isSaved = state.myWords.some(m => String(m.id) === String(wordId));
+            toggleSaveWord: (wordId) => {
+                const isSaved = state.myWords.includes(String(wordId));
                 
-                try {
-                    if (isSaved) {
-                        await deleteDoc(docRef);
-                        showToast("Đã bỏ khỏi danh sách từ thuộc", "success");
-                    } else {
-                        const wordData = state.allWords.find(w => String(w.id) === String(wordId));
-                        if (wordData) {
-                            await setDoc(docRef, { ...wordData, savedAt: new Date().toISOString() });
-                            showToast("Đã lưu vào danh sách thuộc!", "success");
-                        }
-                    }
-                } catch (err) {
-                    showToast("Lỗi khi đồng bộ lưu từ", "error");
+                if (isSaved) {
+                    state.myWords = state.myWords.filter(id => String(id) !== String(wordId));
+                    showToast("Đã bỏ khỏi danh sách từ đã thuộc", "success");
+                } else {
+                    state.myWords.push(String(wordId));
+                    showToast("Đã đánh dấu là từ đã thuộc!", "success");
                 }
+                
+                localStorage.setItem('vocab_saved_words_v2', JSON.stringify(state.myWords));
+                
+                // Update UI everywhere
+                if($('#mywords-count')) $('#mywords-count').innerText = `${state.myWords.length} từ`;
+                if($('#stat-saved-words')) $('#stat-saved-words').innerText = state.myWords.length;
+                
+                if (state.activeTab === 'library') displayVocabulary();
+                if (state.activeTab === 'mywords') renderMyWords();
+                updateDashboardStats();
             },
 
             toggleWatchlist: (wordId) => {
@@ -1508,6 +1464,28 @@
                 displayVocabulary();
             },
             
+            searchWord: (keyword) => {
+                // Feature: Click Synonym/Antonym to search
+                if (state.activeTab !== 'library') {
+                    window.app.switchTab('library');
+                }
+                
+                // Reset other filters to ensure the word shows up
+                state.library.filter = 'all';
+                state.library.topic = 'all';
+                $$('.filter-btn').forEach(btn => {
+                    btn.className = "filter-btn bg-slate-900/80 border border-slate-800 hover:border-slate-700 px-4 py-2.5 rounded-xl text-xs sm:text-sm transition-all text-slate-400 font-medium";
+                });
+                const allBtn = $$('.filter-btn')[0];
+                if(allBtn) allBtn.className = "filter-btn bg-purple-600 text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm transition-all font-bold shadow-lg shadow-purple-900/40";
+                
+                state.library.search = keyword;
+                if ($('#search-input')) $('#search-input').value = keyword;
+                
+                displayVocabulary();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
+
             handleTopicSearch: (e) => {
                 state.library.topicSearch = e.target.value;
                 renderTopicNav();
@@ -1518,7 +1496,7 @@
             // EDITED: Now filters to only include words that are in "myWords" (Từ đã thuộc)
             startPractice: (type, mode = 'en-vi') => {
                 // Determine saved IDs to map against full word objects for robust data
-                const savedMap = new Set(state.myWords.map(m => String(m.id)));
+                const savedMap = new Set(state.myWords.map(String));
                 let sourcePool = state.allWords.filter(w => savedMap.has(String(w.id)));
 
                 if (sourcePool.length === 0) {
@@ -1644,7 +1622,10 @@
         // Initialize App on DOM Load
         document.addEventListener('DOMContentLoaded', () => {
             renderNav();
-            setupAuth();
+            // Cập nhật số lượng hiển thị ngay lập tức từ Local Storage
+            if($('#mywords-count')) $('#mywords-count').innerText = `${state.myWords.length} từ`;
+            if($('#stat-saved-words')) $('#stat-saved-words').innerText = state.myWords.length;
+            
             fetchSheetData();
             updateStreak();
         });
