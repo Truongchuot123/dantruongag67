@@ -1180,34 +1180,77 @@
             renderNotesList();
         }
 
+        
         function renderNotesList() {
             const container = document.getElementById('notes-grid');
             const counter = document.getElementById('notes-counter');
+
             if (!container) return;
 
-            if (counter) counter.textContent = `${clinicalNotes.length} ghi chú`;
+            if (counter) {
+                counter.textContent = `${clinicalNotes.length} ghi chú`;
+            }
 
             if (clinicalNotes.length === 0) {
                 container.innerHTML = `
                     <div class="col-span-full text-center py-10 text-gray-500 text-xs">
                         <i class="fas fa-folder-open text-2xl mb-2"></i>
-                        <p>Sổ tay trống. Hãy thêm ghi chú mới lâm sàng!</p>
-                    </div>`;
+                        <p>Sổ tay trống. Hãy thêm ghi chú mới!</p>
+                    </div>
+                `;
                 return;
             }
 
-            container.innerHTML = clinicalNotes.map(n => `
-                <div class="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-indigo-500/50 transition duration-300 relative group">
-                    <span class="text-[8px] uppercase font-extrabold px-2 py-0.5 bg-indigo-500/20 text-indigo-300 rounded">${n.tag}</span>
-                    <h4 class="text-sm font-bold text-white mt-1.5 mb-1">${n.title}</h4>
-                    <p class="text-xs text-gray-400 leading-relaxed">${n.content}</p>
-                    
-                    <div class="flex justify-end gap-2 mt-3 opacity-0 group-hover:opacity-100 transition">
-                        <button onclick="copyNoteContent('${n.content.replace(/'/g, "\\'")}')" class="text-[10px] text-teal-400 hover:text-white" title="Sao chép nội dung"><i class="fas fa-copy"></i> Sao chép</button>
-                        <button onclick="deleteClinicalNote(${n.id})" class="text-[10px] text-red-400 hover:text-white" title="Xóa ghi chú"><i class="fas fa-trash-alt"></i> Xóa</button>
+            container.innerHTML = clinicalNotes.map(n => {
+                // Chuyển ký tự xuống dòng thành thẻ <br>
+                const displayContent = n.content
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/\n/g, '<br>');
+
+                // Chuẩn bị nội dung sao chép an toàn
+                const safeCopyContent = n.content
+                    .replace(/\\/g, '\\\\')
+                    .replace(/'/g, "\\'")
+                    .replace(/\r?\n/g, '\\n');
+
+                return `
+                    <div class="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-indigo-500/50 transition duration-300 relative group">
+
+                        <span class="text-[8px] uppercase font-extrabold px-2 py-0.5 bg-indigo-500/20 text-indigo-300 rounded">
+                            ${n.tag}
+                        </span>
+
+                        <h4 class="text-sm font-bold text-white mt-1.5 mb-1">
+                            ${n.title}
+                        </h4>
+
+                        <!-- Nội dung ghi chú được xuống dòng -->
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            ${displayContent}
+                        </p>
+
+                        <div class="flex justify-end gap-2 mt-3 opacity-0 group-hover:opacity-100 transition">
+
+                            <button
+                                onclick="copyNoteContent('${safeCopyContent}')"
+                                class="text-[10px] text-teal-400 hover:text-white"
+                                title="Sao chép nội dung">
+                                <i class="fas fa-copy"></i> Sao chép
+                            </button>
+
+                            <button
+                                onclick="deleteClinicalNote(${n.id})"
+                                class="text-[10px] text-red-400 hover:text-white"
+                                title="Xóa ghi chú">
+                                <i class="fas fa-trash-alt"></i> Xóa
+                            </button>
+
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function saveNewNote() {
