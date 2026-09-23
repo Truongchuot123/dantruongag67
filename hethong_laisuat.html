@@ -118,7 +118,7 @@
             transition: all 0.3s ease;
         }
         .input-dark:focus {
-            border-color: #10b981;
+            border-color: #10b981; /* Default focus color is emerald */
             background-color: rgba(15, 23, 42, 0.9);
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
             outline: none;
@@ -538,14 +538,26 @@
             <!-- Tab: Lịch Sử Giao Dịch -->
             <div id="view-transactions" class="view-section space-y-8">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Thêm mới -->
+                    <!-- Thêm mới Giao dịch -->
                     <div class="glass-panel p-6 rounded-3xl h-fit sticky top-28">
                         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
-                        <h3 class="text-sm font-extrabold text-white mb-6 flex items-center gap-2">
+                        <h3 class="text-sm font-extrabold text-white mb-5 flex items-center gap-2">
                             <span class="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400"><i class="fa-solid fa-plus"></i></span>
-                            Thêm Giao Dịch
+                            Thêm Ghi Nhận
                         </h3>
-                        <form id="transaction-form" onsubmit="handleSavingsSubmit(event)" class="space-y-5">
+
+                        <!-- Tabs Toggle: Gửi tiền vs Tiền phòng khám -->
+                        <div class="flex p-1 bg-slate-900/60 border border-slate-800/50 rounded-xl mb-6">
+                            <button id="tab-tx-normal" type="button" onclick="switchTxType('normal')" class="flex-1 py-2 text-xs font-bold rounded-lg bg-indigo-500/20 text-indigo-300 transition-all border border-indigo-500/30 shadow-sm flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-money-bill-transfer"></i> Gửi tiền
+                            </button>
+                            <button id="tab-tx-clinic" type="button" onclick="switchTxType('clinic')" class="flex-1 py-2 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all border border-transparent flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-user-doctor"></i> Tiền phòng khám
+                            </button>
+                        </div>
+
+                        <!-- Form 1: Gửi tiền thường -->
+                        <form id="transaction-form" onsubmit="handleSavingsSubmit(event, 'normal')" class="space-y-5">
                             <div>
                                 <label class="block text-[11px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Số tiền (VNĐ)</label>
                                 <input type="text" id="tx-amount" oninput="formatCurrencyInput(this)" required placeholder="10.000.000" class="input-dark input-dark-indigo w-full px-4 py-3 rounded-xl font-mono-num font-extrabold text-white text-lg">
@@ -556,12 +568,40 @@
                             </div>
                             <div>
                                 <label class="block text-[11px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Ghi chú (Tùy chọn)</label>
-                                <!-- Sử dụng datalist để tạo tính năng dropdown nhưng vẫn cho nhập liệu -->
                                 <input type="text" id="tx-note" list="tx-note-suggestions" placeholder="Nhập tại đây..." class="input-dark input-dark-indigo w-full px-4 py-3 rounded-xl text-white">
                                 <datalist id="tx-note-suggestions"></datalist>
                             </div>
-                            <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold py-3.5 rounded-xl transition-all duration-300 shadow-lg shadow-indigo-600/25 btn-smooth mt-2">
-                                Ghi Nhận
+                            <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold py-3.5 rounded-xl transition-all duration-300 shadow-lg shadow-indigo-600/25 btn-smooth mt-2 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-check"></i> Ghi Nhận
+                            </button>
+                        </form>
+
+                        <!-- Form 2: Tiền phòng khám -->
+                        <form id="transaction-form-clinic" onsubmit="handleSavingsSubmit(event, 'clinic')" class="space-y-5 hidden">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Số ca (50k/ca)</label>
+                                    <div class="relative">
+                                        <input type="number" id="tx-clinic-cases" min="0" oninput="calculateClinicTotal()" placeholder="0" class="input-dark w-full pl-4 pr-10 py-3 rounded-xl font-mono-num font-extrabold text-white text-base transition-all focus:bg-slate-900">
+                                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs font-bold pointer-events-none">ca</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Tiền típ (VNĐ)</label>
+                                    <input type="text" id="tx-clinic-tips" oninput="formatCurrencyInput(this); calculateClinicTotal()" placeholder="0" class="input-dark w-full px-4 py-3 rounded-xl font-mono-num font-extrabold text-white text-base transition-all focus:bg-slate-900">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Ngày làm việc</label>
+                                <input type="date" id="tx-clinic-date" required class="input-dark w-full px-4 py-3 rounded-xl text-white font-mono-num cursor-pointer">
+                            </div>
+                            <div class="bg-emerald-950/20 p-4 rounded-xl border border-emerald-500/20 text-center relative overflow-hidden group">
+                                <div class="absolute -right-2 -bottom-2 w-16 h-16 bg-emerald-500/10 rounded-full blur-md group-hover:bg-emerald-500/20 transition-all"></div>
+                                <span class="block text-[10px] text-emerald-400 font-bold uppercase tracking-widest mb-1 relative z-10">Tổng thu nhập</span>
+                                <span id="tx-clinic-total" class="font-black text-emerald-400 font-mono-num text-2xl drop-shadow-md relative z-10">0 ₫</span>
+                            </div>
+                            <button type="submit" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold py-3.5 rounded-xl transition-all duration-300 shadow-lg shadow-emerald-600/25 btn-smooth mt-2 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-notes-medical"></i> Ghi Nhận Phòng Khám
                             </button>
                         </form>
                     </div>
@@ -773,6 +813,7 @@
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('tx-date').value = today;
             document.getElementById('counter-date').value = today;
+            document.getElementById('tx-clinic-date').value = today;
             if(!appData.savings.config.startDate) document.getElementById('config-start-date').value = today;
             
             Chart.defaults.color = '#94a3b8';
@@ -800,7 +841,6 @@
         }
         function parseVND(str) { return parseFloat(str.replace(/[^0-9]/g, '')) || 0; }
 
-        // Hàm chuyển đổi chuỗi YYYY-MM-DD thành ngày giờ địa phương chuẩn (tránh lệch múi giờ UTC)
         function parseLocalDate(ds) {
             if (!ds) return new Date();
             const parts = ds.split('-');
@@ -1215,7 +1255,6 @@
             });
         }
 
-        // ================= NEW FUNCTIONS CHO DROPDOWN GHI CHÚ LỊCH SỬ TIẾT KIỆM =================
         function getUniqueSavingsNotes() {
             const notes = appData.savings.transactions.map(t => t.note).filter(n => n && n.trim() !== '');
             return [...new Set(notes)];
@@ -1224,13 +1263,11 @@
         function updateNoteDropdowns() {
             const uniqueNotes = getUniqueSavingsNotes();
             
-            // Cập nhật Datalist (cho form nhập liệu)
             const datalist = document.getElementById('tx-note-suggestions');
             if (datalist) {
                 datalist.innerHTML = uniqueNotes.map(n => `<option value="${n}">`).join('');
             }
             
-            // Cập nhật Filter Select (cho phần lịch sử)
             const filterSelect = document.getElementById('tx-filter-note');
             if (filterSelect) {
                 const currentVal = filterSelect.value;
@@ -1240,7 +1277,6 @@
                 });
                 filterSelect.innerHTML = html;
                 
-                // Giữ lại giá trị đang chọn nếu nó vẫn tồn tại sau khi update
                 if (uniqueNotes.includes(currentVal)) {
                     filterSelect.value = currentVal;
                 } else {
@@ -1248,7 +1284,6 @@
                 }
             }
         }
-        // ======================================================================================
 
         function initSavings() {
             const conf = appData.savings.config;
@@ -1257,7 +1292,7 @@
             document.getElementById('config-rate-1').value = conf.rate1;
             document.getElementById('config-rate-2').value = conf.rate2;
             
-            updateNoteDropdowns(); // Khởi tạo dropdown khi load trang
+            updateNoteDropdowns();
             renderSavingsTransactions();
         }
 
@@ -1274,21 +1309,79 @@
             switchTab('dashboard');
         }
 
-        function handleSavingsSubmit(e) {
-            e.preventDefault();
-            const amtStr = document.getElementById('tx-amount').value;
-            const amt = parseVND(amtStr);
-            if(amt <= 0) return showToast("Số tiền không hợp lệ", "error");
+        // Logic xử lý chuyển đổi giữa form "Gửi tiền" và "Phòng khám"
+        function switchTxType(type) {
+            const btnN = document.getElementById('tab-tx-normal');
+            const btnC = document.getElementById('tab-tx-clinic');
+            const formN = document.getElementById('transaction-form');
+            const formC = document.getElementById('transaction-form-clinic');
 
-            const tx = { id: Date.now().toString(), amount: amt, date: document.getElementById('tx-date').value, note: document.getElementById('tx-note').value.trim() };
+            if (type === 'normal') {
+                btnN.className = 'flex-1 py-2 text-xs font-bold rounded-lg bg-indigo-500/20 text-indigo-300 transition-all border border-indigo-500/30 shadow-sm flex items-center justify-center gap-1.5';
+                btnC.className = 'flex-1 py-2 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all border border-transparent flex items-center justify-center gap-1.5';
+                formN.classList.remove('hidden');
+                formC.classList.add('hidden');
+            } else {
+                btnC.className = 'flex-1 py-2 text-xs font-bold rounded-lg bg-emerald-500/20 text-emerald-400 transition-all border border-emerald-500/30 shadow-sm flex items-center justify-center gap-1.5';
+                btnN.className = 'flex-1 py-2 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all border border-transparent flex items-center justify-center gap-1.5';
+                formC.classList.remove('hidden');
+                formN.classList.add('hidden');
+                
+                if(!document.getElementById('tx-clinic-date').value) {
+                    document.getElementById('tx-clinic-date').value = new Date().toISOString().split('T')[0];
+                }
+            }
+        }
+
+        // Hàm tính tổng thu nhập tiền phòng khám
+        function calculateClinicTotal() {
+            const cases = parseInt(document.getElementById('tx-clinic-cases').value) || 0;
+            const tips = parseVND(document.getElementById('tx-clinic-tips').value) || 0;
+            
+            const total = (cases * 50000) + tips;
+            
+            document.getElementById('tx-clinic-total').innerText = total.toLocaleString('vi-VN') + ' ₫';
+            return total;
+        }
+
+        // Hàm xử lý lưu dòng tiền chung cho cả 2 Tab
+        function handleSavingsSubmit(e, type = 'normal') {
+            e.preventDefault();
+            
+            let amt, date, note;
+
+            if (type === 'normal') {
+                amt = parseVND(document.getElementById('tx-amount').value);
+                date = document.getElementById('tx-date').value;
+                note = document.getElementById('tx-note').value.trim();
+                
+                if(amt <= 0) return showToast("Số tiền không hợp lệ", "error");
+            } else if (type === 'clinic') {
+                amt = calculateClinicTotal();
+                date = document.getElementById('tx-clinic-date').value;
+                note = "Tiền phòng khám theo ca"; // Nội dung cố định theo yêu cầu
+                
+                if(amt <= 0) return showToast("Vui lòng nhập số ca hoặc tiền típ", "error");
+            }
+
+            const tx = { id: Date.now().toString(), amount: amt, date: date, note: note };
             appData.savings.transactions.push(tx);
             appData.savings.transactions.sort((a,b) => parseLocalDate(a.date) - parseLocalDate(b.date));
             saveData();
             
-            document.getElementById('tx-amount').value = ''; document.getElementById('tx-note').value = '';
-            showToast("Đã thêm giao dịch gửi tiền");
+            // Xóa trường biểu mẫu
+            if (type === 'normal') {
+                document.getElementById('tx-amount').value = ''; 
+                document.getElementById('tx-note').value = '';
+            } else {
+                document.getElementById('tx-clinic-cases').value = '';
+                document.getElementById('tx-clinic-tips').value = '';
+                calculateClinicTotal(); // Reset bộ đếm text
+            }
             
-            updateNoteDropdowns(); // Cập nhật lại dropdown sau khi thêm
+            showToast("Đã thêm ghi nhận dòng tiền thành công");
+            
+            updateNoteDropdowns(); 
             renderSavingsTransactions();
             updateSavingsDashboard();
         }
@@ -1297,17 +1390,17 @@
             appData.savings.transactions = appData.savings.transactions.filter(t => t.id !== id);
             saveData(); 
             
-            updateNoteDropdowns(); // Cập nhật lại dropdown sau khi xoá
+            updateNoteDropdowns(); 
             renderSavingsTransactions();
             updateSavingsDashboard();
         }
 
         function confirmClearSavings() {
-            if(confirm("Bạn có chắc chắn muốn xóa tất cả dữ liệu")) {
+            if(confirm("Bạn có chắc chắn muốn xóa tất cả dữ liệu tiết kiệm và phòng khám?")) {
                 appData.savings.transactions = [];
                 saveData(); 
                 
-                updateNoteDropdowns(); // Cập nhật lại dropdown khi reset data
+                updateNoteDropdowns(); 
                 renderSavingsTransactions(); 
                 updateSavingsDashboard();
             }
@@ -1317,7 +1410,6 @@
             const container = document.getElementById('grouped-tx-container');
             let txs = appData.savings.transactions;
             
-            // Xử lý logic lọc (Filter)
             const filterValue = document.getElementById('tx-filter-note')?.value || '';
             if (filterValue) {
                 txs = txs.filter(t => t.note === filterValue);
@@ -1326,7 +1418,7 @@
             document.getElementById('tx-count').innerText = `${txs.length} khoản`;
             
             if (txs.length === 0) {
-                container.innerHTML = `<div class="text-center py-10 text-slate-500 font-medium text-sm">Chưa có giao dịch nào${filterValue ? ' phù hợp với bộ lọc.' : '.'}</div>`;
+                container.innerHTML = `<div class="text-center py-10 text-slate-500 font-medium text-sm border border-dashed border-slate-800 rounded-2xl">Chưa có giao dịch nào${filterValue ? ' phù hợp với bộ lọc.' : '.'}</div>`;
                 return;
             }
 
@@ -1348,11 +1440,16 @@
                             </div>
                             <div class="divide-y divide-slate-800/30">`;
                 items.forEach(tx => {
+                    // Đánh dấu giao dịch phòng khám bằng màu sắc khác nhẹ (Emerald)
+                    const isClinic = tx.note === "Tiền phòng khám theo ca";
+                    const amountColor = isClinic ? "text-emerald-400" : "text-white";
+                    const iconHTML = isClinic ? `<i class="fa-solid fa-user-doctor text-emerald-500/50 mr-1.5 text-xs"></i>` : '';
+
                     html += `
                         <div class="p-5 flex justify-between items-center hover:bg-slate-800/40 transition-colors group">
                             <div>
-                                <p class="font-black text-white text-[15px] font-mono-num">${formatVND(tx.amount)}</p>
-                                <p class="text-xs text-slate-400 mt-1">${formatDate(tx.date)} ${tx.note ? ` • ${tx.note}` : ''}</p>
+                                <p class="font-black ${amountColor} text-[15px] font-mono-num drop-shadow-sm">${formatVND(tx.amount)}</p>
+                                <p class="text-xs text-slate-400 mt-1">${formatDate(tx.date)} ${tx.note ? ` • ${iconHTML}${tx.note}` : ''}</p>
                             </div>
                             <button onclick="deleteSavingsTx('${tx.id}')" class="text-slate-500 hover:text-rose-400 w-8 h-8 rounded-lg flex items-center justify-center hover:bg-rose-500/10 transition-colors opacity-0 group-hover:opacity-100">
                                 <i class="fa-solid fa-trash-can"></i>
@@ -1401,7 +1498,6 @@
                 currentMonthDate.setMonth(currentMonthDate.getMonth() + month);
                 
                 const isPastLimit = currentMonthDate > limitDate;
-                // Tháng 1 đến 6 dùng Lãi suất 1, từ tháng 7 trở đi dùng Lãi suất 2
                 const currentRate = (month <= 6) ? conf.rate1 : conf.rate2;
                 
                 const prevMonthDate = new Date(startDate); 
@@ -1456,188 +1552,203 @@
             const slider = document.getElementById('timeline-slider');
             
             if (!res) {
-                document.getElementById('card-total-principal').innerText = '0 ₫'; 
+                document.getElementById('card-total-principal').innerText = '0 ₫';
                 document.getElementById('card-total-interest').innerText = '0 ₫';
-                document.getElementById('card-current-balance').innerText = '0 ₫'; 
+                document.getElementById('card-current-balance').innerText = '0 ₫';
                 document.getElementById('card-yield').innerText = '0%';
-                document.getElementById('monthly-table-body').innerHTML = `<tr><td colspan="3" class="text-center p-6 text-slate-500 text-xs">Chưa có dữ liệu.</td></tr>`;
-                slider.max = 12; slider.value = 12;
+                
+                slider.max = 0; slider.value = 0;
+                document.getElementById('time-widget-progress-bar').style.width = '0%';
+                
+                document.getElementById('monthly-table-body').innerHTML = `<tr><td colspan="3" class="text-center p-8 text-slate-500 font-bold border border-dashed border-slate-800 rounded-xl m-2 inline-block w-[calc(100%-16px)]">Chưa có dữ liệu giao dịch</td></tr>`;
+                
+                if(growthChartInstance) { growthChartInstance.destroy(); growthChartInstance = null; }
                 return;
             }
 
             calculatedMonthlyData = res.monthlyData;
             
-            document.getElementById('card-total-principal').innerText = formatVND(res.finalPrincipal);
-            document.getElementById('card-total-interest').innerText = formatVND(res.finalInterest);
-            document.getElementById('card-current-balance').innerText = formatVND(res.finalBalance);
-            document.getElementById('card-yield').innerText = (res.finalPrincipal > 0 ? ((res.finalInterest / res.finalPrincipal) * 100).toFixed(2) : 0) + '%';
+            // Cập nhật slider max value
+            slider.max = appData.savings.config.duration;
+            const currentMonthIdx = parseInt(slider.value);
+            const safeIdx = Math.min(currentMonthIdx, calculatedMonthlyData.length - 1);
+            slider.value = safeIdx;
+            
+            updateSliderView(safeIdx);
 
-            const totalMonths = appData.savings.config.duration;
-            document.getElementById('time-widget-duration').innerText = `${totalMonths} tháng`;
+            // Cập nhật Time widget
+            document.getElementById('time-widget-duration').innerText = appData.savings.config.duration + ' tháng';
+            const now = new Date(); now.setHours(0,0,0,0);
             
-            let monthsElapsed = 0; 
-            const now = new Date();
-            now.setHours(0,0,0,0);
-            
-            if (now > res.endDate) monthsElapsed = totalMonths;
-            else if (now >= res.startDate) {
-                monthsElapsed = (now.getFullYear() - res.startDate.getFullYear()) * 12 - res.startDate.getMonth() + now.getMonth();
+            let elapsedMonths = 0;
+            if (now >= res.endDate) { elapsedMonths = appData.savings.config.duration; }
+            else if (now <= res.startDate) { elapsedMonths = 0; }
+            else {
+                elapsedMonths = (now.getFullYear() - res.startDate.getFullYear()) * 12 + now.getMonth() - res.startDate.getMonth();
+                if (now.getDate() < res.startDate.getDate()) elapsedMonths--;
+                if(elapsedMonths < 0) elapsedMonths = 0;
             }
             
-            const pct = Math.min(100, Math.max(0, (monthsElapsed / totalMonths) * 100));
-            document.getElementById('time-widget-progress-bar').style.width = `${pct}%`;
-            document.getElementById('time-widget-elapsed').innerText = `${monthsElapsed} tháng`;
-            document.getElementById('time-widget-remaining').innerText = `${Math.max(0, totalMonths - monthsElapsed)} tháng`;
+            document.getElementById('time-widget-elapsed').innerText = elapsedMonths + ' tháng';
+            document.getElementById('time-widget-remaining').innerText = Math.max(0, appData.savings.config.duration - elapsedMonths) + ' tháng';
+            const pct = Math.min(100, Math.max(0, (elapsedMonths / appData.savings.config.duration) * 100));
+            document.getElementById('time-widget-progress-bar').style.width = pct + '%';
+            
+            renderMonthlyTable();
+            updateGrowthChart();
+        }
 
-            slider.max = totalMonths;
-            slider.value = res.monthlyData.findIndex(d => d.date >= res.limitDate);
-            if (slider.value == -1) slider.value = totalMonths;
-            updateSliderView(slider.value);
-
-            let tbody = '';
-            res.monthlyData.forEach(d => {
-                if(d.monthIndex === 0 && d.addedPrincipal === 0) return;
-                const opacity = d.isFuture ? 'opacity-30' : '';
-                tbody += `<tr class="${opacity} hover:bg-slate-800/40 transition-colors">
-                    <td class="p-3 pl-5 text-slate-300 font-bold">T${d.monthIndex}</td>
-                    <td class="p-3 text-right text-emerald-400 font-bold">+${formatVND(d.interestGenerated)}</td>
+        function updateSliderView(val) {
+            const idx = parseInt(val);
+            document.getElementById('slider-month-label').innerText = 'T' + idx;
+            
+            if (calculatedMonthlyData && calculatedMonthlyData[idx]) {
+                const data = calculatedMonthlyData[idx];
+                document.getElementById('slider-val-principal').innerText = formatVND(data.accumulatedPrincipal);
+                document.getElementById('slider-val-total').innerText = formatVND(data.balance);
+                
+                if(idx === appData.savings.config.duration || calcTarget === 'today') {
+                    // Update main cards only if on current view
+                    document.getElementById('card-total-principal').innerText = formatVND(data.accumulatedPrincipal);
+                    document.getElementById('card-total-interest').innerText = formatVND(data.totalInterest);
+                    document.getElementById('card-current-balance').innerText = formatVND(data.balance);
+                    
+                    const yieldPct = data.accumulatedPrincipal > 0 ? ((data.totalInterest / data.accumulatedPrincipal) * 100).toFixed(2) : 0;
+                    document.getElementById('card-yield').innerText = yieldPct + '%';
+                }
+            }
+        }
+        
+        function renderMonthlyTable() {
+            const tbody = document.getElementById('monthly-table-body');
+            let html = '';
+            
+            calculatedMonthlyData.forEach(d => {
+                const isPast = !d.isFuture;
+                const rowClass = isPast ? 'bg-slate-900/20 hover:bg-slate-800/40' : 'bg-slate-950/20 opacity-50';
+                
+                html += `
+                <tr class="tr-smooth border-b border-slate-800/20 ${rowClass}">
+                    <td class="p-3 pl-5 text-slate-300 font-bold whitespace-nowrap">Tháng ${d.monthIndex}</td>
+                    <td class="p-3 text-right text-emerald-400 font-black">+${formatVND(d.interestGenerated)}</td>
                     <td class="p-3 text-right pr-5 text-white font-black">${formatVND(d.balance)}</td>
                 </tr>`;
             });
-            document.getElementById('monthly-table-body').innerHTML = tbody;
+            tbody.innerHTML = html;
+        }
+
+        function updateGrowthChart() {
+            const labels = calculatedMonthlyData.map(d => 'T' + d.monthIndex);
+            const dataPrincipal = calculatedMonthlyData.map(d => d.accumulatedPrincipal);
+            const dataInterest = calculatedMonthlyData.map(d => d.totalInterest);
             
             const ctx = document.getElementById('growthChart').getContext('2d');
-            if (growthChartInstance) growthChartInstance.destroy();
+            if(growthChartInstance) growthChartInstance.destroy();
+            
             growthChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: res.monthlyData.map(d => `T${d.monthIndex}`),
+                    labels: labels,
                     datasets: [
-                        { label: 'Gốc', data: res.monthlyData.map(d => d.accumulatedPrincipal), backgroundColor: '#4f46e5', borderRadius: 4 },
-                        { label: 'Lãi', data: res.monthlyData.map(d => d.totalInterest), backgroundColor: '#10b981', borderRadius: 4 }
+                        { label: 'Gốc Tích Lũy', data: dataPrincipal, backgroundColor: 'rgba(99, 102, 241, 0.8)', stack: 'Stack 0', borderRadius: {topLeft: 0, topRight: 0, bottomLeft: 4, bottomRight: 4} },
+                        { label: 'Lãi Phát Sinh', data: dataInterest, backgroundColor: 'rgba(16, 185, 129, 0.8)', stack: 'Stack 0', borderRadius: {topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0} }
                     ]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     scales: {
                         x: { stacked: true, grid: { display: false } },
-                        y: { stacked: true, grid: { color: 'rgba(255,255,255,0.05)', borderDash: [5,5] }, ticks: { callback: v => (v/1000000) + 'M' } }
+                        y: { stacked: true, grid: { color: 'rgba(255,255,255,0.05)', borderDash: [5, 5] }, ticks: { callback: (v) => (v/1000000) + 'M' } }
                     },
-                    plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.9)' } }
+                    plugins: { tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.9)', cornerRadius: 8, padding: 12, callbacks: { label: (ctx) => ctx.dataset.label + ': ' + formatVND(ctx.raw) } } }
                 }
             });
         }
-
-        function updateSliderView(val) {
-            const m = parseInt(val);
-            document.getElementById('slider-month-label').innerText = m === 0 ? 'Khởi đầu' : `Tháng ${m}`;
-            if (calculatedMonthlyData && calculatedMonthlyData[m]) {
-                const d = calculatedMonthlyData[m];
-                document.getElementById('slider-val-principal').innerText = formatVND(d.accumulatedPrincipal);
-                document.getElementById('slider-val-total').innerText = formatVND(d.balance);
-            }
+        
+        // ================= PDF Generation Functions =================
+        function triggerPrint() {
+            updatePrintView();
+            const modal = document.getElementById('pdf-preview-modal');
+            const loading = document.getElementById('pdf-loading');
+            const iframe = document.getElementById('pdf-iframe');
+            
+            modal.classList.remove('hidden');
+            iframe.style.opacity = '0';
+            loading.style.display = 'flex';
+            
+            requestAnimationFrame(() => { modal.classList.remove('opacity-0'); modal.querySelector('.glass-panel').classList.remove('scale-95'); });
+            
+            setTimeout(() => {
+                const element = document.getElementById('pdf-export-container');
+                const opt = {
+                    margin: [10, 10, 10, 10],
+                    filename: 'Bao_Cao_Kiem_Ke_' + document.getElementById('counter-date').value + '.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+                
+                html2pdf().set(opt).from(element).outputPdf('datauristring').then(function(pdfAsString) {
+                    iframe.src = pdfAsString;
+                    loading.style.display = 'none';
+                    iframe.style.opacity = '1';
+                    
+                    const dlBtn = document.getElementById('btn-download-pdf');
+                    dlBtn.onclick = function() {
+                        html2pdf().set(opt).from(element).save();
+                        return false;
+                    };
+                });
+            }, 500);
+        }
+        
+        function closePDFModal() {
+            const modal = document.getElementById('pdf-preview-modal');
+            modal.classList.add('opacity-0');
+            modal.querySelector('.glass-panel').classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); document.getElementById('pdf-iframe').src = ''; }, 300);
+        }
+        
+        function printFromPreview() {
+            const iframe = document.getElementById('pdf-iframe');
+            if(iframe && iframe.contentWindow) iframe.contentWindow.print();
         }
 
-        let currentPdfBlobUrl = null;
-
-        function triggerPrint() {
+        function updatePrintView() {
+            const now = new Date();
+            const dateStr = `${now.getDate().toString().padStart(2,'0')}/${(now.getMonth()+1).toString().padStart(2,'0')}/${now.getFullYear()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+            document.getElementById('printDateStr').innerText = dateStr;
+            
             const stats = calculateCounterStats();
-            if (appData.counter.sessions.length === 0) return showToast("Chưa có dữ liệu để xuất!", "error");
-
+            document.getElementById('printSessionCountStr').innerText = appData.counter.sessions.length;
+            document.getElementById('printTotalBills').innerText = stats.totalBills.toLocaleString('vi-VN');
             document.getElementById('printGrandTotalStr').innerText = stats.grandTotal.toLocaleString('vi-VN') + ' ₫';
             document.getElementById('printTotalInWords').innerText = docso(stats.grandTotal);
-            document.getElementById('printSessionCountStr').innerText = appData.counter.sessions.length;
-            document.getElementById('printDateStr').innerText = new Date().toLocaleDateString('vi-VN') + ' ' + new Date().toLocaleTimeString('vi-VN');
             
-            let tbody = '', stt = 1;
-            getSortedDenoms().forEach(denom => {
-                const bCount = stats.denomSums[denom] || 0;
-                if(bCount > 0) {
-                    tbody += `<tr>
-                        <td style="text-align:center;">${stt++}</td>
-                        <td style="text-align:right;">${denom.toLocaleString('vi-VN')} ₫</td>
-                        <td style="text-align:center;">${bCount.toLocaleString('vi-VN')}</td>
-                        <td style="text-align:right;">${(denom * bCount).toLocaleString('vi-VN')} ₫</td>
-                    </tr>`;
+            const tbody1 = document.getElementById('printTableBody');
+            const denoms = getSortedDenoms();
+            let html1 = '';
+            let printIdx = 1;
+            denoms.forEach(d => {
+                const count = stats.denomSums[d] || 0;
+                if(count > 0) {
+                    html1 += `<tr><td style="text-align:center;">${printIdx++}</td><td style="text-align:right;">${d.toLocaleString('vi-VN')} ₫</td><td style="text-align:center;">${count.toLocaleString('vi-VN')}</td><td style="text-align:right;">${(d*count).toLocaleString('vi-VN')} ₫</td></tr>`;
                 }
             });
-
-            document.getElementById('printTableBody').innerHTML = tbody;
-            document.getElementById('printTotalBills').innerText = stats.totalBills.toLocaleString('vi-VN');
+            tbody1.innerHTML = html1;
             document.getElementById('printFooterTotalBills').innerText = stats.totalBills.toLocaleString('vi-VN');
             document.getElementById('printGrandTotal').innerText = stats.grandTotal.toLocaleString('vi-VN') + ' ₫';
             
-            let sessionsBody = '';
-            appData.counter.sessions.forEach((s, idx) => {
-                let sc = 0, ss = 0; 
-                for(let d in s.counts) { const cnt = s.counts[d] || 0; sc += cnt; ss += parseInt(d) * cnt; }
-                sessionsBody += `<tr>
-                    <td style="text-align:center;">${idx + 1}</td>
-                    <td style="text-align:center;">${formatDate(s.date)}</td>
-                    <td>${s.note || ''}</td>
-                    <td style="text-align:center;">${sc.toLocaleString('vi-VN')}</td>
-                    <td style="text-align:right;">${ss.toLocaleString('vi-VN')} ₫</td>
-                </tr>`;
+            const tbody2 = document.getElementById('printSessionsBody');
+            let html2 = '';
+            appData.counter.sessions.forEach((s, i) => {
+                let stotal = 0, sbills = 0;
+                for (let d in s.counts) { stotal += parseInt(d)*(s.counts[d]||0); sbills += (s.counts[d]||0); }
+                html2 += `<tr><td style="text-align:center;">${i+1}</td><td style="text-align:center;">${formatDate(s.date)}</td><td>${s.note||''}</td><td style="text-align:center;">${sbills}</td><td style="text-align:right;">${stotal.toLocaleString('vi-VN')} ₫</td></tr>`;
             });
-            document.getElementById('printSessionsBody').innerHTML = sessionsBody;
-            
-            const modal = document.getElementById('pdf-preview-modal');
-            const content = document.getElementById('pdf-modal-content');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            
-            requestAnimationFrame(() => {
-                modal.classList.remove('opacity-0');
-                content.classList.remove('scale-95');
-                content.classList.add('scale-100');
-            });
-            
-            const iframe = document.getElementById('pdf-iframe');
-            iframe.style.opacity = '0';
-            document.getElementById('pdf-loading').style.display = 'flex';
-
-            const cloneElement = document.getElementById('pdf-export-container').cloneNode(true);
-            cloneElement.id = 'pdf-export-clone';
-            cloneElement.style.left = '0px'; cloneElement.style.top = '0px'; cloneElement.style.zIndex = '-9999'; cloneElement.style.display = 'block';
-            document.body.appendChild(cloneElement);
-
-            html2pdf().set({
-                margin: 15, filename: `KiemKe_${new Date().getTime()}.pdf`, image: { type: 'jpeg', quality: 1.0 },
-                html2canvas: { scale: 2, useCORS: true, logging: false }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            }).from(cloneElement).output('bloburl').then(function(pdfUrl) {
-                if (document.body.contains(cloneElement)) document.body.removeChild(cloneElement);
-                currentPdfBlobUrl = pdfUrl; iframe.src = pdfUrl; document.getElementById('btn-download-pdf').href = pdfUrl;
-                
-                setTimeout(() => {
-                    document.getElementById('pdf-loading').style.display = 'none';
-                    iframe.style.opacity = '1';
-                }, 1000);
-            }).catch(err => {
-                if (document.body.contains(cloneElement)) document.body.removeChild(cloneElement);
-                showToast("Lỗi tạo PDF", "error"); closePDFModal();
-            });
+            tbody2.innerHTML = html2;
         }
 
-        function closePDFModal() {
-            const modal = document.getElementById('pdf-preview-modal');
-            const content = document.getElementById('pdf-modal-content');
-            
-            modal.classList.add('opacity-0');
-            content.classList.remove('scale-100');
-            content.classList.add('scale-95');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                document.getElementById('pdf-iframe').src = '';
-                currentPdfBlobUrl = null;
-            }, 300);
-        }
-
-        function printFromPreview() {
-            const iframe = document.getElementById('pdf-iframe');
-            if (iframe && iframe.contentWindow) iframe.contentWindow.print();
-        }
     </script>
 </body>
 </html>
