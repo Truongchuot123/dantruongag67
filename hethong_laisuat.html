@@ -312,11 +312,11 @@
                             </h3>
                             <div class="space-y-5">
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Ngày ghi nhận</label>
+                                    <label class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Ngày</label>
                                     <input type="date" id="counter-date" class="input-dark w-full px-4 py-3 rounded-xl text-sm text-white font-mono-num cursor-pointer">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Ghi chú (Tùy chọn)</label>
+                                    <label class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Ghi chú</label>
                                     <input type="text" id="counter-note" placeholder="Nhập tại đây..." class="input-dark w-full px-4 py-3 rounded-xl text-sm text-white">
                                 </div>
                                 <button onclick="saveCounterSession()" class="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold py-4 rounded-xl transition-all duration-300 shadow-lg shadow-emerald-500/25 btn-smooth flex items-center justify-center gap-2 mt-2">
@@ -543,7 +543,7 @@
                         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
                         <h3 class="text-sm font-extrabold text-white mb-5 flex items-center gap-2">
                             <span class="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400"><i class="fa-solid fa-plus"></i></span>
-                            Thêm Ghi Nhận
+                            Thêm dữ liệu mới
                         </h3>
 
                         <!-- Tabs Toggle: Gửi tiền vs Tiền phòng khám -->
@@ -552,7 +552,7 @@
                                 <i class="fa-solid fa-money-bill-transfer"></i> Gửi tiền
                             </button>
                             <button id="tab-tx-clinic" type="button" onclick="switchTxType('clinic')" class="flex-1 py-2 text-xs font-bold rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all border border-transparent flex items-center justify-center gap-1.5">
-                                <i class="fa-solid fa-user-doctor"></i> Tiền phòng khám
+                                <i class="fa-solid fa-user-doctor"></i> Phòng khám
                             </button>
                         </div>
 
@@ -572,7 +572,7 @@
                                 <datalist id="tx-note-suggestions"></datalist>
                             </div>
                             <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold py-3.5 rounded-xl transition-all duration-300 shadow-lg shadow-indigo-600/25 btn-smooth mt-2 flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-check"></i> Ghi Nhận
+                                <i class="fa-solid fa-check"></i> Lưu dữ liệu
                             </button>
                         </form>
 
@@ -580,7 +580,7 @@
                         <form id="transaction-form-clinic" onsubmit="handleSavingsSubmit(event, 'clinic')" class="space-y-5 hidden">
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Số ca (50k/ca)</label>
+                                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Số ca</label>
                                     <div class="relative">
                                         <input type="number" id="tx-clinic-cases" min="0" oninput="calculateClinicTotal()" placeholder="0" class="input-dark w-full pl-4 pr-10 py-3 rounded-xl font-mono-num font-extrabold text-white text-base transition-all focus:bg-slate-900">
                                         <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs font-bold pointer-events-none">ca</span>
@@ -610,7 +610,7 @@
                     <div class="glass-panel p-6 rounded-3xl lg:col-span-2">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-slate-800/60 pb-4">
                             <div class="flex items-center gap-3 w-full sm:w-auto">
-                                <h3 class="text-sm font-extrabold text-white whitespace-nowrap">Lịch sử dòng tiền</h3>
+                                <h3 class="text-sm font-extrabold text-white whitespace-nowrap">Lịch sử tiết kiệm</h3>
                                 <!-- Bộ lọc ghi chú mới -->
                                 <div class="relative w-full sm:w-40">
                                     <select id="tx-filter-note" onchange="renderSavingsTransactions()" class="appearance-none bg-slate-900/60 border border-slate-700/50 rounded-lg pl-3 pr-8 py-1.5 text-xs text-slate-300 outline-none focus:border-indigo-500 cursor-pointer w-full">
@@ -1359,7 +1359,7 @@
             } else if (type === 'clinic') {
                 amt = calculateClinicTotal();
                 date = document.getElementById('tx-clinic-date').value;
-                note = "Tiền phòng khám theo ca"; // Nội dung cố định theo yêu cầu
+                note = "Tiền pk theo ca"; // Nội dung cố định theo yêu cầu
                 
                 if(amt <= 0) return showToast("Vui lòng nhập số ca hoặc tiền típ", "error");
             }
@@ -1379,7 +1379,7 @@
                 calculateClinicTotal(); // Reset bộ đếm text
             }
             
-            showToast("Đã thêm ghi nhận dòng tiền thành công");
+            showToast("Đã lưu dữ liệu thành công!");
             
             updateNoteDropdowns(); 
             renderSavingsTransactions();
@@ -1441,7 +1441,7 @@
                             <div class="divide-y divide-slate-800/30">`;
                 items.forEach(tx => {
                     // Đánh dấu giao dịch phòng khám bằng màu sắc khác nhẹ (Emerald)
-                    const isClinic = tx.note === "Tiền phòng khám theo ca";
+                    const isClinic = tx.note === "Tiền pk theo ca";
                     const amountColor = isClinic ? "text-emerald-400" : "text-white";
                     const iconHTML = isClinic ? `<i class="fa-solid fa-user-doctor text-emerald-500/50 mr-1.5 text-xs"></i>` : '';
 
