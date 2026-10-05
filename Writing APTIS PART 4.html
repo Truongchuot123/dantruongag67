@@ -1,25 +1,30 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aptis Email Writing Assistant</title>
+    <title>Luyện thi writing Part 4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        /* Tùy chỉnh thanh cuộn */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #0f172a; /* tailwind slate-900 */
+            color: #f8fafc; /* tailwind slate-50 */
+        }
         
-        /* Style cho ô input dạng điền vào chỗ trống */
+        /* Tùy chỉnh thanh cuộn cho giao diện tối */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; } /* slate-800 */
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; } /* slate-600 */
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; } /* slate-500 */
+        
+        /* Style cho ô input dạng điền vào chỗ trống (Dark Mode) */
         .inline-input {
             border: none;
-            border-bottom: 2px dashed #94a3b8;
+            border-bottom: 2px dashed #64748b; /* slate-500 */
             background: transparent;
-            color: #2563eb;
+            color: #60a5fa; /* blue-400 */
             font-weight: 500;
             padding: 0 4px;
             margin: 0 4px;
@@ -28,58 +33,71 @@
         }
         .inline-input:focus {
             outline: none;
-            border-bottom-color: #2563eb;
-            background-color: #eff6ff;
+            border-bottom-color: #3b82f6; /* blue-500 */
+            background-color: #1e293b; /* slate-800 */
+            border-radius: 4px 4px 0 0;
         }
         .inline-input::placeholder {
-            color: #94a3b8;
+            color: #475569; /* slate-600 */
             font-weight: 400;
         }
 
-        /* Style cho select dạng inline */
+        /* Style cho select dạng inline (Dark Mode) */
         .inline-select {
             appearance: none;
-            background-color: #f1f5f9;
-            border: 1px solid #cbd5e1;
+            background-color: #1e293b; /* slate-800 */
+            border: 1px solid #475569; /* slate-600 */
             border-radius: 4px;
             padding: 2px 24px 2px 8px;
             margin: 0 4px;
-            color: #0f172a;
+            color: #f8fafc; /* slate-50 */
             font-weight: 500;
             cursor: pointer;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 4px center;
             background-size: 14px;
         }
         .inline-select:focus {
             outline: none;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+            border-color: #3b82f6; /* blue-500 */
+            box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
         }
 
         .mad-libs-text {
             line-height: 2.2;
             font-size: 1.05rem;
-            color: #334155;
+            color: #cbd5e1; /* slate-300 */
+        }
+        
+        /* Custom textarea cho Dark mode */
+        textarea {
+            background-color: #1e293b; /* slate-800 */
+            border-color: #334155; /* slate-700 */
+            color: #f8fafc;
+        }
+        textarea:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 1px #3b82f6;
         }
     </style>
 </head>
-<body class="bg-gray-50 h-screen flex overflow-hidden">
+<body class="h-screen flex overflow-hidden">
 
     <!-- Sidebar / Lịch sử -->
-    <aside id="sidebar" class="w-64 bg-white border-r border-gray-200 flex flex-col transition-all duration-300 absolute z-20 h-full md:relative md:translate-x-0 -translate-x-full shadow-lg md:shadow-none">
-        <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-blue-600 text-white">
+    <aside id="sidebar" class="w-64 bg-slate-800 border-r border-slate-700 flex flex-col transition-all duration-300 absolute z-20 h-full md:relative md:translate-x-0 -translate-x-full shadow-2xl md:shadow-none">
+        <div class="p-4 border-b border-slate-700 flex justify-between items-center bg-indigo-600 text-white">
             <h2 class="font-bold text-lg flex items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 Lịch sử làm bài
             </h2>
-            <button id="close-sidebar-btn" class="md:hidden p-1 hover:bg-blue-700 rounded text-white">
+            <button id="close-sidebar-btn" class="md:hidden p-1 hover:bg-indigo-700 rounded text-white">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
         <div class="p-3">
-            <button id="btn-new-doc" class="w-full bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 font-semibold py-2 px-4 rounded flex items-center justify-center gap-2 transition-colors">
+            <button id="btn-new-doc" class="w-full bg-slate-700 hover:bg-slate-600 text-indigo-400 border border-slate-600 font-semibold py-2 px-4 rounded flex items-center justify-center gap-2 transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 Tạo bài mới
             </button>
@@ -90,18 +108,18 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 flex flex-col h-full w-full overflow-hidden relative">
+    <main class="flex-1 flex flex-col h-full w-full overflow-hidden relative bg-slate-900">
         <!-- Header -->
-        <header class="bg-white border-b border-gray-200 p-4 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+        <header class="bg-slate-800 border-b border-slate-700 p-4 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center shadow-sm z-10">
             <div class="flex items-center gap-3 w-full sm:w-auto">
-                <button id="open-sidebar-btn" class="md:hidden p-2 text-gray-500 hover:bg-gray-100 rounded">
+                <button id="open-sidebar-btn" class="md:hidden p-2 text-slate-400 hover:bg-slate-700 hover:text-white rounded transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
-                <input type="text" id="doc-title" placeholder="Nhập tên bài làm..." class="text-xl font-bold border-b border-transparent hover:border-gray-300 focus:border-blue-500 focus:outline-none bg-transparent w-full sm:w-80 px-1 py-1 transition-colors text-gray-800" value="Bài chưa đặt tên">
+                <input type="text" id="doc-title" placeholder="Nhập tên bài làm..." class="text-xl font-bold border-b border-transparent hover:border-slate-600 focus:border-indigo-500 focus:outline-none bg-transparent w-full sm:w-80 px-1 py-1 transition-colors text-white placeholder-slate-500" value="Bài chưa đặt tên">
             </div>
             <div class="flex items-center gap-2">
-                <span id="save-status" class="text-sm text-gray-500 mr-2 opacity-0 transition-opacity">Đã lưu thành công</span>
-                <button id="btn-save" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-sm flex items-center gap-2 transition-colors font-medium text-sm">
+                <span id="save-status" class="text-sm text-green-400 mr-2 opacity-0 transition-opacity">Đã lưu thành công</span>
+                <button id="btn-save" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow-sm flex items-center gap-2 transition-colors font-medium text-sm">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                     Lưu bài
                 </button>
@@ -111,70 +129,96 @@
         <div class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
             <div class="max-w-4xl mx-auto space-y-6">
                 
-                <!-- Đề bài -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <div class="bg-slate-50 border-b border-gray-200 px-4 py-3 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                        <h3 class="font-semibold text-slate-700">Đề bài</h3>
+                <!-- Khu vực Đề bài chia làm 3 phần -->
+                <div class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 overflow-hidden">
+                    <div class="bg-slate-800/50 border-b border-slate-700 px-4 py-3 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <h3 class="font-semibold text-slate-200">Đề bài (Part 4)</h3>
                     </div>
-                    <div class="p-4">
-                        <textarea id="doc-prompt" rows="3" placeholder="Dán hoặc nhập đề bài vào đây (hỗ trợ xuống dòng)..." class="w-full resize-y focus:outline-none focus:ring-2 focus:ring-blue-100 border border-gray-200 rounded p-3 text-gray-700 leading-relaxed"></textarea>
+                    <div class="p-4 space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">1. Tình huống chung (General Situation)</label>
+                            <textarea id="doc-situation" rows="2" placeholder="Ví dụ: You are a member of a travel club. You received an email saying the next trip is cancelled..." class="w-full resize-y rounded p-3 leading-relaxed placeholder-slate-600 text-sm"></textarea>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-400 mb-1">2. Yêu cầu Email thân mật (Cho bạn bè)</label>
+                                <textarea id="doc-prompt-informal" rows="2" placeholder="Ví dụ: Write an email to your friend. Tell them how you feel and suggest what to do." class="w-full resize-y rounded p-3 leading-relaxed placeholder-slate-600 text-sm"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-400 mb-1">3. Yêu cầu Email trang trọng (Cho quản lý)</label>
+                                <textarea id="doc-prompt-formal" rows="2" placeholder="Ví dụ: Write an email to the club manager. Express your disappointment and suggest alternatives." class="w-full resize-y rounded p-3 leading-relaxed placeholder-slate-600 text-sm"></textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Tabs -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                    <div class="flex border-b border-gray-200">
-                        <button class="tab-btn flex-1 py-4 px-6 text-center font-semibold text-blue-600 border-b-2 border-blue-600 focus:outline-none bg-blue-50/30" data-target="informal-tab">
-                            Email Thân Mật
+                <!-- Tabs Khu vực làm bài -->
+                <div class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 overflow-hidden">
+                    <div class="flex border-b border-slate-700">
+                        <button class="tab-btn flex-1 py-4 px-6 text-center font-semibold text-indigo-400 border-b-2 border-indigo-500 focus:outline-none bg-slate-700/30 transition-colors" data-target="informal-tab">
+                            Email Thân Mật (Bạn bè)
                         </button>
-                        <button class="tab-btn flex-1 py-4 px-6 text-center font-semibold text-gray-500 border-b-2 border-transparent hover:text-gray-700 focus:outline-none" data-target="formal-tab">
-                            Email Trang Trọng
+                        <button class="tab-btn flex-1 py-4 px-6 text-center font-semibold text-slate-400 border-b-2 border-transparent hover:text-slate-200 hover:bg-slate-700/20 focus:outline-none transition-colors" data-target="formal-tab">
+                            Email Trang Trọng (Quản lý)
                         </button>
                     </div>
 
                     <!-- Nội dung Email Thân Mật -->
                     <div id="informal-tab" class="tab-content p-6 sm:p-8">
+                        <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-700">
+                            <div id="informal-word-count" class="font-bold text-sm bg-slate-700 px-3 py-1 rounded transition-colors duration-300">
+                                Số từ: 0 / 75
+                            </div>
+                        </div>
+
                         <div class="mad-libs-text">
-                            <p class="font-bold text-gray-500 mb-2 text-sm uppercase tracking-wider">Phần Mở Bài</p>
+                            <p class="font-bold text-slate-500 mb-2 text-xs uppercase tracking-wider">Phần Mở Bài</p>
                             <p>
-                                Hi <input type="text" id="if-recipient" class="inline-input w-32" placeholder="">,
+                                Hi <input type="text" id="if-recipient" class="inline-input w-32" placeholder="Tên bạn">,
                             </p>
                             <p class="mt-2">
                                 How are you doing? I hope you are well.<br>
-                                Did you get the email from the club about <input type="text" id="if-notice" class="inline-input w-64" placeholder="">?
+                                Did you get the email from the club about <input type="text" id="if-notice" class="inline-input w-64" placeholder="Chủ đề email nhận được">?
                             </p>
 
-                            <p class="font-bold text-gray-500 mt-6 mb-2 text-sm uppercase tracking-wider">Phần Thân Bài</p>
+                            <p class="font-bold text-slate-500 mt-6 mb-2 text-xs uppercase tracking-wider">Phần Thân Bài</p>
                             <p>
                                 <select id="if-emotion-type" class="inline-select">
                                     <option value="happy">To be honest, I am so happy/excited because</option>
                                     <option value="sad">To be honest, I am so sad/disappointed because</option>
                                 </select>
-                                <input type="text" id="if-emotion-reason" class="inline-input w-64" placeholder="">.
+                                <input type="text" id="if-emotion-reason" class="inline-input w-64" placeholder="Lý do cảm xúc">.
                             </p>
                             <p class="mt-2">
                                 <select id="if-suggestion-type" class="inline-select">
                                     <option value="think">I think we should</option>
                                     <option value="how-about">Or how about</option>
                                 </select>
-                                <input type="text" id="if-suggestion-content" class="inline-input w-64" placeholder="">?
+                                <input type="text" id="if-suggestion-content" class="inline-input w-64" placeholder="Đề xuất của bạn">?
                             </p>
 
-                            <p class="font-bold text-gray-500 mt-6 mb-2 text-sm uppercase tracking-wider">KẾT BÀI</p>
+                            <p class="font-bold text-slate-500 mt-6 mb-2 text-xs uppercase tracking-wider">Phần Kết Bài</p>
                             <p>Let me know what you think!</p>
                             <p class="mt-2">
                                 <select id="if-signoff" class="inline-select">
                                     <option value="best-wishes">Best wishes,</option>
                                     <option value="talk-soon">Talk soon,</option>
+                                    <option value="cheers">Cheers,</option>
                                 </select>
                             </p>
                             <p class="mt-2">
-                                <input type="text" id="if-sender" class="inline-input w-40" placeholder="">
+                                <input type="text" id="if-sender" class="inline-input w-40" placeholder="Tên của bạn">
                             </p>
                         </div>
-                        <div class="mt-8 pt-6 border-t border-gray-100 flex justify-end">
-                            <button onclick="copyToClipboard('informal')" class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-lg flex items-center gap-2 transition-colors font-medium shadow-sm">
+                        
+                        <div id="informal-warning" class="hidden mt-4 p-3 bg-red-900/50 border border-red-500/50 text-red-200 rounded text-sm flex items-center gap-2">
+                            <svg class="w-5 h-5 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            <span>Cảnh báo: Email thân mật của bạn đã vượt quá giới hạn 75 từ. Vui lòng rút gọn nội dung.</span>
+                        </div>
+
+                        <div class="mt-6 pt-6 border-t border-slate-700 flex justify-end">
+                            <button onclick="copyToClipboard('informal')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg flex items-center gap-2 transition-colors font-medium shadow-sm">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
                                 Sao chép Email Thân Mật
                             </button>
@@ -183,13 +227,21 @@
 
                     <!-- Nội dung Email Trang Trọng -->
                     <div id="formal-tab" class="tab-content hidden p-6 sm:p-8">
+                        <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-700">
+                            <span class="text-slate-400 text-sm"><i class="text-indigo-400">Gợi ý:</i> Sử dụng ngôn ngữ lịch sự, không viết tắt. Tối đa 225 từ.</span>
+                            <div id="formal-word-count" class="font-bold text-sm bg-slate-700 px-3 py-1 rounded transition-colors duration-300">
+                                Số từ: 0 / 225
+                            </div>
+                        </div>
+
                         <div class="mad-libs-text">
-                            <p class="font-bold text-gray-500 mb-2 text-sm uppercase tracking-wider">MỞ BÀI</p>
+                            <p class="font-bold text-slate-500 mb-2 text-xs uppercase tracking-wider">MỞ BÀI</p>
                             <p>Dear Manager,</p>
                             <p class="mt-2">
-                                My name is <input type="text" id="fm-sender" class="inline-input w-40" placeholder="">, and I am a member of the club. I am writing to express my 
+                                My name is <input type="text" id="fm-sender" class="inline-input w-40" placeholder="Tên của bạn">, and I am a member of the club. I am writing to express my 
                                 <select id="fm-intent" class="inline-select">
                                     <option value="concerns">concerns</option>
+                                    <option value="dissatisfaction">dissatisfaction</option>
                                     <option value="suggestions">suggestions</option>
                                     <option value="opinions">opinions</option>
                                 </select> 
@@ -200,78 +252,86 @@
                                     <option value="according">According to the announcement,</option>
                                     <option value="as-stated">As stated in the email,</option>
                                 </select>
-                                <input type="text" id="fm-recap-content" class="inline-input w-full mt-1 sm:mt-0 sm:w-80" placeholder="">.
+                                <input type="text" id="fm-recap-content" class="inline-input w-full mt-2 sm:mt-0 sm:w-80" placeholder="Tóm tắt lại tin tức nhận được">.
                             </p>
 
-                            <div class="flex items-center gap-4 mt-8 mb-4 border-b border-gray-200 pb-2">
-                                <p class="font-bold text-gray-500 text-sm uppercase tracking-wider mb-0">THÂN BÀI</p>
-                                <select id="fm-body-type" class="text-sm bg-blue-50 border-blue-200 text-blue-700 rounded px-3 py-1 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-4 mt-8 mb-4 border-b border-slate-700 pb-3">
+                                <p class="font-bold text-slate-500 text-xs uppercase tracking-wider mb-0 whitespace-nowrap">THÂN BÀI</p>
+                                <select id="fm-body-type" class="text-sm bg-slate-800 border border-indigo-500 text-indigo-300 rounded px-3 py-2 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-auto">
                                     <option value="type1">1. Hiến kế / Nêu quan điểm</option>
                                     <option value="type2">2. Chọn 1 trong 2 / Đồng ý hay Không</option>
-                                    <option value="type3">3. Phản hồi tin xấu</option>
+                                    <option value="type3">3. Phản hồi tin xấu (Hủy/Đổi lịch)</option>
                                     <option value="type4">4. Tự ứng cử / Tiến cử</option>
                                 </select>
                             </div>
 
                             <!-- Body Type 1 -->
-                            <div id="fm-body-1" class="body-section block">
+                            <div id="fm-body-1" class="body-section block p-4 bg-slate-800/50 rounded border border-slate-700/50">
                                 <p>
-                                    In my opinion, the club should <input type="text" id="fm-t1-sug1" class="inline-input w-64" placeholder="">, 
-                                    as this would <input type="text" id="fm-t1-ben1" class="inline-input w-64" placeholder="">. 
-                                    In addition, I would suggest <input type="text" id="fm-t1-sug2" class="inline-input w-64" placeholder="">, 
-                                    which would <input type="text" id="fm-t1-ben2" class="inline-input w-64" placeholder="">.
+                                    In my opinion, the club should <input type="text" id="fm-t1-sug1" class="inline-input w-64" placeholder="Đề xuất 1">, 
+                                    as this would <input type="text" id="fm-t1-ben1" class="inline-input w-64" placeholder="Lợi ích của đề xuất 1">. 
+                                    In addition, I would suggest <input type="text" id="fm-t1-sug2" class="inline-input w-64" placeholder="Đề xuất 2">, 
+                                    which would <input type="text" id="fm-t1-ben2" class="inline-input w-64" placeholder="Lợi ích của đề xuất 2">.
                                 </p>
                             </div>
 
                             <!-- Body Type 2 -->
-                            <div id="fm-body-2" class="body-section hidden">
+                            <div id="fm-body-2" class="body-section hidden p-4 bg-slate-800/50 rounded border border-slate-700/50">
                                 <p>
-                                    After careful consideration, I would choose <input type="text" id="fm-t2-choice" class="inline-input w-48" placeholder="">. 
-                                    Firstly, <input type="text" id="fm-t2-reason1" class="inline-input w-64" placeholder="">. 
-                                    In addition to that, <input type="text" id="fm-t2-reason2" class="inline-input w-64" placeholder="">. 
-                                    Even though <input type="text" id="fm-t2-other" class="inline-input w-40" placeholder=""> also has its merits, 
-                                    I believe it would <input type="text" id="fm-t2-limit" class="inline-input w-64" placeholder="">.
+                                    After careful consideration, I would choose <input type="text" id="fm-t2-choice" class="inline-input w-48" placeholder="Lựa chọn của bạn">. 
+                                    Firstly, <input type="text" id="fm-t2-reason1" class="inline-input w-64" placeholder="Lý do 1">. 
+                                    In addition to that, <input type="text" id="fm-t2-reason2" class="inline-input w-64" placeholder="Lý do 2">. 
+                                    Even though <input type="text" id="fm-t2-other" class="inline-input w-40" placeholder="Lựa chọn còn lại"> also has its merits, 
+                                    I believe it would <input type="text" id="fm-t2-limit" class="inline-input w-64" placeholder="Điểm hạn chế của lựa chọn kia">.
                                 </p>
                             </div>
 
                             <!-- Body Type 3 -->
-                            <div id="fm-body-3" class="body-section hidden">
+                            <div id="fm-body-3" class="body-section hidden p-4 bg-slate-800/50 rounded border border-slate-700/50">
                                 <p>
-                                    While I do understand the reasons behind this decision, I am concerned that <input type="text" id="fm-t3-impact" class="inline-input w-64" placeholder="">. 
-                                    Nevertheless, I would like to suggest that the club <input type="text" id="fm-t3-fix1" class="inline-input w-64" placeholder="">. 
-                                    It would also help if <input type="text" id="fm-t3-fix2" class="inline-input w-64" placeholder="">.
+                                    While I do understand the reasons behind this decision, I am concerned that <input type="text" id="fm-t3-impact" class="inline-input w-64" placeholder="Ảnh hưởng tiêu cực">. 
+                                    Nevertheless, I would like to suggest that the club <input type="text" id="fm-t3-fix1" class="inline-input w-64" placeholder="Cách giải quyết 1">. 
+                                    It would also help if <input type="text" id="fm-t3-fix2" class="inline-input w-64" placeholder="Cách giải quyết 2">.
                                 </p>
                             </div>
 
                             <!-- Body Type 4 -->
-                            <div id="fm-body-4" class="body-section hidden">
+                            <div id="fm-body-4" class="body-section hidden p-4 bg-slate-800/50 rounded border border-slate-700/50">
                                 <p>
-                                    I would like to put myself forward for this position. I have <input type="text" id="fm-t4-exp" class="inline-input w-64" placeholder="">, 
-                                    and I am available <input type="text" id="fm-t4-time" class="inline-input w-48" placeholder="">. 
-                                    Should I be selected, I would <input type="text" id="fm-t4-do" class="inline-input w-64" placeholder="">, 
-                                    which I believe would <input type="text" id="fm-t4-ben" class="inline-input w-64" placeholder="">.
+                                    I would like to put myself forward for this position. I have <input type="text" id="fm-t4-exp" class="inline-input w-64" placeholder="Kinh nghiệm của bạn">, 
+                                    and I am available <input type="text" id="fm-t4-time" class="inline-input w-48" placeholder="Thời gian rảnh">. 
+                                    Should I be selected, I would <input type="text" id="fm-t4-do" class="inline-input w-64" placeholder="Việc bạn sẽ làm">, 
+                                    which I believe would <input type="text" id="fm-t4-ben" class="inline-input w-64" placeholder="Lợi ích mang lại">.
                                 </p>
                             </div>
 
-                            <p class="font-bold text-gray-500 mt-8 mb-2 text-sm uppercase tracking-wider">Phần Kết Bài</p>
+                            <p class="font-bold text-slate-500 mt-8 mb-2 text-xs uppercase tracking-wider">Phần Kết Bài</p>
                             <p>
-                                <select id="fm-closing" class="inline-select w-full max-w-2xl">
+                                <select id="fm-closing" class="inline-select w-full max-w-3xl">
                                     <option value="grateful">I would be grateful if you could take my suggestions into consideration. I look forward to hearing from you soon.</option>
                                     <option value="thank-you">Thank you for your time and attention. I hope to hear from you soon.</option>
+                                    <option value="apologies">I apologize for any inconvenience caused and hope for a prompt resolution.</option>
                                 </select>
                             </p>
                             <p class="mt-4">
                                 <select id="fm-signoff" class="inline-select">
                                     <option value="faithfully">Yours faithfully,</option>
+                                    <option value="sincerely">Yours sincerely,</option>
                                     <option value="regards">Kind regards,</option>
                                 </select>
                             </p>
                             <p class="mt-2">
-                                <input type="text" id="fm-sender-sign" class="inline-input w-40" placeholder="">
+                                <input type="text" id="fm-sender-sign" class="inline-input w-40" placeholder="Ký tên">
                             </p>
                         </div>
-                        <div class="mt-8 pt-6 border-t border-gray-100 flex justify-end">
-                            <button onclick="copyToClipboard('formal')" class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-lg flex items-center gap-2 transition-colors font-medium shadow-sm">
+
+                        <div id="formal-warning" class="hidden mt-4 p-3 bg-red-900/50 border border-red-500/50 text-red-200 rounded text-sm flex items-center gap-2">
+                            <svg class="w-5 h-5 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            <span>Cảnh báo: Email trang trọng của bạn đã vượt quá giới hạn 225 từ. Vui lòng rút gọn nội dung.</span>
+                        </div>
+
+                        <div class="mt-6 pt-6 border-t border-slate-700 flex justify-end">
+                            <button onclick="copyToClipboard('formal')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg flex items-center gap-2 transition-colors font-medium shadow-sm">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
                                 Sao chép Email Trang Trọng
                             </button>
@@ -285,22 +345,26 @@
         </div>
         
         <!-- Toast Notification -->
-        <div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2">
-            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-            <span id="toast-msg">Thông báo</span>
+        <div id="toast" class="fixed bottom-4 right-4 bg-slate-800 border border-slate-600 text-white px-6 py-3 rounded shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 z-50">
+            <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span id="toast-msg" class="font-medium">Thông báo</span>
         </div>
     </main>
 
     <script>
         // --- State Management ---
-        const STORAGE_KEY = 'aptis_emails_data';
+        const STORAGE_KEY = 'aptis_emails_data_v2'; // Changed key to avoid conflict with old schema
         let currentDocId = Date.now().toString();
         let docsList = [];
 
         // --- DOM Elements ---
         const els = {
             title: document.getElementById('doc-title'),
-            prompt: document.getElementById('doc-prompt'),
+            // Updated Prompts
+            situation: document.getElementById('doc-situation'),
+            promptInformal: document.getElementById('doc-prompt-informal'),
+            promptFormal: document.getElementById('doc-prompt-formal'),
+            
             historyList: document.getElementById('history-list'),
             saveBtn: document.getElementById('btn-save'),
             newBtn: document.getElementById('btn-new-doc'),
@@ -309,7 +373,13 @@
             sidebar: document.getElementById('sidebar'),
             openSidebar: document.getElementById('open-sidebar-btn'),
             closeSidebar: document.getElementById('close-sidebar-btn'),
-            bodyTypeSelect: document.getElementById('fm-body-type')
+            bodyTypeSelect: document.getElementById('fm-body-type'),
+            
+            // Counters
+            infoWordCount: document.getElementById('informal-word-count'),
+            formWordCount: document.getElementById('formal-word-count'),
+            infoWarning: document.getElementById('informal-warning'),
+            formWarning: document.getElementById('formal-warning')
         };
 
         // Inputs Informal
@@ -363,25 +433,28 @@
                 loadDoc(docsList[0].id);
             }
             setupEventListeners();
+            updateWordCounts(); // Initial word count calculation
         }
 
-        // --- Event Listeners ---
+        // --- STREAMING_CHUNK:Setting up Event Listeners and Auto-Save... ---
         function setupEventListeners() {
-            // Tabs
+            // Tabs logic
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     // Reset all tabs
                     document.querySelectorAll('.tab-btn').forEach(b => {
-                        b.classList.remove('text-blue-600', 'border-blue-600', 'bg-blue-50/30');
-                        b.classList.add('text-gray-500', 'border-transparent');
+                        b.classList.remove('text-indigo-400', 'border-indigo-500', 'bg-slate-700/30');
+                        b.classList.add('text-slate-400', 'border-transparent');
                     });
                     document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
 
                     // Active clicked tab
                     const target = e.currentTarget.dataset.target;
-                    e.currentTarget.classList.add('text-blue-600', 'border-blue-600', 'bg-blue-50/30');
-                    e.currentTarget.classList.remove('text-gray-500', 'border-transparent');
+                    e.currentTarget.classList.add('text-indigo-400', 'border-indigo-500', 'bg-slate-700/30');
+                    e.currentTarget.classList.remove('text-slate-400', 'border-transparent');
                     document.getElementById(target).classList.remove('hidden');
+                    
+                    updateWordCounts(); // Ensure word count is fresh when switching tabs
                 });
             });
 
@@ -390,19 +463,29 @@
                 document.querySelectorAll('.body-section').forEach(sec => sec.classList.add('hidden'));
                 const targetId = 'fm-body-' + e.target.value.replace('type', '');
                 document.getElementById(targetId).classList.remove('hidden');
+                updateWordCounts();
             });
 
             // Đồng bộ tên người gửi Formal
-            fmEls.sender.addEventListener('input', (e) => { fmEls.senderSign.value = e.target.value; });
-            fmEls.senderSign.addEventListener('input', (e) => { fmEls.sender.value = e.target.value; });
+            fmEls.sender.addEventListener('input', (e) => { 
+                fmEls.senderSign.value = e.target.value; 
+                updateWordCounts();
+            });
+            fmEls.senderSign.addEventListener('input', (e) => { 
+                fmEls.sender.value = e.target.value; 
+                updateWordCounts();
+            });
 
             // Actions
             els.saveBtn.addEventListener('click', saveDoc);
             els.newBtn.addEventListener('click', createNewDoc);
 
-            // Auto save on input change (optional, but good for UX)
+            // Auto save & Live Word Count on input change
             const allInputs = document.querySelectorAll('input, textarea, select');
             allInputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    updateWordCounts();
+                });
                 input.addEventListener('change', debounce(saveDoc, 1000));
             });
 
@@ -415,7 +498,7 @@
             });
         }
 
-        // --- Helper: Debounce ---
+        // Helper: Debounce
         function debounce(func, wait) {
             let timeout;
             return function executedFunction(...args) {
@@ -425,7 +508,7 @@
             };
         }
 
-        // --- Data Management ---
+        // --- STREAMING_CHUNK:Implementing Data Saving, Loading, and Deletion... ---
         function loadHistory() {
             const data = localStorage.getItem(STORAGE_KEY);
             docsList = data ? JSON.parse(data) : [];
@@ -436,15 +519,15 @@
             els.historyList.innerHTML = '';
             docsList.sort((a, b) => b.updatedAt - a.updatedAt).forEach(doc => {
                 const li = document.createElement('li');
-                li.className = `p-3 rounded cursor-pointer transition-colors border-l-4 ${doc.id === currentDocId ? 'bg-blue-50 border-blue-500' : 'hover:bg-gray-100 border-transparent'}`;
+                li.className = `p-3 rounded cursor-pointer transition-colors border-l-4 ${doc.id === currentDocId ? 'bg-slate-700 border-indigo-500' : 'hover:bg-slate-700/50 border-transparent'}`;
                 
                 // Content
                 const titleDiv = document.createElement('div');
-                titleDiv.className = `font-medium truncate ${doc.id === currentDocId ? 'text-blue-700' : 'text-gray-700'}`;
+                titleDiv.className = `font-medium truncate ${doc.id === currentDocId ? 'text-indigo-300' : 'text-slate-300'}`;
                 titleDiv.textContent = doc.title || 'Bài chưa đặt tên';
                 
                 const dateDiv = document.createElement('div');
-                dateDiv.className = 'text-xs text-gray-400 mt-1';
+                dateDiv.className = 'text-xs text-slate-500 mt-1';
                 dateDiv.textContent = new Date(doc.updatedAt).toLocaleString('vi-VN');
 
                 li.appendChild(titleDiv);
@@ -459,12 +542,14 @@
 
                 // Delete button
                 const delBtn = document.createElement('button');
-                delBtn.innerHTML = '&times;';
-                delBtn.className = 'absolute right-2 top-2 text-gray-400 hover:text-red-500 text-lg p-1 hidden group-hover:block';
+                delBtn.innerHTML = `
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                `;
+                delBtn.className = 'absolute right-2 top-3 text-slate-500 hover:text-red-400 p-1 hidden group-hover:block transition-colors';
                 li.classList.add('relative', 'group');
                 delBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    if (confirm('Bạn có chắc muốn xóa bài này?')) deleteDoc(doc.id);
+                    if (confirm('Bạn có chắc muốn xóa bài này khỏi lịch sử?')) deleteDoc(doc.id);
                 });
                 li.appendChild(delBtn);
 
@@ -476,27 +561,21 @@
             const dataToSave = {
                 id: currentDocId,
                 title: els.title.value,
-                prompt: els.prompt.value,
+                situation: els.situation.value,
+                promptInformal: els.promptInformal.value,
+                promptFormal: els.promptFormal.value,
                 updatedAt: Date.now(),
                 informal: {
-                    recipient: ifEls.recipient.value,
-                    notice: ifEls.notice.value,
-                    emotionType: ifEls.emotionType.value,
-                    emotionReason: ifEls.emotionReason.value,
-                    suggestionType: ifEls.suggestionType.value,
-                    suggestionContent: ifEls.suggestionContent.value,
-                    signoff: ifEls.signoff.value,
-                    sender: ifEls.sender.value,
+                    recipient: ifEls.recipient.value, notice: ifEls.notice.value,
+                    emotionType: ifEls.emotionType.value, emotionReason: ifEls.emotionReason.value,
+                    suggestionType: ifEls.suggestionType.value, suggestionContent: ifEls.suggestionContent.value,
+                    signoff: ifEls.signoff.value, sender: ifEls.sender.value,
                 },
                 formal: {
-                    sender: fmEls.sender.value,
-                    intent: fmEls.intent.value,
-                    recapType: fmEls.recapType.value,
-                    recapContent: fmEls.recapContent.value,
-                    bodyType: fmEls.bodyType.value,
-                    closing: fmEls.closing.value,
-                    signoff: fmEls.signoff.value,
-                    senderSign: fmEls.senderSign.value,
+                    sender: fmEls.sender.value, intent: fmEls.intent.value,
+                    recapType: fmEls.recapType.value, recapContent: fmEls.recapContent.value,
+                    bodyType: fmEls.bodyType.value, closing: fmEls.closing.value,
+                    signoff: fmEls.signoff.value, senderSign: fmEls.senderSign.value,
                     t1Sug1: fmEls.t1Sug1.value, t1Ben1: fmEls.t1Ben1.value, t1Sug2: fmEls.t1Sug2.value, t1Ben2: fmEls.t1Ben2.value,
                     t2Choice: fmEls.t2Choice.value, t2Reason1: fmEls.t2Reason1.value, t2Reason2: fmEls.t2Reason2.value, t2Other: fmEls.t2Other.value, t2Limit: fmEls.t2Limit.value,
                     t3Impact: fmEls.t3Impact.value, t3Fix1: fmEls.t3Fix1.value, t3Fix2: fmEls.t3Fix2.value,
@@ -505,11 +584,8 @@
             };
 
             const index = docsList.findIndex(d => d.id === currentDocId);
-            if (index > -1) {
-                docsList[index] = dataToSave;
-            } else {
-                docsList.push(dataToSave);
-            }
+            if (index > -1) { docsList[index] = dataToSave; } 
+            else { docsList.push(dataToSave); }
 
             localStorage.setItem(STORAGE_KEY, JSON.stringify(docsList));
             renderHistoryList();
@@ -526,7 +602,9 @@
 
             currentDocId = doc.id;
             els.title.value = doc.title || '';
-            els.prompt.value = doc.prompt || '';
+            els.situation.value = doc.situation || '';
+            els.promptInformal.value = doc.promptInformal || '';
+            els.promptFormal.value = doc.promptFormal || '';
 
             // Load Informal
             if (doc.informal) {
@@ -540,11 +618,11 @@
                 Object.keys(fmEls).forEach(key => {
                     if (doc.formal[key] !== undefined) fmEls[key].value = doc.formal[key];
                 });
-                // Trigger body type change to show correct section
                 const event = new Event('change');
                 els.bodyTypeSelect.dispatchEvent(event);
             }
             renderHistoryList();
+            updateWordCounts();
         }
 
         function createNewDoc() {
@@ -557,11 +635,10 @@
             document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
             
             els.title.value = 'Bài chưa đặt tên';
-            
-            // Trigger body change
             els.bodyTypeSelect.dispatchEvent(new Event('change'));
             
             renderHistoryList();
+            updateWordCounts();
         }
 
         function deleteDoc(id) {
@@ -575,52 +652,112 @@
             }
         }
 
-        function getV(el) {
-            return el.value.trim() || "[....]";
-        }
+        // --- STREAMING_CHUNK:Implementing Word Counting and Text Generation Logic... ---
+        // Helper cho tính word count (không gán placeholder "[....]" để tính chính xác)
+        function getRawV(el) { return el.value.trim(); }
+        
+        // Helper cho tính năng sao chép (nếu trống thì để trống hoặc gạch dưới)
+        function getV(el) { return el.value.trim() || "___"; }
 
-        function copyToClipboard(type) {
+        function generateEmailText(type, isForCount = false) {
             let text = "";
-            
+            const vFunc = isForCount ? getRawV : getV;
+
             if (type === 'informal') {
                 const emotionPhrase = ifEls.emotionType.options[ifEls.emotionType.selectedIndex].text;
                 const sugPhrase = ifEls.suggestionType.options[ifEls.suggestionType.selectedIndex].text;
                 const signoffPhrase = ifEls.signoff.options[ifEls.signoff.selectedIndex].text;
 
-                text = `Hi ${getV(ifEls.recipient)},\n\n` +
+                // Để word count chuẩn, nếu vFunc trả về chuỗi rỗng, không nên cộng thừa khoảng trắng
+                const recipient = vFunc(ifEls.recipient);
+                const notice = vFunc(ifEls.notice);
+                const emotionReason = vFunc(ifEls.emotionReason);
+                const sugContent = vFunc(ifEls.suggestionContent);
+                const sender = vFunc(ifEls.sender);
+
+                text = `Hi ${recipient ? recipient + ',' : ''}\n\n` +
                        `How are you doing? I hope you are well.\n` +
-                       `Did you get the email from the club about ${getV(ifEls.notice)}?\n\n` +
-                       `${emotionPhrase} ${getV(ifEls.emotionReason)}.\n` +
-                       `${sugPhrase} ${getV(ifEls.suggestionContent)}?\n\n` +
+                       `Did you get the email from the club about ${notice}?\n\n` +
+                       `${emotionPhrase} ${emotionReason}.\n` +
+                       `${sugPhrase} ${sugContent}?\n\n` +
                        `Let me know what you think!\n\n` +
                        `${signoffPhrase}\n` +
-                       `${getV(ifEls.sender)}`;
+                       `${sender}`;
+                       
             } else if (type === 'formal') {
                 const intentPhrase = fmEls.intent.options[fmEls.intent.selectedIndex].text;
                 const recapPhrase = fmEls.recapType.options[fmEls.recapType.selectedIndex].text;
                 
+                const sender = vFunc(fmEls.sender);
+                const recap = vFunc(fmEls.recapContent);
+
                 text = `Dear Manager,\n\n` +
-                       `My name is ${getV(fmEls.sender)}, and I am a member of the club. I am writing to express my ${intentPhrase} regarding the notice that I received from our club recently.\n` +
-                       `${recapPhrase} ${getV(fmEls.recapContent)}.\n\n`;
+                       `My name is ${sender}, and I am a member of the club. I am writing to express my ${intentPhrase} regarding the notice that I received from our club recently.\n` +
+                       `${recapPhrase} ${recap}.\n\n`;
 
                 const bodyType = fmEls.bodyType.value;
                 if (bodyType === 'type1') {
-                    text += `In my opinion, the club should ${getV(fmEls.t1Sug1)}, as this would ${getV(fmEls.t1Ben1)}. In addition, I would suggest ${getV(fmEls.t1Sug2)}, which would ${getV(fmEls.t1Ben2)}.\n\n`;
+                    text += `In my opinion, the club should ${vFunc(fmEls.t1Sug1)}, as this would ${vFunc(fmEls.t1Ben1)}. In addition, I would suggest ${vFunc(fmEls.t1Sug2)}, which would ${vFunc(fmEls.t1Ben2)}.\n\n`;
                 } else if (bodyType === 'type2') {
-                    text += `After careful consideration, I would choose ${getV(fmEls.t2Choice)}. Firstly, ${getV(fmEls.t2Reason1)}. In addition to that, ${getV(fmEls.t2Reason2)}. Even though ${getV(fmEls.t2Other)} also has its merits, I believe it would ${getV(fmEls.t2Limit)}.\n\n`;
+                    text += `After careful consideration, I would choose ${vFunc(fmEls.t2Choice)}. Firstly, ${vFunc(fmEls.t2Reason1)}. In addition to that, ${vFunc(fmEls.t2Reason2)}. Even though ${vFunc(fmEls.t2Other)} also has its merits, I believe it would ${vFunc(fmEls.t2Limit)}.\n\n`;
                 } else if (bodyType === 'type3') {
-                    text += `While I do understand the reasons behind this decision, I am concerned that ${getV(fmEls.t3Impact)}. Nevertheless, I would like to suggest that the club ${getV(fmEls.t3Fix1)}. It would also help if ${getV(fmEls.t3Fix2)}.\n\n`;
+                    text += `While I do understand the reasons behind this decision, I am concerned that ${vFunc(fmEls.t3Impact)}. Nevertheless, I would like to suggest that the club ${vFunc(fmEls.t3Fix1)}. It would also help if ${vFunc(fmEls.t3Fix2)}.\n\n`;
                 } else if (bodyType === 'type4') {
-                    text += `I would like to put myself forward for this position. I have ${getV(fmEls.t4Exp)}, and I am available ${getV(fmEls.t4Time)}. Should I be selected, I would ${getV(fmEls.t4Do)}, which I believe would ${getV(fmEls.t4Ben)}.\n\n`;
+                    text += `I would like to put myself forward for this position. I have ${vFunc(fmEls.t4Exp)}, and I am available ${vFunc(fmEls.t4Time)}. Should I be selected, I would ${vFunc(fmEls.t4Do)}, which I believe would ${vFunc(fmEls.t4Ben)}.\n\n`;
                 }
 
                 const closingPhrase = fmEls.closing.options[fmEls.closing.selectedIndex].text;
                 const signoffPhrase = fmEls.signoff.options[fmEls.signoff.selectedIndex].text;
+                const senderSign = vFunc(fmEls.senderSign);
 
                 text += `${closingPhrase}\n\n` +
                         `${signoffPhrase}\n` +
-                        `${getV(fmEls.senderSign)}`;
+                        `${senderSign}`;
             }
+            return text;
+        }
+
+        function countWords(str) {
+            // Loại bỏ khoảng trắng thừa, dấu phẩy, chấm hỏi, chấm than đứng độc lập
+            const cleanStr = str.replace(/[.,!?]/g, ' ').trim();
+            if (cleanStr === '') return 0;
+            return cleanStr.split(/\s+/).length;
+        }
+
+        function updateWordCounts() {
+            // Informal Count
+            const infoText = generateEmailText('informal', true);
+            const infoCount = countWords(infoText);
+            els.infoWordCount.textContent = `Số từ: ${infoCount} / 75`;
+            
+            if (infoCount > 75) {
+                els.infoWordCount.classList.add('bg-red-900', 'text-red-200');
+                els.infoWordCount.classList.remove('bg-slate-700');
+                els.infoWarning.classList.remove('hidden');
+            } else {
+                els.infoWordCount.classList.remove('bg-red-900', 'text-red-200');
+                els.infoWordCount.classList.add('bg-slate-700');
+                els.infoWarning.classList.add('hidden');
+            }
+
+            // Formal Count
+            const formText = generateEmailText('formal', true);
+            const formCount = countWords(formText);
+            els.formWordCount.textContent = `Số từ: ${formCount} / 225`;
+
+            if (formCount > 225) {
+                els.formWordCount.classList.add('bg-red-900', 'text-red-200');
+                els.formWordCount.classList.remove('bg-slate-700');
+                els.formWarning.classList.remove('hidden');
+            } else {
+                els.formWordCount.classList.remove('bg-red-900', 'text-red-200');
+                els.formWordCount.classList.add('bg-slate-700');
+                els.formWarning.classList.add('hidden');
+            }
+        }
+
+        function copyToClipboard(type) {
+            const text = generateEmailText(type, false);
 
             // Copy logic
             const el = document.createElement('textarea');
@@ -630,7 +767,7 @@
             document.execCommand('copy');
             document.body.removeChild(el);
 
-            showToast('Đã sao chép vào bộ nhớ tạm!');
+            showToast('Đã sao chép nội dung vào bộ nhớ tạm!');
         }
 
         function showToast(msg) {

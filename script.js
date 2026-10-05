@@ -11,6 +11,7 @@
             "/phong_luyen_thi_trac_nghiem.html",
             "/APITIS.html",
             "/WrittingAPTIS.html",
+            "/Writing APTIS PART 4.html",
             
         ];
 
