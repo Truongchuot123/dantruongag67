@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aptis Email Writing Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Tùy chỉnh thanh cuộn */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Style cho ô input dạng điền vào chỗ trống */
+        .inline-input {
+            border: none;
+            border-bottom: 2px dashed #94a3b8;
+            background: transparent;
+            color: #2563eb;
+            font-weight: 500;
+            padding: 0 4px;
+            margin: 0 4px;
+            min-width: 120px;
+            transition: all 0.2s;
+        }
+        .inline-input:focus {
+            outline: none;
+            border-bottom-color: #2563eb;
+            background-color: #eff6ff;
+        }
+        .inline-input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        /* Style cho select dạng inline */
+        .inline-select {
+            appearance: none;
+            background-color: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 2px 24px 2px 8px;
+            margin: 0 4px;
+            color: #0f172a;
+            font-weight: 500;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 4px center;
+            background-size: 14px;
+        }
+        .inline-select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+        }
+
+        .mad-libs-text {
+            line-height: 2.2;
+            font-size: 1.05rem;
+            color: #334155;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 h-screen flex overflow-hidden">
+
+    <!-- Sidebar / Lịch sử -->
+    <aside id="sidebar" class="w-64 bg-white border-r border-gray-200 flex flex-col transition-all duration-300 absolute z-20 h-full md:relative md:translate-x-0 -translate-x-full shadow-lg md:shadow-none">
+        <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-blue-600 text-white">
+            <h2 class="font-bold text-lg flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Lịch sử làm bài
+            </h2>
+            <button id="close-sidebar-btn" class="md:hidden p-1 hover:bg-blue-700 rounded text-white">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div class="p-3">
+            <button id="btn-new-doc" class="w-full bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 font-semibold py-2 px-4 rounded flex items-center justify-center gap-2 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                Tạo bài mới
+            </button>
+        </div>
+        <ul id="history-list" class="flex-1 overflow-y-auto p-2 space-y-1">
+            <!-- Items sẽ được chèn vào đây bằng JS -->
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full w-full overflow-hidden relative">
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-200 p-4 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+                <button id="open-sidebar-btn" class="md:hidden p-2 text-gray-500 hover:bg-gray-100 rounded">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <input type="text" id="doc-title" placeholder="Nhập tên bài làm..." class="text-xl font-bold border-b border-transparent hover:border-gray-300 focus:border-blue-500 focus:outline-none bg-transparent w-full sm:w-80 px-1 py-1 transition-colors text-gray-800" value="Bài chưa đặt tên">
+            </div>
+            <div class="flex items-center gap-2">
+                <span id="save-status" class="text-sm text-gray-500 mr-2 opacity-0 transition-opacity">Đã lưu thành công</span>
+                <button id="btn-save" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-sm flex items-center gap-2 transition-colors font-medium text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                    Lưu bài
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+            <div class="max-w-4xl mx-auto space-y-6">
+                
+                <!-- Đề bài -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="bg-slate-50 border-b border-gray-200 px-4 py-3 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <h3 class="font-semibold text-slate-700">Đề bài</h3>
+                    </div>
+                    <div class="p-4">
+                        <textarea id="doc-prompt" rows="3" placeholder="Dán hoặc nhập đề bài vào đây (hỗ trợ xuống dòng)..." class="w-full resize-y focus:outline-none focus:ring-2 focus:ring-blue-100 border border-gray-200 rounded p-3 text-gray-700 leading-relaxed"></textarea>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                    <div class="flex border-b border-gray-200">
+                        <button class="tab-btn flex-1 py-4 px-6 text-center font-semibold text-blue-600 border-b-2 border-blue-600 focus:outline-none bg-blue-50/30" data-target="informal-tab">
+                            Email Thân Mật
+                        </button>
+                        <button class="tab-btn flex-1 py-4 px-6 text-center font-semibold text-gray-500 border-b-2 border-transparent hover:text-gray-700 focus:outline-none" data-target="formal-tab">
+                            Email Trang Trọng
+                        </button>
+                    </div>
+
+                    <!-- Nội dung Email Thân Mật -->
+                    <div id="informal-tab" class="tab-content p-6 sm:p-8">
+                        <div class="mad-libs-text">
+                            <p class="font-bold text-gray-500 mb-2 text-sm uppercase tracking-wider">Phần Mở Bài</p>
+                            <p>
+                                Hi <input type="text" id="if-recipient" class="inline-input w-32" placeholder="">,
+                            </p>
+                            <p class="mt-2">
+                                How are you doing? I hope you are well.<br>
+                                Did you get the email from the club about <input type="text" id="if-notice" class="inline-input w-64" placeholder="">?
+                            </p>
+
+                            <p class="font-bold text-gray-500 mt-6 mb-2 text-sm uppercase tracking-wider">Phần Thân Bài</p>
+                            <p>
+                                <select id="if-emotion-type" class="inline-select">
+                                    <option value="happy">To be honest, I am so happy/excited because</option>
+                                    <option value="sad">To be honest, I am so sad/disappointed because</option>
+                                </select>
+                                <input type="text" id="if-emotion-reason" class="inline-input w-64" placeholder="">.
+                            </p>
+                            <p class="mt-2">
+                                <select id="if-suggestion-type" class="inline-select">
+                                    <option value="think">I think we should</option>
+                                    <option value="how-about">Or how about</option>
+                                </select>
+                                <input type="text" id="if-suggestion-content" class="inline-input w-64" placeholder="">?
+                            </p>
+
+                            <p class="font-bold text-gray-500 mt-6 mb-2 text-sm uppercase tracking-wider">KẾT BÀI</p>
+                            <p>Let me know what you think!</p>
+                            <p class="mt-2">
+                                <select id="if-signoff" class="inline-select">
+                                    <option value="best-wishes">Best wishes,</option>
+                                    <option value="talk-soon">Talk soon,</option>
+                                </select>
+                            </p>
+                            <p class="mt-2">
+                                <input type="text" id="if-sender" class="inline-input w-40" placeholder="">
+                            </p>
+                        </div>
+                        <div class="mt-8 pt-6 border-t border-gray-100 flex justify-end">
+                            <button onclick="copyToClipboard('informal')" class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-lg flex items-center gap-2 transition-colors font-medium shadow-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                                Sao chép Email Thân Mật
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Nội dung Email Trang Trọng -->
+                    <div id="formal-tab" class="tab-content hidden p-6 sm:p-8">
+                        <div class="mad-libs-text">
+                            <p class="font-bold text-gray-500 mb-2 text-sm uppercase tracking-wider">MỞ BÀI</p>
+                            <p>Dear Manager,</p>
+                            <p class="mt-2">
+                                My name is <input type="text" id="fm-sender" class="inline-input w-40" placeholder="">, and I am a member of the club. I am writing to express my 
+                                <select id="fm-intent" class="inline-select">
+                                    <option value="concerns">concerns</option>
+                                    <option value="suggestions">suggestions</option>
+                                    <option value="opinions">opinions</option>
+                                </select> 
+                                regarding the notice that I received from our club recently.
+                            </p>
+                            <p class="mt-2">
+                                <select id="fm-recap-type" class="inline-select">
+                                    <option value="according">According to the announcement,</option>
+                                    <option value="as-stated">As stated in the email,</option>
+                                </select>
+                                <input type="text" id="fm-recap-content" class="inline-input w-full mt-1 sm:mt-0 sm:w-80" placeholder="">.
+                            </p>
+
+                            <div class="flex items-center gap-4 mt-8 mb-4 border-b border-gray-200 pb-2">
+                                <p class="font-bold text-gray-500 text-sm uppercase tracking-wider mb-0">THÂN BÀI</p>
+                                <select id="fm-body-type" class="text-sm bg-blue-50 border-blue-200 text-blue-700 rounded px-3 py-1 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="type1">1. Hiến kế / Nêu quan điểm</option>
+                                    <option value="type2">2. Chọn 1 trong 2 / Đồng ý hay Không</option>
+                                    <option value="type3">3. Phản hồi tin xấu</option>
+                                    <option value="type4">4. Tự ứng cử / Tiến cử</option>
+                                </select>
+                            </div>
+
+                            <!-- Body Type 1 -->
+                            <div id="fm-body-1" class="body-section block">
+                                <p>
+                                    In my opinion, the club should <input type="text" id="fm-t1-sug1" class="inline-input w-64" placeholder="">, 
+                                    as this would <input type="text" id="fm-t1-ben1" class="inline-input w-64" placeholder="">. 
+                                    In addition, I would suggest <input type="text" id="fm-t1-sug2" class="inline-input w-64" placeholder="">, 
+                                    which would <input type="text" id="fm-t1-ben2" class="inline-input w-64" placeholder="">.
+                                </p>
+                            </div>
+
+                            <!-- Body Type 2 -->
+                            <div id="fm-body-2" class="body-section hidden">
+                                <p>
+                                    After careful consideration, I would choose <input type="text" id="fm-t2-choice" class="inline-input w-48" placeholder="">. 
+                                    Firstly, <input type="text" id="fm-t2-reason1" class="inline-input w-64" placeholder="">. 
+                                    In addition to that, <input type="text" id="fm-t2-reason2" class="inline-input w-64" placeholder="">. 
+                                    Even though <input type="text" id="fm-t2-other" class="inline-input w-40" placeholder=""> also has its merits, 
+                                    I believe it would <input type="text" id="fm-t2-limit" class="inline-input w-64" placeholder="">.
+                                </p>
+                            </div>
+
+                            <!-- Body Type 3 -->
+                            <div id="fm-body-3" class="body-section hidden">
+                                <p>
+                                    While I do understand the reasons behind this decision, I am concerned that <input type="text" id="fm-t3-impact" class="inline-input w-64" placeholder="">. 
+                                    Nevertheless, I would like to suggest that the club <input type="text" id="fm-t3-fix1" class="inline-input w-64" placeholder="">. 
+                                    It would also help if <input type="text" id="fm-t3-fix2" class="inline-input w-64" placeholder="">.
+                                </p>
+                            </div>
+
+                            <!-- Body Type 4 -->
+                            <div id="fm-body-4" class="body-section hidden">
+                                <p>
+                                    I would like to put myself forward for this position. I have <input type="text" id="fm-t4-exp" class="inline-input w-64" placeholder="">, 
+                                    and I am available <input type="text" id="fm-t4-time" class="inline-input w-48" placeholder="">. 
+                                    Should I be selected, I would <input type="text" id="fm-t4-do" class="inline-input w-64" placeholder="">, 
+                                    which I believe would <input type="text" id="fm-t4-ben" class="inline-input w-64" placeholder="">.
+                                </p>
+                            </div>
+
+                            <p class="font-bold text-gray-500 mt-8 mb-2 text-sm uppercase tracking-wider">Phần Kết Bài</p>
+                            <p>
+                                <select id="fm-closing" class="inline-select w-full max-w-2xl">
+                                    <option value="grateful">I would be grateful if you could take my suggestions into consideration. I look forward to hearing from you soon.</option>
+                                    <option value="thank-you">Thank you for your time and attention. I hope to hear from you soon.</option>
+                                </select>
+                            </p>
+                            <p class="mt-4">
+                                <select id="fm-signoff" class="inline-select">
+                                    <option value="faithfully">Yours faithfully,</option>
+                                    <option value="regards">Kind regards,</option>
+                                </select>
+                            </p>
+                            <p class="mt-2">
+                                <input type="text" id="fm-sender-sign" class="inline-input w-40" placeholder="">
+                            </p>
+                        </div>
+                        <div class="mt-8 pt-6 border-t border-gray-100 flex justify-end">
+                            <button onclick="copyToClipboard('formal')" class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-lg flex items-center gap-2 transition-colors font-medium shadow-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                                Sao chép Email Trang Trọng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer spacing -->
+                <div class="h-10"></div>
+            </div>
+        </div>
+        
+        <!-- Toast Notification -->
+        <div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2">
+            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            <span id="toast-msg">Thông báo</span>
+        </div>
+    </main>
+
+    <script>
+        // --- State Management ---
+        const STORAGE_KEY = 'aptis_emails_data';
+        let currentDocId = Date.now().toString();
+        let docsList = [];
+
+        // --- DOM Elements ---
+        const els = {
+            title: document.getElementById('doc-title'),
+            prompt: document.getElementById('doc-prompt'),
+            historyList: document.getElementById('history-list'),
+            saveBtn: document.getElementById('btn-save'),
+            newBtn: document.getElementById('btn-new-doc'),
+            toast: document.getElementById('toast'),
+            toastMsg: document.getElementById('toast-msg'),
+            sidebar: document.getElementById('sidebar'),
+            openSidebar: document.getElementById('open-sidebar-btn'),
+            closeSidebar: document.getElementById('close-sidebar-btn'),
+            bodyTypeSelect: document.getElementById('fm-body-type')
+        };
+
+        // Inputs Informal
+        const ifEls = {
+            recipient: document.getElementById('if-recipient'),
+            notice: document.getElementById('if-notice'),
+            emotionType: document.getElementById('if-emotion-type'),
+            emotionReason: document.getElementById('if-emotion-reason'),
+            suggestionType: document.getElementById('if-suggestion-type'),
+            suggestionContent: document.getElementById('if-suggestion-content'),
+            signoff: document.getElementById('if-signoff'),
+            sender: document.getElementById('if-sender'),
+        };
+
+        // Inputs Formal
+        const fmEls = {
+            sender: document.getElementById('fm-sender'),
+            intent: document.getElementById('fm-intent'),
+            recapType: document.getElementById('fm-recap-type'),
+            recapContent: document.getElementById('fm-recap-content'),
+            bodyType: document.getElementById('fm-body-type'),
+            closing: document.getElementById('fm-closing'),
+            signoff: document.getElementById('fm-signoff'),
+            senderSign: document.getElementById('fm-sender-sign'),
+            // Type 1
+            t1Sug1: document.getElementById('fm-t1-sug1'),
+            t1Ben1: document.getElementById('fm-t1-ben1'),
+            t1Sug2: document.getElementById('fm-t1-sug2'),
+            t1Ben2: document.getElementById('fm-t1-ben2'),
+            // Type 2
+            t2Choice: document.getElementById('fm-t2-choice'),
+            t2Reason1: document.getElementById('fm-t2-reason1'),
+            t2Reason2: document.getElementById('fm-t2-reason2'),
+            t2Other: document.getElementById('fm-t2-other'),
+            t2Limit: document.getElementById('fm-t2-limit'),
+            // Type 3
+            t3Impact: document.getElementById('fm-t3-impact'),
+            t3Fix1: document.getElementById('fm-t3-fix1'),
+            t3Fix2: document.getElementById('fm-t3-fix2'),
+            // Type 4
+            t4Exp: document.getElementById('fm-t4-exp'),
+            t4Time: document.getElementById('fm-t4-time'),
+            t4Do: document.getElementById('fm-t4-do'),
+            t4Ben: document.getElementById('fm-t4-ben')
+        };
+
+        // --- Initialization ---
+        function init() {
+            loadHistory();
+            if (docsList.length > 0) {
+                loadDoc(docsList[0].id);
+            }
+            setupEventListeners();
+        }
+
+        // --- Event Listeners ---
+        function setupEventListeners() {
+            // Tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    // Reset all tabs
+                    document.querySelectorAll('.tab-btn').forEach(b => {
+                        b.classList.remove('text-blue-600', 'border-blue-600', 'bg-blue-50/30');
+                        b.classList.add('text-gray-500', 'border-transparent');
+                    });
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+
+                    // Active clicked tab
+                    const target = e.currentTarget.dataset.target;
+                    e.currentTarget.classList.add('text-blue-600', 'border-blue-600', 'bg-blue-50/30');
+                    e.currentTarget.classList.remove('text-gray-500', 'border-transparent');
+                    document.getElementById(target).classList.remove('hidden');
+                });
+            });
+
+            // Formal Body Type Switcher
+            els.bodyTypeSelect.addEventListener('change', (e) => {
+                document.querySelectorAll('.body-section').forEach(sec => sec.classList.add('hidden'));
+                const targetId = 'fm-body-' + e.target.value.replace('type', '');
+                document.getElementById(targetId).classList.remove('hidden');
+            });
+
+            // Đồng bộ tên người gửi Formal
+            fmEls.sender.addEventListener('input', (e) => { fmEls.senderSign.value = e.target.value; });
+            fmEls.senderSign.addEventListener('input', (e) => { fmEls.sender.value = e.target.value; });
+
+            // Actions
+            els.saveBtn.addEventListener('click', saveDoc);
+            els.newBtn.addEventListener('click', createNewDoc);
+
+            // Auto save on input change (optional, but good for UX)
+            const allInputs = document.querySelectorAll('input, textarea, select');
+            allInputs.forEach(input => {
+                input.addEventListener('change', debounce(saveDoc, 1000));
+            });
+
+            // Sidebar mobile toggle
+            els.openSidebar.addEventListener('click', () => {
+                els.sidebar.classList.remove('-translate-x-full');
+            });
+            els.closeSidebar.addEventListener('click', () => {
+                els.sidebar.classList.add('-translate-x-full');
+            });
+        }
+
+        // --- Helper: Debounce ---
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => { clearTimeout(timeout); func(...args); };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // --- Data Management ---
+        function loadHistory() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            docsList = data ? JSON.parse(data) : [];
+            renderHistoryList();
+        }
+
+        function renderHistoryList() {
+            els.historyList.innerHTML = '';
+            docsList.sort((a, b) => b.updatedAt - a.updatedAt).forEach(doc => {
+                const li = document.createElement('li');
+                li.className = `p-3 rounded cursor-pointer transition-colors border-l-4 ${doc.id === currentDocId ? 'bg-blue-50 border-blue-500' : 'hover:bg-gray-100 border-transparent'}`;
+                
+                // Content
+                const titleDiv = document.createElement('div');
+                titleDiv.className = `font-medium truncate ${doc.id === currentDocId ? 'text-blue-700' : 'text-gray-700'}`;
+                titleDiv.textContent = doc.title || 'Bài chưa đặt tên';
+                
+                const dateDiv = document.createElement('div');
+                dateDiv.className = 'text-xs text-gray-400 mt-1';
+                dateDiv.textContent = new Date(doc.updatedAt).toLocaleString('vi-VN');
+
+                li.appendChild(titleDiv);
+                li.appendChild(dateDiv);
+
+                li.addEventListener('click', () => {
+                    loadDoc(doc.id);
+                    if (window.innerWidth < 768) {
+                        els.sidebar.classList.add('-translate-x-full'); // Auto close on mobile
+                    }
+                });
+
+                // Delete button
+                const delBtn = document.createElement('button');
+                delBtn.innerHTML = '&times;';
+                delBtn.className = 'absolute right-2 top-2 text-gray-400 hover:text-red-500 text-lg p-1 hidden group-hover:block';
+                li.classList.add('relative', 'group');
+                delBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (confirm('Bạn có chắc muốn xóa bài này?')) deleteDoc(doc.id);
+                });
+                li.appendChild(delBtn);
+
+                els.historyList.appendChild(li);
+            });
+        }
+
+        function saveDoc() {
+            const dataToSave = {
+                id: currentDocId,
+                title: els.title.value,
+                prompt: els.prompt.value,
+                updatedAt: Date.now(),
+                informal: {
+                    recipient: ifEls.recipient.value,
+                    notice: ifEls.notice.value,
+                    emotionType: ifEls.emotionType.value,
+                    emotionReason: ifEls.emotionReason.value,
+                    suggestionType: ifEls.suggestionType.value,
+                    suggestionContent: ifEls.suggestionContent.value,
+                    signoff: ifEls.signoff.value,
+                    sender: ifEls.sender.value,
+                },
+                formal: {
+                    sender: fmEls.sender.value,
+                    intent: fmEls.intent.value,
+                    recapType: fmEls.recapType.value,
+                    recapContent: fmEls.recapContent.value,
+                    bodyType: fmEls.bodyType.value,
+                    closing: fmEls.closing.value,
+                    signoff: fmEls.signoff.value,
+                    senderSign: fmEls.senderSign.value,
+                    t1Sug1: fmEls.t1Sug1.value, t1Ben1: fmEls.t1Ben1.value, t1Sug2: fmEls.t1Sug2.value, t1Ben2: fmEls.t1Ben2.value,
+                    t2Choice: fmEls.t2Choice.value, t2Reason1: fmEls.t2Reason1.value, t2Reason2: fmEls.t2Reason2.value, t2Other: fmEls.t2Other.value, t2Limit: fmEls.t2Limit.value,
+                    t3Impact: fmEls.t3Impact.value, t3Fix1: fmEls.t3Fix1.value, t3Fix2: fmEls.t3Fix2.value,
+                    t4Exp: fmEls.t4Exp.value, t4Time: fmEls.t4Time.value, t4Do: fmEls.t4Do.value, t4Ben: fmEls.t4Ben.value
+                }
+            };
+
+            const index = docsList.findIndex(d => d.id === currentDocId);
+            if (index > -1) {
+                docsList[index] = dataToSave;
+            } else {
+                docsList.push(dataToSave);
+            }
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(docsList));
+            renderHistoryList();
+
+            // Show save status
+            const status = document.getElementById('save-status');
+            status.classList.remove('opacity-0');
+            setTimeout(() => status.classList.add('opacity-0'), 2000);
+        }
+
+        function loadDoc(id) {
+            const doc = docsList.find(d => d.id === id);
+            if (!doc) return;
+
+            currentDocId = doc.id;
+            els.title.value = doc.title || '';
+            els.prompt.value = doc.prompt || '';
+
+            // Load Informal
+            if (doc.informal) {
+                Object.keys(ifEls).forEach(key => {
+                    if (doc.informal[key] !== undefined) ifEls[key].value = doc.informal[key];
+                });
+            }
+
+            // Load Formal
+            if (doc.formal) {
+                Object.keys(fmEls).forEach(key => {
+                    if (doc.formal[key] !== undefined) fmEls[key].value = doc.formal[key];
+                });
+                // Trigger body type change to show correct section
+                const event = new Event('change');
+                els.bodyTypeSelect.dispatchEvent(event);
+            }
+            renderHistoryList();
+        }
+
+        function createNewDoc() {
+            currentDocId = Date.now().toString();
+            
+            // Clear inputs
+            document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+            
+            // Set defaults for selects
+            document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+            
+            els.title.value = 'Bài chưa đặt tên';
+            
+            // Trigger body change
+            els.bodyTypeSelect.dispatchEvent(new Event('change'));
+            
+            renderHistoryList();
+        }
+
+        function deleteDoc(id) {
+            docsList = docsList.filter(d => d.id !== id);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(docsList));
+            if (currentDocId === id) {
+                if (docsList.length > 0) loadDoc(docsList[0].id);
+                else createNewDoc();
+            } else {
+                renderHistoryList();
+            }
+        }
+
+        function getV(el) {
+            return el.value.trim() || "[....]";
+        }
+
+        function copyToClipboard(type) {
+            let text = "";
+            
+            if (type === 'informal') {
+                const emotionPhrase = ifEls.emotionType.options[ifEls.emotionType.selectedIndex].text;
+                const sugPhrase = ifEls.suggestionType.options[ifEls.suggestionType.selectedIndex].text;
+                const signoffPhrase = ifEls.signoff.options[ifEls.signoff.selectedIndex].text;
+
+                text = `Hi ${getV(ifEls.recipient)},\n\n` +
+                       `How are you doing? I hope you are well.\n` +
+                       `Did you get the email from the club about ${getV(ifEls.notice)}?\n\n` +
+                       `${emotionPhrase} ${getV(ifEls.emotionReason)}.\n` +
+                       `${sugPhrase} ${getV(ifEls.suggestionContent)}?\n\n` +
+                       `Let me know what you think!\n\n` +
+                       `${signoffPhrase}\n` +
+                       `${getV(ifEls.sender)}`;
+            } else if (type === 'formal') {
+                const intentPhrase = fmEls.intent.options[fmEls.intent.selectedIndex].text;
+                const recapPhrase = fmEls.recapType.options[fmEls.recapType.selectedIndex].text;
+                
+                text = `Dear Manager,\n\n` +
+                       `My name is ${getV(fmEls.sender)}, and I am a member of the club. I am writing to express my ${intentPhrase} regarding the notice that I received from our club recently.\n` +
+                       `${recapPhrase} ${getV(fmEls.recapContent)}.\n\n`;
+
+                const bodyType = fmEls.bodyType.value;
+                if (bodyType === 'type1') {
+                    text += `In my opinion, the club should ${getV(fmEls.t1Sug1)}, as this would ${getV(fmEls.t1Ben1)}. In addition, I would suggest ${getV(fmEls.t1Sug2)}, which would ${getV(fmEls.t1Ben2)}.\n\n`;
+                } else if (bodyType === 'type2') {
+                    text += `After careful consideration, I would choose ${getV(fmEls.t2Choice)}. Firstly, ${getV(fmEls.t2Reason1)}. In addition to that, ${getV(fmEls.t2Reason2)}. Even though ${getV(fmEls.t2Other)} also has its merits, I believe it would ${getV(fmEls.t2Limit)}.\n\n`;
+                } else if (bodyType === 'type3') {
+                    text += `While I do understand the reasons behind this decision, I am concerned that ${getV(fmEls.t3Impact)}. Nevertheless, I would like to suggest that the club ${getV(fmEls.t3Fix1)}. It would also help if ${getV(fmEls.t3Fix2)}.\n\n`;
+                } else if (bodyType === 'type4') {
+                    text += `I would like to put myself forward for this position. I have ${getV(fmEls.t4Exp)}, and I am available ${getV(fmEls.t4Time)}. Should I be selected, I would ${getV(fmEls.t4Do)}, which I believe would ${getV(fmEls.t4Ben)}.\n\n`;
+                }
+
+                const closingPhrase = fmEls.closing.options[fmEls.closing.selectedIndex].text;
+                const signoffPhrase = fmEls.signoff.options[fmEls.signoff.selectedIndex].text;
+
+                text += `${closingPhrase}\n\n` +
+                        `${signoffPhrase}\n` +
+                        `${getV(fmEls.senderSign)}`;
+            }
+
+            // Copy logic
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            showToast('Đã sao chép vào bộ nhớ tạm!');
+        }
+
+        function showToast(msg) {
+            els.toastMsg.textContent = msg;
+            els.toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                els.toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Run
+        init();
+    </script>
+</body>
+</html>
