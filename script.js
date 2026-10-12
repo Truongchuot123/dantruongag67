@@ -12,7 +12,6 @@
             "/APITIS.html",
             "/WrittingAPTIS.html",
             "/Writing APTIS PART 4.html",
-            "/learn_voca.html",
             
         ];
 
@@ -713,7 +712,7 @@
                         <div class="px-6 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest">Công cụ</div>
                         <a href="javascript:void(0);" onclick="openNotesModal()"><i class="fas fa-notes-medical"></i> Sổ tay ghi chú</a>
                         <a href="/yhoccotruyen/tra_cuu_huyet.html"><i class="fas fa-hand-sparkles"></i> Hệ thống tra cứu huyệt</a>
-                        <a href="/tienganh/vocab_notebook.html"><i class="fas fa-hand-paper"></i> Hệ thống học từ vựng</a>
+                        <a href="/learn_voca.html"><i class="fas fa-hand-paper"></i> Hệ thống học từ vựng</a>
                         <a href="/hethong_laisuat.html"><i class="fas fa-hand-holding-usd"></i> Hệ thống tính lãi suất</a>
                         <a href="javascript:void(0);" onclick="openSettings()"><i class="fas fa-cog"></i> Cài đặt hệ thống</a>
                     ` : ''}
