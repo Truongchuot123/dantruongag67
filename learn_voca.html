@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VocabMaster - Học Từ Vựng & Từ Đồng Nghĩa</title>
+    <title>VocabMaster Pro - Học Từ Vựng & Luyện Tập Thông Minh</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts Inter -->
@@ -40,1132 +40,1747 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(51, 65, 85, 0.8);
         }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #475569; border-radius: 9999px; }
     </style>
 </head>
 <body class="h-full bg-slate-900 text-slate-100 transition-colors duration-300 flex flex-col">
-
-    <!-- Header -->
-    <header class="sticky top-0 z-40 w-full glass-card border-b border-slate-800 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('search')">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
-                    <i data-lucide="book-open-check" class="w-5 h-5"></i>
-                </div>
-                <div>
-                    <h1 class="font-bold text-lg leading-tight bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">VocabMaster</h1>                </div>
+<!-- Header -->
+<header class="sticky top-0 z-40 w-full glass-card border-b border-slate-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="flex items-center space-x-2 sm:space-x-3 cursor-pointer" onclick="playSound(); switchTab('search')">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 transform hover:scale-105 transition">
+                <i data-lucide="book-open-check" class="w-5 h-5"></i>
             </div>
+            <div>
+                <h1 class="font-bold text-base sm:text-lg leading-tight bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">VocabMaster</h1>
+            </div>
+        </div>
 
-            <!-- Desktop Nav Tabs -->
-            <nav class="hidden md:flex items-center space-x-1 bg-slate-800 p-1 rounded-xl">
-                <button onclick="switchTab('search')" id="nav-search" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center space-x-2 bg-slate-700 text-indigo-300 shadow-sm">
-                    <i data-lucide="search" class="w-4 h-4"></i>
-                    <span>Tra cứu</span>
-                </button>
-                <button onclick="switchTab('saved')" id="nav-saved" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center space-x-2 text-slate-400 hover:text-indigo-400">
-                    <i data-lucide="calendar-check" class="w-4 h-4"></i>
-                    <span>Từ của bạn</span>
-                    <span id="saved-badge" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-indigo-900 text-indigo-300 font-bold">0</span>
-                </button>
-                <button onclick="switchTab('practice')" id="nav-practice" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center space-x-2 text-slate-400 hover:text-indigo-400">
-                    <i data-lucide="brain" class="w-4 h-4"></i>
-                    <span>Luyện tập</span>
-                </button>
-            </nav>
+        <!-- Study Streak Badge -->
+        <div class="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold shadow-sm">
+            <i data-lucide="flame" class="w-4 h-4 text-amber-500 animate-pulse"></i>
+            <span id="streak-counter">Chuỗi: 0 ngày</span>
+        </div>
 
+        <!-- Desktop Nav Tabs -->
+        <nav class="hidden md:flex items-center space-x-1 bg-slate-800 p-1 rounded-xl">
+            <button onclick="playSound(); switchTab('search')" id="nav-search" class="nav-btn px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center space-x-1.5 bg-slate-700 text-indigo-300 shadow-sm">
+                <i data-lucide="search" class="w-4 h-4"></i>
+                <span>Tra cứu</span>
+            </button>
+            <button onclick="playSound(); switchTab('saved')" id="nav-saved" class="nav-btn px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center space-x-1.5 text-slate-400 hover:text-indigo-400">
+                <i data-lucide="bookmark-check" class="w-4 h-4"></i>
+                <span>Đã lưu</span>
+                <span id="saved-badge" class="ml-1 px-1.5 py-0.5 text-[10px] rounded-full bg-indigo-900 text-indigo-300 font-bold">0</span>
+            </button>
+            <button onclick="playSound(); switchTab('lookup')" id="nav-lookup" class="nav-btn px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center space-x-1.5 text-slate-400 hover:text-indigo-400">
+                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                <span>Cần tìm hiểu</span>
+                <span id="lookup-badge" class="ml-1 px-1.5 py-0.5 text-[10px] rounded-full bg-amber-900 text-amber-300 font-bold">0</span>
+            </button>
+            <button onclick="playSound(); switchTab('practice')" id="nav-practice" class="nav-btn px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center space-x-1.5 text-slate-400 hover:text-indigo-400">
+                <i data-lucide="brain" class="w-4 h-4"></i>
+                <span>Luyện tập</span>
+            </button>
+            <button onclick="playSound(); switchTab('history')" id="nav-history" class="nav-btn px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center space-x-1.5 text-slate-400 hover:text-indigo-400">
+                <i data-lucide="history" class="w-4 h-4"></i>
+                <span>Lịch sử</span>
+            </button>
+        </nav>
+
+        <div class="flex items-center space-x-2">
+            <button onclick="playSound(); openAddWordModal()" title="Thêm từ vựng mới" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white transition flex items-center space-x-1 text-xs sm:text-sm font-bold shadow-lg shadow-indigo-500/20">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span class="hidden sm:inline">Thêm từ mới</span>
+            </button>
+            <button onclick="playSound(); syncData()" id="sync-btn" title="Đồng bộ dữ liệu từ Google Sheet" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-slate-800 text-indigo-400 hover:bg-slate-700 transition flex items-center space-x-1 text-xs sm:text-sm font-medium">
+                <i data-lucide="refresh-cw" class="w-4 h-4" id="sync-icon"></i>
+                <span class="hidden sm:inline">Đồng bộ</span>
+            </button>
+            <!-- Mobile Menu Button -->
+            <button onclick="playSound(); toggleMobileMenu()" class="md:hidden p-2 rounded-xl bg-slate-800 text-slate-300">
+                <i data-lucide="menu" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Nav Menu -->
+    <div id="mobile-menu" class="hidden md:hidden px-4 pt-2 pb-4 space-y-1 bg-slate-800 border-b border-slate-700">
+        <div class="flex items-center justify-between px-3 py-2 bg-amber-500/10 border border-amber-500/30 rounded-lg text-amber-400 text-xs font-bold mb-2">
             <div class="flex items-center space-x-2">
-                <button onclick="syncData()" id="sync-btn" title="Đồng bộ dữ liệu từ Google Sheet" class="p-2.5 rounded-xl bg-slate-800 text-indigo-400 hover:bg-slate-700 transition flex items-center space-x-1 text-sm font-medium">
-                    <i data-lucide="refresh-cw" class="w-4 h-4" id="sync-icon"></i>
-                    <span class="hidden sm:inline">Đồng bộ</span>
-                </button>
-                <!-- Mobile Menu Button -->
-                <button onclick="toggleMobileMenu()" class="md:hidden p-2.5 rounded-xl bg-slate-800 text-slate-400">
-                    <i data-lucide="menu" class="w-5 h-5"></i>
+                <i data-lucide="flame" class="w-4 h-4 text-amber-500"></i>
+                <span>Chuỗi học tập</span>
+            </div>
+            <span id="mobile-streak-counter">0 ngày liên tiếp</span>
+        </div>
+        <button onclick="playSound(); switchTab('search'); toggleMobileMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium flex items-center space-x-2 text-indigo-300 bg-slate-700">
+            <i data-lucide="search" class="w-4 h-4"></i><span>Tra cứu</span>
+        </button>
+        <button onclick="playSound(); switchTab('saved'); toggleMobileMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium flex items-center space-x-2 text-slate-300">
+            <i data-lucide="bookmark-check" class="w-4 h-4"></i><span>Từ đã lưu (<span id="mobile-saved-count">0</span>)</span>
+        </button>
+        <button onclick="playSound(); switchTab('lookup'); toggleMobileMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium flex items-center space-x-2 text-slate-300">
+            <i data-lucide="help-circle" class="w-4 h-4"></i><span>Cần tìm hiểu (<span id="mobile-lookup-count">0</span>)</span>
+        </button>
+        <button onclick="playSound(); switchTab('practice'); toggleMobileMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium flex items-center space-x-2 text-slate-300">
+            <i data-lucide="brain" class="w-4 h-4"></i><span>Luyện tập</span>
+        </button>
+        <button onclick="playSound(); switchTab('history'); toggleMobileMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium flex items-center space-x-2 text-slate-300">
+            <i data-lucide="history" class="w-4 h-4"></i><span>Lịch sử làm bài</span>
+        </button>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 overflow-y-auto">
+
+    <!-- TAB 1: SEARCH & LOOKUP -->
+    <section id="tab-search" class="space-y-6">
+        <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-800 text-white p-6 sm:p-8 shadow-xl">
+            <div class="absolute right-0 top-0 translate-x-1/4 -translate-y-1/4 w-72 sm:w-96 h-72 sm:h-96 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="relative z-10 max-w-2xl mx-auto text-center space-y-3 sm:space-y-4">
+                <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight">Tra Cứu Từ Vựng & Phát Âm</h2>
+                <p class="text-indigo-100 text-xs sm:text-base">Tìm kiếm nhanh từ Google Sheet, nghe phát âm chuẩn. Nếu từ chưa có, hệ thống sẽ tự động lưu vào mục <span class="font-bold underline">Cần tìm hiểu</span>!</p>
+                <!-- Search Input Box -->
+                <div class="relative mt-4 sm:mt-6">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <i data-lucide="search" class="w-5 h-5"></i>
+                    </div>
+                    <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Nhập từ vựng cần tra (vd: success, happy...)" class="w-full pl-11 pr-24 sm:pr-28 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl bg-slate-900 text-white placeholder-slate-400 shadow-2xl focus:outline-none focus:ring-4 focus:ring-indigo-400/50 text-sm sm:text-base font-medium transition">
+                    <button onclick="playSound(); clearSearch()" id="clear-search-btn" class="hidden absolute inset-y-0 right-14 sm:right-16 px-2 text-slate-400 hover:text-slate-200">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                    <div class="absolute right-2 top-2 bottom-2 flex items-center">
+                        <span id="result-count-badge" class="px-2.5 sm:px-3 py-1 rounded-lg sm:rounded-xl bg-slate-800 text-indigo-300 text-xs font-bold shadow-sm">0 từ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Filters -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="flex items-center space-x-2">
+                <span class="text-xs sm:text-sm font-semibold text-slate-400">Tổng từ vựng:</span>
+                <span id="total-vocab-count" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-900 text-indigo-300">0 từ</span>
+            </div>
+            <div class="flex items-center space-x-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+                <button onclick="playSound(); filterByTopic('all')" class="topic-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white transition shadow-sm whitespace-nowrap">Tất cả</button>
+                <div id="topic-filters-container" class="flex items-center space-x-2">
+                    <!-- Dynamic topic buttons -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Results Grid -->
+        <div id="search-results-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"></div>
+        
+        <!-- Empty state with Add Prompt -->
+        <div id="search-empty-state" class="hidden text-center py-16 space-y-4">
+            <div class="w-16 h-16 mx-auto rounded-full bg-slate-800 flex items-center justify-center text-indigo-400">
+                <i data-lucide="search-x" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-300">Không tìm thấy từ vựng trong hệ thống</h3>
+            <p id="search-missing-msg" class="text-sm text-slate-400">Từ này đã được tự động lưu cục bộ vào mục <span class="font-bold text-amber-400">Cần tìm hiểu</span>.</p>
+            <button onclick="playSound(); openAddWordModalWithQuery(document.getElementById('search-input').value)" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-lg shadow-indigo-500/30 transition inline-flex items-center space-x-2">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                <span>Thêm ngay vào hệ thống</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- TAB 2: SAVED VOCABULARY BY DATE -->
+    <section id="tab-saved" class="space-y-6 hidden">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-800 p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-700">
+            <div>
+                <h2 class="text-xl sm:text-2xl font-bold flex items-center space-x-2">
+                    <i data-lucide="bookmark-check" class="w-6 h-6 sm:w-7 sm:h-7 text-indigo-400"></i>
+                    <span>Từ Vựng Đã Lưu</span>
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-400 mt-1">Quản lý từ vựng đã lưu, sắp xếp theo ngày (DD - MM - YYYY).</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="playSound(); exportSavedWords()" class="px-3.5 py-2 rounded-xl bg-slate-700 text-indigo-300 text-xs sm:text-sm font-semibold hover:bg-slate-600 transition flex items-center space-x-2">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span>Xuất file</span>
                 </button>
             </div>
         </div>
 
-        <!-- Mobile Nav Menu -->
-        <div id="mobile-menu" class="hidden md:hidden px-4 pt-2 pb-4 space-y-1 bg-slate-800 border-b border-slate-700">
-            <button onclick="switchTab('search'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 text-indigo-300 bg-slate-700">
-                <i data-lucide="search" class="w-4 h-4"></i><span>Tra cứu</span>
-            </button>
-            <button onclick="switchTab('saved'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 text-slate-300">
-                <i data-lucide="calendar-check" class="w-4 h-4"></i><span>Từ của bạn (<span id="mobile-saved-count">0</span>)</span>
-            </button>
-            <button onclick="switchTab('practice'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 text-slate-300">
-                <i data-lucide="brain" class="w-4 h-4"></i><span>Luyện tập</span>
+        <div id="saved-by-date-container" class="space-y-8"></div>
+
+        <div id="saved-empty-state" class="hidden text-center py-20 space-y-4">
+            <div class="w-20 h-20 mx-auto rounded-3xl bg-slate-800 flex items-center justify-center text-indigo-400">
+                <i data-lucide="bookmark-plus" class="w-10 h-10"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-300">Chưa có từ vựng nào được lưu</h3>
+            <p class="text-sm text-slate-400 max-w-md mx-auto">Hãy tra cứu từ vựng và nhấn nút <span class="font-semibold text-indigo-400">"Lưu học"</span> để thêm vào danh sách.</p>
+            <button onclick="playSound(); switchTab('search')" class="px-6 py-3 rounded-xl bg-indigo-600 text-white font-semibold text-sm shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 transition">
+                Khám phá ngay
             </button>
         </div>
-    </header>
+    </section>
 
-    <!-- Main Content -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 overflow-y-auto">
+    <!-- TAB 3: WORDS TO LOOK UP (CẦN TÌM HIỂU) -->
+    <section id="tab-lookup" class="space-y-6 hidden">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-800 p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-700">
+            <div>
+                <h2 class="text-xl sm:text-2xl font-bold flex items-center space-x-2">
+                    <i data-lucide="help-circle" class="w-6 h-6 sm:w-7 sm:h-7 text-amber-400"></i>
+                    <span>Từ Cần Tìm Hiểu (Cục Bộ)</span>
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-400 mt-1">Những từ bạn đã tra cứu nhưng chưa có trong hệ thống. Nhấp vào từ bất kỳ để mở form nhập từ mới.</p>
+            </div>
+            <button onclick="playSound(); clearLookupQueue()" class="px-3.5 py-2 rounded-xl bg-rose-900/60 hover:bg-rose-900 text-rose-300 text-xs sm:text-sm font-semibold transition flex items-center space-x-2">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                <span>Xóa danh sách</span>
+            </button>
+        </div>
 
-        <!-- TAB 1: SEARCH & LOOKUP -->
-        <section id="tab-search" class="space-y-6">
-            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-800 text-white p-8 shadow-xl">
-                <div class="absolute right-0 top-0 translate-x-1/4 -translate-y-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="relative z-10 max-w-2xl mx-auto text-center space-y-4">
-                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Khám Phá Từ Vựng & Từ Đồng Nghĩa</h2>
-                    <p class="text-indigo-100 text-sm sm:text-base">Tìm kiếm nhanh chóng từ danh sách Google Sheet. Lưu lại từ vựng để ôn tập mà không lo trùng lặp.</p>
-                    <!-- Search Input Box -->
-                    <div class="relative mt-6">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-                            <i data-lucide="search" class="w-5 h-5"></i>
-                        </div>
-                        <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Nhập từ vựng tiếng Anh cần tra (vd: success, happy, brilliant...)" class="w-full pl-12 pr-28 py-4 rounded-2xl bg-slate-900 text-white placeholder-slate-400 shadow-2xl focus:outline-none focus:ring-4 focus:ring-indigo-400/50 text-base font-medium transition">
-                        <button onclick="clearSearch()" id="clear-search-btn" class="hidden absolute inset-y-0 right-16 px-2 text-slate-400 hover:text-slate-200">
-                            <i data-lucide="x" class="w-5 h-5"></i>
-                        </button>
-                        <div class="absolute right-2 top-2 bottom-2 flex items-center">
-                            <span id="result-count-badge" class="px-3 py-1.5 rounded-xl bg-slate-800 text-indigo-300 text-xs font-bold shadow-sm">0 từ</span>
-                        </div>
+        <div id="lookup-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
+        <div id="lookup-empty-state" class="hidden text-center py-20 space-y-4">
+            <div class="w-20 h-20 mx-auto rounded-3xl bg-slate-800 flex items-center justify-center text-amber-400">
+                <i data-lucide="check-circle" class="w-10 h-10"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-300">Không có từ nào cần tìm hiểu</h3>
+            <p class="text-sm text-slate-400 max-w-md mx-auto">Mọi từ bạn tra cứu đều đã có sẵn trong hệ thống hoặc đã được bạn bổ sung.</p>
+        </div>
+    </section>
+
+    <!-- TAB 4: PRACTICE & QUIZ -->
+    <section id="tab-practice" class="space-y-6 hidden">
+        <div class="bg-gradient-to-r from-violet-600 to-indigo-600 rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white shadow-xl">
+            <div class="max-w-xl space-y-3">
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-white/20 backdrop-blur-md">Ôn tập thông minh</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold">Phần Luyện Tập Trắc Nghiệm</h2>
+                <p class="text-indigo-100 text-xs sm:text-sm">Chọn hình thức luyện tập và phạm vi ôn tập. Nếu chọn sai, hệ thống sẽ hiển thị thẻ từ vựng để bạn học lại ngay lập tức.</p>
+            </div>
+        </div>
+
+        <!-- Practice Mode Selector Cards -->
+        <div id="practice-mode-selector" class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <!-- Card 1: Synonym Practice -->
+            <div class="glass-card p-5 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm hover:shadow-md transition cursor-pointer border-l-4 border-l-indigo-500 group" onclick="playSound(); openScopeModal('synonym')">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-11 h-11 rounded-xl bg-indigo-900/50 text-indigo-300 flex items-center justify-center group-hover:scale-110 transition">
+                        <i data-lucide="git-merge" class="w-5 h-5"></i>
                     </div>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-900 text-indigo-300">Đồng nghĩa</span>
+                </div>
+                <h3 class="text-lg sm:text-xl font-bold mb-1 sm:mb-2">Luyện Tập Từ Đồng Nghĩa</h3>
+                <p class="text-xs sm:text-sm text-slate-400 mb-4">Trắc nghiệm chọn từ đồng nghĩa tiếng Anh chính xác.</p>
+                <div class="flex items-center text-indigo-400 font-semibold text-xs sm:text-sm">
+                    <span>Chọn phạm vi ôn tập</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4 ml-2 group-hover:translate-x-1 transition"></i>
                 </div>
             </div>
 
-            <!-- Search Filters -->
-            <div class="flex flex-wrap items-center justify-between gap-4">
-                <div class="flex items-center space-x-2">
-                    <span class="text-sm font-semibold text-slate-400">Tổng kho từ vựng:</span>
-                    <span id="total-vocab-count" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-900 text-indigo-300">0 từ</span>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <button onclick="filterByTopic('all')" class="topic-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white transition shadow-sm">Tất cả</button>
-                    <div id="topic-filters-container" class="flex items-center space-x-2 overflow-x-auto">
-                        <!-- Dynamic topic buttons -->
+            <!-- Card 2: Meaning Practice -->
+            <div class="glass-card p-5 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm hover:shadow-md transition cursor-pointer border-l-4 border-l-violet-500 group" onclick="playSound(); openScopeModal('meaning')">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-11 h-11 rounded-xl bg-violet-900/50 text-violet-300 flex items-center justify-center group-hover:scale-110 transition">
+                        <i data-lucide="book-open" class="w-5 h-5"></i>
                     </div>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-violet-900 text-violet-300">Nghĩa từ</span>
+                </div>
+                <h3 class="text-lg sm:text-xl font-bold mb-1 sm:mb-2">Luyện Tập Nghĩa Tiếng Việt</h3>
+                <p class="text-xs sm:text-sm text-slate-400 mb-4">Ôn tập nghĩa tiếng Việt tương ứng với từ vựng tiếng Anh.</p>
+                <div class="flex items-center text-violet-400 font-semibold text-xs sm:text-sm">
+                    <span>Chọn phạm vi ôn tập</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4 ml-2 group-hover:translate-x-1 transition"></i>
                 </div>
             </div>
+        </div>
 
-            <!-- Search Results Grid -->
-            <div id="search-results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            
-            <!-- Empty state -->
-            <div id="search-empty-state" class="hidden text-center py-16 space-y-4">
-                <div class="w-16 h-16 mx-auto rounded-full bg-slate-800 flex items-center justify-center text-indigo-400">
-                    <i data-lucide="search-x" class="w-8 h-8"></i>
-                </div>
-                <h3 class="text-lg font-bold text-slate-300">Không tìm thấy từ vựng phù hợp</h3>
-                <p class="text-sm text-slate-400">Hãy thử nhập từ khóa khác hoặc kiểm tra kết nối Google Sheet.</p>
-            </div>
-        </section>
-
-        <!-- TAB 2: SAVED VOCABULARY BY DATE (GLOBAL NO DUPLICATES) -->
-        <section id="tab-saved" class="space-y-6 hidden">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-700">
-                <div>
-                    <h2 class="text-2xl font-bold flex items-center space-x-2">
-                        <i data-lucide="calendar-check" class="w-7 h-7 text-indigo-400"></i>
-                        <span>Từ Vựng Đã Lưu</span>
-                    </h2>
-                    <p class="text-sm text-slate-400 mt-1">Danh sách từ vựng được phân loại theo ngày.</p>
-                </div>
+        <!-- Quiz Active Arena -->
+        <div id="quiz-arena" class="hidden glass-card p-5 sm:p-8 rounded-2xl sm:rounded-3xl shadow-xl space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-700 pb-4">
                 <div class="flex items-center space-x-3">
-                    <button onclick="exportSavedWords()" class="px-4 py-2 rounded-xl bg-slate-700 text-indigo-300 text-sm font-semibold hover:bg-slate-600 transition flex items-center space-x-2">
-                        <i data-lucide="download" class="w-4 h-4"></i>
-                        <span>Xuất danh sách</span>
+                    <button onclick="playSound(); exitQuiz()" class="p-2 rounded-xl bg-slate-700 hover:bg-slate-600 transition text-slate-300">
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
                     </button>
+                    <div>
+                        <h3 id="quiz-title" class="font-bold text-base sm:text-lg">Đang luyện tập...</h3>
+                        <p id="quiz-progress-text" class="text-xs text-slate-400">Câu 1 / 10</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs text-slate-400 block">Điểm số</span>
+                    <span id="quiz-score" class="font-extrabold text-base sm:text-lg text-indigo-400">0</span>
                 </div>
             </div>
 
-            <div id="saved-by-date-container" class="space-y-8"></div>
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
+                <div id="quiz-progress-bar" class="bg-indigo-600 h-full transition-all duration-300" style="width: 10%"></div>
+            </div>
 
-            <div id="saved-empty-state" class="hidden text-center py-20 space-y-4">
-                <div class="w-20 h-20 mx-auto rounded-3xl bg-slate-800 flex items-center justify-center text-indigo-400">
-                    <i data-lucide="bookmark-plus" class="w-10 h-10"></i>
+            <!-- Question Card -->
+            <div class="py-2 sm:py-4 space-y-4">
+                <div class="text-center space-y-2">
+                    <span id="quiz-mode-tag" class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-700 text-indigo-300">Từ đồng nghĩa</span>
+                    <h4 id="quiz-question-prompt" class="text-lg sm:text-2xl font-bold text-white">Chọn từ đồng nghĩa với từ: "..."</h4>
                 </div>
-                <h3 class="text-xl font-bold text-slate-300">Chưa có từ vựng nào được lưu</h3>
-                <p class="text-sm text-slate-400 max-w-md mx-auto">Hãy tra cứu từ vựng ở tab đầu tiên và nhấn nút <span class="font-semibold text-indigo-400">"Lưu học"</span> để thêm vào danh sách.</p>
-                <button onclick="switchTab('search')" class="px-6 py-3 rounded-xl bg-indigo-600 text-white font-semibold text-sm shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 transition">
-                    Khám phá từ vựng ngay
+
+                <!-- Options Grid -->
+                <div id="quiz-options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-2"></div>
+
+                <!-- WRONG ANSWER RE-LEARN CARD CONTAINER -->
+                <div id="wrong-answer-card-container" class="hidden mt-4 p-5 rounded-2xl bg-rose-950/40 border border-rose-800/80 space-y-3">
+                    <div class="flex items-center space-x-2 text-rose-400 font-bold text-sm">
+                        <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                        <span>Bạn đã chọn sai! Hãy xem lại thẻ từ vựng này để học lại:</span>
+                    </div>
+                    <div id="relearn-card-content" class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Actions -->
+            <div class="flex justify-end pt-4 border-t border-slate-700">
+                <button onclick="playSound(); nextQuizQuestion()" id="quiz-next-btn" class="hidden px-6 py-3 rounded-xl bg-indigo-600 text-white font-semibold text-sm shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 transition">
+                    Câu tiếp theo
                 </button>
             </div>
-        </section>
+        </div>
 
-        <!-- TAB 3: PRACTICE & QUIZ -->
-        <section id="tab-practice" class="space-y-6 hidden">
-            <div class="bg-gradient-to-r from-violet-600 to-indigo-600 rounded-3xl p-8 text-white shadow-xl">
-                <div class="max-w-xl space-y-3">
-                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-white/20 backdrop-blur-md">Chế độ ôn tập nâng cao</span>
-                    <h2 class="text-3xl font-extrabold">Luyện Tập Trắc Nghiệm Thông Minh</h2>
-                    <p class="text-indigo-100 text-sm">Chọn thẻ luyện tập bên dưới và chọn phạm vi ôn tập theo ngày, theo tuần hoặc toàn bộ kho từ vựng.</p>
-                </div>
+        <!-- Quiz Result View -->
+        <div id="quiz-result-view" class="hidden glass-card p-6 sm:p-8 rounded-2xl sm:rounded-3xl shadow-xl text-center space-y-6 max-w-lg mx-auto">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-3xl bg-emerald-900 text-emerald-400 flex items-center justify-center shadow-lg">
+                <i data-lucide="trophy" class="w-8 h-8 sm:w-10 sm:h-10"></i>
             </div>
-
-            <!-- Practice Mode Selector 2 Cards -->
-            <div id="practice-mode-selector" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Card 1: Synonym Practice -->
-                <div class="glass-card p-6 rounded-3xl shadow-sm hover:shadow-md transition cursor-pointer border-l-4 border-l-indigo-500 group" onclick="openScopeModal('synonym')">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 rounded-2xl bg-indigo-900/50 text-indigo-300 flex items-center justify-center group-hover:scale-110 transition">
-                            <i data-lucide="git-merge" class="w-6 h-6"></i>
-                        </div>
-                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-indigo-900 text-indigo-300">Phổ biến</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">Luyện Tập Từ Đồng Nghĩa</h3>
-                    <p class="text-sm text-slate-400 mb-4">Trắc nghiệm các từ đồng nghĩa tiếng Anh, đáp án không trùng lặp.</p>
-                    <div class="flex items-center text-indigo-400 font-semibold text-sm">
-                        <span>Chọn phạm vi luyện tập</span>
-                        <i data-lucide="arrow-right" class="w-4 h-4 ml-2 group-hover:translate-x-1 transition"></i>
-                    </div>
-                </div>
-
-                <!-- Card 2: Meaning Practice -->
-                <div class="glass-card p-6 rounded-3xl shadow-sm hover:shadow-md transition cursor-pointer border-l-4 border-l-violet-500 group" onclick="openScopeModal('meaning')">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 rounded-2xl bg-violet-900/50 text-violet-300 flex items-center justify-center group-hover:scale-110 transition">
-                            <i data-lucide="book-open" class="w-6 h-6"></i>
-                        </div>
-                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-violet-900 text-violet-300">Ôn nghĩa</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">Luyện Tập Nghĩa</h3>
-                    <p class="text-sm text-slate-400 mb-4">Ôn tập trắc nghiệm nghĩa tiếng Việt của từ vựng theo các mốc thời gian.</p>
-                    <div class="flex items-center text-violet-400 font-semibold text-sm">
-                        <span>Chọn phạm vi luyện tập</span>
-                        <i data-lucide="arrow-right" class="w-4 h-4 ml-2 group-hover:translate-x-1 transition"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quiz Active Arena -->
-            <div id="quiz-arena" class="hidden glass-card p-6 sm:p-8 rounded-3xl shadow-xl space-y-6">
-                <div class="flex items-center justify-between border-b border-slate-700 pb-4">
-                    <div class="flex items-center space-x-3">
-                        <button onclick="exitQuiz()" class="p-2 rounded-xl bg-slate-700 hover:bg-slate-600 transition text-slate-300">
-                            <i data-lucide="arrow-left" class="w-5 h-5"></i>
-                        </button>
-                        <div>
-                            <h3 id="quiz-title" class="font-bold text-lg">Đang luyện tập...</h3>
-                            <p id="quiz-progress-text" class="text-xs text-slate-400">Câu 1 / 10</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="text-right">
-                            <span class="text-xs text-slate-400 block">Điểm số</span>
-                            <span id="quiz-score" class="font-extrabold text-lg text-indigo-400">0</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Progress Bar -->
-                <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
-                    <div id="quiz-progress-bar" class="bg-indigo-600 h-full transition-all duration-300" style="width: 10%"></div>
-                </div>
-
-                <!-- Question Card -->
-                <div class="py-4 space-y-4">
-                    <div class="text-center space-y-2">
-                        <span id="quiz-mode-tag" class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-700 text-indigo-300">Từ đồng nghĩa</span>
-                        <h4 id="quiz-question-prompt" class="text-xl sm:text-2xl font-bold text-white">Chọn từ đồng nghĩa với từ: "..."</h4>
-                    </div>
-
-                    <!-- Options Grid -->
-                    <div id="quiz-options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4"></div>
-                </div>
-
-                <!-- Quiz Actions -->
-                <div class="flex justify-end pt-4 border-t border-slate-700">
-                    <button onclick="nextQuizQuestion()" id="quiz-next-btn" class="hidden px-6 py-3 rounded-xl bg-indigo-600 text-white font-semibold text-sm shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 transition">
-                        Câu tiếp theo
-                    </button>
-                </div>
-            </div>
-
-            <!-- Quiz Result View -->
-            <div id="quiz-result-view" class="hidden glass-card p-8 rounded-3xl shadow-xl text-center space-y-6 max-w-lg mx-auto">
-                <div class="w-20 h-20 mx-auto rounded-3xl bg-emerald-900 text-emerald-400 flex items-center justify-center shadow-lg">
-                    <i data-lucide="trophy" class="w-10 h-10"></i>
-                </div>
-                <div class="space-y-2">
-                    <h3 class="text-2xl font-bold">Hoàn Thành Xuất Sắc!</h3>
-                    <p class="text-slate-400 text-sm">Bạn đã hoàn thành phiên luyện tập trắc nghiệm từ vựng.</p>
-                </div>
-                <div class="bg-slate-800 p-6 rounded-2xl flex items-center justify-around">
-                    <div>
-                        <span class="text-xs text-slate-400 block">Tổng số câu</span>
-                        <span id="result-total" class="text-xl font-bold">10</span>
-                    </div>
-                    <div class="w-px h-10 bg-slate-700"></div>
-                    <div>
-                        <span class="text-xs text-slate-400 block">Số câu đúng</span>
-                        <span id="result-correct" class="text-xl font-bold text-emerald-400">8</span>
-                    </div>
-                    <div class="w-px h-10 bg-slate-700"></div>
-                    <div>
-                        <span class="text-xs text-slate-400 block">Tỷ lệ chính xác</span>
-                        <span id="result-percent" class="text-xl font-bold text-indigo-400">80%</span>
-                    </div>
-                </div>
-                <div class="flex items-center justify-center space-x-4 pt-2">
-                    <button onclick="restartQuiz()" class="px-6 py-3 rounded-xl bg-indigo-600 text-white font-semibold text-sm shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 transition">
-                        Làm lại bài khác
-                    </button>
-                    <button onclick="exitQuiz()" class="px-6 py-3 rounded-xl bg-slate-700 text-slate-300 font-semibold text-sm hover:bg-slate-600 transition">
-                        Về trang luyện tập
-                    </button>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Scope Selection Modal for Practice -->
-    <div id="scope-selection-modal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full rounded-3xl shadow-2xl p-6 sm:p-8 space-y-6 relative">
-            <button onclick="closeScopeModal()" class="absolute right-5 top-5 p-2 rounded-full bg-slate-800 text-slate-400 hover:bg-slate-700 transition">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
             <div class="space-y-2">
-                <h3 id="scope-modal-title" class="text-xl font-bold text-white">Chọn phạm vi luyện tập</h3>
-                <p class="text-xs text-slate-400">Số lượng câu hỏi sẽ phụ thuộc vào số từ vựng đã lưu trong phạm vi bạn chọn.</p>
+                <h3 class="text-xl sm:text-2xl font-bold">Hoàn Thành Xuất Sắc!</h3>
+                <p class="text-slate-400 text-xs sm:text-sm">Kết quả luyện tập đã được lưu vào Lịch sử làm bài và cập nhật chuỗi học.</p>
             </div>
-            
-            <div class="space-y-3">
-                <button onclick="startPracticeWithScope('day')" class="w-full p-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-left transition flex items-center justify-between group">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-indigo-900/50 text-indigo-400 flex items-center justify-center">
-                            <i data-lucide="calendar" class="w-5 h-5"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-sm text-white group-hover:text-indigo-400 transition">Theo ngày</h4>
-                            <p class="text-xs text-slate-400">Chọn từ vựng lưu trong ngày cụ thể</p>
-                        </div>
-                    </div>
-                    <i data-lucide="chevron-right" class="w-5 h-5 text-slate-500"></i>
+            <div class="bg-slate-800 p-5 rounded-2xl flex items-center justify-around">
+                <div>
+                    <span class="text-xs text-slate-400 block">Tổng số câu</span>
+                    <span id="result-total" class="text-lg sm:text-xl font-bold">10</span>
+                </div>
+                <div class="w-px h-10 bg-slate-700"></div>
+                <div>
+                    <span class="text-xs text-slate-400 block">Câu đúng</span>
+                    <span id="result-correct" class="text-lg sm:text-xl font-bold text-emerald-400">8</span>
+                </div>
+                <div class="w-px h-10 bg-slate-700"></div>
+                <div>
+                    <span class="text-xs text-slate-400 block">Tỷ lệ chính xác</span>
+                    <span id="result-percent" class="text-lg sm:text-xl font-bold text-indigo-400">80%</span>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                <button onclick="playSound(); restartQuiz()" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-indigo-600 text-white font-semibold text-sm shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 transition">
+                    Làm bài khác
                 </button>
+                <button onclick="playSound(); exitQuiz()" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-slate-700 text-slate-300 font-semibold text-sm hover:bg-slate-600 transition">
+                    Về trang luyện tập
+                </button>
+            </div>
+        </div>
+    </section>
 
-                <!-- Date selector subview (hidden by default) -->
-                <div id="date-selector-subview" class="hidden p-3 bg-slate-900 rounded-xl space-y-3">
-                    <label class="block text-xs font-semibold text-slate-300">Chọn ngày:</label>
-                    <select id="practice-date-select" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+    <!-- TAB 5: QUIZ HISTORY -->
+    <section id="tab-history" class="space-y-6 hidden">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-800 p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-700">
+            <div>
+                <h2 class="text-xl sm:text-2xl font-bold flex items-center space-x-2">
+                    <i data-lucide="history" class="w-6 h-6 sm:w-7 sm:h-7 text-indigo-400"></i>
+                    <span>Lịch Sử Làm Bài</span>
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-400 mt-1">Xem lại ngày làm bài, chế độ luyện tập và tỷ lệ chính xác (định dạng ngày DD - MM - YYYY).</p>
+            </div>
+            <button onclick="playSound(); clearQuizHistory()" class="px-3.5 py-2 rounded-xl bg-rose-900/60 hover:bg-rose-900 text-rose-300 text-xs sm:text-sm font-semibold transition flex items-center space-x-2">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                <span>Xóa lịch sử</span>
+            </button>
+        </div>
+
+        <div id="history-list-container" class="space-y-3"></div>
+
+        <div id="history-empty-state" class="hidden text-center py-20 space-y-4">
+            <div class="w-20 h-20 mx-auto rounded-3xl bg-slate-800 flex items-center justify-center text-indigo-400">
+                <i data-lucide="clipboard-list" class="w-10 h-10"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-300">Chưa có lịch sử làm bài nào</h3>
+            <p class="text-sm text-slate-400 max-w-md mx-auto">Hãy tham gia phần <span class="font-semibold text-indigo-400">"Luyện tập"</span> để ghi nhận kết quả ôn tập của bạn.</p>
+            <button onclick="playSound(); switchTab('practice')" class="px-6 py-3 rounded-xl bg-indigo-600 text-white font-semibold text-sm shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 transition">
+                Bắt đầu luyện tập
+            </button>
+        </div>
+    </section>
+</main>
+
+<!-- Scope Selection Modal for Practice -->
+<div id="scope-selection-modal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-card max-w-md w-full rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 space-y-6 relative">
+        <button onclick="playSound(); closeScopeModal()" class="absolute right-5 top-5 p-2 rounded-full bg-slate-800 text-slate-400 hover:bg-slate-700 transition">
+            <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        <div class="space-y-1 sm:space-y-2">
+            <h3 id="scope-modal-title" class="text-lg sm:text-xl font-bold text-white">Chọn phạm vi luyện tập</h3>
+            <p class="text-xs text-slate-400">Số lượng câu hỏi phụ thuộc vào từ vựng đã lưu trong phạm vi bạn chọn.</p>
+        </div>
+        
+        <div class="space-y-3">
+            <button onclick="playSound(); startPracticeWithScope('day')" class="w-full p-3.5 sm:p-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-left transition flex items-center justify-between group">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-xl bg-indigo-900/50 text-indigo-400 flex items-center justify-center">
+                        <i data-lucide="calendar" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs sm:text-sm text-white group-hover:text-indigo-400 transition">Theo ngày cụ thể</h4>
+                        <p class="text-[11px] sm:text-xs text-slate-400">Chọn từ vựng theo ngày lưu</p>
+                    </div>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-slate-500"></i>
+            </button>
+
+            <!-- Date selector subview -->
+            <div id="date-selector-subview" class="hidden p-3 bg-slate-900 rounded-xl space-y-3">
+                <label class="block text-xs font-semibold text-slate-300">Chọn ngày (DD - MM - YYYY):</label>
+                <select id="practice-date-select" class="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <!-- Populated dynamically -->
+                </select>
+                <button onclick="playSound(); startQuizWithDate()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition shadow">
+                    Bắt đầu luyện tập ngày này
+                </button>
+            </div>
+
+            <button onclick="playSound(); startPracticeWithScope('week')" class="w-full p-3.5 sm:p-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-left transition flex items-center justify-between group">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-900/50 text-emerald-400 flex items-center justify-center">
+                        <i data-lucide="calendar-range" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs sm:text-sm text-white group-hover:text-emerald-400 transition">Theo tuần (7 ngày gần nhất)</h4>
+                        <p class="text-[11px] sm:text-xs text-slate-400">Tổng hợp từ vựng trong tuần qua</p>
+                    </div>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-slate-500"></i>
+            </button>
+
+            <button onclick="playSound(); startPracticeWithScope('all')" class="w-full p-3.5 sm:p-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-left transition flex items-center justify-between group">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-xl bg-amber-900/50 text-amber-400 flex items-center justify-center">
+                        <i data-lucide="layers" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs sm:text-sm text-white group-hover:text-amber-400 transition">Toàn bộ kho từ vựng</h4>
+                        <p class="text-[11px] sm:text-xs text-slate-400">Hiển thị ngẫu nhiên từ kho dữ liệu</p>
+                    </div>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-slate-500"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Word Detail & Edit Modal -->
+<div id="word-detail-modal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-card max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded-2xl sm:rounded-3xl shadow-2xl p-5 sm:p-8 space-y-6 relative">
+        <button onclick="playSound(); closeWordModal()" class="absolute right-5 top-5 p-2 rounded-full bg-slate-800 text-slate-400 hover:bg-slate-700 transition">
+            <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <!-- View Mode Header -->
+        <div id="modal-view-header" class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-700 pb-4">
+            <div>
+                <div class="flex items-center space-x-3">
+                    <h3 id="modal-word" class="text-2xl sm:text-3xl font-extrabold text-white">Word</h3>
+                    <button onclick="playSound(); speakWord(document.getElementById('modal-word').innerText)" class="p-2 rounded-xl bg-indigo-600/30 text-indigo-300 hover:bg-indigo-600/50 transition" title="Nghe phát âm">
+                        <i data-lucide="volume-2" class="w-4 h-4"></i>
+                    </button>
+                    <span id="modal-type" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-900 text-indigo-300">noun</span>
+                </div>
+                <p id="modal-ipa" class="text-xs sm:text-sm font-mono text-slate-400 mt-1">/wɜːd/</p>
+            </div>
+            <div class="flex items-center space-x-2" id="modal-action-btn-container">
+                <!-- Edit Button & Save/Bookmark Button -->
+            </div>
+        </div>
+
+        <!-- View Mode Content -->
+        <div id="modal-view-content" class="space-y-4 text-sm">
+            <div class="p-4 rounded-2xl bg-slate-900/50 border border-slate-800">
+                <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block mb-1">Tiếng Việt / Nghĩa chính</span>
+                <p id="modal-vietnamese" class="text-base sm:text-lg font-bold text-slate-200 multiline-text">-</p>
+            </div>
+
+            <div>
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Định nghĩa chi tiết</span>
+                <p id="modal-definition" class="text-slate-300 leading-relaxed text-xs sm:text-sm multiline-text">-</p>
+            </div>
+
+            <div>
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Ví dụ minh họa (hỗ trợ xuống dòng)</span>
+                <div class="p-3 rounded-xl bg-slate-900 italic text-slate-400 border-l-4 border-indigo-500 text-xs sm:text-sm multiline-text">
+                    "<span id="modal-example">-</span>"
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                <div class="p-3.5 rounded-2xl bg-slate-900/50 border border-slate-800">
+                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider block mb-1">Từ đồng nghĩa (Tự động 2 chiều)</span>
+                    <div id="modal-synonyms" class="flex flex-wrap gap-1.5 mt-1"></div>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-slate-900/50 border border-slate-800">
+                    <span class="text-xs font-bold text-rose-400 uppercase tracking-wider block mb-1">Từ trái nghĩa (Tự động 2 chiều)</span>
+                    <div id="modal-antonyms" class="flex flex-wrap gap-1.5 mt-1"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add / Edit Form Modal (Unified) -->
+        <div id="modal-edit-form" class="hidden space-y-4">
+            <h4 id="form-modal-title" class="text-base font-bold text-indigo-400 border-b border-slate-700 pb-2 flex items-center space-x-2">
+                <i data-lucide="edit-3" class="w-4 h-4"></i>
+                <span>Thêm / Chỉnh sửa Từ Vựng & Cập nhật Google Sheet</span>
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Từ vựng (English)* (Không trùng lặp)</label>
+                    <input type="text" id="edit-word" placeholder="vd: success" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Nghĩa tiếng Việt*</label>
+                    <input type="text" id="edit-vietnamese" placeholder="vd: sự thành công" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Từ loại (Type)</label>
+                    <input type="text" id="edit-type" placeholder="vd: noun, verb..." class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Phiên âm (IPA)</label>
+                    <input type="text" id="edit-ipa" placeholder="vd: /səkˈses/" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Chủ đề (Topic) - Chọn hoặc nhập mới</label>
+                    <select id="edit-topic-select" onchange="handleTopicSelectChange(this.value)" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-1">
                         <!-- Populated dynamically -->
                     </select>
-                    <button onclick="startQuizWithDate()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition shadow">
-                        Bắt đầu luyện tập ngày này
+                    <input type="text" id="edit-topic" placeholder="Hoặc nhập chủ đề mới..." class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Từ đồng nghĩa (phẩy cách - tự lưu 2 chiều)</label>
+                    <input type="text" id="edit-synonym" placeholder="vd: triumph, victory" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Từ trái nghĩa (phẩy cách - tự lưu 2 chiều)</label>
+                    <input type="text" id="edit-antonym" placeholder="vd: failure" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Định nghĩa chi tiết (có thể xuống dòng)</label>
+                    <textarea id="edit-definition" rows="2" placeholder="Nhập định nghĩa..." class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Ví dụ minh họa (hỗ trợ xuống dòng)</label>
+                    <textarea id="edit-example" rows="2" placeholder="Nhập câu ví dụ (có thể ấn Enter xuống dòng nhiều dòng)..." class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                </div>
+            </div>
+            <div class="flex items-center justify-end space-x-3 pt-4 border-t border-slate-700">
+                <button onclick="playSound(); cancelEditWord()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 transition">
+                    Hủy
+                </button>
+                <button onclick="playSound(); saveNewOrEditedWord()" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-bold text-white transition shadow-lg shadow-indigo-500/30 flex items-center space-x-1.5">
+                    <i data-lucide="save" class="w-4 h-4"></i>
+                    <span>Lưu & Cập nhật hệ thống</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification Container -->
+<div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+<!-- JavaScript Application Core -->
+<script>
+    // --- Web Audio API Click Sound Synthesizer ---
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound() {
+        try {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.05);
+            gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.05);
+        } catch (e) {
+            // Ignore audio context restrictions before user gesture
+        }
+    }
+
+    // --- Sample Vocabulary Data ---
+    const sampleVocabData = [
+        { english: "success", vietnamese: "sự thành công", type: "noun", ipa: "/səkˈses/", definition: "The accomplishment of an aim or purpose.", example: "The project was a huge success.\nIt required great teamwork.", synonym: "triumph, achievement, victory", antonym: "failure", topic: "Business" },
+        { english: "happy", vietnamese: "vui vẻ, hạnh phúc", type: "adjective", ipa: "/ˈhæpi/", definition: "Feeling or showing pleasure or contentment.", example: "She looks very happy today.\nHer smile lit up the room.", synonym: "joyful, cheerful, delighted", antonym: "sad, unhappy", topic: "Emotion" },
+        { english: "brilliant", vietnamese: "xuất chúng, rực rỡ", type: "adjective", ipa: "/ˈbrɪliənt/", definition: "Clever, talented, or highly impressive.", example: "He came up with a brilliant idea.", synonym: "outstanding, exceptional, smart", antonym: "dull, stupid", topic: "General" },
+        { english: "challenge", vietnamese: "thử thách", type: "noun", ipa: "/ˈtʃælɪndʒ/", definition: "A call to someone to prove something or test ability.", example: "Learning a new language is a great challenge.", synonym: "test, trial, difficulty", antonym: "easy task", topic: "Work" },
+        { english: "confident", vietnamese: "tự tin", type: "adjective", ipa: "/ˈkɒnfɪdənt/", definition: "Feeling sure about one's abilities or qualities.", example: "She is confident about passing the exam.", synonym: "assured, certain, positive", antonym: "insecure, doubtful", topic: "Emotion" },
+        { english: "innovative", vietnamese: "đổi mới, sáng tạo", type: "adjective", ipa: "/ˈɪnəveɪtɪv/", definition: "Featuring new methods; advanced and original.", example: "We need innovative solutions for this problem.", synonym: "creative, pioneering, novel", antonym: "outdated, traditional", topic: "Technology" }
+    ];
+
+    // --- Hardcoded Google Apps Script URL ---
+    const HARDCODED_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbykgN9Mf37KxqMZx2XW1mqPJJ3jVunAWVEljUAszFJVwMLxDXJpDHg6cvpdkMHR2v_iKQ/exec";
+
+    // --- App State ---
+    let vocabList = [];
+    let savedWordsByDate = JSON.parse(localStorage.getItem('vocab_saved_by_date') || '{}');
+    let lookupQueue = JSON.parse(localStorage.getItem('vocab_lookup_queue') || '[]');
+    let quizHistory = JSON.parse(localStorage.getItem('vocab_quiz_history') || '[]');
+    let studyStreak = JSON.parse(localStorage.getItem('vocab_study_streak') || '{"count": 0, "lastDate": ""}');
+    let currentTab = 'search';
+    let currentTopic = 'all';
+    let activePracticeType = null; 
+    let isCreatingNewWord = false;
+    let currentEditingWordOriginal = null;
+    let currentQuiz = {
+        mode: null,
+        questions: [],
+        currentIndex: 0,
+        score: 0,
+        correctCount: 0
+    };
+
+    // --- Initialization ---
+    window.addEventListener('DOMContentLoaded', () => {
+        const cachedVocab = localStorage.getItem('vocab_master_data');
+        if (cachedVocab) {
+            try {
+                vocabList = JSON.parse(cachedVocab);
+            } catch (e) {
+                vocabList = sampleVocabData;
+            }
+        } else {
+            vocabList = sampleVocabData;
+            localStorage.setItem('vocab_master_data', JSON.stringify(sampleVocabData));
+        }
+
+        checkAndUpdateStreak();
+        renderTopicFilters();
+        renderSearchResults('');
+        updateBadges();
+        renderSavedWordsByDate();
+        renderLookupQueue();
+        renderQuizHistory();
+        
+        if (HARDCODED_SCRIPT_URL && !HARDCODED_SCRIPT_URL.includes("...")) {
+            syncData(true);
+        }
+
+        lucide.createIcons();
+    });
+
+    // --- Study Streak Calculation ---
+    function checkAndUpdateStreak() {
+        const today = getTodayDateString();
+        if (studyStreak.lastDate === today) {
+            // already recorded today
+        } else {
+            if (!studyStreak.lastDate) {
+                studyStreak = { count: 1, lastDate: today };
+            } else {
+                const lastD = new Date(studyStreak.lastDate);
+                const nowD = new Date(today);
+                const diffDays = Math.round((nowD - lastD) / (1000 * 60 * 60 * 24));
+                if (diffDays === 1) {
+                    studyStreak.count += 1;
+                    studyStreak.lastDate = today;
+                } else if (diffDays > 1) {
+                    studyStreak.count = 1;
+                    studyStreak.lastDate = today;
+                }
+            }
+            localStorage.setItem('vocab_study_streak', JSON.stringify(studyStreak));
+        }
+        document.getElementById('streak-counter').innerText = `Chuỗi: ${studyStreak.count} ngày`;
+        document.getElementById('mobile-streak-counter').innerText = `${studyStreak.count} ngày liên tiếp`;
+    }
+
+    // --- Date Formatter DD - MM - YYYY ---
+    function formatDateVN(dateStr) {
+        if (!dateStr) return '';
+        const parts = dateStr.split('-');
+        if (parts.length === 3) {
+            return `${parts[2]} - ${parts[1]} - ${parts[0]}`;
+        }
+        return dateStr;
+    }
+
+    function getTodayDateString() {
+        const d = new Date();
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    // --- Text-to-Speech Pronunciation ---
+    function speakWord(word) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(word);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        } else {
+            showToast("Trình duyệt không hỗ trợ phát âm.", "info");
+        }
+    }
+
+    // --- Navigation ---
+    function switchTab(tabId) {
+        currentTab = tabId;
+        ['search', 'saved', 'lookup', 'practice', 'history'].forEach(id => {
+            const sec = document.getElementById(`tab-${id}`);
+            const btn = document.getElementById(`nav-${id}`);
+            if (id === tabId) {
+                sec.classList.remove('hidden');
+                if (btn) {
+                    btn.className = "nav-btn px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center space-x-1.5 bg-slate-700 text-indigo-300 shadow-sm";
+                }
+            } else {
+                sec.classList.add('hidden');
+                if (btn) {
+                    btn.className = "nav-btn px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center space-x-1.5 text-slate-400 hover:text-indigo-400";
+                }
+            }
+        });
+
+        if (tabId === 'saved') {
+            renderSavedWordsByDate();
+        } else if (tabId === 'lookup') {
+            renderLookupQueue();
+        } else if (tabId === 'history') {
+            renderQuizHistory();
+        }
+        lucide.createIcons();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+    }
+
+    // --- Toast Notifications ---
+    function showToast(message, type = 'success') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        const bgClass = type === 'success' ? 'bg-emerald-600 text-white' : type === 'error' ? 'bg-rose-600 text-white' : 'bg-slate-800 text-white';
+        const icon = type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : 'info';
+
+        toast.className = `flex items-center space-x-3 px-4 py-3 rounded-2xl shadow-xl pointer-events-auto transform translate-y-2 opacity-0 transition-all duration-300 ${bgClass}`;
+        toast.innerHTML = `<i data-lucide="${icon}" class="w-5 h-5"></i><span class="text-xs sm:text-sm font-medium">${message}</span>`;
+        
+        container.appendChild(toast);
+        lucide.createIcons();
+
+        setTimeout(() => {
+            toast.classList.remove('translate-y-2', 'opacity-0');
+        }, 10);
+
+        setTimeout(() => {
+            toast.classList.add('translate-y-2', 'opacity-0');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    // --- Google Sheet Sync & Update ---
+    async function syncData(silent = false) {
+        if (!HARDCODED_SCRIPT_URL || HARDCODED_SCRIPT_URL.includes("...")) {
+            if (!silent) {
+                showToast("Đang dùng dữ liệu cục bộ (Chưa cấu hình URL Google Sheet).", "info");
+            }
+            return;
+        }
+
+        const syncIcon = document.getElementById('sync-icon');
+        if (syncIcon) syncIcon.classList.add('animate-spin');
+
+        try {
+            const response = await fetch(HARDCODED_SCRIPT_URL);
+            const data = await response.json();
+            
+            if (Array.isArray(data)) {
+                vocabList = data;
+                localStorage.setItem('vocab_master_data', JSON.stringify(data));
+                renderTopicFilters();
+                renderSearchResults(document.getElementById('search-input').value);
+                if (!silent) showToast("Đồng bộ dữ liệu từ Google Sheet thành công!", "success");
+            } else if (data && data.status === 'error') {
+                throw new Error(data.message);
+            }
+        } catch (error) {
+            console.error("Sync error:", error);
+            if (!silent) showToast("Lỗi đồng bộ: " + error.message, "error");
+        } finally {
+            if (syncIcon) syncIcon.classList.remove('animate-spin');
+        }
+    }
+
+    async function updateGoogleSheetRow(updatedItem) {
+        if (!HARDCODED_SCRIPT_URL || HARDCODED_SCRIPT_URL.includes("...")) {
+            return true;
+        }
+        try {
+            await fetch(HARDCODED_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'update', data: updatedItem })
+            });
+            return true;
+        } catch (e) {
+            console.error("Google Sheet update error:", e);
+            return false;
+        }
+    }
+
+    // --- Helper for Field Extraction ---
+    function getVal(item, keys) {
+        for (let k of keys) {
+            if (item[k] !== undefined && item[k] !== null) return item[k];
+            const foundKey = Object.keys(item).find(vk => vk.toLowerCase() === k.toLowerCase());
+            if (foundKey && item[foundKey] !== undefined) return item[foundKey];
+        }
+        return "";
+    }
+
+    // --- Topic Filters & Management ---
+    function renderTopicFilters() {
+        const container = document.getElementById('topic-filters-container');
+        const topics = [...new Set(vocabList.map(item => getVal(item, ['topic', 'chủ đề'])).filter(Boolean))];
+        
+        container.innerHTML = topics.map(topic => {
+            const active = currentTopic === topic;
+            return `<button onclick="playSound(); filterByTopic('${topic}')" class="topic-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition shadow-sm whitespace-nowrap ${active ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">${topic}</button>`;
+        }).join('');
+
+        document.getElementById('total-vocab-count').innerText = `${vocabList.length} từ`;
+
+        // Populate select in add/edit form
+        const select = document.getElementById('edit-topic-select');
+        if (select) {
+            select.innerHTML = `<option value="">-- Chọn chủ đề có sẵn --</option>` + topics.map(t => `<option value="${t}">${t}</option>`).join('');
+        }
+    }
+
+    function filterByTopic(topic) {
+        currentTopic = topic;
+        document.querySelectorAll('.topic-filter-btn').forEach(btn => {
+            if (btn.innerText.toLowerCase() === topic.toLowerCase() || (topic === 'all' && btn.innerText === 'Tất cả')) {
+                btn.className = "topic-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition shadow-sm bg-indigo-600 text-white whitespace-nowrap";
+            } else {
+                btn.className = "topic-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition shadow-sm bg-slate-800 text-slate-300 hover:bg-slate-700 whitespace-nowrap";
+            }
+        });
+        renderSearchResults(document.getElementById('search-input').value);
+    }
+
+    function handleTopicSelectChange(val) {
+        if (val) {
+            document.getElementById('edit-topic').value = val;
+        }
+    }
+
+    // --- Search & "Cần tìm hiểu" Queue ---
+    function handleSearch(query) {
+        const clearBtn = document.getElementById('clear-search-btn');
+        const q = query.trim();
+        if (q.length > 0) {
+            clearBtn.classList.remove('hidden');
+        } else {
+            clearBtn.classList.add('hidden');
+        }
+        renderSearchResults(q);
+
+        // If user typed something significant and it's not found in vocabList, add to lookup queue
+        if (q.length >= 2) {
+            const found = vocabList.some(item => getVal(item, ['english', 'từ vựng', 'word']).toLowerCase() === q.toLowerCase());
+            if (!found) {
+                addToLookupQueue(q);
+            }
+        }
+    }
+
+    function clearSearch() {
+        document.getElementById('search-input').value = '';
+        document.getElementById('clear-search-btn').classList.add('hidden');
+        renderSearchResults('');
+    }
+
+    function addToLookupQueue(wordStr) {
+        const cleanWord = wordStr.trim();
+        if (!lookupQueue.includes(cleanWord)) {
+            // Check if already in main vocab
+            const inMain = vocabList.some(i => getVal(i, ['english', 'từ vựng', 'word']).toLowerCase() === cleanWord.toLowerCase());
+            if (!inMain) {
+                lookupQueue.unshift(cleanWord);
+                localStorage.setItem('vocab_lookup_queue', JSON.stringify(lookupQueue));
+                updateBadges();
+                renderLookupQueue();
+            }
+        }
+    }
+
+    function renderLookupQueue() {
+        const container = document.getElementById('lookup-grid');
+        const emptyState = document.getElementById('lookup-empty-state');
+
+        if (!lookupQueue || lookupQueue.length === 0) {
+            container.innerHTML = '';
+            emptyState.classList.remove('hidden');
+            return;
+        }
+
+        emptyState.classList.add('hidden');
+        container.innerHTML = lookupQueue.map(word => `
+            <div class="glass-card p-4 rounded-2xl flex items-center justify-between space-x-3 group">
+                <div class="flex items-center space-x-3 cursor-pointer flex-1" onclick="playSound(); openAddWordModalWithQuery('${word}')">
+                    <div class="w-10 h-10 rounded-xl bg-amber-900/40 text-amber-400 flex items-center justify-center font-bold">
+                        <i data-lucide="help-circle" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-base text-white group-hover:text-amber-400 transition">${word}</h4>
+                        <p class="text-[11px] text-slate-400">Nhấp để thêm vào từ điển</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-1">
+                    <button onclick="playSound(); openAddWordModalWithQuery('${word}')" class="p-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold transition" title="Thêm từ mới">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="playSound(); removeFromLookupQueue('${word}')" class="p-2 rounded-xl bg-slate-800 hover:bg-rose-900 text-slate-400 hover:text-rose-300 transition" title="Xóa">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
                     </button>
                 </div>
-
-                <button onclick="startPracticeWithScope('week')" class="w-full p-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-left transition flex items-center justify-between group">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-900/50 text-emerald-400 flex items-center justify-center">
-                            <i data-lucide="calendar-range" class="w-5 h-5"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-sm text-white group-hover:text-emerald-400 transition">Theo tuần (7 ngày gần nhất)</h4>
-                            <p class="text-xs text-slate-400">Tổng hợp từ vựng trong 7 ngày qua</p>
-                        </div>
-                    </div>
-                    <i data-lucide="chevron-right" class="w-5 h-5 text-slate-500"></i>
-                </button>
-
-                <button onclick="startPracticeWithScope('all')" class="w-full p-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-left transition flex items-center justify-between group">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-amber-900/50 text-amber-400 flex items-center justify-center">
-                            <i data-lucide="layers" class="w-5 h-5"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-sm text-white group-hover:text-amber-400 transition">Toàn bộ kho từ vựng</h4>
-                            <p class="text-xs text-slate-400">Hiển thị ngẫu nhiên tối đa 150 từ</p>
-                        </div>
-                    </div>
-                    <i data-lucide="chevron-right" class="w-5 h-5 text-slate-500"></i>
-                </button>
             </div>
-        </div>
-    </div>
+        `).join('');
 
-    <!-- Word Detail Modal -->
-    <div id="word-detail-modal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="glass-card max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl p-6 sm:p-8 space-y-6 relative">
-            <button onclick="closeWordModal()" class="absolute right-6 top-6 p-2 rounded-full bg-slate-800 text-slate-400 hover:bg-slate-700 transition">
-                <i data-lucide="x" class="w-5 h-5"></i>
+        lucide.createIcons();
+    }
+
+    function removeFromLookupQueue(word) {
+        lookupQueue = lookupQueue.filter(w => w !== word);
+        localStorage.setItem('vocab_lookup_queue', JSON.stringify(lookupQueue));
+        updateBadges();
+        renderLookupQueue();
+        showToast("Đã xóa khỏi danh sách cần tìm hiểu.", "info");
+    }
+
+    function clearLookupQueue() {
+        lookupQueue = [];
+        localStorage.removeItem('vocab_lookup_queue');
+        updateBadges();
+        renderLookupQueue();
+        showToast("Đã xóa toàn bộ danh sách cần tìm hiểu.", "info");
+    }
+
+    function renderSearchResults(query) {
+        const grid = document.getElementById('search-results-grid');
+        const emptyState = document.getElementById('search-empty-state');
+        
+        const q = query.toLowerCase().trim();
+        const filtered = vocabList.filter(item => {
+            const word = getVal(item, ['english', 'từ vựng', 'word']).toString().toLowerCase();
+            const meaning = getVal(item, ['vietnamese', 'tiếng việt', 'meaning']).toString().toLowerCase();
+            const topic = getVal(item, ['topic', 'chủ đề']).toString().toLowerCase();
+            const synonym = getVal(item, ['synonym', 'đồng nghĩa']).toString().toLowerCase();
+
+            const matchQuery = !q || word.includes(q) || meaning.includes(q) || synonym.includes(q);
+            const matchTopic = currentTopic === 'all' || topic === currentTopic.toLowerCase();
+
+            return matchQuery && matchTopic;
+        });
+
+        document.getElementById('result-count-badge').innerText = `${filtered.length} kết quả`;
+
+        if (filtered.length === 0) {
+            grid.innerHTML = '';
+            emptyState.classList.remove('hidden');
+            document.getElementById('search-missing-msg').innerHTML = q ? `Từ <span class="font-bold text-amber-400">"${q}"</span> chưa có trong hệ thống và đã được lưu vào mục <span class="font-bold text-amber-400">Cần tìm hiểu</span>.` : `Hãy thử nhập từ khóa khác.`;
+            return;
+        }
+
+        emptyState.classList.add('hidden');
+        grid.innerHTML = filtered.map(item => {
+            const word = getVal(item, ['english', 'từ vựng', 'word']);
+            const vietnamese = getVal(item, ['vietnamese', 'tiếng việt', 'meaning']);
+            const type = getVal(item, ['type', 'từ loại', 'loại từ']);
+            const ipa = getVal(item, ['ipa', 'phiên âm']);
+            const topic = getVal(item, ['topic', 'chủ đề']);
+            const synonym = getVal(item, ['synonym', 'đồng nghĩa']);
+
+            const isSaved = checkIsSavedGlobal(word);
+
+            return `
+                <div class="glass-card p-5 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-4 group">
+                    <div class="space-y-3">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <h3 onclick="playSound(); openWordModal('${encodeURIComponent(word)}')" class="text-lg sm:text-xl font-bold text-white cursor-pointer hover:text-indigo-400 transition">${word}</h3>
+                                    <button onclick="playSound(); speakWord('${word}')" class="p-1.5 rounded-lg bg-indigo-600/30 text-indigo-300 hover:bg-indigo-600/50 transition">
+                                        <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-indigo-900/60 text-indigo-300">${type || 'word'}</span>
+                                </div>
+                                <p class="text-xs font-mono text-slate-400 mt-0.5">${ipa}</p>
+                            </div>
+                            ${topic ? `<span class="px-2.5 py-1 rounded-xl text-[10px] sm:text-xs font-semibold bg-slate-800 text-slate-300">${topic}</span>` : ''}
+                        </div>
+                        <p class="text-xs sm:text-sm font-semibold text-slate-200 multiline-text">${vietnamese}</p>
+                        ${synonym ? `
+                            <div class="text-[11px] sm:text-xs text-slate-400">
+                                <span class="font-semibold text-emerald-400">Đồng nghĩa:</span> ${synonym}
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="pt-3 border-t border-slate-700 flex items-center justify-between gap-2">
+                        <button onclick="playSound(); openWordModal('${encodeURIComponent(word)}')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 hover:text-indigo-400 transition flex items-center space-x-1">
+                            <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                            <span>Chi tiết</span>
+                        </button>
+                        <button onclick="playSound(); saveWord('${encodeURIComponent(word)}')" class="px-3 py-2 rounded-xl ${isSaved ? 'bg-emerald-900 text-emerald-300' : 'bg-indigo-600 hover:bg-indigo-700 text-white'} text-xs font-semibold transition flex items-center space-x-1 shadow-sm">
+                            <i data-lucide="${isSaved ? 'check' : 'bookmark-plus'}" class="w-3.5 h-3.5"></i>
+                            <span>${isSaved ? 'Đã lưu' : 'Lưu học'}</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        lucide.createIcons();
+    }
+
+    // --- Add / Edit Word Modal & 2-Way Synonyms/Antonyms ---
+    function findWordByString(wordStr) {
+        const decoded = decodeURIComponent(wordStr);
+        return vocabList.find(item => getVal(item, ['english', 'từ vựng', 'word']).toLowerCase() === decoded.toLowerCase());
+    }
+
+    function openWordModal(wordStr) {
+        const item = findWordByString(wordStr);
+        if (!item) return;
+
+        currentEditingWordOriginal = getVal(item, ['english', 'từ vựng', 'word']);
+        isCreatingNewWord = false;
+
+        const word = getVal(item, ['english', 'từ vựng', 'word']);
+        const vietnamese = getVal(item, ['vietnamese', 'tiếng việt', 'meaning']);
+        const type = getVal(item, ['type', 'từ loại', 'loại từ']);
+        const ipa = getVal(item, ['ipa', 'phiên âm']);
+        const definition = getVal(item, ['definition', 'định nghĩa']);
+        const example = getVal(item, ['example', 'ví dụ']);
+        const synonym = getVal(item, ['synonym', 'đồng nghĩa']);
+        const antonym = getVal(item, ['antonym', 'trái nghĩa']);
+
+        // Populate view mode
+        document.getElementById('modal-word').innerText = word;
+        document.getElementById('modal-type').innerText = type || 'word';
+        document.getElementById('modal-ipa').innerText = ipa || '/.../';
+        document.getElementById('modal-vietnamese').innerText = vietnamese || '-';
+        document.getElementById('modal-definition').innerText = definition || 'Chưa có định nghĩa chi tiết.';
+        document.getElementById('modal-example').innerText = example || 'Chưa có ví dụ minh họa.';
+
+        const synContainer = document.getElementById('modal-synonyms');
+        if (synonym) {
+            synContainer.innerHTML = synonym.split(',').map(s => `<span class="px-2 py-0.5 rounded-lg text-[11px] sm:text-xs font-semibold bg-emerald-900 text-emerald-300">${s.trim()}</span>`).join('');
+        } else {
+            synContainer.innerHTML = '<span class="text-xs text-slate-400">Không có</span>';
+        }
+
+        const antContainer = document.getElementById('modal-antonyms');
+        if (antonym) {
+            antContainer.innerHTML = antonym.split(',').map(a => `<span class="px-2 py-0.5 rounded-lg text-[11px] sm:text-xs font-semibold bg-rose-900 text-rose-300">${a.trim()}</span>`).join('');
+        } else {
+            antContainer.innerHTML = '<span class="text-xs text-slate-400">Không có</span>';
+        }
+
+        const actionContainer = document.getElementById('modal-action-btn-container');
+        const isSaved = checkIsSavedGlobal(word);
+        actionContainer.innerHTML = `
+            <button onclick="playSound(); startEditWord()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-indigo-400 text-xs font-semibold transition flex items-center space-x-1" title="Chỉnh sửa">
+                <i data-lucide="edit-3" class="w-4 h-4"></i>
+                <span class="hidden sm:inline">Chỉnh sửa</span>
             </button>
+            <button onclick="playSound(); saveWord('${encodeURIComponent(word)}'); openWordModal('${encodeURIComponent(word)}');" class="px-3.5 py-2 rounded-xl ${isSaved ? 'bg-emerald-900 text-emerald-300' : 'bg-indigo-600 hover:bg-indigo-700 text-white'} text-xs font-semibold transition flex items-center space-x-1.5 shadow-sm">
+                <i data-lucide="${isSaved ? 'check' : 'bookmark-plus'}" class="w-4 h-4"></i>
+                <span>${isSaved ? 'Đã lưu' : 'Lưu'}</span>
+            </button>
+        `;
 
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-700 pb-4">
-                <div>
-                    <div class="flex items-center space-x-3">
-                        <h3 id="modal-word" class="text-3xl font-extrabold text-white">Word</h3>
-                        <span id="modal-type" class="px-3 py-1 rounded-full text-xs font-bold bg-indigo-900 text-indigo-300">noun</span>
+        document.getElementById('modal-view-header').classList.remove('hidden');
+        document.getElementById('modal-view-content').classList.remove('hidden');
+        document.getElementById('modal-edit-form').classList.add('hidden');
+
+        document.getElementById('word-detail-modal').classList.remove('hidden');
+        lucide.createIcons();
+    }
+
+    function openAddWordModal() {
+        isCreatingNewWord = true;
+        currentEditingWordOriginal = null;
+
+        document.getElementById('form-modal-title').innerHTML = `<i data-lucide="plus-circle" class="w-4 h-4"></i><span>Thêm Từ Vựng Mới (Không trùng lặp)</span>`;
+        document.getElementById('edit-word').value = '';
+        document.getElementById('edit-vietnamese').value = '';
+        document.getElementById('edit-type').value = '';
+        document.getElementById('edit-ipa').value = '';
+        document.getElementById('edit-definition').value = '';
+        document.getElementById('edit-example').value = '';
+        document.getElementById('edit-synonym').value = '';
+        document.getElementById('edit-antonym').value = '';
+        document.getElementById('edit-topic').value = '';
+        document.getElementById('edit-topic-select').selectedIndex = 0;
+
+        document.getElementById('modal-view-header').classList.add('hidden');
+        document.getElementById('modal-view-content').classList.add('hidden');
+        document.getElementById('modal-edit-form').classList.remove('hidden');
+
+        document.getElementById('word-detail-modal').classList.remove('hidden');
+        lucide.createIcons();
+    }
+
+    function openAddWordModalWithQuery(queryWord) {
+        openAddWordModal();
+        document.getElementById('edit-word').value = queryWord;
+    }
+
+    function closeWordModal() {
+        document.getElementById('word-detail-modal').classList.add('hidden');
+    }
+
+    function startEditWord() {
+        const item = findWordByString(currentEditingWordOriginal);
+        if (!item) return;
+
+        document.getElementById('form-modal-title').innerHTML = `<i data-lucide="edit-3" class="w-4 h-4"></i><span>Chỉnh Sửa Từ Vựng & Đồng Bộ Google Sheet</span>`;
+        document.getElementById('edit-word').value = getVal(item, ['english', 'từ vựng', 'word']);
+        document.getElementById('edit-vietnamese').value = getVal(item, ['vietnamese', 'tiếng việt', 'meaning']);
+        document.getElementById('edit-type').value = getVal(item, ['type', 'từ loại', 'loại từ']);
+        document.getElementById('edit-ipa').value = getVal(item, ['ipa', 'phiên âm']);
+        document.getElementById('edit-definition').value = getVal(item, ['definition', 'định nghĩa']);
+        document.getElementById('edit-example').value = getVal(item, ['example', 'ví dụ']);
+        document.getElementById('edit-synonym').value = getVal(item, ['synonym', 'đồng nghĩa']);
+        document.getElementById('edit-antonym').value = getVal(item, ['antonym', 'trái nghĩa']);
+        const top = getVal(item, ['topic', 'chủ đề']);
+        document.getElementById('edit-topic').value = top;
+        
+        // select option if matches
+        const select = document.getElementById('edit-topic-select');
+        for (let i = 0; i < select.options.length; i++) {
+            if (select.options[i].value.toLowerCase() === top.toLowerCase()) {
+                select.selectedIndex = i;
+                break;
+            }
+        }
+
+        document.getElementById('modal-view-header').classList.add('hidden');
+        document.getElementById('modal-view-content').classList.add('hidden');
+        document.getElementById('modal-edit-form').classList.remove('hidden');
+        lucide.createIcons();
+    }
+
+    function cancelEditWord() {
+        if (isCreatingNewWord) {
+            closeWordModal();
+        } else {
+            openWordModal(currentEditingWordOriginal);
+        }
+    }
+
+    // --- Automatic 2-Way Synonyms & Antonyms Sync & Uniqueness Check ---
+    async function saveNewOrEditedWord() {
+        const newWord = document.getElementById('edit-word').value.trim();
+        const newVietnamese = document.getElementById('edit-vietnamese').value.trim();
+        const newType = document.getElementById('edit-type').value.trim();
+        const newIpa = document.getElementById('edit-ipa').value.trim();
+        const newDef = document.getElementById('edit-definition').value.trim();
+        const newEx = document.getElementById('edit-example').value.trim();
+        const newSyn = document.getElementById('edit-synonym').value.trim();
+        const newAnt = document.getElementById('edit-antonym').value.trim();
+        const newTopic = document.getElementById('edit-topic').value.trim() || 'General';
+
+        if (!newWord || !newVietnamese) {
+            showToast("Vui lòng điền đầy đủ Từ vựng (English) và Nghĩa tiếng Việt!", "error");
+            return;
+        }
+
+        // Check Uniqueness (Ngân không lưu trùng lặp)
+        const duplicateIndex = vocabList.findIndex(i => getVal(i, ['english', 'từ vựng', 'word']).toLowerCase() === newWord.toLowerCase());
+        
+        if (isCreatingNewWord) {
+            if (duplicateIndex !== -1) {
+                showToast(`Từ "${newWord}" đã tồn tại trong hệ thống! Hệ thống không lưu trùng lặp.`, "error");
+                return;
+            }
+        } else {
+            if (duplicateIndex !== -1 && getVal(vocabList[duplicateIndex], ['english', 'từ vựng', 'word']).toLowerCase() !== currentEditingWordOriginal.toLowerCase()) {
+                showToast(`Từ "${newWord}" đã tồn tại trong hệ thống!`, "error");
+                return;
+            }
+        }
+
+        const itemData = {
+            english: newWord,
+            vietnamese: newVietnamese,
+            type: newType,
+            ipa: newIpa,
+            definition: newDef,
+            example: newEx,
+            synonym: newSyn,
+            antonym: newAnt,
+            topic: newTopic
+        };
+
+        // 1. Update or Add in vocabList
+        let targetIndex = -1;
+        if (isCreatingNewWord) {
+            vocabList.push(itemData);
+            targetIndex = vocabList.length - 1;
+        } else {
+            targetIndex = vocabList.findIndex(i => getVal(i, ['english', 'từ vựng', 'word']).toLowerCase() === currentEditingWordOriginal.toLowerCase());
+            if (targetIndex !== -1) {
+                vocabList[targetIndex] = itemData;
+            } else {
+                vocabList.push(itemData);
+                targetIndex = vocabList.length - 1;
+            }
+        }
+
+        // 2. Automatic 2-Way Synonyms & Antonyms synchronization across vocabList
+        // If word A has synonym B, then B must have synonym A.
+        if (newSyn) {
+            const syns = newSyn.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+            syns.forEach(synWord => {
+                const foundObj = vocabList.find(v => getVal(v, ['english', 'từ vựng', 'word']).toLowerCase() === synWord);
+                if (foundObj) {
+                    let existingSyns = getVal(foundObj, ['synonym', 'đồng nghĩa']).split(',').map(s => s.trim()).filter(Boolean);
+                    if (!existingSyns.some(s => s.toLowerCase() === newWord.toLowerCase())) {
+                        existingSyns.push(newWord);
+                        foundObj.synonym = existingSyns.join(', ');
+                    }
+                }
+            });
+        }
+
+        if (newAnt) {
+            const ants = newAnt.split(',').map(a => a.trim().toLowerCase()).filter(Boolean);
+            ants.forEach(antWord => {
+                const foundObj = vocabList.find(v => getVal(v, ['english', 'từ vựng', 'word']).toLowerCase() === antWord);
+                if (foundObj) {
+                    let existingAnts = getVal(foundObj, ['antonym', 'trái nghĩa']).split(',').map(a => a.trim()).filter(Boolean);
+                    if (!existingAnts.some(a => a.toLowerCase() === newWord.toLowerCase())) {
+                        existingAnts.push(newWord);
+                        foundObj.antonym = existingAnts.join(', ');
+                    }
+                }
+            });
+        }
+
+        // Also remove from lookup queue if present
+        lookupQueue = lookupQueue.filter(w => w.toLowerCase() !== newWord.toLowerCase());
+        localStorage.setItem('vocab_lookup_queue', JSON.stringify(lookupQueue));
+
+        // Update in savedWordsByDate if saved
+        if (!isCreatingNewWord && currentEditingWordOriginal) {
+            for (let d in savedWordsByDate) {
+                savedWordsByDate[d] = savedWordsByDate[d].map(item => {
+                    if (getVal(item, ['english', 'từ vựng', 'word']).toLowerCase() === currentEditingWordOriginal.toLowerCase()) {
+                        return itemData;
+                    }
+                    return item;
+                });
+            }
+            localStorage.setItem('vocab_saved_by_date', JSON.stringify(savedWordsByDate));
+        }
+
+        localStorage.setItem('vocab_master_data', JSON.stringify(vocabList));
+
+        // Sync with Google Sheet
+        showToast("Đang đồng bộ với Google Sheet...", "info");
+        await updateGoogleSheetRow(vocabList[targetIndex]);
+
+        renderTopicFilters();
+        renderSearchResults(document.getElementById('search-input').value);
+        renderSavedWordsByDate();
+        renderLookupQueue();
+        updateBadges();
+        closeWordModal();
+        showToast(isCreatingNewWord ? "Thêm từ mới thành công!" : "Cập nhật từ vựng thành công!", "success");
+    }
+
+    // --- Saved Words Management ---
+    function checkIsSavedGlobal(word) {
+        const target = word.toLowerCase();
+        for (let dateKey in savedWordsByDate) {
+            const list = savedWordsByDate[dateKey] || [];
+            if (list.some(item => getVal(item, ['english', 'từ vựng', 'word']).toLowerCase() === target)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function saveWord(wordStr) {
+        const item = findWordByString(wordStr);
+        if (!item) return;
+
+        const word = getVal(item, ['english', 'từ vựng', 'word']);
+
+        if (checkIsSavedGlobal(word)) {
+            showToast(`Từ "${word}" đã có trong danh sách đã lưu!`, 'info');
+            return;
+        }
+
+        const today = getTodayDateString();
+        if (!savedWordsByDate[today]) {
+            savedWordsByDate[today] = [];
+        }
+
+        savedWordsByDate[today].push(item);
+        localStorage.setItem('vocab_saved_by_date', JSON.stringify(savedWordsByDate));
+
+        updateBadges();
+        renderSavedWordsByDate();
+        renderSearchResults(document.getElementById('search-input').value);
+        showToast(`Đã lưu từ "${word}" thành công!`, 'success');
+    }
+
+    function removeSavedWord(dateKey, wordStr) {
+        if (!savedWordsByDate[dateKey]) return;
+        savedWordsByDate[dateKey] = savedWordsByDate[dateKey].filter(i => getVal(i, ['english', 'từ vựng', 'word']).toLowerCase() !== decodeURIComponent(wordStr).toLowerCase());
+        if (savedWordsByDate[dateKey].length === 0) {
+            delete savedWordsByDate[dateKey];
+        }
+        localStorage.setItem('vocab_saved_by_date', JSON.stringify(savedWordsByDate));
+        updateBadges();
+        renderSavedWordsByDate();
+        renderSearchResults(document.getElementById('search-input').value);
+        showToast("Đã xóa từ vựng khỏi danh sách.", "info");
+    }
+
+    function updateBadges() {
+        let totalSaved = 0;
+        for (let d in savedWordsByDate) {
+            totalSaved += (savedWordsByDate[d] || []).length;
+        }
+        document.getElementById('saved-badge').innerText = totalSaved;
+        document.getElementById('mobile-saved-count').innerText = totalSaved;
+
+        const totalLookup = lookupQueue.length;
+        document.getElementById('lookup-badge').innerText = totalLookup;
+        document.getElementById('mobile-lookup-count').innerText = totalLookup;
+
+        const savedEmptyState = document.getElementById('saved-empty-state');
+        if (totalSaved === 0) {
+            savedEmptyState.classList.remove('hidden');
+        } else {
+            savedEmptyState.classList.add('hidden');
+        }
+    }
+
+    function renderSavedWordsByDate() {
+        const container = document.getElementById('saved-by-date-container');
+        const dates = Object.keys(savedWordsByDate).sort().reverse();
+
+        if (dates.length === 0) {
+            container.innerHTML = '';
+            return;
+        }
+
+        container.innerHTML = dates.map(dateKey => {
+            const words = savedWordsByDate[dateKey];
+            if (!words || words.length === 0) return '';
+            const displayDate = formatDateVN(dateKey);
+
+            return `
+                <div class="glass-card p-5 sm:p-6 rounded-2xl sm:rounded-3xl space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="calendar" class="w-5 h-5 text-indigo-400"></i>
+                            <h3 class="font-bold text-base sm:text-lg text-white">Ngày: ${displayDate}</h3>
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-900 text-indigo-300">${words.length} từ</span>
+                        </div>
                     </div>
-                    <p id="modal-ipa" class="text-sm font-mono text-slate-400 mt-1">/wɜːd/</p>
-                </div>
-                <div id="modal-action-btn-container"></div>
-            </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        ${words.map(item => {
+                            const word = getVal(item, ['english', 'từ vựng', 'word']);
+                            const vietnamese = getVal(item, ['vietnamese', 'tiếng việt', 'meaning']);
+                            const type = getVal(item, ['type', 'từ loại', 'loại từ']);
+                            const ipa = getVal(item, ['ipa', 'phiên âm']);
+                            const synonym = getVal(item, ['synonym', 'đồng nghĩa']);
 
-            <div class="space-y-4 text-sm">
-                <div class="p-4 rounded-2xl bg-slate-900/50 border border-slate-800">
-                    <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block mb-1">Tiếng Việt / Nghĩa chính</span>
-                    <p id="modal-vietnamese" class="text-lg font-bold text-slate-200">-</p>
-                </div>
-
-                <div>
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Định nghĩa chi tiết (Definition)</span>
-                    <p id="modal-definition" class="text-slate-300 leading-relaxed">-</p>
-                </div>
-
-                <div>
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Ví dụ minh họa (Example)</span>
-                    <div class="p-3 rounded-xl bg-slate-900 italic text-slate-400 border-l-4 border-indigo-500">
-                        "<span id="modal-example">-</span>"
+                            return `
+                                <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between space-y-3">
+                                    <div>
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-2">
+                                                <h4 onclick="playSound(); openWordModal('${encodeURIComponent(word)}')" class="font-bold text-sm sm:text-base text-white cursor-pointer hover:text-indigo-400">${word}</h4>
+                                                <button onclick="playSound(); speakWord('${word}')" class="p-1 rounded bg-indigo-600/30 text-indigo-300 hover:bg-indigo-600/50 transition">
+                                                    <i data-lucide="volume-2" class="w-3 h-3"></i>
+                                                </button>
+                                            </div>
+                                            <span class="text-xs text-indigo-400 font-semibold">${type}</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400">${ipa}</p>
+                                        <p class="text-xs sm:text-sm font-semibold text-slate-200 mt-2 multiline-text">${vietnamese}</p>${synonym ? `<p class="text-xs text-slate-400 mt-1"><span class="text-emerald-400 font-semibold">Đồng nghĩa:</span> ${synonym}</p>` : ''}
+                                    </div>
+                                    <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+                                        <button onclick="playSound(); openWordModal('${encodeURIComponent(word)}')" class="text-xs text-indigo-400 hover:underline">Chi tiết</button>
+                                        <button onclick="playSound(); removeSavedWord('${dateKey}', '${encodeURIComponent(word)}')" class="text-xs font-semibold text-rose-400 hover:text-rose-300 flex items-center space-x-1">
+                                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                            <span>Xóa</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
                     </div>
                 </div>
+            `;
+        }).join('');
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                    <div class="p-4 rounded-2xl bg-slate-900/50 border border-slate-800">
-                        <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider block mb-1">Từ đồng nghĩa (Synonyms)</span>
-                        <div id="modal-synonyms" class="flex flex-wrap gap-1.5 mt-1"></div>
-                    </div>
-                    <div class="p-4 rounded-2xl bg-slate-900/50 border border-slate-800">
-                        <span class="text-xs font-bold text-rose-400 uppercase tracking-wider block mb-1">Từ trái nghĩa (Antonyms)</span>
-                        <div id="modal-antonyms" class="flex flex-wrap gap-1.5 mt-1"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        lucide.createIcons();
+        updateBadges();
+    }
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+    function exportSavedWords() {
+        let text = "DANH SÁCH TỪ VỰNG ĐÃ LƯU\n\n";
+        for (let date in savedWordsByDate) {
+            text += `--- Ngày: ${formatDateVN(date)} ---\n`;
+            savedWordsByDate[date].forEach((item, idx) => {
+                const w = getVal(item, ['english', 'từ vựng', 'word']);
+                const v = getVal(item, ['vietnamese', 'tiếng việt', 'meaning']);
+                text += `${idx + 1}. ${w} - ${v}\n`;
+            });
+            text += "\n";
+        }
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `vocab_saved_${getTodayDateString()}.txt`;
+        a.click();
+        showToast("Đã xuất file danh sách từ vựng thành công!", "success");
+    }
 
-    <!-- JavaScript Application Core -->
-    <script>
-        // --- Hardcoded Google Apps Script URL ---
-        const HARDCODED_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbykgN9Mf37KxqMZx2XW1mqPJJ3jVunAWVEljUAszFJVwMLxDXJpDHg6cvpdkMHR2v_iKQ/exec";
+    // --- Practice & Quiz Logic with Wrong Answer Re-learn Card ---
+    function openScopeModal(type) {
+        activePracticeType = type; // 'synonym' or 'meaning'
+        const title = type === 'synonym' ? 'Luyện tập Từ Đồng Nghĩa' : 'Luyện tập Nghĩa';
+        document.getElementById('scope-modal-title').innerText = title;
+        
+        const select = document.getElementById('practice-date-select');
+        const dates = Object.keys(savedWordsByDate).sort().reverse();
+        if (dates.length === 0) {
+            select.innerHTML = '<option value="">Chưa có ngày nào được lưu</option>';
+        } else {
+            select.innerHTML = dates.map(d => `<option value="${d}">${formatDateVN(d)} (${savedWordsByDate[d].length} từ)</option>`).join('');
+        }
 
-        // --- App State ---
-        let vocabList = [];
-        let savedWordsByDate = JSON.parse(localStorage.getItem('vocab_saved_by_date') || '{}');
-        let currentTab = 'search';
-        let currentTopic = 'all';
-        let activePracticeType = null; // 'synonym' or 'meaning'
-        let currentQuiz = {
-            mode: null,
-            questions: [],
+        document.getElementById('date-selector-subview').classList.add('hidden');
+        document.getElementById('scope-selection-modal').classList.remove('hidden');
+        lucide.createIcons();
+    }
+
+    function closeScopeModal() {
+        document.getElementById('scope-selection-modal').classList.add('hidden');
+    }
+
+    function startPracticeWithScope(scope) {
+        if (scope === 'day') {
+            const subview = document.getElementById('date-selector-subview');
+            subview.classList.toggle('hidden');
+            return;
+        }
+
+        let pool = [];
+        if (scope === 'week') {
+            const now = new Date();
+            const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            for (let d in savedWordsByDate) {
+                const dt = new Date(d);
+                if (dt >= sevenDaysAgo) {
+                    pool = pool.concat(savedWordsByDate[d]);
+                }
+            }
+        } else if (scope === 'all') {
+            for (let d in savedWordsByDate) {
+                pool = pool.concat(savedWordsByDate[d]);
+            }
+            if (pool.length === 0) {
+                pool = [...vocabList]; // fallback to master list if nothing saved
+            }
+        }
+
+        closeScopeModal();
+        initQuiz(pool);
+    }
+
+    function startQuizWithDate() {
+        const select = document.getElementById('practice-date-select');
+        const dateKey = select.value;
+        if (!dateKey || !savedWordsByDate[dateKey]) {
+            showToast("Vui lòng chọn ngày hợp lệ!", "error");
+            return;
+        }
+        closeScopeModal();
+        initQuiz(savedWordsByDate[dateKey]);
+    }
+
+    function initQuiz(wordPool) {
+        if (!wordPool || wordPool.length === 0) {
+            showToast("Không có đủ từ vựng trong phạm vi này để luyện tập!", "error");
+            return;
+        }
+
+        const shuffled = [...wordPool].sort(() => 0.5 - Math.random());
+        const selectedWords = shuffled.slice(0, 10);
+
+        currentQuiz = {
+            mode: activePracticeType,
+            questions: selectedWords.map(item => {
+                const correctWord = getVal(item, ['english', 'từ vựng', 'word']);
+                const correctMeaning = getVal(item, ['vietnamese', 'tiếng việt', 'meaning']);
+                const correctSynonym = getVal(item, ['synonym', 'đồng nghĩa']);
+
+                let prompt = "";
+                let correctAnswer = "";
+                let wrongPool = vocabList.map(i => activePracticeType === 'synonym' ? getVal(i, ['synonym', 'đồng nghĩa']) || getVal(i, ['vietnamese', 'tiếng việt', 'meaning']) : getVal(i, ['vietnamese', 'tiếng việt', 'meaning'])).filter(Boolean);
+
+                if (activePracticeType === 'synonym') {
+                    prompt = `Chọn từ đồng nghĩa với từ: "${correctWord}"`;
+                    correctAnswer = correctSynonym || correctMeaning;
+                } else {
+                    prompt = `Chọn nghĩa đúng của từ: "${correctWord}" (${getVal(item, ['ipa', 'phiên âm'])})`;
+                    correctAnswer = correctMeaning;
+                }
+
+                const options = [correctAnswer];
+                while (options.length < 4 && wrongPool.length > 0) {
+                    const randOpt = wrongPool[Math.floor(Math.random() * wrongPool.length)];
+                    if (!options.includes(randOpt)) {
+                        options.push(randOpt);
+                    }
+                }
+
+                return {
+                    item: item,
+                    prompt: prompt,
+                    correctAnswer: correctAnswer,
+                    options: options.sort(() => 0.5 - Math.random())
+                };
+            }),
             currentIndex: 0,
             score: 0,
             correctCount: 0
         };
 
-        // --- Initialization ---
-        window.addEventListener('DOMContentLoaded', () => {
-            const cachedVocab = localStorage.getItem('vocab_master_data');
-            if (cachedVocab) {
-                try {
-                    vocabList = JSON.parse(cachedVocab);
-                } catch (e) {
-                    vocabList = sampleVocabData;
-                }
-            } else {
-                vocabList = sampleVocabData;
-                localStorage.setItem('vocab_master_data', JSON.stringify(sampleVocabData));
-            }
+        document.getElementById('practice-mode-selector').classList.add('hidden');
+        document.getElementById('quiz-result-view').classList.add('hidden');
+        document.getElementById('quiz-arena').classList.remove('hidden');
 
-            renderTopicFilters();
-            renderSearchResults('');
-            updateSavedBadgeCount();
-            renderSavedWordsByDate();
+        renderQuizQuestion();
+    }
+
+    function renderQuizQuestion() {
+        const q = currentQuiz.questions[currentQuiz.currentIndex];
+        const total = currentQuiz.questions.length;
+
+        document.getElementById('quiz-title').innerText = currentQuiz.mode === 'synonym' ? 'Luyện tập Từ Đồng Nghĩa' : 'Luyện tập Nghĩa';
+        document.getElementById('quiz-progress-text').innerText = `Câu ${currentQuiz.currentIndex + 1} / ${total}`;
+        document.getElementById('quiz-score').innerText = currentQuiz.score;
+        document.getElementById('quiz-progress-bar').style.width = `${((currentQuiz.currentIndex + 1) / total) * 100}%`;
+        document.getElementById('quiz-mode-tag').innerText = currentQuiz.mode === 'synonym' ? 'Từ đồng nghĩa' : 'Nghĩa từ';
+        document.getElementById('quiz-question-prompt').innerText = q.prompt;
+
+        document.getElementById('wrong-answer-card-container').classList.add('hidden');
+        document.getElementById('quiz-next-btn').classList.add('hidden');
+
+        const grid = document.getElementById('quiz-options-grid');
+        grid.innerHTML = q.options.map(opt => `
+            <button onclick="playSound(); handleAnswerSelection(this, '${escapeHtml(opt)}', '${escapeHtml(q.correctAnswer)}')" class="quiz-option-btn p-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-left transition font-semibold text-sm sm:text-base text-white">
+                ${opt}
+            </button>
+        `).join('');
+
+        lucide.createIcons();
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+    }
+
+    function handleAnswerSelection(btnElement, selectedOpt, correctOpt) {
+        const buttons = document.querySelectorAll('.quiz-option-btn');
+        buttons.forEach(b => b.disabled = true);
+
+        const q = currentQuiz.questions[currentQuiz.currentIndex];
+        const isCorrect = selectedOpt === correctOpt;
+
+        if (isCorrect) {
+            btnElement.className = "quiz-option-btn p-4 rounded-2xl bg-emerald-600 border border-emerald-500 text-left transition font-semibold text-sm sm:text-base text-white shadow-lg";
+            currentQuiz.score += 10;
+            currentQuiz.correctCount += 1;
+            document.getElementById('quiz-score').innerText = currentQuiz.score;
+            showToast("Chính xác! +10 điểm", "success");
+            document.getElementById('quiz-next-btn').classList.remove('hidden');
+        } else {
+            btnElement.className = "quiz-option-btn p-4 rounded-2xl bg-rose-600 border border-rose-500 text-left transition font-semibold text-sm sm:text-base text-white shadow-lg";
             
-            // Auto sync if script URL is configured
-            if (HARDCODED_SCRIPT_URL && !HARDCODED_SCRIPT_URL.includes("...")) {
-                syncData(true);
-            }
-
-            lucide.createIcons();
-        });
-
-        // --- Navigation ---
-        function switchTab(tabId) {
-            currentTab = tabId;
-            ['search', 'saved', 'practice'].forEach(id => {
-                const sec = document.getElementById(`tab-${id}`);
-                const btn = document.getElementById(`nav-${id}`);
-                if (id === tabId) {
-                    sec.classList.remove('hidden');
-                    if (btn) {
-                        btn.className = "nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center space-x-2 bg-slate-700 text-indigo-300 shadow-sm";
-                    }
-                } else {
-                    sec.classList.add('hidden');
-                    if (btn) {
-                        btn.className = "nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center space-x-2 text-slate-400 hover:text-indigo-400";
-                    }
+            buttons.forEach(b => {
+                if (b.innerText.trim() === correctOpt.trim()) {
+                    b.className = "quiz-option-btn p-4 rounded-2xl bg-emerald-600 border border-emerald-500 text-left transition font-semibold text-sm sm:text-base text-white shadow-lg";
                 }
             });
 
-            if (tabId === 'saved') {
-                renderSavedWordsByDate();
-            }
-            lucide.createIcons();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        }
-
-        // --- Toast Notifications ---
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            const bgClass = type === 'success' ? 'bg-emerald-600 text-white' : type === 'error' ? 'bg-rose-600 text-white' : 'bg-slate-800 text-white';
-            const icon = type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : 'info';
-
-            toast.className = `flex items-center space-x-3 px-4 py-3 rounded-2xl shadow-xl pointer-events-auto transform translate-y-2 opacity-0 transition-all duration-300 ${bgClass}`;
-            toast.innerHTML = `<i data-lucide="${icon}" class="w-5 h-5"></i><span class="text-sm font-medium">${message}</span>`;
-            
-            container.appendChild(toast);
-            lucide.createIcons();
-
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 10);
-
-            setTimeout(() => {
-                toast.classList.add('translate-y-2', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        // --- Google Sheet Sync ---
-        async function syncData(silent = false) {
-            if (!HARDCODED_SCRIPT_URL || HARDCODED_SCRIPT_URL.includes("...")) {
-                if (!silent) {
-                    showToast("Đang dùng dữ liệu mẫu (Chưa cấu hình URL Google Sheet trong code).", "info");
-                }
-                return;
-            }
-
-            const syncIcon = document.getElementById('sync-icon');
-            if (syncIcon) syncIcon.classList.add('animate-spin');
-
-            try {
-                const response = await fetch(HARDCODED_SCRIPT_URL);
-                const data = await response.json();
-                
-                if (Array.isArray(data)) {
-                    vocabList = data;
-                    localStorage.setItem('vocab_master_data', JSON.stringify(data));
-                    renderTopicFilters();
-                    renderSearchResults(document.getElementById('search-input').value);
-                    if (!silent) showToast("Đồng bộ dữ liệu từ Google Sheet thành công!", "success");
-                } else if (data && data.status === 'error') {
-                    throw new Error(data.message);
-                }
-            } catch (error) {
-                console.error("Sync error:", error);
-                if (!silent) showToast("Lỗi đồng bộ: " + error.message, "error");
-            } finally {
-                if (syncIcon) syncIcon.classList.remove('animate-spin');
-            }
-        }
-
-        // --- Search & Filtering ---
-        function renderTopicFilters() {
-            const container = document.getElementById('topic-filters-container');
-            const topics = ['all', ...new Set(vocabList.map(item => item.topic || item.Topic).filter(Boolean))];
-            
-            container.innerHTML = topics.map(topic => {
-                if (topic === 'all') return '';
-                const active = currentTopic === topic;
-                return `<button onclick="filterByTopic('${topic}')" class="topic-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition shadow-sm ${active ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">${topic}</button>`;
-            }).join('');
-
-            document.getElementById('total-vocab-count').innerText = `${vocabList.length} từ`;
-        }
-
-        function filterByTopic(topic) {
-            currentTopic = topic;
-            document.querySelectorAll('.topic-filter-btn').forEach(btn => {
-                if (btn.innerText.toLowerCase() === topic.toLowerCase() || (topic === 'all' && btn.innerText === 'Tất cả')) {
-                    btn.className = "topic-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition shadow-sm bg-indigo-600 text-white";
-                } else {
-                    btn.className = "topic-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition shadow-sm bg-slate-800 text-slate-300 hover:bg-slate-700";
-                }
-            });
-            renderSearchResults(document.getElementById('search-input').value);
-        }
-
-        function handleSearch(query) {
-            const clearBtn = document.getElementById('clear-search-btn');
-            if (query.trim().length > 0) {
-                clearBtn.classList.remove('hidden');
-            } else {
-                clearBtn.classList.add('hidden');
-            }
-            renderSearchResults(query);
-        }
-
-        function clearSearch() {
-            document.getElementById('search-input').value = '';
-            document.getElementById('clear-search-btn').classList.add('hidden');
-            renderSearchResults('');
-        }
-
-        function getVal(item, keys) {
-            for (let k of keys) {
-                if (item[k] !== undefined && item[k] !== null) return item[k];
-                const foundKey = Object.keys(item).find(vk => vk.toLowerCase() === k.toLowerCase());
-                if (foundKey && item[foundKey] !== undefined) return item[foundKey];
-            }
-            return "";
-        }
-
-        function renderSearchResults(query) {
-            const grid = document.getElementById('search-results-grid');
-            const emptyState = document.getElementById('search-empty-state');
-            
-            const q = query.toLowerCase().trim();
-            const filtered = vocabList.filter(item => {
-                const word = getVal(item, ['english', 'từ vựng', 'word']).toString().toLowerCase();
-                const meaning = getVal(item, ['vietnamese', 'tiếng việt', 'meaning']).toString().toLowerCase();
-                const topic = getVal(item, ['topic', 'chủ đề']).toString().toLowerCase();
-                const synonym = getVal(item, ['synonym', 'đồng nghĩa']).toString().toLowerCase();
-
-                const matchQuery = !q || word.includes(q) || meaning.includes(q) || synonym.includes(q);
-                const matchTopic = currentTopic === 'all' || topic === currentTopic.toLowerCase();
-
-                return matchQuery && matchTopic;
-            });
-
-            document.getElementById('result-count-badge').innerText = `${filtered.length} kết quả`;
-
-            if (filtered.length === 0) {
-                grid.innerHTML = '';
-                emptyState.classList.remove('hidden');
-                return;
-            }
-
-            emptyState.classList.add('hidden');
-            grid.innerHTML = filtered.map(item => {
-                const word = getVal(item, ['english', 'từ vựng', 'word']);
-                const vietnamese = getVal(item, ['vietnamese', 'tiếng việt', 'meaning']);
-                const type = getVal(item, ['type', 'từ loại', 'loại từ']);
-                const ipa = getVal(item, ['ipa', 'phiên âm']);
-                const topic = getVal(item, ['topic', 'chủ đề']);
-                const synonym = getVal(item, ['synonym', 'đồng nghĩa']);
-
-                const isSaved = checkIsSavedGlobal(word);
-
-                return `
-                    <div class="glass-card p-6 rounded-3xl shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-4 group">
-                        <div class="space-y-3">
-                            <div class="flex items-start justify-between">
-                                <div>
-                                    <div class="flex items-center space-x-2">
-                                        <h3 onclick="openWordModal('${encodeURIComponent(word)}')" class="text-xl font-bold text-white cursor-pointer hover:text-indigo-400 transition">${word}</h3>
-                                        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-900/60 text-indigo-300">${type || 'word'}</span>
-                                    </div>
-                                    <p class="text-xs font-mono text-slate-400 mt-0.5">${ipa}</p>
-                                </div>
-                                ${topic ? `<span class="px-2.5 py-1 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300">${topic}</span>` : ''}
-                            </div>
-                            <p class="text-sm font-semibold text-slate-200">${vietnamese}</p>
-                            ${synonym ? `
-                                <div class="text-xs text-slate-400">
-                                    <span class="font-semibold text-emerald-400">Đồng nghĩa:</span> ${synonym}
-                                </div>
-                            ` : ''}
-                        </div>
-                        <div class="pt-3 border-t border-slate-700 flex items-center justify-between gap-2">
-                            <button onclick="openWordModal('${encodeURIComponent(word)}')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 hover:text-indigo-400 transition flex items-center space-x-1">
-                                <i data-lucide="eye" class="w-3.5 h-3.5"></i>
-                                <span>Chi tiết</span>
-                            </button>
-                            <button onclick="saveWord('${encodeURIComponent(word)}')" class="px-3 py-2 rounded-xl ${isSaved ? 'bg-emerald-900 text-emerald-300' : 'bg-indigo-600 hover:bg-indigo-700 text-white'} text-xs font-semibold transition flex items-center space-x-1 shadow-sm">
-                                <i data-lucide="${isSaved ? 'check' : 'bookmark-plus'}" class="w-3.5 h-3.5"></i>
-                                <span>${isSaved ? 'Đã lưu' : 'Lưu học'}</span>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            lucide.createIcons();
-        }
-
-        // --- Word Detail Modal ---
-        function findWordByString(wordStr) {
-            const decoded = decodeURIComponent(wordStr);
-            return vocabList.find(item => getVal(item, ['english', 'từ vựng', 'word']).toLowerCase() === decoded.toLowerCase());
-        }
-
-        function openWordModal(wordStr) {
-            const item = findWordByString(wordStr);
-            if (!item) return;
-
+            const item = q.item;
             const word = getVal(item, ['english', 'từ vựng', 'word']);
             const vietnamese = getVal(item, ['vietnamese', 'tiếng việt', 'meaning']);
             const type = getVal(item, ['type', 'từ loại', 'loại từ']);
             const ipa = getVal(item, ['ipa', 'phiên âm']);
-            const definition = getVal(item, ['definition', 'định nghĩa']);
             const example = getVal(item, ['example', 'ví dụ']);
             const synonym = getVal(item, ['synonym', 'đồng nghĩa']);
-            const antonym = getVal(item, ['antonym', 'trái nghĩa']);
 
-            document.getElementById('modal-word').innerText = word;
-            document.getElementById('modal-type').innerText = type || 'word';
-            document.getElementById('modal-ipa').innerText = ipa || '/.../';
-            document.getElementById('modal-vietnamese').innerText = vietnamese || '-';
-            document.getElementById('modal-definition').innerText = definition || 'Chưa có định nghĩa chi tiết.';
-            document.getElementById('modal-example').innerText = example || 'Chưa có ví dụ minh họa.';
-
-            const synContainer = document.getElementById('modal-synonyms');
-            if (synonym) {
-                synContainer.innerHTML = synonym.split(',').map(s => `<span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-900 text-emerald-300">${s.trim()}</span>`).join('');
-            } else {
-                synContainer.innerHTML = '<span class="text-xs text-slate-400">Không có</span>';
-            }
-
-            const antContainer = document.getElementById('modal-antonyms');
-            if (antonym) {
-                antContainer.innerHTML = antonym.split(',').map(a => `<span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-rose-900 text-rose-300">${a.trim()}</span>`).join('');
-            } else {
-                antContainer.innerHTML = '<span class="text-xs text-slate-400">Không có</span>';
-            }
-
-            const actionContainer = document.getElementById('modal-action-btn-container');
-            const isSaved = checkIsSavedGlobal(word);
-            actionContainer.innerHTML = `
-                <button onclick="saveWord('${encodeURIComponent(word)}'); openWordModal('${encodeURIComponent(word)}');" class="px-4 py-2.5 rounded-xl ${isSaved ? 'bg-emerald-900 text-emerald-300' : 'bg-indigo-600 hover:bg-indigo-700 text-white'} text-xs font-semibold transition flex items-center space-x-2 shadow-sm">
-                    <i data-lucide="${isSaved ? 'check' : 'bookmark-plus'}" class="w-4 h-4"></i>
-                    <span>${isSaved ? 'Đã lưu' : 'Lưu từ vựng'}</span>
-                </button>
+            const relearnContainer = document.getElementById('relearn-card-content');
+            relearnContainer.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <span class="font-bold text-base text-white">${word}</span>
+                        <button onclick="playSound(); speakWord('${word}')" class="p-1 rounded bg-indigo-600/30 text-indigo-300">
+                            <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
+                        </button>
+                        <span class="text-xs px-2 py-0.5 rounded bg-indigo-900 text-indigo-300">${type}</span>
+                    </div>
+                    <span class="text-xs font-mono text-slate-400">${ipa}</span>
+                </div>
+                <p class="text-xs font-semibold text-slate-200 multiline-text">Nghĩa: ${vietnamese}</p>
+                ${synonym ? `<p class="text-xs text-slate-400"><span class="text-emerald-400 font-semibold">Đồng nghĩa:</span> ${synonym}</p>` : ''}
+                ${example ? `<p class="text-xs text-slate-400 italic multiline-text">Ví dụ: "${example}"</p>` : ''}
             `;
-
-            document.getElementById('word-detail-modal').classList.remove('hidden');
+            document.getElementById('wrong-answer-card-container').classList.remove('hidden');
+            document.getElementById('quiz-next-btn').classList.remove('hidden');
             lucide.createIcons();
         }
+    }
 
-        function closeWordModal() {
-            document.getElementById('word-detail-modal').classList.add('hidden');
+    function nextQuizQuestion() {
+        currentQuiz.currentIndex++;
+        if (currentQuiz.currentIndex < currentQuiz.questions.length) {
+            renderQuizQuestion();
+        } else {
+            finishQuiz();
+        }
+    }
+
+    function finishQuiz() {
+        document.getElementById('quiz-arena').classList.add('hidden');
+        document.getElementById('quiz-result-view').classList.remove('hidden');
+
+        const total = currentQuiz.questions.length;
+        const correct = currentQuiz.correctCount;
+        const percent = Math.round((correct / total) * 100);
+
+        document.getElementById('result-total').innerText = total;
+        document.getElementById('result-correct').innerText = correct;
+        document.getElementById('result-percent').innerText = `${percent}%`;
+
+        const historyItem = {
+            date: getTodayDateString(),
+            mode: currentQuiz.mode === 'synonym' ? 'Từ đồng nghĩa' : 'Nghĩa từ',
+            total: total,
+            correct: correct,
+            percent: `${percent}%`
+        };
+        quizHistory.unshift(historyItem);
+        localStorage.setItem('vocab_quiz_history', JSON.stringify(quizHistory));
+        renderQuizHistory();
+
+        // Update streak on quiz completion
+        checkAndUpdateStreak();
+
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+    }
+
+    function restartQuiz() {
+        initQuiz(currentQuiz.questions.map(q => q.item));
+    }
+
+    function exitQuiz() {
+        document.getElementById('quiz-arena').classList.add('hidden');
+        document.getElementById('quiz-result-view').classList.add('hidden');
+        document.getElementById('practice-mode-selector').classList.remove('hidden');
+    }
+
+    // --- Quiz History Section ---
+    function renderQuizHistory() {
+        const container = document.getElementById('history-list-container');
+        const emptyState = document.getElementById('history-empty-state');
+
+        if (!quizHistory || quizHistory.length === 0) {
+            container.innerHTML = '';
+            emptyState.classList.remove('hidden');
+            return;
         }
 
-        // --- Global Uniqueness & Saved Words ---
-        function getTodayDateString() {
-            const d = new Date();
-            return d.toISOString().split('T')[0];
-        }
-
-        function checkIsSavedGlobal(word) {
-            const target = word.toLowerCase();
-            for (let dateKey in savedWordsByDate) {
-                const list = savedWordsByDate[dateKey] || [];
-                if (list.some(item => getVal(item, ['english', 'từ vựng', 'word']).toLowerCase() === target)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        function saveWord(wordStr) {
-            const item = findWordByString(wordStr);
-            if (!item) return;
-
-            const word = getVal(item, ['english', 'từ vựng', 'word']);
-
-            if (checkIsSavedGlobal(word)) {
-                showToast(`Từ "${word}" đã tồn tại trong danh sách đã lưu của bạn rồi!`, 'info');
-                return;
-            }
-
-            const today = getTodayDateString();
-            if (!savedWordsByDate[today]) {
-                savedWordsByDate[today] = [];
-            }
-
-            savedWordsByDate[today].push(item);
-            localStorage.setItem('vocab_saved_by_date', JSON.stringify(savedWordsByDate));
-
-            updateSavedBadgeCount();
-            renderSavedWordsByDate();
-            renderSearchResults(document.getElementById('search-input').value);
-            showToast(`Đã lưu từ "${word}" thành công!`, 'success');
-        }
-
-        function removeSavedWord(dateKey, wordStr) {
-            if (!savedWordsByDate[dateKey]) return;
-            savedWordsByDate[dateKey] = savedWordsByDate[dateKey].filter(i => getVal(i, ['english', 'từ vựng', 'word']).toLowerCase() !== decodeURIComponent(wordStr).toLowerCase());
-            if (savedWordsByDate[dateKey].length === 0) {
-                delete savedWordsByDate[dateKey];
-            }
-            localStorage.setItem('vocab_saved_by_date', JSON.stringify(savedWordsByDate));
-            updateSavedBadgeCount();
-            renderSavedWordsByDate();
-            renderSearchResults(document.getElementById('search-input').value);
-            showToast("Đã xóa từ vựng khỏi danh sách.", "info");
-        }
-
-        function updateSavedBadgeCount() {
-            let total = 0;
-            for (let d in savedWordsByDate) {
-                total += (savedWordsByDate[d] || []).length;
-            }
-            document.getElementById('saved-badge').innerText = total;
-            document.getElementById('mobile-saved-count').innerText = total;
-
-            const emptyState = document.getElementById('saved-empty-state');
-            if (total === 0) {
-                emptyState.classList.remove('hidden');
-            } else {
-                emptyState.classList.add('hidden');
-            }
-        }
-
-        function renderSavedWordsByDate() {
-            const container = document.getElementById('saved-by-date-container');
-            const dates = Object.keys(savedWordsByDate).sort().reverse();
-
-            if (dates.length === 0) {
-                container.innerHTML = '';
-                return;
-            }
-
-            container.innerHTML = dates.map(dateKey => {
-                const words = savedWordsByDate[dateKey];
-                if (!words || words.length === 0) return '';
-
-                return `
-                    <div class="glass-card p-6 rounded-3xl space-y-4">
-                        <div class="flex items-center justify-between border-b border-slate-700 pb-3">
-                            <div class="flex items-center space-x-2">
-                                <i data-lucide="calendar" class="w-5 h-5 text-indigo-400"></i>
-                                <h3 class="font-bold text-lg text-white">Ngày: ${dateKey}</h3>
-                                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-900 text-indigo-300">${words.length} từ</span>
-                            </div>
+        emptyState.classList.add('hidden');
+        container.innerHTML = quizHistory.map((hist, idx) => {
+            const formattedDate = formatDateVN(hist.date);
+            return `
+                <div class="p-4 rounded-2xl bg-slate-800 border border-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-900/50 text-indigo-400 flex items-center justify-center font-bold text-xs">
+                            #${quizHistory.length - idx}
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            ${words.map(item => {
-                                const word = getVal(item, ['english', 'từ vựng', 'word']);
-                                const vietnamese = getVal(item, ['vietnamese', 'tiếng việt', 'meaning']);
-                                const type = getVal(item, ['type', 'từ loại', 'loại từ']);
-                                const ipa = getVal(item, ['ipa', 'phiên âm']);
-                                const synonym = getVal(item, ['synonym', 'đồng nghĩa']);
-
-                                return `
-                                    <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between space-y-3">
-                                        <div>
-                                            <div class="flex items-center justify-between">
-                                                <h4 onclick="openWordModal('${encodeURIComponent(word)}')" class="font-bold text-base text-white cursor-pointer hover:text-indigo-400">${word}</h4>
-                                                <span class="text-xs text-indigo-400 font-semibold">${type}</span>
-                                            </div>
-                                            <p class="text-xs text-slate-400">${ipa}</p>
-                                            <p class="text-sm font-semibold text-slate-200 mt-2">${vietnamese}</p>
-                                            ${synonym ? `<p class="text-xs text-slate-400 mt-1"><span class="text-emerald-400 font-semibold">Đồng nghĩa:</span> ${synonym}</p>` : ''}
-                                        </div>
-                                        <div class="flex justify-end pt-2 border-t border-slate-800">
-                                            <button onclick="removeSavedWord('${dateKey}', '${encodeURIComponent(word)}')" class="text-xs font-semibold text-rose-400 hover:text-rose-300 flex items-center space-x-1">
-                                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                                                <span>Xóa khỏi danh sách</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                `;
-                            }).join('')}
+                        <div>
+                            <h4 class="font-bold text-sm sm:text-base text-white">${hist.mode}</h4>
+                            <p class="text-xs text-slate-400 flex items-center space-x-1 mt-0.5">
+                                <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                                <span>Ngày làm bài: ${formattedDate}</span>
+                            </p>
                         </div>
                     </div>
-                `;
-            }).join('');
+                    <div class="flex items-center space-x-4 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 border-slate-700 pt-2 sm:pt-0">
+                        <div class="text-right">
+                            <span class="text-xs text-slate-400 block">Đúng</span>
+                            <span class="font-bold text-sm text-emerald-400">${hist.correct} / ${hist.total}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs text-slate-400 block">Tỷ lệ</span>
+                            <span class="font-bold text-sm text-indigo-400">${hist.percent}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
 
-            lucide.createIcons();
-            updateSavedBadgeCount();
-        }
+        lucide.createIcons();
+    }
 
-        function exportSavedWords() {
-            let text = "DANH SÁCH TỪ VỰNG ĐÃ LƯU\n\n";
-            for (let date in savedWordsByDate) {
-                text += `--- Ngày: ${date} ---\n`;
-                savedWordsByDate[date].forEach((item, idx) => {
-                    const w = getVal(item, ['english', 'từ vựng', 'word']);
-                    const v = getVal(item, ['vietnamese', 'tiếng việt', 'meaning']);
-                    text += `${idx + 1}. ${w} - ${v}\n`;
-                });
-                text += "\n";
-            }
-            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `vocab_saved_${getTodayDateString()}.txt`;
-            a.click();
-            showToast("Đã xuất file danh sách từ vựng thành công!", "success");
-        }
-
-        // --- Practice & Quiz Logic ---
-        function openScopeModal(type) {
-            activePracticeType = type; // 'synonym' or 'meaning'
-            const title = type === 'synonym' ? 'Luyện tập Từ Đồng Nghĩa' : 'Luyện tập Nghĩa';
-            document.getElementById('scope-modal-title').innerText = title;
-            
-            const select = document.getElementById('practice-date-select');
-            const dates = Object.keys(savedWordsByDate).sort().reverse();
-            if (dates.length === 0) {
-                select.innerHTML = '<option value="">Chưa có ngày nào được lưu</option>';
-            } else {
-                select.innerHTML = dates.map(d => `<option value="${d}">${d} (${savedWordsByDate[d].length} từ)</option>`).join('');
-            }
-
-            document.getElementById('date-selector-subview').classList.add('hidden');
-            document.getElementById('scope-selection-modal').classList.remove('hidden');
-            lucide.createIcons();
-        }
-
-        function closeScopeModal() {
-            document.getElementById('scope-selection-modal').classList.add('hidden');
-        }
-
-        function startPracticeWithScope(scope) {
-            if (scope === 'day') {
-                const subview = document.getElementById('date-selector-subview');
-                subview.classList.toggle('hidden');
-                return;
-            }
-
-            closeScopeModal();
-            
-            let wordsPool = [];
-            if (scope === 'week') {
-                const now = new Date();
-                const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-                for (let d in savedWordsByDate) {
-                    if (new Date(d) >= sevenDaysAgo) {
-                        wordsPool = wordsPool.concat(savedWordsByDate[d]);
-                    }
-                }
-                if (wordsPool.length === 0) {
-                    for (let d in savedWordsByDate) {
-                        wordsPool = wordsPool.concat(savedWordsByDate[d]);
-                    }
-                }
-            } else if (scope === 'all') {
-                let allPool = [...vocabList];
-                allPool.sort(() => Math.random() - 0.5);
-                wordsPool = allPool.slice(0, 150);
-            }
-
-            if (wordsPool.length === 0) {
-                showToast("Không có từ vựng nào trong phạm vi này! Hãy lưu thêm từ vựng.", "error");
-                return;
-            }
-
-            initQuizSession(wordsPool, activePracticeType);
-        }
-
-        function startQuizWithDate() {
-            const select = document.getElementById('practice-date-select');
-            const dateKey = select.value;
-            if (!dateKey || !savedWordsByDate[dateKey]) {
-                showToast("Vui lòng chọn ngày hợp lệ.", "error");
-                return;
-            }
-            closeScopeModal();
-            initQuizSession(savedWordsByDate[dateKey], activePracticeType);
-        }
-
-        function initQuizSession(pool, type) {
-            let validPool = [...pool];
-            if (type === 'synonym') {
-                validPool = validPool.filter(i => {
-                    const syn = getVal(i, ['synonym', 'đồng nghĩa']);
-                    return syn && syn.trim().length > 0;
-                });
-                if (validPool.length < 3) {
-                    showToast("Cần ít nhất 3 từ có từ đồng nghĩa để luyện tập phần này!", "error");
-                    return;
-                }
-            }
-
-            const questions = [];
-            validPool.sort(() => Math.random() - 0.5);
-
-            validPool.forEach(item => {
-                const word = getVal(item, ['english', 'từ vựng', 'word']);
-                const meaning = getVal(item, ['vietnamese', 'tiếng việt', 'meaning']);
-                const synonymStr = getVal(item, ['synonym', 'đồng nghĩa']);
-
-                if (type === 'synonym' && synonymStr) {
-                    const syns = synonymStr.split(',').map(s => s.trim()).filter(Boolean);
-                    if (syns.length === 0) return;
-                    const correctAns = syns[Math.floor(Math.random() * syns.length)];
-                    
-                    // Generate wrong options exclusively using English words and synonyms from dataset
-                    let poolOfWrongs = [];
-                    vocabList.forEach(otherItem => {
-                        const oWord = getVal(otherItem, ['english', 'từ vựng', 'word']);
-                        if (oWord.toLowerCase() !== word.toLowerCase()) {
-                            poolOfWrongs.push(oWord);
-                        }
-                        const oSyn = getVal(otherItem, ['synonym', 'đồng nghĩa']);
-                        if (oSyn) {
-                            oSyn.split(',').forEach(s => {
-                                const st = s.trim();
-                                if (st && st.toLowerCase() !== correctAns.toLowerCase()) {
-                                    poolOfWrongs.push(st);
-                                }
-                            });
-                        }
-                    });
-
-                    // Remove duplicates and any form of correct answer
-                    poolOfWrongs = [...new Set(poolOfWrongs)].filter(w => 
-                        w.toLowerCase() !== correctAns.toLowerCase() && 
-                        !syns.map(s => s.toLowerCase()).includes(w.toLowerCase())
-                    );
-                    poolOfWrongs.sort(() => Math.random() - 0.5);
-
-                    const wrongOptions = poolOfWrongs.slice(0, 3);
-                    if (wrongOptions.length < 3) return;
-
-                    const options = [correctAns, ...wrongOptions];
-                    const uniqueOptions = [...new Set(options)].sort(() => Math.random() - 0.5);
-                    if (uniqueOptions.length < 4) return;
-
-                    questions.push({
-                        prompt: `Chọn từ đồng nghĩa với từ: "${word}"`,
-                        correct: correctAns,
-                        options: uniqueOptions,
-                        modeTag: 'Từ đồng nghĩa (English)'
-                    });
-                } else if (type === 'meaning') {
-                    const correctAns = meaning;
-                    let wrongs = vocabList
-                        .filter(i => getVal(i, ['english', 'từ vựng', 'word']) !== word)
-                        .map(i => getVal(i, ['vietnamese', 'tiếng việt', 'meaning']))
-                        .filter(Boolean);
-                    wrongs = [...new Set(wrongs)].filter(w => w !== correctAns);
-                    wrongs.sort(() => Math.random() - 0.5);
-                    
-                    const wrongOptions = wrongs.slice(0, 3);
-                    if (wrongOptions.length < 3) return;
-
-                    const options = [correctAns, ...wrongOptions];
-                    const uniqueOptions = [...new Set(options)].sort(() => Math.random() - 0.5);
-                    if (uniqueOptions.length < 4) return;
-
-                    questions.push({
-                        prompt: `Nghĩa của từ vựng: "${word}" là gì?`,
-                        correct: correctAns,
-                        options: uniqueOptions,
-                        modeTag: 'Nghĩa từ vựng'
-                    });
-                }
-            });
-
-            if (questions.length === 0) {
-                showToast("Không đủ dữ liệu để tạo câu hỏi trắc nghiệm không trùng lặp.", "error");
-                return;
-            }
-
-            currentQuiz = {
-                mode: type,
-                questions: questions,
-                currentIndex: 0,
-                score: 0,
-                correctCount: 0
-            };
-
-            document.getElementById('practice-mode-selector').classList.add('hidden');
-            document.getElementById('quiz-arena').classList.remove('hidden');
-            document.getElementById('quiz-result-view').classList.add('hidden');
-
-            renderQuizQuestion();
-        }
-
-        function renderQuizQuestion() {
-            const q = currentQuiz.questions[currentQuiz.currentIndex];
-            const total = currentQuiz.questions.length;
-            const index = currentQuiz.currentIndex;
-
-            document.getElementById('quiz-title').innerText = currentQuiz.mode === 'synonym' ? 'Luyện tập Từ Đồng Nghĩa' : 'Luyện tập Nghĩa';
-            document.getElementById('quiz-progress-text').innerText = `Câu ${index + 1} / ${total}`;
-            document.getElementById('quiz-score').innerText = currentQuiz.score;
-            document.getElementById('quiz-mode-tag').innerText = q.modeTag;
-            document.getElementById('quiz-question-prompt').innerText = q.prompt;
-
-            const percent = ((index + 1) / total) * 100;
-            document.getElementById('quiz-progress-bar').style.width = `${percent}%`;
-
-            const grid = document.getElementById('quiz-options-grid');
-            grid.innerHTML = q.options.map(opt => `
-                <button onclick="selectQuizOption(this, '${encodeURIComponent(opt)}', '${encodeURIComponent(q.correct)}')" class="quiz-option-btn p-4 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-left font-medium text-white transition flex items-center justify-between group">
-                    <span>${opt}</span>
-                    <div class="w-6 h-6 rounded-full border border-slate-600 flex items-center justify-center text-xs group-hover:border-indigo-400"></div>
-                </button>
-            `).join('');
-
-            document.getElementById('quiz-next-btn').classList.add('hidden');
-            lucide.createIcons();
-        }
-
-        function selectQuizOption(btn, encodedOpt, encodedCorrect) {
-            const opt = decodeURIComponent(encodedOpt);
-            const correct = decodeURIComponent(encodedCorrect);
-
-            const allBtns = document.querySelectorAll('.quiz-option-btn');
-            allBtns.forEach(b => b.disabled = true);
-
-            if (opt === correct) {
-                btn.className = "quiz-option-btn p-4 rounded-2xl bg-emerald-900/80 border border-emerald-500 text-left font-medium text-white flex items-center justify-between shadow-lg";
-                currentQuiz.correctCount++;
-                currentQuiz.score += 10;
-                showToast("Chính xác!", "success");
-            } else {
-                btn.className = "quiz-option-btn p-4 rounded-2xl bg-rose-900/80 border border-rose-500 text-left font-medium text-white flex items-center justify-between shadow-lg";
-                allBtns.forEach(b => {
-                    if (b.innerText.trim() === correct.trim()) {
-                        b.className = "quiz-option-btn p-4 rounded-2xl bg-emerald-900/80 border border-emerald-500 text-left font-medium text-white flex items-center justify-between shadow-lg";
-                    }
-                });
-                showToast(`Chưa chính xác. Đáp án đúng là: ${correct}`, "error");
-            }
-
-            document.getElementById('quiz-score').innerText = currentQuiz.score;
-            document.getElementById('quiz-next-btn').classList.remove('hidden');
-        }
-
-        function nextQuizQuestion() {
-            currentQuiz.currentIndex++;
-            if (currentQuiz.currentIndex < currentQuiz.questions.length) {
-                renderQuizQuestion();
-            } else {
-                finishQuiz();
-            }
-        }
-
-        function finishQuiz() {
-            document.getElementById('quiz-arena').classList.add('hidden');
-            document.getElementById('quiz-result-view').classList.remove('hidden');
-
-            const total = currentQuiz.questions.length;
-            const correct = currentQuiz.correctCount;
-            const percent = Math.round((correct / total) * 100);
-
-            document.getElementById('result-total').innerText = total;
-            document.getElementById('result-correct').innerText = correct;
-            document.getElementById('result-percent').innerText = `${percent}%`;
-
-            if (percent >= 70) {
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.6 }
-                });
-            }
-        }
-
-        function restartQuiz() {
-            document.getElementById('quiz-result-view').classList.add('hidden');
-            document.getElementById('practice-mode-selector').classList.remove('hidden');
-        }
-
-        function exitQuiz() {
-            document.getElementById('quiz-arena').classList.add('hidden');
-            document.getElementById('quiz-result-view').classList.add('hidden');
-            document.getElementById('practice-mode-selector').classList.remove('hidden');
-        }
-    </script>
+    function clearQuizHistory() {
+        quizHistory = [];
+        localStorage.removeItem('vocab_quiz_history');
+        renderQuizHistory();
+        showToast("Đã xóa toàn bộ lịch sử làm bài.", "info");
+    }
+</script>
 </body>
 </html>
