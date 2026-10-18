@@ -28,7 +28,7 @@
                     <i class="fa-solid fa-wallet text-2xl text-amber-300"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Quản Lý Chi Tiêu</h1>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Quản Lý Chi Tiêu Theo Ngày</h1>
                     <p class="text-xs text-indigo-100">Kiểm soát tài chính thông minh mỗi ngày</p>
                 </div>
             </div>
@@ -279,6 +279,14 @@
         let currentDate = getFormattedDate(new Date());
         let currentCalendarDate = new Date();
 
+        // Helper: Format YYYY-MM-DD to DD/MM/YYYY for display
+        function formatDateDisplay(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) return dateStr;
+            return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
+
         // Helper: Format raw number with thousand separators for display
         function formatNumberWithCommas(value) {
             if (!value && value !== 0) return '';
@@ -338,6 +346,77 @@
             renderCalendar();
             applyFilters();
         };
+
+        // Helper: Update selected date badge label
+        function updateSelectedDateBadge() {
+            const badge = document.getElementById('selected-date-badge');
+            const label = document.getElementById('current-view-date-label');
+            const todayStr = getFormattedDate(new Date());
+
+            if (currentDate === todayStr) {
+                if (badge) badge.innerText = 'Hôm nay';
+            } else {
+                if (badge) badge.innerText = formatDateDisplay(currentDate);
+            }
+
+            if (label) {
+                label.innerText = `Đang hiển thị ngày: ${formatDateDisplay(currentDate)}`;
+            }
+        }
+
+        // Toggle custom category text input when "Khác" is selected
+        function toggleCustomCategory() {
+            const categorySelect = document.getElementById('expense-category');
+            const customWrapper = document.getElementById('custom-category-wrapper');
+            const customInput = document.getElementById('expense-custom-category');
+
+            if (categorySelect.value === 'Khác') {
+                customWrapper.classList.remove('hidden');
+                customInput.setAttribute('required', 'required');
+            } else {
+                customWrapper.classList.add('hidden');
+                customInput.removeAttribute('required');
+                customInput.value = '';
+            }
+        }
+
+        // Switch active tab view
+        function switchTab(tabName) {
+            const viewInput = document.getElementById('view-input');
+            const viewCalendar = document.getElementById('view-calendar');
+            const viewFilter = document.getElementById('view-filter');
+
+            const tabInputBtn = document.getElementById('tab-input');
+            const tabCalendarBtn = document.getElementById('tab-calendar');
+            const tabFilterBtn = document.getElementById('tab-filter');
+
+            const activeClass = "bg-indigo-600 text-white shadow-sm";
+            const inactiveClass = "text-slate-600 hover:text-indigo-600 hover:bg-slate-50";
+
+            // Hide all views
+            viewInput.classList.add('hidden');
+            viewCalendar.classList.add('hidden');
+            viewFilter.classList.add('hidden');
+
+            // Reset tab styles
+            [tabInputBtn, tabCalendarBtn, tabFilterBtn].forEach(btn => {
+                btn.className = `flex-1 sm:flex-initial px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${inactiveClass} flex items-center justify-center gap-2`;
+            });
+
+            if (tabName === 'input') {
+                viewInput.classList.remove('hidden');
+                tabInputBtn.className = `flex-1 sm:flex-initial px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${activeClass} flex items-center justify-center gap-2`;
+                renderDailyExpenses();
+            } else if (tabName === 'calendar') {
+                viewCalendar.classList.remove('hidden');
+                tabCalendarBtn.className = `flex-1 sm:flex-initial px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${activeClass} flex items-center justify-center gap-2`;
+                renderCalendar();
+            } else if (tabName === 'filter') {
+                viewFilter.classList.remove('hidden');
+                tabFilterBtn.className = `flex-1 sm:flex-initial px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${activeClass} flex items-center justify-center gap-2`;
+                applyFilters();
+            }
+        }
 
         // Handle Form Submission
         function handleFormSubmit(event) {
