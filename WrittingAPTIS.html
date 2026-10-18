@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ thống Luyện thi Aptis Writing</title>
+    <title>Hệ thống Luyện thi Aptis Writing - Pro Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -11,71 +11,114 @@
             theme: {
                 extend: {
                     colors: {
-                        darkbg: '#121212',
-                        darkcard: '#1e1e1e',
-                        darkborder: '#333333'
+                        darkbg: '#090d16',
+                        darkcard: '#131c2e',
+                        darkborder: '#1e293b',
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif']
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'slide-up': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(6px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(16px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        }
                     }
                 }
             }
         }
     </script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
         
-        ::-webkit-scrollbar { width: 8px; }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        .loader { border: 3px solid rgba(156, 163, 175, 0.3); border-top: 3px solid #3b82f6; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .dark .glass-nav {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
 
-        .tab-active { border-bottom: 2px solid #3b82f6; color: #3b82f6; font-weight: 600; }
-        .tab-inactive { color: #6b7280; }
-        .dark .tab-inactive { color: #9ca3af; }
-        .tab-inactive:hover { color: #374151; }
-        .dark .tab-inactive:hover { color: #f3f4f6; }
+        .loader { border: 3px solid rgba(59, 130, 246, 0.2); border-top: 3px solid #3b82f6; border-radius: 50%; width: 28px; height: 28px; animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-darkbg text-gray-800 dark:text-gray-200 min-h-screen flex flex-col transition-colors duration-200">
+<body class="bg-slate-50 dark:bg-darkbg text-slate-900 dark:text-slate-100 min-h-screen flex flex-col selection:bg-blue-500 selection:text-white transition-colors duration-300">
 
-    <nav class="bg-white dark:bg-darkcard shadow-sm border-b border-gray-200 dark:border-darkborder sticky top-0 z-50">
+    <nav class="glass-nav border-b border-slate-200/80 dark:border-darkborder sticky top-0 z-50 transition-colors">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center cursor-pointer" onclick="navigate('dashboard')">
-                    <i class="fas fa-pen-nib text-blue-600 text-2xl mr-2"></i>
-                    <span class="font-bold text-xl text-gray-900 dark:text-white tracking-tight hidden sm:block">Aptis<span class="text-blue-600">Practice</span></span>
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center space-x-3 cursor-pointer group" onclick="navigate('dashboard')">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/25 group-hover:scale-105 transition-transform">
+                        <i class="fas fa-pen-nib text-lg"></i>
+                    </div>
+                    <div>
+                        <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">Aptis<span class="text-blue-600 dark:text-blue-500">Writing</span></span>
+                        <span class="block text-[10px] font-semibold tracking-wider text-slate-400 uppercase">Mastery System</span>
+                    </div>
                 </div>
-                <div class="flex items-center space-x-2 sm:space-x-4">
-                    <button onclick="navigate('dashboard')" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-2 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors">Trang chủ</button>
-                    <button onclick="navigate('history')" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-2 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors"><i class="fas fa-history mr-1"></i> <span class="hidden sm:inline">Lịch sử</span></button>
-                    <button onclick="navigate('admin')" class="bg-blue-50 dark:bg-gray-800 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-gray-700 px-3 sm:px-4 py-2 rounded-md text-sm font-medium transition-colors border border-blue-200 dark:border-gray-700">
-                        <i class="fas fa-cog mr-1"></i> <span class="hidden sm:inline">Quản trị</span>
+                <div class="flex items-center space-x-2 sm:space-x-3">
+                    <button onclick="navigate('dashboard')" class="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all hover:bg-slate-100 dark:hover:bg-slate-800/60">
+                        <i class="fas fa-home mr-1.5 opacity-70"></i> Trang chủ
                     </button>
-                    <button onclick="toggleDarkMode()" class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <i id="theme-icon" class="fas fa-moon"></i>
+                    <button onclick="navigate('history')" class="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all hover:bg-slate-100 dark:hover:bg-slate-800/60">
+                        <i class="fas fa-history mr-1.5 opacity-70"></i> <span class="hidden sm:inline">Lịch sử</span>
+                    </button>
+                    <button onclick="navigate('admin')" class="bg-blue-50 dark:bg-slate-800/80 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-slate-800 px-4 py-2 rounded-xl text-sm font-semibold transition-all border border-blue-200/60 dark:border-slate-700 shadow-sm flex items-center">
+                        <i class="fas fa-cog mr-1.5 animate-spin-slow"></i> <span class="hidden sm:inline">Quản trị</span>
+                    </button>
+                    <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
+                        <i id="theme-icon" class="fas fa-moon text-sm"></i>
                     </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <main id="app-container" class="flex-grow flex flex-col w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="flex items-center justify-center h-64">
-            <div class="loader mr-3"></div>
-            <span class="text-gray-500 dark:text-gray-400 font-medium">Đang khởi tạo hệ thống...</span>
+    <main id="app-container" class="flex-grow flex flex-col w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+        <div class="flex flex-col items-center justify-center h-80 space-y-4">
+            <div class="loader"></div>
+            <span class="text-slate-500 dark:text-slate-400 font-medium tracking-wide">Đang khởi tạo hệ thống chuẩn Aptis...</span>
         </div>
     </main>
 
-    <div id="custom-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4">
-        <div class="bg-white dark:bg-darkcard rounded-lg p-6 max-w-sm w-full mx-auto shadow-xl transform transition-all border border-gray-200 dark:border-darkborder">
-            <h3 id="modal-title" class="text-lg font-bold text-gray-900 dark:text-white mb-2">Thông báo</h3>
-            <p id="modal-message" class="text-sm text-gray-600 dark:text-gray-300 mb-6"></p>
+    <div id="custom-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4 transition-all duration-300">
+        <div class="bg-white dark:bg-darkcard rounded-3xl p-6 sm:p-8 max-w-md w-full mx-auto shadow-2xl border border-slate-200 dark:border-darkborder transform transition-all animate-slide-up">
+            <div class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl mb-4">
+                <i class="fas fa-bell"></i>
+            </div>
+            <h3 id="modal-title" class="text-xl font-extrabold text-slate-900 dark:text-white mb-2">Thông báo</h3>
+            <p id="modal-message" class="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed"></p>
             <div class="flex justify-end space-x-3" id="modal-actions">
-                <button onclick="closeModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">Đóng</button>
+                <button onclick="closeModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-5 rounded-xl shadow-lg shadow-blue-500/25 transition-all">Đóng</button>
             </div>
         </div>
     </div>
@@ -131,12 +174,16 @@
             const icon = document.getElementById('theme-icon');
             if (state.isDarkMode) {
                 htmlClass.add('dark');
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
+                if(icon) {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
             } else {
                 htmlClass.remove('dark');
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
+                if(icon) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                }
             }
         };
 
@@ -147,7 +194,7 @@
             if (actionsHtml) {
                 actionsContainer.innerHTML = actionsHtml;
             } else {
-                actionsContainer.innerHTML = `<button onclick="closeModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">Đóng</button>`;
+                actionsContainer.innerHTML = `<button onclick="closeModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-5 rounded-xl shadow-lg shadow-blue-500/25 transition-all">Đóng</button>`;
             }
             const modal = document.getElementById('custom-modal');
             modal.classList.remove('hidden');
@@ -170,15 +217,13 @@
             return str.replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         };
 
-        // Hàm tự động tìm và làm nổi bật số lượng từ (ví dụ: "30-40 words", "50 words")
+        // Hàm làm nổi bật số lượng từ với badge hiện đại chữ lớn
         const highlightWordCount = (text) => {
             if (!text) return '';
-            // Match dạng số hoặc khoảng số đi kèm chữ "words"
             const regex = /\b(\d+(?:\s*-\s*\d+)?\s*words)\b/gi;
-            return text.replace(regex, '<strong class="text-red-600 dark:text-red-400 font-bold">$1</strong>');
+            return text.replace(regex, '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-extrabold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 mx-1">$1</span>');
         };
 
-        // Local Storage Utilities for Practice
         const saveDraftLocally = () => {
             if(state.currentTopic) {
                 const draftKey = `aptis_draft_${state.currentTopic.id}`;
@@ -230,7 +275,7 @@
             }
             if (view === 'history') fetchHistory();
             render();
-            window.scrollTo(0, 0);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
         const getEmptyTopicTemplate = () => ({
@@ -273,13 +318,13 @@
                 case 'admin': container.appendChild(renderAdminList()); break;
                 case 'admin-form': container.appendChild(renderAdminForm()); break;
                 case 'history': container.appendChild(renderHistory()); break;
-                default: container.innerHTML = '<div class="text-center py-10">404 Not Found</div>';
+                default: container.innerHTML = '<div class="text-center py-20 text-slate-500">404 Không tìm thấy trang</div>';
             }
         }
 
         function renderDashboard() {
             const div = document.createElement('div');
-            div.className = 'w-full animation-fade-in flex flex-col items-center';
+            div.className = 'w-full animate-fade-in flex flex-col items-center';
             
             let filteredTopics = state.topics;
             if (state.searchQuery) {
@@ -288,31 +333,41 @@
             }
 
             let html = `
-                <div class="w-full max-w-5xl mb-8 text-center px-4">
-                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Luyện tập Aptis Writing</h1>
-                    <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">Chọn một chủ đề bên dưới để bắt đầu bài thi thử. Hệ thống sẽ tự động lưu lại phiên bản và bài làm của bạn.</p>
-                    <div class="relative max-w-xl mx-auto mb-10">
-                        <input type="text" id="searchInput" value="${state.searchQuery}" placeholder="Tìm kiếm chủ đề..." class="w-full pl-12 pr-4 py-3 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-darkcard text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-colors">
-                        <i class="fas fa-search absolute left-4 top-3.5 text-gray-400 dark:text-gray-500 text-lg"></i>
+                <div class="w-full max-w-4xl mb-12 text-center px-4">
+                    <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold mb-4 uppercase tracking-wider border border-blue-500/20">
+                        <i class="fas fa-graduation-cap"></i> <span>Aptis Writing Exam Prep</span>
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4 leading-tight">Luyện tập kỹ năng viết Aptis</h1>
+                    <p class="text-slate-600 dark:text-slate-400 text-base sm:text-lg mb-8 max-w-2xl mx-auto leading-relaxed">Chọn chủ đề bên dưới để bắt đầu bài luyện tập tiêu chuẩn với đầy đủ Part 2, Part 3 và Part 4.</p>
+                    
+                    <div class="relative max-w-2xl mx-auto mb-6">
+                        <input type="text" id="searchInput" value="${state.searchQuery}" placeholder="Tìm kiếm chủ đề luyện thi..." class="w-full pl-14 pr-6 py-4 rounded-2xl border border-slate-200 dark:border-darkborder bg-white dark:bg-darkcard text-slate-900 dark:text-white text-base focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 shadow-xl shadow-slate-200/50 dark:shadow-none transition-all">
+                        <i class="fas fa-search absolute left-5 top-4.5 text-slate-400 text-lg"></i>
                     </div>
                 </div>
-                <div class="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+
+                <div class="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
             `;
 
             if (filteredTopics.length === 0) {
-                html += `<div class="col-span-full text-center py-10 text-gray-500 bg-white dark:bg-darkcard rounded-xl shadow-sm border border-gray-100 dark:border-darkborder">Không tìm thấy chủ đề nào.</div>`;
+                html += `<div class="col-span-full text-center py-16 text-slate-400 bg-white dark:bg-darkcard rounded-3xl shadow-sm border border-slate-200/60 dark:border-darkborder"><i class="fas fa-folder-open text-4xl mb-3 opacity-60"></i><p class="text-base font-medium">Không tìm thấy chủ đề nào phù hợp.</p></div>`;
             } else {
                 filteredTopics.forEach(topic => {
                     const hasDraft = !!localStorage.getItem(`aptis_draft_${topic.id}`);
                     html += `
-                        <div class="bg-white dark:bg-darkcard rounded-xl shadow-sm border border-gray-200 dark:border-darkborder p-6 flex flex-col justify-between group transition-all hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 relative overflow-hidden">
-                            ${hasDraft ? `<div class="absolute top-0 right-0 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-[10px] font-bold px-2 py-1 rounded-bl-lg">ĐANG LÀM DỞ</div>` : ''}
+                        <div class="bg-white dark:bg-darkcard rounded-3xl p-6 sm:p-7 flex flex-col justify-between group hover:-translate-y-1 transition-all duration-300 shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-200/80 dark:border-darkborder hover:border-blue-500/50 dark:hover:border-blue-500/50 relative overflow-hidden">
+                            ${hasDraft ? `<div class="absolute top-0 right-0 bg-gradient-to-l from-amber-500 to-orange-500 text-white text-[10px] font-extrabold px-3 py-1 rounded-bl-xl shadow-sm tracking-wider uppercase"><i class="fas fa-clock mr-1"></i>Đang làm dở</div>` : ''}
                             <div>
-                                <div class="w-12 h-12 bg-blue-50 dark:bg-gray-800 text-blue-600 dark:text-blue-400 rounded-lg flex items-center justify-center text-xl mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors"><i class="fas fa-file-alt"></i></div>
-                                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">${topic.title}</h3>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Gồm Part 2, 3 và 4. Chuẩn format Aptis.</p>
+                                <div class="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 flex items-center justify-center text-2xl mb-5 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shadow-inner">
+                                    <i class="fas fa-pen-fancy"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">${topic.title}</h3>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">Bộ đề thi thử chuẩn format Aptis Writing (Part 2, 3, 4).</p>
                             </div>
-                            <button onclick="navigate('practice', '${topic.id}')" class="w-full py-2.5 bg-gray-50 dark:bg-gray-800 hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white text-gray-700 dark:text-gray-300 font-medium rounded-lg transition-colors border border-gray-200 dark:border-gray-700 hover:border-transparent">${hasDraft ? 'Tiếp tục làm bài' : 'Bắt đầu làm bài'}</button>
+                            <button onclick="navigate('practice', '${topic.id}')" class="w-full py-3.5 px-4 bg-slate-100 dark:bg-slate-800/80 hover:bg-blue-600 dark:hover:bg-blue-600 hover:text-white text-slate-700 dark:text-slate-200 font-bold rounded-2xl transition-all duration-200 flex items-center justify-center space-x-2 shadow-sm">
+                                <span>${hasDraft ? 'Tiếp tục làm bài' : 'Bắt đầu luyện tập'}</span>
+                                <i class="fas fa-arrow-right text-xs"></i>
+                            </button>
                         </div>
                     `;
                 });
@@ -350,7 +405,6 @@
             return false;
         };
 
-        // Nút toggle xem bài viết cũ
         window.togglePastAnswers = (key) => {
             const container = document.getElementById(`past-answers-${key}`);
             if (!container) return;
@@ -360,27 +414,28 @@
                 return;
             }
 
-            // Load data history
             const historyStr = localStorage.getItem('aptis_submissions_history') || '[]';
             const historyArr = JSON.parse(historyStr);
             const topicId = state.currentTopic.id;
             
-            // Lọc các bài viết cũ của chính câu hỏi (key) trong chủ đề này
             const pastAnswers = historyArr
                 .filter(h => h.topicId === topicId && h.answers && h.answers[key] && h.answers[key].trim().length > 0)
                 .map(h => ({
                     date: h.submittedAt ? new Date(h.submittedAt).toLocaleString('vi-VN') : 'Không rõ thời gian',
                     text: h.answers[key]
                 }))
-                .sort((a,b) => b.date.localeCompare(a.date)); // Xếp mới nhất lên đầu (tạm qua chuỗi)
+                .sort((a,b) => b.date.localeCompare(a.date));
 
             if (pastAnswers.length === 0) {
-                container.innerHTML = '<div class="text-gray-500 italic text-xs text-center py-2">Bạn chưa có lịch sử làm bài cho câu hỏi này.</div>';
+                container.innerHTML = '<div class="text-slate-400 italic text-xs text-center py-3">Chưa có lịch sử làm bài cho câu hỏi này.</div>';
             } else {
                 container.innerHTML = pastAnswers.map((pa, idx) => `
-                    <div class="mb-3 border-b border-gray-200 dark:border-gray-700 pb-3 last:border-0 last:pb-0 last:mb-0">
-                        <span class="text-xs text-blue-600 dark:text-blue-400 font-semibold block mb-1"><i class="fas fa-clock mr-1"></i> Nộp lúc: ${pa.date}</span>
-                        <p class="text-gray-800 dark:text-gray-200 whitespace-pre-wrap text-sm bg-white dark:bg-[#1a1a1a] p-2 rounded border border-gray-100 dark:border-gray-800">${escapeHtml(pa.text)}</p>
+                    <div class="mb-3 last:mb-0 pb-3 last:pb-0 border-b border-slate-200 dark:border-slate-800 last:border-0">
+                        <div class="flex items-center justify-between text-xs text-blue-600 dark:text-blue-400 font-semibold mb-1">
+                            <span><i class="fas fa-clock mr-1"></i> Nộp lúc: ${pa.date}</span>
+                            <span class="text-slate-400">${countWords(pa.text)} từ</span>
+                        </div>
+                        <p class="text-slate-700 dark:text-slate-300 whitespace-pre-wrap text-sm bg-white dark:bg-[#111827] p-3 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">${escapeHtml(pa.text)}</p>
                     </div>
                 `).join('');
             }
@@ -389,42 +444,46 @@
 
         function renderPracticeArea() {
             const div = document.createElement('div');
-            div.className = 'w-full max-w-5xl mx-auto bg-white dark:bg-darkcard rounded-xl shadow-sm border border-gray-200 dark:border-darkborder overflow-hidden transition-colors';
+            div.className = 'w-full max-w-5xl mx-auto bg-white dark:bg-darkcard rounded-3xl shadow-2xl border border-slate-200/80 dark:border-darkborder overflow-hidden animate-fade-in transition-colors';
             
             const t = state.currentTopic;
             if (!t) return div;
 
             const tabs = [
-                { id: 'part2', label: 'Part 2', icon: 'fa-align-left' },
-                { id: 'part3', label: 'Part 3', icon: 'fa-comments' },
-                { id: 'part4', label: 'Part 4', icon: 'fa-envelope' }
+                { id: 'part2', label: 'Part 2 (Form)', icon: 'fa-align-left' },
+                { id: 'part3', label: 'Part 3 (Chat)', icon: 'fa-comments' },
+                { id: 'part4', label: 'Part 4 (Email)', icon: 'fa-envelope-open-text' }
             ];
 
             let html = `
-                <div class="bg-gray-50 dark:bg-[#181818] border-b border-gray-200 dark:border-darkborder px-4 sm:px-6 py-4 flex justify-between items-center">
-                    <h2 class="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200 truncate pr-4">Chủ đề: <span class="text-blue-600 dark:text-blue-400">${t.title}</span></h2>
-                    <div class="flex items-center space-x-3">
-                        <span id="auto-save-status" class="text-xs text-gray-400 italic hidden"><i class="fas fa-check text-green-500 mr-1"></i>Đã lưu nháp</span>
-                        <button onclick="navigate('dashboard')" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"><i class="fas fa-times text-xl"></i></button>
+                <div class="bg-slate-50/80 dark:bg-[#111827]/80 backdrop-blur-md border-b border-slate-200 dark:border-darkborder px-6 py-5 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+                    <div>
+                        <span class="text-xs font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-1">Đang luyện tập chủ đề</span>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">${t.title}</h2>
+                    </div>
+                    <div class="flex items-center justify-between sm:justify-end space-x-4">
+                        <span id="auto-save-status" class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-500/10 px-3 py-1.5 rounded-full hidden items-center"><i class="fas fa-check-circle mr-1.5"></i>Đã lưu nháp</span>
+                        <button onclick="navigate('dashboard')" class="w-10 h-10 rounded-xl bg-slate-200/60 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-red-500 flex items-center justify-center transition-colors"><i class="fas fa-times text-base"></i></button>
                     </div>
                 </div>
 
-                <div class="flex border-b border-gray-200 dark:border-darkborder overflow-x-auto hide-scrollbar">
+                <div class="flex border-b border-slate-200 dark:border-darkborder overflow-x-auto hide-scrollbar bg-slate-100/50 dark:bg-slate-900/40">
                     ${tabs.map(tab => {
                         const isComplete = window.isPartComplete(tab.id);
                         return `
                             <button id="tab-btn-${tab.id}" onclick="changePracticeTab('${tab.id}')" 
-                                    class="flex-1 min-w-[120px] py-4 text-center font-medium flex items-center justify-center gap-2 ${state.practiceState.tab === tab.id ? 'tab-active bg-blue-50/50 dark:bg-blue-900/20' : 'tab-inactive hover:bg-gray-50 dark:hover:bg-gray-800'} transition-colors whitespace-nowrap">
-                                <span><i class="fas ${tab.icon} mr-1"></i> ${tab.label}</span>
+                                    class="flex-1 min-w-[150px] py-4 px-6 text-center font-bold text-sm flex items-center justify-center space-x-2.5 ${state.practiceState.tab === tab.id ? 'bg-white dark:bg-darkcard text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50'} transition-all whitespace-nowrap">
+                                <i class="fas ${tab.icon} opacity-80"></i>
+                                <span>${tab.label}</span>
                                 <span id="tab-check-container-${tab.id}">
-                                    ${isComplete ? `<i class="fas fa-check-circle text-green-500"></i>` : ''}
+                                    ${isComplete ? `<i class="fas fa-check-circle text-emerald-500 text-base"></i>` : ''}
                                 </span>
                             </button>
                         `;
                     }).join('')}
                 </div>
 
-                <div class="p-4 sm:p-6 md:p-8 min-h-[500px]">
+                <div class="p-6 sm:p-8 md:p-10 min-h-[500px]">
             `;
 
             const partId = state.practiceState.tab;
@@ -435,13 +494,13 @@
             const currentV = partData[vIdx];
 
             if (partData.length > 1) {
-                html += `<div class="mb-6 flex flex-wrap gap-2 pb-4 border-b border-gray-100 dark:border-gray-800">
-                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400 py-1.5 mr-2">Chọn phiên bản:</span>`;
+                html += `<div class="mb-8 flex flex-wrap items-center gap-2.5 pb-6 border-b border-slate-100 dark:border-slate-800/80">
+                    <span class="text-sm font-bold text-slate-500 dark:text-slate-400 mr-2"><i class="fas fa-layer-group mr-1.5"></i> Phiên bản:</span>`;
                 partData.forEach((_, idx) => {
                     const active = idx === vIdx;
                     html += `
                         <button onclick="changeVersion('${partId}', ${idx})" 
-                                class="px-4 py-1.5 text-sm font-medium rounded-full transition-all border ${active ? 'bg-blue-600 text-white border-blue-600 shadow-sm transform scale-105' : 'bg-white dark:bg-[#2a2a2a] text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'}">
+                                class="px-4 py-2 text-sm font-bold rounded-xl transition-all duration-200 border ${active ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-500/25 scale-105' : 'bg-slate-50 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'}">
                             Phiên bản ${idx + 1}
                         </button>
                     `;
@@ -453,36 +512,38 @@
                 const key = `${baseKey}_v${vIdx}`;
                 const isNotesVisible = state.practiceState.showNotes[key] || false;
                 const noteDisplayClass = isNotesVisible ? 'block' : 'hidden';
-                const answerColSpan = isNotesVisible ? 'lg:col-span-8' : 'lg:col-span-12';
+                const answerColSpan = isNotesVisible ? 'lg:col-span-7' : 'lg:col-span-12';
                 const iconClass = isNotesVisible ? 'fa-chevron-up' : 'fa-chevron-down';
-                const toggleText = isNotesVisible ? 'Ẩn nháp' : 'Mở nháp';
+                const toggleText = isNotesVisible ? 'Ẩn ghi chú' : 'Viết nháp / Ghi chú';
                 
                 const ansValue = state.practiceState.answers[key] || '';
                 const noteValue = state.practiceState.notes[key] || '';
 
                 return `
-                    <div class="mb-6 bg-white dark:bg-[#1a1a1a] rounded-lg border border-gray-200 dark:border-darkborder p-4 transition-all">
-                        <div class="mb-3 border-b border-gray-100 dark:border-gray-800 pb-2 flex justify-between items-start flex-col sm:flex-row gap-2">
+                    <div class="mb-8 bg-slate-50/80 dark:bg-[#111827] rounded-3xl border border-slate-200/80 dark:border-darkborder p-6 sm:p-7 shadow-sm transition-all">
+                        <div class="mb-5 border-b border-slate-200 dark:border-slate-800 pb-4 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
                             <div>
-                                <h4 class="font-bold text-gray-800 dark:text-gray-200">${title}</h4>
-                                ${instruction ? `<p class="text-sm text-gray-600 dark:text-gray-400 mt-1">${instruction}</p>` : ''}
+                                <h4 class="font-extrabold text-lg text-slate-900 dark:text-white flex items-center">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-blue-600 mr-2.5"></span> ${title}
+                                </h4>
+                                ${instruction ? `<div class="text-base sm:text-lg text-slate-700 dark:text-slate-200 mt-2.5 font-semibold leading-relaxed">${instruction}</div>` : ''}
                             </div>
-                            <button onclick="toggleNotesDOM('${key}')" class="flex-shrink-0 text-xs flex items-center text-blue-600 dark:text-blue-400 font-medium px-3 py-1.5 rounded-md bg-blue-50 dark:bg-blue-900/30 border border-transparent hover:border-blue-200 dark:hover:border-blue-800 transition-colors">
-                                <i class="fas fa-lightbulb mr-1.5 text-yellow-500"></i> <span id="toggle-text-${key}">${toggleText}</span> <i id="toggle-icon-${key}" class="fas ${iconClass} ml-1.5"></i>
+                            <button onclick="toggleNotesDOM('${key}')" class="flex-shrink-0 text-xs sm:text-sm font-bold flex items-center text-amber-600 dark:text-amber-400 px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 transition-all shadow-sm">
+                                <i class="fas fa-lightbulb mr-2 text-amber-500"></i> <span id="toggle-text-${key}">${toggleText}</span> <i id="toggle-icon-${key}" class="fas ${iconClass} ml-2 text-xs"></i>
                             </button>
                         </div>
-                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-                            <div id="note-container-${key}" class="lg:col-span-4 flex flex-col ${noteDisplayClass}">
-                                <label class="block text-xs font-semibold text-gray-500 mb-1 uppercase">Ghi chú ý chính</label>
-                                <textarea oninput="handleNoteInput(this, '${key}')" class="w-full flex-grow min-h-[120px] bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-700/50 rounded-lg p-2 text-sm text-gray-700 dark:text-gray-300 focus:ring-1 focus:ring-yellow-400 focus:border-yellow-400 resize-y transition-colors" placeholder="Ghi chú keywords...">${noteValue}</textarea>
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                            <div id="note-container-${key}" class="lg:col-span-5 flex-col ${noteDisplayClass} transition-all">
+                                <label class="block text-xs font-bold text-amber-600 dark:text-amber-400 mb-2 uppercase tracking-wider"><i class="fas fa-sticky-note mr-1.5"></i> Ghi chú & Ý chính</label>
+                                <textarea oninput="handleNoteInput(this, '${key}')" class="w-full h-full min-h-[160px] bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/50 rounded-2xl p-4 text-sm text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 resize-y shadow-inner transition-all" placeholder="Ghi chú các từ vựng hoặc ý chính cần viết...">${noteValue}</textarea>
                             </div>
-                            <div id="answer-container-${key}" class="${answerColSpan} transition-all duration-200 flex flex-col h-full">
-                                <div class="flex justify-between items-center mb-1">
-                                    <label class="block text-xs font-semibold text-gray-500 uppercase"><i class="fas fa-pen mr-1 text-blue-500"></i> Bài làm của bạn</label>
-                                    <button onclick="togglePastAnswers('${key}')" title="Xem các câu trả lời bạn đã lưu trước đây" class="text-xs text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded transition-colors flex items-center font-medium border border-blue-100 dark:border-blue-800"><i class="fas fa-history mr-1.5"></i> Lịch sử làm câu này</button>
+                            <div id="answer-container-${key}" class="${answerColSpan} transition-all duration-300 flex flex-col">
+                                <div class="flex justify-between items-center mb-2">
+                                    <label class="block text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider"><i class="fas fa-edit mr-1.5"></i> Bài làm của bạn</label>
+                                    <button onclick="togglePastAnswers('${key}')" title="Xem lịch sử câu trả lời" class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-500/10 px-3 py-1.5 rounded-xl transition-all flex items-center border border-blue-500/20 shadow-sm"><i class="fas fa-history mr-1.5"></i> Lịch sử câu này</button>
                                 </div>
-                                ${createTextArea(key, ansValue, minWords, maxWords, placeholder, 'flex-grow min-h-[120px]')}
-                                <div id="past-answers-${key}" class="hidden mt-3 p-3 bg-gray-50 dark:bg-[#222] rounded-lg border border-gray-200 dark:border-gray-700 text-sm max-h-60 overflow-y-auto shadow-inner transition-all"></div>
+                                ${createTextArea(key, ansValue, minWords, maxWords, placeholder, 'min-h-[160px]')}
+                                <div id="past-answers-${key}" class="hidden mt-4 p-4 bg-slate-100 dark:bg-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 text-sm max-h-64 overflow-y-auto shadow-inner transition-all"></div>
                             </div>
                         </div>
                     </div>
@@ -491,49 +552,55 @@
 
             if (partId === 'part2') {
                 html += `
-                    <div class="mb-6 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded-r-md">
-                        <p class="font-semibold text-blue-900 dark:text-blue-300 mb-1">Hướng dẫn:</p>
-                        <p class="text-sm text-blue-800 dark:text-blue-200">You are a new member of the <strong>${t.title}</strong>. Fill in the form. Write in sentences. Use <strong class="text-red-600 dark:text-red-400 font-bold">20-30 words</strong>.</p>
+                    <div class="mb-8 bg-blue-500/10 border-l-4 border-blue-600 p-5 rounded-2xl backdrop-blur-sm">
+                        <p class="font-bold text-blue-900 dark:text-blue-300 mb-1 text-base"><i class="fas fa-info-circle mr-2"></i> Hướng dẫn Part 2:</p>
+                        <p class="text-base text-blue-800 dark:text-blue-200 leading-relaxed">You are a new member of the <strong>${t.title}</strong>. Fill in the form. Write in sentences. Use <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-extrabold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 mx-1">20-30 words</span>.</p>
                     </div>
-                    ${renderInputSection('Form Question:', highlightWordCount(currentV.question) || 'No question provided.', 'p2', 20, 30, 'Write your answer here...')}
+                    ${renderInputSection('Form Question:', highlightWordCount(currentV.question) || 'Chưa có câu hỏi.', 'p2', 20, 30, 'Nhập câu trả lời của bạn ở đây...')}
                     <div class="mt-8 flex justify-end">
-                        <button onclick="changePracticeTab('part3')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors w-full sm:w-auto">Tiếp theo (Part 3) <i class="fas fa-arrow-right ml-2"></i></button>
+                        <button onclick="changePracticeTab('part3')" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3.5 rounded-2xl font-bold shadow-xl shadow-blue-500/25 transition-all flex items-center space-x-2">
+                            <span>Tiếp theo (Part 3)</span> <i class="fas fa-arrow-right text-sm"></i>
+                        </button>
                     </div>
                 `;
             }
             else if (partId === 'part3') {
-                // PART 3: Bỏ dòng Use 30-40 words cứng. Hệ thống sẽ tự Highlight từ trong DB
                 html += `
-                    <div class="mb-6 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded-r-md">
-                        <p class="font-semibold text-blue-900 dark:text-blue-300 mb-1">Tình huống:</p>
-                        <p class="text-sm text-blue-800 dark:text-blue-200">${highlightWordCount(currentV.intro) || ''}</p>
+                    <div class="mb-8 bg-blue-500/10 border-l-4 border-blue-600 p-5 rounded-2xl backdrop-blur-sm">
+                        <p class="font-bold text-blue-900 dark:text-blue-300 mb-1 text-base"><i class="fas fa-info-circle mr-2"></i> Tình huống Part 3 (Chat Room):</p>
+                        <p class="text-base sm:text-lg text-blue-800 dark:text-blue-200 leading-relaxed font-semibold">${highlightWordCount(currentV.intro) || ''}</p>
                     </div>
-                    <div class="space-y-2">
-                        ${renderInputSection('Question 1:', highlightWordCount(currentV.q1), 'p3q1', 30, 40, 'Write your answer to member 1...')}
-                        ${renderInputSection('Question 2:', highlightWordCount(currentV.q2), 'p3q2', 30, 40, 'Write your answer to member 2...')}
-                        ${renderInputSection('Question 3:', highlightWordCount(currentV.q3), 'p3q3', 30, 40, 'Write your answer to member 3...')}
+                    <div class="space-y-6">
+                        ${renderInputSection('Question 1:', highlightWordCount(currentV.q1), 'p3q1', 30, 40, 'Trả lời câu hỏi 1...')}
+                        ${renderInputSection('Question 2:', highlightWordCount(currentV.q2), 'p3q2', 30, 40, 'Trả lời câu hỏi 2...')}
+                        ${renderInputSection('Question 3:', highlightWordCount(currentV.q3), 'p3q3', 30, 40, 'Trả lời câu hỏi 3...')}
                     </div>
                     <div class="mt-8 flex flex-col sm:flex-row justify-between gap-4">
-                        <button onclick="changePracticeTab('part2')" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white px-4 py-2 font-medium bg-gray-100 dark:bg-gray-800 rounded-lg sm:bg-transparent"><i class="fas fa-arrow-left mr-2"></i> Quay lại</button>
-                        <button onclick="changePracticeTab('part4')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">Tiếp theo (Part 4) <i class="fas fa-arrow-right ml-2"></i></button>
+                        <button onclick="changePracticeTab('part2')" class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white px-6 py-3.5 font-bold bg-slate-100 dark:bg-slate-800 rounded-2xl transition-all flex items-center justify-center sm:justify-start">
+                            <i class="fas fa-arrow-left mr-2"></i> Quay lại Part 2
+                        </button>
+                        <button onclick="changePracticeTab('part4')" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3.5 rounded-2xl font-bold shadow-xl shadow-blue-500/25 transition-all flex items-center justify-center space-x-2">
+                            <span>Tiếp theo (Part 4)</span> <i class="fas fa-arrow-right text-sm"></i>
+                        </button>
                     </div>
                 `;
             }
             else if (partId === 'part4') {
-                // PART 4: Bỏ hướng dẫn viết thư cứng. Highlight trực tiếp từ prompt của Admin
                 html += `
-                    <div class="mb-6 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded-r-md">
-                        <p class="font-semibold text-blue-900 dark:text-blue-300 mb-1">Tình huống:</p>
-                        <p class="text-sm text-blue-800 dark:text-blue-200 whitespace-pre-line">${highlightWordCount(currentV.intro) || ''}</p>
+                    <div class="mb-8 bg-blue-500/10 border-l-4 border-blue-600 p-5 rounded-2xl backdrop-blur-sm">
+                        <p class="font-bold text-blue-900 dark:text-blue-300 mb-1 text-base"><i class="fas fa-info-circle mr-2"></i> Tình huống Part 4 (Emails):</p>
+                        <p class="text-base sm:text-lg text-blue-800 dark:text-blue-200 whitespace-pre-line leading-relaxed font-semibold">${highlightWordCount(currentV.intro) || ''}</p>
                     </div>
-                    <div class="space-y-6">
-                        ${renderInputSection('Email 1 (Informal)', `<span class="italic text-gray-600 dark:text-gray-300">${highlightWordCount(currentV.informalPrompt) || ''}</span>`, 'p4inf', 40, 60, 'Hi [Name],...')}
-                        ${renderInputSection('Email 2 (Formal)', `<span class="italic text-gray-600 dark:text-gray-300">${highlightWordCount(currentV.formalPrompt) || ''}</span>`, 'p4form', 120, 150, 'Dear Sir/Madam,...')}
+                    <div class="space-y-8">
+                        ${renderInputSection('Email 1 (Informal)', `<span class="italic text-slate-700 dark:text-slate-300">${highlightWordCount(currentV.informalPrompt) || ''}</span>`, 'p4inf', 40, 60, 'Hi [Name],...')}
+                        ${renderInputSection('Email 2 (Formal)', `<span class="italic text-slate-700 dark:text-slate-300">${highlightWordCount(currentV.formalPrompt) || ''}</span>`, 'p4form', 120, 150, 'Dear Sir/Madam,...')}
                     </div>
-                    <div class="mt-8 flex flex-col sm:flex-row justify-between items-center border-t border-gray-200 dark:border-darkborder pt-6 gap-4">
-                         <button onclick="changePracticeTab('part3')" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white px-4 py-2 font-medium w-full sm:w-auto text-center"><i class="fas fa-arrow-left mr-2"></i> Quay lại</button>
-                         <button onclick="submitPractice()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-bold shadow-lg transition-transform transform hover:scale-105 flex items-center w-full sm:w-auto justify-center">
-                            <i class="fas fa-save mr-2"></i> Nộp & Lưu Lịch Sử
+                    <div class="mt-10 flex flex-col sm:flex-row justify-between items-center border-t border-slate-200 dark:border-slate-800 pt-8 gap-4">
+                         <button onclick="changePracticeTab('part3')" class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white px-6 py-3.5 font-bold w-full sm:w-auto text-center flex items-center justify-center">
+                            <i class="fas fa-arrow-left mr-2"></i> Quay lại Part 3
+                        </button>
+                         <button onclick="submitPractice()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-4 rounded-2xl font-extrabold shadow-xl shadow-emerald-500/25 transition-all transform hover:scale-105 flex items-center w-full sm:w-auto justify-center space-x-2">
+                            <i class="fas fa-paper-plane mr-2"></i> <span>Nộp bài & Lưu lịch sử</span>
                         </button>
                     </div>
                 `;
@@ -567,14 +634,14 @@
             const toggleIcon = document.getElementById(`toggle-icon-${key}`);
             
             if (isVisible) {
-                noteContainer.classList.remove('hidden'); noteContainer.classList.add('flex'); // Add flex back for full height
-                answerContainer.classList.remove('lg:col-span-12'); answerContainer.classList.add('lg:col-span-8');
-                toggleText.innerText = 'Ẩn nháp';
+                noteContainer.classList.remove('hidden'); noteContainer.classList.add('flex');
+                answerContainer.classList.remove('lg:col-span-12'); answerContainer.classList.add('lg:col-span-7');
+                toggleText.innerText = 'Ẩn ghi chú';
                 toggleIcon.classList.remove('fa-chevron-down'); toggleIcon.classList.add('fa-chevron-up');
             } else {
                 noteContainer.classList.add('hidden'); noteContainer.classList.remove('flex');
-                answerContainer.classList.add('lg:col-span-12'); answerContainer.classList.remove('lg:col-span-8');
-                toggleText.innerText = 'Mở nháp';
+                answerContainer.classList.add('lg:col-span-12'); answerContainer.classList.remove('lg:col-span-7');
+                toggleText.innerText = 'Viết nháp / Ghi chú';
                 toggleIcon.classList.remove('fa-chevron-up'); toggleIcon.classList.add('fa-chevron-down');
             }
         };
@@ -585,8 +652,12 @@
             const el = document.getElementById('auto-save-status');
             if(el) {
                 el.classList.remove('hidden');
+                el.classList.add('flex');
                 clearTimeout(saveTimeout);
-                saveTimeout = setTimeout(() => el.classList.add('hidden'), 2000);
+                saveTimeout = setTimeout(() => {
+                    el.classList.remove('flex');
+                    el.classList.add('hidden');
+                }, 2500);
             }
         };
 
@@ -597,20 +668,30 @@
             
             const count = countWords(val);
             const counterDiv = document.getElementById(`counter-${key}`);
-            let colorClass = 'text-gray-500 dark:text-gray-400';
-            if (count > max) colorClass = 'text-red-600 dark:text-red-400 font-bold';
-            else if (count >= min && count <= max) colorClass = 'text-green-600 dark:text-green-400 font-medium';
-            else if (count > 0 && count < min) colorClass = 'text-yellow-600 dark:text-yellow-400';
+            let colorClass = 'text-slate-400';
+            let badgeBg = 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300';
 
-            counterDiv.className = `text-sm text-right mt-1 transition-colors ${colorClass}`;
-            counterDiv.innerHTML = `${count} từ <span class="text-gray-400 font-normal ml-1">(${min}-${max})</span>`;
+            if (count > max) {
+                colorClass = 'text-rose-600 dark:text-rose-400 font-extrabold';
+                badgeBg = 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20';
+            } else if (count >= min && count <= max) {
+                colorClass = 'text-emerald-600 dark:text-emerald-400 font-extrabold';
+                badgeBg = 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20';
+            } else if (count > 0 && count < min) {
+                colorClass = 'text-amber-600 dark:text-amber-400 font-bold';
+                badgeBg = 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20';
+            }
 
-            // Realtime Update Checkmark
+            if(counterDiv) {
+                counterDiv.className = `inline-flex items-center px-3 py-1 rounded-full text-xs font-bold transition-all ${badgeBg}`;
+                counterDiv.innerHTML = `<i class="fas fa-file-word mr-1.5 opacity-70"></i> ${count} từ <span class="opacity-60 ml-1 font-normal">(${min}-${max} từ)</span>`;
+            }
+
             const partId = state.practiceState.tab;
             const checkContainer = document.getElementById(`tab-check-container-${partId}`);
             if (checkContainer) {
                 if (window.isPartComplete(partId)) {
-                    checkContainer.innerHTML = `<i class="fas fa-check-circle text-green-500"></i>`;
+                    checkContainer.innerHTML = `<i class="fas fa-check-circle text-emerald-500 text-base"></i>`;
                 } else {
                     checkContainer.innerHTML = '';
                 }
@@ -624,25 +705,29 @@
 
         const createTextArea = (key, value, min, max, placeholder, customClasses = '') => {
             const count = countWords(value);
-            let colorClass = 'text-gray-500 dark:text-gray-400';
-            if (count > max) colorClass = 'text-red-600 dark:text-red-400 font-bold';
-            else if (count >= min && count <= max) colorClass = 'text-green-600 dark:text-green-400 font-medium';
-            else if (count > 0 && count < min) colorClass = 'text-yellow-600 dark:text-yellow-400';
+            let badgeBg = 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300';
+            if (count > max) badgeBg = 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20';
+            else if (count >= min && count <= max) badgeBg = 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20';
+            else if (count > 0 && count < min) badgeBg = 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20';
 
             return `
-                <textarea oninput="handleInput(this, '${key}', ${min}, ${max})" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#252525] rounded-lg p-3 focus:ring-2 focus:ring-blue-500 resize-y shadow-sm transition-colors text-gray-700 dark:text-gray-200 ${customClasses}" placeholder="${placeholder}">${value}</textarea>
-                <div id="counter-${key}" class="text-sm text-right mt-1 ${colorClass}">${count} từ <span class="text-gray-400 font-normal ml-1">(${min}-${max})</span></div>
+                <textarea oninput="handleInput(this, '${key}', ${min}, ${max})" class="w-full border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-[#182234] rounded-2xl p-4 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 resize-y shadow-sm transition-all text-slate-900 dark:text-white text-base leading-relaxed ${customClasses}" placeholder="${placeholder}">${value}</textarea>
+                <div class="flex justify-end mt-2">
+                    <div id="counter-${key}" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold transition-all ${badgeBg}">
+                        <i class="fas fa-file-word mr-1.5 opacity-70"></i> ${count} từ <span class="opacity-60 ml-1 font-normal">(${min}-${max} từ)</span>
+                    </div>
+                </div>
             `;
         };
 
         window.submitPractice = async () => {
             const confirmHtml = `
-                <div class="flex justify-end space-x-2">
-                    <button id="btn-cancel-submit" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold py-2 px-4 rounded">Xem lại</button>
-                    <button id="btn-confirm-submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Nộp & Lưu</button>
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button id="btn-cancel-submit" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-800 dark:text-white font-bold py-2.5 px-5 rounded-xl transition-all">Xem lại</button>
+                    <button id="btn-confirm-submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg shadow-emerald-500/25 transition-all">Nộp & Lưu</button>
                 </div>
             `;
-            showModal("Xác nhận nộp bài", "Bài làm của bạn sẽ được lưu cục bộ vào lịch sử trên trình duyệt này.", confirmHtml);
+            showModal("Xác nhận nộp bài", "Bài làm của bạn sẽ được lưu vào lịch sử làm bài trên trình duyệt này.", confirmHtml);
 
             document.getElementById('btn-cancel-submit').onclick = () => closeModal();
             document.getElementById('btn-confirm-submit').onclick = () => {
@@ -663,13 +748,12 @@
 
                     historyArr.push(newSubmission);
                     localStorage.setItem('aptis_submissions_history', JSON.stringify(historyArr));
-                    
                     localStorage.removeItem(`aptis_draft_${state.currentTopic.id}`);
 
-                    const successActions = `<button onclick="navigate('history'); closeModal();" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded">Xem Lịch Sử</button>`;
-                    showModal("Thành công", "Bài làm của bạn đã được lưu cục bộ thành công!", successActions);
+                    const successActions = `<button onclick="navigate('history'); closeModal();" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg shadow-blue-500/25 transition-all">Xem Lịch Sử</button>`;
+                    showModal("Thành công", "Bài làm đã được lưu thành công vào lịch sử!", successActions);
                 } catch (error) {
-                    showModal("Lỗi nộp bài", "Không thể lưu bài làm vào Local Storage. Hãy kiểm tra dung lượng trình duyệt.");
+                    showModal("Lỗi nộp bài", "Không thể lưu bài làm. Vui lòng thử lại.");
                 }
             };
         };
@@ -678,26 +762,24 @@
             try {
                 const historyStr = localStorage.getItem('aptis_submissions_history') || '[]';
                 let historyArr = JSON.parse(historyStr);
-                
                 state.history = historyArr.sort((a, b) => (b.submittedAt || 0) - (a.submittedAt || 0));
-                
                 if(state.view === 'history') render();
             } catch (error) {
-                showModal("Lỗi", "Không thể tải lịch sử từ bộ nhớ cục bộ.");
+                showModal("Lỗi", "Không thể tải lịch sử làm bài.");
             }
         }
 
         function renderHistory() {
             const div = document.createElement('div');
-            div.className = 'w-full max-w-5xl mx-auto animation-fade-in';
+            div.className = 'w-full max-w-5xl mx-auto animate-fade-in';
             
             let html = `
-                <div class="flex items-center justify-between mb-8 border-b border-gray-200 dark:border-darkborder pb-4">
-                    <div class="flex items-center">
-                        <button onclick="navigate('dashboard')" class="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 mr-4"><i class="fas fa-arrow-left text-xl"></i></button>
+                <div class="flex items-center justify-between mb-8 border-b border-slate-200 dark:border-darkborder pb-6">
+                    <div class="flex items-center space-x-4">
+                        <button onclick="navigate('dashboard')" class="w-11 h-11 rounded-2xl bg-white dark:bg-darkcard border border-slate-200 dark:border-darkborder text-slate-600 dark:text-slate-300 hover:text-blue-600 flex items-center justify-center transition-all shadow-sm"><i class="fas fa-arrow-left"></i></button>
                         <div>
-                            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Lịch sử làm bài</h1>
-                            <p class="text-gray-500 dark:text-gray-400 mt-1">Dữ liệu được lưu cục bộ trên trình duyệt này</p>
+                            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Lịch sử làm bài</h1>
+                            <p class="text-slate-500 dark:text-slate-400 text-sm mt-0.5">Các bài viết đã lưu trên trình duyệt của bạn</p>
                         </div>
                     </div>
                 </div>
@@ -705,18 +787,17 @@
 
             if (state.history.length === 0) {
                 html += `
-                    <div class="bg-white dark:bg-darkcard rounded-xl shadow-sm border border-gray-200 dark:border-darkborder p-10 text-center">
-                        <div class="text-gray-400 text-5xl mb-4"><i class="fas fa-box-open"></i></div>
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Chưa có dữ liệu</h3>
-                        <p class="text-gray-500 dark:text-gray-400">Bạn chưa nộp bài luyện tập nào. Hãy bắt đầu ngay nhé!</p>
-                        <button onclick="navigate('dashboard')" class="mt-4 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-4 py-2 rounded-md transition-colors">Đến trang Luyện tập</button>
+                    <div class="bg-white dark:bg-darkcard rounded-3xl shadow-xl border border-slate-200/80 dark:border-darkborder p-12 text-center">
+                        <div class="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 flex items-center justify-center text-2xl mx-auto mb-4 shadow-inner"><i class="fas fa-box-open"></i></div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Chưa có lịch sử làm bài</h3>
+                        <p class="text-slate-500 dark:text-slate-400 mb-6 max-w-sm mx-auto">Bạn chưa nộp bài thi nào. Hãy chọn một chủ đề và bắt đầu luyện tập ngay nhé!</p>
+                        <button onclick="navigate('dashboard')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-blue-500/25 transition-all">Đến trang Luyện tập</button>
                     </div>
                 `;
             } else {
                 html += `<div class="space-y-6">`;
                 state.history.forEach((item, index) => {
-                    const date = item.submittedAt ? new Date(item.submittedAt).toLocaleString('vi-VN') : 'Unknown Time';
-                    
+                    const date = item.submittedAt ? new Date(item.submittedAt).toLocaleString('vi-VN') : 'Không rõ';
                     const v2 = item.selectedVersions?.part2 || 0;
                     const v3 = item.selectedVersions?.part3 || 0;
                     const v4 = item.selectedVersions?.part4 || 0;
@@ -732,49 +813,57 @@
                     const w_p4 = countWords(p4infAns) + countWords(p4formAns);
                     
                     html += `
-                        <div class="bg-white dark:bg-darkcard rounded-xl shadow-sm border border-gray-200 dark:border-darkborder overflow-hidden relative">
-                            <div class="absolute top-0 right-0 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 hover:text-red-500 cursor-pointer px-3 py-2 rounded-bl-lg transition-colors z-10" onclick="deleteLocalHistory(${index})" title="Xóa lịch sử này">
-                                <i class="fas fa-trash-alt"></i>
+                        <div class="bg-white dark:bg-darkcard rounded-3xl shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-200/80 dark:border-darkborder overflow-hidden relative transition-all">
+                            <div class="absolute top-4 right-14 text-slate-400 hover:text-rose-500 cursor-pointer w-9 h-9 rounded-xl hover:bg-rose-500/10 flex items-center justify-center transition-colors z-10" onclick="deleteLocalHistory(${index})" title="Xóa lịch sử">
+                                <i class="fas fa-trash-alt text-sm"></i>
                             </div>
-                            <div class="bg-gray-50 dark:bg-[#1a1a1a] px-6 py-4 cursor-pointer flex justify-between items-center border-b border-gray-200 dark:border-darkborder pt-8 sm:pt-4" onclick="toggleHistoryDetail('hist-${item.id}')">
-                                <div><h3 class="font-bold text-lg text-gray-900 dark:text-white">${item.topicTitle}</h3><p class="text-sm text-gray-500 dark:text-gray-400"><i class="far fa-clock mr-1"></i> ${date}</p></div>
-                                <div class="flex items-center">
-                                    <div class="hidden md:flex space-x-3 mr-4 text-xs">
-                                        <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded">P2: ${w_p2} words</span>
-                                        <span class="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-1 rounded">P3: ${w_p3} words</span>
-                                        <span class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded">P4: ${w_p4} words</span>
-                                    </div>
-                                    <i id="icon-hist-${item.id}" class="fas fa-chevron-down text-gray-400 transition-transform"></i>
-                                </div>
-                            </div>
-                            <div id="hist-${item.id}" class="hidden p-6 space-y-6">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <h4 class="font-semibold text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 pb-2 mb-3 flex items-center">Part 2 <span class="text-xs font-normal text-gray-500 ml-2">(Phiên bản ${v2 + 1})</span></h4>
-                                        <div class="bg-gray-50 dark:bg-[#222] p-3 rounded-md text-sm text-gray-700 dark:text-gray-300">
-                                            <span class="font-bold text-gray-500 dark:text-gray-400 text-xs uppercase">Answer:</span><br>
-                                            ${p2Ans || '<i class="text-gray-400">Trống</i>'}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 pb-2 mb-3 flex items-center">Part 3 <span class="text-xs font-normal text-gray-500 ml-2">(Phiên bản ${v3 + 1})</span></h4>
-                                        <div class="space-y-2">
-                                            <div class="bg-gray-50 dark:bg-[#222] p-2 rounded-md text-sm text-gray-700 dark:text-gray-300"><span class="text-xs text-gray-500">Q1:</span> ${p3q1Ans}</div>
-                                            <div class="bg-gray-50 dark:bg-[#222] p-2 rounded-md text-sm text-gray-700 dark:text-gray-300"><span class="text-xs text-gray-500">Q2:</span> ${p3q2Ans}</div>
-                                            <div class="bg-gray-50 dark:bg-[#222] p-2 rounded-md text-sm text-gray-700 dark:text-gray-300"><span class="text-xs text-gray-500">Q3:</span> ${p3q3Ans}</div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="bg-slate-50/80 dark:bg-[#111827] px-6 py-5 cursor-pointer flex justify-between items-center border-b border-slate-200 dark:border-darkborder" onclick="toggleHistoryDetail('hist-${item.id}')">
                                 <div>
-                                    <h4 class="font-semibold text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 pb-2 mb-3 flex items-center">Part 4 <span class="text-xs font-normal text-gray-500 ml-2">(Phiên bản ${v4 + 1})</span></h4>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div class="bg-gray-50 dark:bg-[#222] p-3 rounded-md text-sm text-gray-700 dark:text-gray-300">
-                                            <span class="font-bold text-gray-500 dark:text-gray-400 text-xs uppercase mb-1 block">Informal Email:</span>
-                                            <div class="whitespace-pre-wrap">${p4infAns || '<i class="text-gray-400">Trống</i>'}</div>
+                                    <h3 class="font-extrabold text-lg text-slate-900 dark:text-white">${item.topicTitle}</h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1"><i class="far fa-clock mr-1"></i> ${date}</p>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="hidden md:flex space-x-2 text-xs font-bold">
+                                        <span class="bg-blue-500/10 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full border border-blue-500/20">P2: ${w_p2} từ</span>
+                                        <span class="bg-purple-500/10 text-purple-600 dark:text-purple-400 px-3 py-1 rounded-full border border-purple-500/20">P3: ${w_p3} từ</span>
+                                        <span class="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/20">P4: ${w_p4} từ</span>
+                                    </div>
+                                    <i id="icon-hist-${item.id}" class="fas fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+                                </div>
+                            </div>
+                            <div id="hist-${item.id}" class="hidden p-6 sm:p-8 space-y-6 bg-white dark:bg-darkcard">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="bg-slate-50 dark:bg-[#111827] p-5 rounded-2xl border border-slate-200 dark:border-slate-800">
+                                        <h4 class="font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-3 mb-3 flex items-center justify-between text-sm">
+                                            <span>Part 2</span> <span class="text-xs font-normal text-blue-600 dark:text-blue-400">Phiên bản ${v2 + 1}</span>
+                                        </h4>
+                                        <div class="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed">
+                                            ${p2Ans || '<span class="text-slate-400 italic">Trống</span>'}
                                         </div>
-                                        <div class="bg-gray-50 dark:bg-[#222] p-3 rounded-md text-sm text-gray-700 dark:text-gray-300">
-                                            <span class="font-bold text-gray-500 dark:text-gray-400 text-xs uppercase mb-1 block">Formal Email:</span>
-                                            <div class="whitespace-pre-wrap">${p4formAns || '<i class="text-gray-400">Trống</i>'}</div>
+                                    </div>
+                                    <div class="bg-slate-50 dark:bg-[#111827] p-5 rounded-2xl border border-slate-200 dark:border-slate-800">
+                                        <h4 class="font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-3 mb-3 flex items-center justify-between text-sm">
+                                            <span>Part 3</span> <span class="text-xs font-normal text-purple-600 dark:text-purple-400">Phiên bản ${v3 + 1}</span>
+                                        </h4>
+                                        <div class="space-y-3 text-sm">
+                                            <div class="p-3 bg-white dark:bg-darkcard rounded-xl border border-slate-200 dark:border-slate-800"><span class="text-xs font-bold text-purple-600 dark:text-purple-400 block mb-1">Q1 (${countWords(p3q1Ans)} từ):</span> ${p3q1Ans || '<span class="text-slate-400 italic">Trống</span>'}</div>
+                                            <div class="p-3 bg-white dark:bg-darkcard rounded-xl border border-slate-200 dark:border-slate-800"><span class="text-xs font-bold text-purple-600 dark:text-purple-400 block mb-1">Q2 (${countWords(p3q2Ans)} từ):</span> ${p3q2Ans || '<span class="text-slate-400 italic">Trống</span>'}</div>
+                                            <div class="p-3 bg-white dark:bg-darkcard rounded-xl border border-slate-200 dark:border-slate-800"><span class="text-xs font-bold text-purple-600 dark:text-purple-400 block mb-1">Q3 (${countWords(p3q3Ans)} từ):</span> ${p3q3Ans || '<span class="text-slate-400 italic">Trống</span>'}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-slate-50 dark:bg-[#111827] p-5 rounded-2xl border border-slate-200 dark:border-slate-800">
+                                    <h4 class="font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-3 mb-4 flex items-center justify-between text-sm">
+                                        <span>Part 4 (Emails)</span> <span class="text-xs font-normal text-emerald-600 dark:text-emerald-400">Phiên bản ${v4 + 1}</span>
+                                    </h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div class="p-4 bg-white dark:bg-darkcard rounded-2xl border border-slate-200 dark:border-slate-800">
+                                            <span class="font-bold text-xs text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2 block">Informal Email (${countWords(p4infAns)} từ):</span>
+                                            <div class="whitespace-pre-wrap text-sm text-slate-700 dark:text-slate-300 leading-relaxed">${p4infAns || '<span class="text-slate-400 italic">Trống</span>'}</div>
+                                        </div>
+                                        <div class="p-4 bg-white dark:bg-darkcard rounded-2xl border border-slate-200 dark:border-slate-800">
+                                            <span class="font-bold text-xs text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-2 block">Formal Email (${countWords(p4formAns)} từ):</span>
+                                            <div class="whitespace-pre-wrap text-sm text-slate-700 dark:text-slate-300 leading-relaxed">${p4formAns || '<span class="text-slate-400 italic">Trống</span>'}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -790,12 +879,12 @@
 
         window.deleteLocalHistory = (index) => {
             const confirmHtml = `
-                <div class="flex justify-end space-x-2">
-                    <button id="btn-cancel-del" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white font-bold py-2 px-4 rounded">Hủy</button>
-                    <button id="btn-confirm-del" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Xóa bỏ</button>
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button id="btn-cancel-del" class="bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-white font-bold py-2.5 px-5 rounded-xl">Hủy</button>
+                    <button id="btn-confirm-del" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg shadow-rose-500/25">Xóa bỏ</button>
                 </div>
             `;
-            showModal("Xóa bài làm", "Bạn có chắc muốn xóa bài làm này khỏi lịch sử cục bộ?", confirmHtml);
+            showModal("Xóa lịch sử", "Bạn có chắc muốn xóa bài làm này khỏi lịch sử?", confirmHtml);
             document.getElementById('btn-cancel-del').onclick = () => closeModal();
             document.getElementById('btn-confirm-del').onclick = () => {
                 state.history.splice(index, 1);
@@ -809,7 +898,9 @@
             const el = document.getElementById(id);
             const icon = document.getElementById(`icon-${id}`);
             el.classList.toggle('hidden');
-            icon.style.transform = el.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+            if(icon) {
+                icon.style.transform = el.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+            }
         };
 
         window.updateAdminData = (part, index, field, value) => {
@@ -831,45 +922,45 @@
 
         function renderAdminPart(partKey, title, badgeClass, badgeText) {
             const versions = state.adminState.formData[partKey] || [];
-            const inputClass = "w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-[#252525] text-gray-900 dark:text-gray-100 transition-colors";
-            const labelClass = "block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2";
+            const inputClass = "w-full px-4 py-3 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 bg-white dark:bg-[#182234] text-slate-900 dark:text-slate-100 transition-all text-sm";
+            const labelClass = "block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2 uppercase tracking-wider";
 
             let html = `
-                <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-5">
-                    <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4 border-b border-gray-200 dark:border-gray-700 pb-2 gap-2">
-                        <div class="flex items-center">
-                            <span class="${badgeClass} text-xs font-bold px-2 py-1 rounded mr-2">${badgeText}</span>
-                            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">${title}</h3>
+                <div class="border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 bg-slate-50/50 dark:bg-[#111827]/50 shadow-sm">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-6 border-b border-slate-200 dark:border-slate-800 pb-4 gap-3">
+                        <div class="flex items-center space-x-3">
+                            <span class="${badgeClass} text-xs font-extrabold px-3 py-1 rounded-full border">${badgeText}</span>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">${title}</h3>
                         </div>
-                        <button type="button" onclick="addAdminVersion('${partKey}')" class="text-blue-600 dark:text-blue-400 text-sm hover:underline font-medium"><i class="fas fa-plus"></i> Thêm phiên bản</button>
+                        <button type="button" onclick="addAdminVersion('${partKey}')" class="text-blue-600 dark:text-blue-400 text-sm hover:underline font-bold flex items-center"><i class="fas fa-plus mr-1.5"></i> Thêm phiên bản</button>
                     </div>
                     <div class="space-y-6">
             `;
 
             versions.forEach((v, i) => {
-                html += `<div class="bg-gray-50 dark:bg-[#1f1f1f] p-4 rounded-md border border-gray-200 dark:border-gray-800 relative shadow-sm">`;
+                html += `<div class="bg-white dark:bg-darkcard p-6 rounded-2xl border border-slate-200 dark:border-slate-800 relative shadow-sm">`;
                 if (versions.length > 1) {
-                    html += `<button type="button" onclick="removeAdminVersion('${partKey}', ${i})" class="absolute top-4 right-4 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"><i class="fas fa-trash-alt"></i> Xóa</button>`;
+                    html += `<button type="button" onclick="removeAdminVersion('${partKey}', ${i})" class="absolute top-5 right-5 text-rose-500 hover:text-rose-700 text-xs font-bold flex items-center bg-rose-500/10 px-3 py-1.5 rounded-xl border border-rose-500/20 transition-all"><i class="fas fa-trash-alt mr-1"></i> Xóa</button>`;
                 }
-                html += `<h4 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 border-l-4 border-blue-500 pl-2">Phiên bản ${i + 1}</h4>`;
+                html += `<h4 class="text-sm font-extrabold text-slate-800 dark:text-slate-200 mb-4 flex items-center"><span class="w-2 h-2 rounded-full bg-blue-600 mr-2"></span> Phiên bản ${i + 1}</h4>`;
                 
                 if (partKey === 'part2') {
-                    html += `<div><label class="${labelClass}">Nội dung câu hỏi</label><textarea rows="2" required class="${inputClass}" oninput="updateAdminData('${partKey}', ${i}, 'question', this.value)">${escapeHtml(v.question)}</textarea></div>`;
+                    html += `<div><label class="${labelClass}">Nội dung câu hỏi Form</label><textarea rows="3" required class="${inputClass}" oninput="updateAdminData('${partKey}', ${i}, 'question', this.value)">${escapeHtml(v.question)}</textarea></div>`;
                 } else if (partKey === 'part3') {
                     html += `
-                        <div class="mb-4"><label class="${labelClass}">Câu mở đầu tình huống</label><input type="text" value="${escapeHtml(v.intro)}" class="${inputClass} text-sm" oninput="updateAdminData('${partKey}', ${i}, 'intro', this.value)"></div>
+                        <div class="mb-4"><label class="${labelClass}">Câu giới thiệu tình huống (Intro)</label><input type="text" value="${escapeHtml(v.intro)}" class="${inputClass}" oninput="updateAdminData('${partKey}', ${i}, 'intro', this.value)"></div>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div><label class="block text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Câu hỏi 1</label><textarea rows="3" required class="${inputClass} text-sm" oninput="updateAdminData('${partKey}', ${i}, 'q1', this.value)">${escapeHtml(v.q1)}</textarea></div>
-                            <div><label class="block text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Câu hỏi 2</label><textarea rows="3" required class="${inputClass} text-sm" oninput="updateAdminData('${partKey}', ${i}, 'q2', this.value)">${escapeHtml(v.q2)}</textarea></div>
-                            <div><label class="block text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Câu hỏi 3</label><textarea rows="3" required class="${inputClass} text-sm" oninput="updateAdminData('${partKey}', ${i}, 'q3', this.value)">${escapeHtml(v.q3)}</textarea></div>
+                            <div><label class="${labelClass}">Câu hỏi 1</label><textarea rows="3" required class="${inputClass}" oninput="updateAdminData('${partKey}', ${i}, 'q1', this.value)">${escapeHtml(v.q1)}</textarea></div>
+                            <div><label class="${labelClass}">Câu hỏi 2</label><textarea rows="3" required class="${inputClass}" oninput="updateAdminData('${partKey}', ${i}, 'q2', this.value)">${escapeHtml(v.q2)}</textarea></div>
+                            <div><label class="${labelClass}">Câu hỏi 3</label><textarea rows="3" required class="${inputClass}" oninput="updateAdminData('${partKey}', ${i}, 'q3', this.value)">${escapeHtml(v.q3)}</textarea></div>
                         </div>
                     `;
                 } else if (partKey === 'part4') {
                     html += `
-                        <div class="mb-4"><label class="${labelClass}">Tình huống chung</label><textarea rows="2" required class="${inputClass} text-sm" oninput="updateAdminData('${partKey}', ${i}, 'intro', this.value)">${escapeHtml(v.intro)}</textarea></div>
+                        <div class="mb-4"><label class="${labelClass}">Tình huống chung Email</label><textarea rows="3" required class="${inputClass}" oninput="updateAdminData('${partKey}', ${i}, 'intro', this.value)">${escapeHtml(v.intro)}</textarea></div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div><label class="${labelClass} text-xs">Yêu cầu Email 1 (Informal)</label><textarea rows="4" required class="${inputClass} text-sm" oninput="updateAdminData('${partKey}', ${i}, 'informalPrompt', this.value)">${escapeHtml(v.informalPrompt)}</textarea></div>
-                            <div><label class="${labelClass} text-xs">Yêu cầu Email 2 (Formal)</label><textarea rows="4" required class="${inputClass} text-sm" oninput="updateAdminData('${partKey}', ${i}, 'formalPrompt', this.value)">${escapeHtml(v.formalPrompt)}</textarea></div>
+                            <div><label class="${labelClass}">Yêu cầu Email 1 (Informal)</label><textarea rows="4" required class="${inputClass}" oninput="updateAdminData('${partKey}', ${i}, 'informalPrompt', this.value)">${escapeHtml(v.informalPrompt)}</textarea></div>
+                            <div><label class="${labelClass}">Yêu cầu Email 2 (Formal)</label><textarea rows="4" required class="${inputClass}" oninput="updateAdminData('${partKey}', ${i}, 'formalPrompt', this.value)">${escapeHtml(v.formalPrompt)}</textarea></div>
                         </div>
                     `;
                 }
@@ -882,28 +973,28 @@
 
         function renderAdminForm() {
             const div = document.createElement('div');
-            div.className = 'w-full max-w-4xl mx-auto bg-white dark:bg-darkcard rounded-xl shadow-sm border border-gray-200 dark:border-darkborder p-4 sm:p-6 md:p-8 animation-fade-in';
+            div.className = 'w-full max-w-4xl mx-auto bg-white dark:bg-darkcard rounded-3xl shadow-2xl border border-slate-200/80 dark:border-darkborder p-6 sm:p-10 animate-fade-in';
             const isEdit = !!state.adminState.editingTopicId;
             const data = state.adminState.formData;
-            const inputClass = "w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-[#252525] text-gray-900 dark:text-gray-100 transition-colors";
-            const labelClass = "block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2";
+            const inputClass = "w-full px-4 py-3.5 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 bg-slate-50 dark:bg-[#182234] text-slate-900 dark:text-white text-base transition-all";
+            const labelClass = "block text-xs font-extrabold text-slate-700 dark:text-slate-300 mb-2 uppercase tracking-wider";
 
             const html = `
-                <div class="flex items-center mb-6">
-                    <button onclick="navigate('admin')" class="text-gray-500 hover:text-gray-800 dark:hover:text-white mr-4"><i class="fas fa-arrow-left text-xl"></i></button>
-                    <h2 class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">${isEdit ? 'Chỉnh sửa đề' : 'Tạo đề thi mới'}</h2>
+                <div class="flex items-center space-x-4 mb-8 border-b border-slate-200 dark:border-slate-800 pb-6">
+                    <button onclick="navigate('admin')" class="w-11 h-11 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-blue-600 flex items-center justify-center transition-all shadow-sm"><i class="fas fa-arrow-left"></i></button>
+                    <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">${isEdit ? 'Chỉnh sửa đề thi' : 'Tạo đề thi mới'}</h2>
                 </div>
-                <form id="adminForm" class="space-y-6 sm:space-y-8" onsubmit="handleAdminSubmit(event)">
-                    <div class="bg-gray-50 dark:bg-[#1a1a1a] p-4 sm:p-5 rounded-lg border border-gray-200 dark:border-gray-700">
+                <form id="adminForm" class="space-y-8" onsubmit="handleAdminSubmit(event)">
+                    <div class="bg-slate-50/50 dark:bg-[#111827]/50 p-6 rounded-3xl border border-slate-200 dark:border-slate-800">
                         <label class="${labelClass}">Tên chủ đề chung (VD: Travel Club)</label>
-                        <input type="text" id="frm_title" value="${escapeHtml(data.title)}" required class="${inputClass}">
+                        <input type="text" id="frm_title" value="${escapeHtml(data.title)}" required class="${inputClass}" placeholder="Nhập tên chủ đề...">
                     </div>
-                    ${renderAdminPart('part2', 'Câu hỏi Form (20-30 words)', 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300', 'Part 2')}
-                    ${renderAdminPart('part3', 'Phòng Chat (3 câu, tự động highlight Word Count)', 'bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300', 'Part 3')}
-                    ${renderAdminPart('part4', 'Viết Email (tự động highlight Word Count)', 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300', 'Part 4')}
-                    <div class="flex flex-col-reverse sm:flex-row justify-end pt-4 gap-3">
-                        <button type="button" onclick="navigate('admin')" class="w-full sm:w-auto px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">Hủy</button>
-                        <button type="submit" class="w-full sm:w-auto px-8 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shadow-sm font-medium transition-colors">
+                    ${renderAdminPart('part2', 'Câu hỏi Form (20-30 words)', 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20', 'Part 2')}
+                    ${renderAdminPart('part3', 'Phòng Chat (3 câu hỏi)', 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20', 'Part 3')}
+                    ${renderAdminPart('part4', 'Viết Email (Informal & Formal)', 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20', 'Part 4')}
+                    <div class="flex flex-col-reverse sm:flex-row justify-end pt-4 gap-4">
+                        <button type="button" onclick="navigate('admin')" class="w-full sm:w-auto px-7 py-3.5 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 font-bold transition-all">Hủy</button>
+                        <button type="submit" class="w-full sm:w-auto px-9 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl shadow-xl shadow-blue-500/25 font-extrabold transition-all">
                             <i class="fas fa-save mr-2"></i> ${isEdit ? 'Lưu Thay Đổi' : 'Tạo Đề Mới'}
                         </button>
                     </div>
@@ -918,7 +1009,7 @@
             if (!auth.currentUser) return;
             const submitBtn = e.target.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Đang lưu...';
             submitBtn.disabled = true;
 
             const titleInput = document.getElementById('frm_title').value.trim();
@@ -935,11 +1026,11 @@
                 if (state.adminState.editingTopicId) {
                     newData.updatedAt = serverTimestamp();
                     await updateDoc(doc(topicsCollectionRef, state.adminState.editingTopicId), newData);
-                    showModal("Thành công", "Đã cập nhật đề thi.");
+                    showModal("Thành công", "Đã cập nhật đề thi thành công.");
                 } else {
                     newData.createdAt = serverTimestamp();
                     await addDoc(topicsCollectionRef, newData);
-                    showModal("Thành công", "Đã tạo đề thi mới.");
+                    showModal("Thành công", "Đã tạo đề thi mới thành công.");
                 }
                 navigate('admin');
             } catch (error) {
@@ -951,36 +1042,39 @@
 
         function renderAdminList() {
             const div = document.createElement('div');
-            div.className = 'w-full max-w-5xl mx-auto animation-fade-in px-2 sm:px-0';
+            div.className = 'w-full max-w-5xl mx-auto animate-fade-in px-4 sm:px-0';
             
             let html = `
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 border-b border-gray-200 dark:border-darkborder pb-4 gap-4">
-                    <div><h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Quản lý Đề thi</h1></div>
-                    <button onclick="navigate('admin-form')" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-sm flex items-center transition-colors">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 border-b border-slate-200 dark:border-darkborder pb-6 gap-4">
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Quản lý Đề thi</h1>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Thêm, chỉnh sửa hoặc xóa các bộ đề luyện thi Aptis</p>
+                    </div>
+                    <button onclick="navigate('admin-form')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3.5 rounded-2xl font-bold shadow-xl shadow-blue-500/25 flex items-center transition-all">
                         <i class="fas fa-plus mr-2"></i> Tạo đề mới
                     </button>
                 </div>
-                <div class="bg-white dark:bg-darkcard rounded-xl shadow-sm border border-gray-200 dark:border-darkborder overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead class="bg-gray-50 dark:bg-gray-800/50">
+                <div class="bg-white dark:bg-darkcard rounded-3xl shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-200/80 dark:border-darkborder overflow-hidden">
+                    <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-800">
+                        <thead class="bg-slate-50 dark:bg-slate-900/60">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tên chủ đề</th>
-                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Thao tác</th>
+                                <th class="px-6 py-4 text-left text-xs font-extrabold text-slate-500 uppercase tracking-wider">Tên chủ đề</th>
+                                <th class="px-6 py-4 text-right text-xs font-extrabold text-slate-500 uppercase tracking-wider">Thao tác</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white dark:bg-darkcard divide-y divide-gray-200 dark:divide-gray-700">
+                        <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
             `;
 
             if (state.topics.length === 0) {
-                html += `<tr><td colspan="2" class="px-6 py-8 text-center text-gray-500">Chưa có đề thi nào.</td></tr>`;
+                html += `<tr><td colspan="2" class="px-6 py-12 text-center text-slate-400">Chưa có đề thi nào trong hệ thống.</td></tr>`;
             } else {
                 state.topics.forEach(t => {
                     html += `
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap"><div class="text-sm font-medium text-gray-900 dark:text-white truncate max-w-[250px] sm:max-w-md">${t.title}</div></td>
-                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button onclick="navigate('admin-form', '${t.id}')" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 mr-4"><i class="fas fa-edit sm:mr-1"></i><span class="hidden sm:inline"> Sửa</span></button>
-                                <button onclick="deleteTopic('${t.id}')" class="text-red-600 dark:text-red-400 hover:text-red-900"><i class="fas fa-trash-alt sm:mr-1"></i><span class="hidden sm:inline"> Xóa</span></button>
+                        <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap"><div class="text-base font-bold text-slate-900 dark:text-white truncate max-w-md">${t.title}</div></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold space-x-3">
+                                <button onclick="navigate('admin-form', '${t.id}')" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 px-3 py-1.5 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 transition-all inline-flex items-center"><i class="fas fa-edit mr-1"></i> Sửa</button>
+                                <button onclick="deleteTopic('${t.id}')" class="text-rose-600 dark:text-rose-400 hover:text-rose-900 px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 transition-all inline-flex items-center"><i class="fas fa-trash-alt mr-1"></i> Xóa</button>
                             </td>
                         </tr>
                     `;
@@ -993,9 +1087,9 @@
 
         window.deleteTopic = async (id) => {
             const confirmHtml = `
-                <div class="flex justify-end space-x-2">
-                    <button id="btn-cancel-del" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white font-bold py-2 px-4 rounded">Hủy</button>
-                    <button id="btn-confirm-del" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Xóa</button>
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button id="btn-cancel-del" class="bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-white font-bold py-2.5 px-5 rounded-xl">Hủy</button>
+                    <button id="btn-confirm-del" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg shadow-rose-500/25">Xóa</button>
                 </div>
             `;
             showModal("Xác nhận xóa", "Bạn có chắc chắn muốn xóa đề thi này không?", confirmHtml);
