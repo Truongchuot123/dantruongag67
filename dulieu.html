@@ -125,7 +125,7 @@
             overflow: hidden;
         }
         .accordion-content.open {
-            max-height: 5000px; /* Arbitrary large number for CSS transition to work */
+            max-height: 5000px;
             opacity: 1;
             margin-top: 0.75rem;
         }
@@ -216,7 +216,7 @@
                 </div>
             </div>
 
-            <!-- Doc Filters Bar (Cascading) -->
+            <!-- Doc Filters Bar -->
             <div class="glass-card p-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-center relative z-20">
                 <div class="xl:col-span-4 relative">
                     <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-indigo-400"></i>
@@ -255,7 +255,6 @@
                             </tr>
                         </thead>
                         <tbody id="docTableBody" class="divide-y divide-slate-800/50">
-                            <!-- JS loaded -->
                         </tbody>
                     </table>
                 </div>
@@ -291,9 +290,9 @@
                 </div>
             </div>
 
-            <!-- SECTION: DANH SÁCH CÂU HỎI (ACCORDION) -->
+            <!-- SECTION: DANH SÁCH CÂU HỎI -->
             <div id="quiz-section-list" class="space-y-6 fade-in-up">
-                <!-- Filters (Cascading) -->
+                <!-- Filters -->
                 <div class="glass-card p-5 grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 items-center">
                     <div class="xl:col-span-2 relative">
                         <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-indigo-400"></i>
@@ -308,12 +307,11 @@
                     </select>
                 </div>
 
-                <!-- Container cho Accordion Groups -->
+                <!-- Accordion Groups Container -->
                 <div id="quizContainer" class="space-y-4 min-h-[300px]">
-                    <!-- Accordion groups loaded here -->
                 </div>
 
-                <!-- Pagination for Groups (Lessons) -->
+                <!-- Pagination Footer -->
                 <div id="quizPaginationFooter" class="flex items-center justify-between bg-slate-900/60 p-4 rounded-2xl border border-slate-800 shadow-sm hidden">
                     <span class="text-sm text-slate-400 font-medium">Đang xem nhóm bài <span id="quiz-page-info" class="text-indigo-400 font-bold text-base">0-0</span> / <span id="quiz-total-info" class="text-indigo-400 font-bold text-base">0</span> nhóm</span>
                     <div class="flex gap-2">
@@ -327,7 +325,7 @@
                 </div>
             </div>
 
-            <!-- SECTION: THÊM/SỬA CÂU HỎI (CONTINUOUS ENTRY) -->
+            <!-- SECTION: THÊM/SỬA CÂU HỎI -->
             <div id="quiz-section-form" class="hidden fade-in-up">
                 <form id="questionForm" class="glass-card p-6 md:p-8 space-y-8 border-t-4 border-t-indigo-500">
                     <input type="hidden" id="editQuizId">
@@ -350,7 +348,6 @@
                             </select>
                         </div>
                         
-                        <!-- CASCADING SELECTS FOR FORM -->
                         <div>
                             <label class="block text-[11px] font-extrabold text-indigo-300 uppercase tracking-wider mb-2.5">Môn học <span class="text-rose-400">*</span></label>
                             <select id="quizSubject" onchange="onQuizFormSubjectChange()" required
@@ -385,7 +382,7 @@
                         <!-- Phương án trắc nghiệm -->
                         <div id="quizMcqOptions" class="space-y-4">
                             <label class="block text-sm font-bold text-slate-200 mb-2">Các phương án & Đáp án đúng <span class="text-rose-400">*</span></label>
-                            <p class="text-[11px] text-slate-400 mb-4 italic">Chọn nút tròn (Radio) tương ứng với đáp án chính xác nhất.</p>
+                            <p class="text-[11px] text-slate-400 mb-4 italic">Hệ thống xử lý xáo trộn chuẩn xác: Tự động đưa các phương án kết hợp ("A và C đều đúng", "Tất cả đều đúng"...) về vị trí C/D và cập nhật tên chữ cái tham chiếu tương ứng.</p>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="flex items-center bg-slate-950/80 rounded-xl p-2 border border-slate-700/80 focus-within:border-indigo-500 focus-within:shadow-md transition-all">
@@ -509,7 +506,6 @@
         </div>
     </div>
 
-    <!-- ================== MODALS & DIALOGS ================== -->
     <!-- MODAL THÊM / CẬP NHẬT TÀI LIỆU -->
     <div id="docModal" class="fixed inset-0 bg-slate-950/80 hidden items-center justify-center z-50 p-4 backdrop-blur-md transition-opacity">
         <div class="bg-slate-900/95 w-full max-w-xl rounded-2xl border border-slate-700 shadow-2xl modal-animate overflow-hidden">
@@ -530,7 +526,6 @@
                         <label class="text-[11px] text-indigo-300 font-extrabold mb-2 block uppercase tracking-wider">
                             Môn học <span class="text-rose-400">*</span>
                         </label>
-                        <!-- Note: Using input list here to allow creating new subjects/topics -->
                         <input type="text" id="docSubject" list="modalSubjectList" placeholder="Nhập hoặc chọn môn..." required
                             class="input-field w-full px-4 py-3 rounded-xl text-sm font-medium">
                         <datalist id="modalSubjectList"></datalist>
@@ -631,24 +626,150 @@
             return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
         
-        // Base64 helper for safe DOM IDs
         const safeId = (str) => btoa(encodeURIComponent(str)).replace(/[^a-zA-Z0-9]/g, '');
 
-        // Global Data
+        // Global Data & State
         let allLinks = []; 
         let allQuestions = []; 
+        let shuffledMapState = {}; // Trạng thái lưu phương án đã xáo trộn theo id câu hỏi
         
-        // State
         let currentMainTab = 'docs'; 
         let currentDocSubTab = 'all'; 
         let currentQuizSubTab = 'list'; 
         
-        // Pagination for Question Groups
         let quizGroupPageSize = 5;
         let quizGroupCurrentPage = 1;
 
         let deleteTargetType = ''; 
         let deleteTargetId = '';
+
+        // =========================================================
+        // THUẬT TOÁN XÁO TRỘN PHƯƠNG ÁN THÔNG MINH (CẬP NHẬT CHUẨN QUY TẮC C/D)
+        // =========================================================
+        window.shuffleQuestionOptions = function(q) {
+            if (q.type !== 'multiple_choice') return q;
+
+            // Dữ liệu gốc 4 phương án
+            const originalOpts = [
+                { key: 'A', text: q.opt_A || '' },
+                { key: 'B', text: q.opt_B || '' },
+                { key: 'C', text: q.opt_C || '' },
+                { key: 'D', text: q.opt_D || '' }
+            ];
+
+            const correctOriginalKey = q.correctAnswer || 'A';
+
+            // 1. Nhận diện các phương án dạng kết hợp
+            const isCombinationOption = (text) => {
+                if (!text) return false;
+                const t = text.toLowerCase().trim();
+                // Từ khóa tổng hợp kết hợp nhiều phương án / tham chiếu
+                const regexCombo = /(tất cả|cả|đều|không có|đáp án khác|chỉ có|phương án|nhận định|câu)\s*(đều|đúng|sai|trên|dưới|[a-d])/i;
+                const regexLetters = /\b([a-d])\s*(và|,|&|\+)\s*([a-d])\b/i;
+                return regexCombo.test(t) || regexLetters.test(t) || t.includes('tất cả các đáp án') || t.includes('cả 3');
+            };
+
+            let normalOpts = [];
+            let comboOpts = [];
+
+            originalOpts.forEach(opt => {
+                if (isCombinationOption(opt.text)) {
+                    comboOpts.push(opt);
+                } else {
+                    normalOpts.push(opt);
+                }
+            });
+
+            // 2. Xáo trộn ngẫu nhiên nhóm phương án thông thường
+            for (let i = normalOpts.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [normalOpts[i], normalOpts[j]] = [normalOpts[j], normalOpts[i]];
+            }
+
+            // 3. Quy tắc ưu tiên C và D cho các phương án kết hợp
+            // Khởi tạo mảng vị trí trống [0, 1, 2, 3] tương ứng A, B, C, D
+            const finalSlots = [null, null, null, null];
+
+            if (comboOpts.length === 1) {
+                // Đặt duy nhất 1 phương án kết hợp vào D (chỉ số 3), nếu bận mới đặt C (chỉ số 2)
+                finalSlots[3] = comboOpts[0];
+            } else if (comboOpts.length >= 2) {
+                // Đặt lần lượt vào D và C
+                finalSlots[3] = comboOpts[0];
+                finalSlots[2] = comboOpts[1];
+                // Nếu có nhiều hơn 2 phương án kết hợp, đưa vào các vị trí còn lại
+                for (let i = 2; i < comboOpts.length; i++) {
+                    normalOpts.push(comboOpts[i]);
+                }
+            }
+
+            // Đặt các phương án thông thường vào các vị trí trống còn lại
+            for (let i = 0; i < 4; i++) {
+                if (finalSlots[i] === null && normalOpts.length > 0) {
+                    finalSlots[i] = normalOpts.shift();
+                }
+            }
+
+            // Lọc các ô không null (trường hợp câu hỏi có ít hơn 4 phương án)
+            const combinedOpts = finalSlots.filter(item => item !== null);
+
+            // 4. Tạo bảng ánh xạ Vị trí cũ -> Vị trí mới (chữ cái mới)
+            const labelMap = {};
+            const labels = ['A', 'B', 'C', 'D'];
+            
+            combinedOpts.forEach((opt, newIdx) => {
+                labelMap[opt.key] = labels[newIdx];
+            });
+
+            // 5. Cập nhật chính xác nội dung tham chiếu chữ cái A, B, C, D
+            const convertComboText = (text) => {
+                if (!text) return '';
+                // Tìm & cập nhật các cụm chữ cái dạng "A và C", "B, C", "A & B"
+                return text.replace(/\b([A-D])\s*(và|,|&|\+)\s*([A-D])\b/gi, (match, p1, sep, p2) => {
+                    const k1 = p1.toUpperCase();
+                    const k2 = p2.toUpperCase();
+                    if (labelMap[k1] && labelMap[k2]) {
+                        let newK1 = labelMap[k1];
+                        let newK2 = labelMap[k2];
+                        if (newK1 > newK2) [newK1, newK2] = [newK2, newK1]; // Đảm bảo thứ tự alphabet (Vd: A và C)
+                        return `${newK1} ${sep} ${newK2}`;
+                    }
+                    return match;
+                });
+            };
+
+            // Tạo danh sách phương án mới đã xáo trộn & đổi tên chữ cái tham chiếu
+            const newShuffledOpts = combinedOpts.map((opt, idx) => {
+                return {
+                    newKey: labels[idx],
+                    oldKey: opt.key,
+                    text: convertComboText(opt.text)
+                };
+            });
+
+            // 6. Xác định đáp án đúng dựa vào mã định danh / vị trí gốc
+            const newCorrectOpt = newShuffledOpts.find(o => o.oldKey === correctOriginalKey);
+            const newCorrectKey = newCorrectOpt ? newCorrectOpt.newKey : 'A';
+
+            return {
+                ...q,
+                isShuffled: true,
+                shuffledOpts: newShuffledOpts,
+                newCorrectAnswer: newCorrectKey
+            };
+        };
+
+        window.toggleShufflePreview = function(qId) {
+            const q = allQuestions.find(item => item.id === qId);
+            if (!q) return;
+
+            if (shuffledMapState[qId]) {
+                delete shuffledMapState[qId]; // Khôi phục nguyên bản
+            } else {
+                shuffledMapState[qId] = shuffleQuestionOptions(q); // Xáo trộn mới theo quy tắc
+            }
+            renderQuizList();
+        };
 
         // Auth
         const initAuth = async () => {
@@ -675,7 +796,7 @@
                     allLinks.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
                     
                     updateDocStats();
-                    updateSearchAndFilterOptions(); // Rebuild cascading options base
+                    updateSearchAndFilterOptions();
                     renderDocs();
                     renderStats();
                     document.getElementById('docLoader').classList.add('hidden');
@@ -685,7 +806,6 @@
                 const quizColRef = collection(db, 'artifacts', appId, 'public', 'data', 'questions');
                 onSnapshot(quizColRef, (snap) => {
                     allQuestions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                    // Sort order: Subject > Topic > Lesson > Time
                     allQuestions.sort((a, b) => {
                         const subA = (a.subject || '').toLowerCase();
                         const subB = (b.subject || '').toLowerCase();
@@ -731,7 +851,6 @@
                 }
             });
             
-            // Re-render specific tabs to ensure state is fresh
             if(tab === 'docs') renderDocs();
             if(tab === 'questions') renderQuizList();
         };
@@ -769,14 +888,13 @@
                 btnList.className = "flex-1 lg:flex-none px-5 py-2.5 text-sm font-bold rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all border border-transparent";
                 secList.classList.add('hidden');
                 secForm.classList.remove('hidden');
-                // Ensure dropdowns in form are initialized if empty
                 if(!document.getElementById('quizSubject').value) {
                     onQuizFormSubjectChange(false); 
                 }
             }
         };
 
-        // --- HELPER FUNCTIONS FOR CASCADING ---
+        // --- CASCADING HELPERS ---
         function getUniqueSubjects(sourceData) {
             return [...new Set(sourceData.map(i => i.subject).filter(Boolean))].sort();
         }
@@ -784,7 +902,6 @@
             return [...new Set(sourceData.filter(i => i.subject === subject).map(i => i.topic).filter(Boolean))].sort();
         }
         function getLessonsFromDocs(subject, topic) {
-            // Lesson names come from Document titles
             return [...new Set(allLinks.filter(i => i.subject === subject && i.topic === topic).map(i => i.title).filter(Boolean))].sort();
         }
 
@@ -797,19 +914,16 @@
         }
 
         function updateSearchAndFilterOptions() {
-            // Update Document Filters based on Document Data
             const docSubjects = getUniqueSubjects(allLinks);
             const currentDocFilterSub = document.getElementById('docFilterSubject').value;
             populateSelect('docFilterSubject', docSubjects, "-- Tất cả Môn học --", currentDocFilterSub);
-            onDocFilterSubjectChange(true); // Maintain cascading state
+            onDocFilterSubjectChange(true);
 
-            // Update Quiz Filters based on Question Data
             const quizSubjects = getUniqueSubjects(allQuestions);
             const currentQuizFilterSub = document.getElementById('quizFilterSubject').value;
             populateSelect('quizFilterSubject', quizSubjects, "-- Tất cả Môn học --", currentQuizFilterSub);
             onQuizFilterSubjectChange(true);
 
-            // Update Form Datalists (Documents)
             const dListSub = document.getElementById('modalSubjectList');
             if(dListSub) dListSub.innerHTML = docSubjects.map(i => `<option value="${i}">`).join('');
             const currentModalSub = document.getElementById('docSubject').value;
@@ -817,13 +931,11 @@
             const dListTop = document.getElementById('modalTopicList');
             if(dListTop) dListTop.innerHTML = docTopics.map(i => `<option value="${i}">`).join('');
 
-            // Update Form Selects (Quiz) - Based on Documents as source of truth
             const formSub = document.getElementById('quizSubject').value;
             populateSelect('quizSubject', docSubjects, "-- Chọn Môn --", formSub);
             if(formSub) onQuizFormSubjectChange(true);
         }
 
-        // --- CASCADING EVENT HANDLERS ---
         window.onDocFilterSubjectChange = function(skipRender = false) {
             const sub = document.getElementById('docFilterSubject').value;
             const topics = sub ? getUniqueTopics(allLinks, sub) : [];
@@ -860,13 +972,11 @@
             populateSelect('quizLesson', lessons, "-- Chọn Bài học --", lessons.includes(currentLes) ? currentLes : '');
         };
 
-
         // ================== QUẢN LÝ TÀI LIỆU ==================
         function updateDocStats() {
             const total = allLinks.length;
             const draft = allLinks.filter(l => !l.url || l.url.trim() === '').length;
             const ready = total - draft;
-            // Check quiz status dynamically
             let hasQuizCount = 0;
             allLinks.forEach(item => {
                 const hasMatchingQuiz = allQuestions.some(q => q.subject === item.subject && q.topic === item.topic && q.lesson === item.title);
@@ -1040,7 +1150,6 @@
             document.getElementById('editDocId').value = id;
             document.getElementById('docSubject').value = item.subject;
             
-            // Trigger update topic datalist based on subject
             const docTopics = getUniqueTopics(allLinks, item.subject);
             document.getElementById('modalTopicList').innerHTML = docTopics.map(i => `<option value="${i}">`).join('');
             
@@ -1052,12 +1161,10 @@
             openDocModal();
         };
 
-        // Navigates to question form with pre-filled fields based on document
         window.quickAddQuiz = function(subject, topic, lesson) {
             switchMainTab('questions');
             switchQuizSubTab('form');
             
-            // Re-populate selects to ensure options exist before setting value
             const docSubjects = getUniqueSubjects(allLinks);
             populateSelect('quizSubject', docSubjects, "-- Chọn Môn --");
             document.getElementById('quizSubject').value = subject;
@@ -1071,7 +1178,6 @@
             document.getElementById('quizContent').focus();
             showToast(`Đã thiết lập phân loại, sẵn sàng tạo câu hỏi`);
         };
-
 
         // ================== QUẢN LÝ CÂU HỎI ==================
         function updateQuizStats() {
@@ -1115,7 +1221,6 @@
             const filterSub = document.getElementById('quizFilterSubject').value;
             const filterTop = document.getElementById('quizFilterTopic').value;
 
-            // 1. Filter Questions
             const filteredQuizzes = allQuestions.filter(q => {
                 const textTarget = `${q.content || ''} ${q.subject || ''} ${q.topic || ''} ${q.lesson || ''}`.toLowerCase();
                 const matchesSearch = textTarget.includes(searchVal);
@@ -1136,7 +1241,6 @@
                 return;
             }
 
-            // 2. Group by Lesson
             const grouped = filteredQuizzes.reduce((acc, q) => {
                 const groupKey = `${q.subject}|${q.topic}|${q.lesson || 'Không phân loại'}`;
                 if (!acc[groupKey]) {
@@ -1154,7 +1258,6 @@
             const groupArray = Object.values(grouped);
             const totalGroups = groupArray.length;
 
-            // 3. Paginate Groups (Lessons)
             const totalPages = Math.ceil(totalGroups / quizGroupPageSize) || 1;
             if (quizGroupCurrentPage > totalPages) quizGroupCurrentPage = totalPages;
 
@@ -1162,7 +1265,6 @@
             const endIndex = Math.min(startIndex + quizGroupPageSize, totalGroups);
             const pageGroups = groupArray.slice(startIndex, endIndex);
 
-            // Update Pagination UI
             const pageFooter = document.getElementById('quizPaginationFooter');
             if (totalGroups > quizGroupPageSize) {
                 pageFooter.classList.remove('hidden');
@@ -1174,14 +1276,12 @@
                 pageFooter.classList.add('hidden');
             }
 
-            // 4. Render HTML for Accordions
             let html = '';
             pageGroups.forEach(group => {
                 const sId = safeId(group.subject + group.topic + group.lesson);
                 
                 html += `
                 <div class="glass-card overflow-hidden border border-slate-700/60 shadow-md">
-                    <!-- Accordion Header -->
                     <button onclick="toggleAccordion('${sId}')" class="w-full flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-800/40 hover:bg-slate-800/80 transition-colors text-left gap-3">
                         <div class="flex items-start sm:items-center gap-3">
                             <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0 border border-indigo-500/30">
@@ -1204,7 +1304,6 @@
                         </div>
                     </button>
                     
-                    <!-- Accordion Content (Questions List) -->
                     <div id="acc-content-${sId}" class="accordion-content bg-slate-900/30">
                         <div class="p-4 pt-0 space-y-4">
                             ${group.questions.map((q, idx) => renderSingleQuestionHTML(q, idx + 1)).join('')}
@@ -1216,25 +1315,36 @@
             container.innerHTML = html;
         };
 
-        function renderSingleQuestionHTML(q, localIdx) {
-            const isMcq = q.type === 'multiple_choice';
+        function renderSingleQuestionHTML(qOriginal, localIdx) {
+            const isMcq = qOriginal.type === 'multiple_choice';
+            const isShuffled = !!shuffledMapState[qOriginal.id];
+            
+            // Lấy dữ liệu đã xáo trộn hoặc dữ liệu gốc
+            const q = isShuffled ? shuffledMapState[qOriginal.id] : qOriginal;
+            const activeCorrectAnswer = isShuffled ? q.newCorrectAnswer : q.correctAnswer;
+
             let answerBlockHtml = '';
             
             if (isMcq) {
+                let optionsList = [];
+                if (isShuffled && q.shuffledOpts) {
+                    optionsList = q.shuffledOpts.map(o => ({ key: o.newKey, text: o.text }));
+                } else {
+                    optionsList = [
+                        { key: 'A', text: q.opt_A || '' },
+                        { key: 'B', text: q.opt_B || '' },
+                        { key: 'C', text: q.opt_C || '' },
+                        { key: 'D', text: q.opt_D || '' }
+                    ];
+                }
+
                 answerBlockHtml = `
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4 text-sm text-slate-300">
-                        <div class="p-3 rounded-xl border transition-colors ${q.correctAnswer === 'A' ? 'bg-indigo-900/40 border-indigo-500/50 text-indigo-200 font-medium' : 'bg-slate-950/50 border-slate-800'}">
-                            <span class="font-black mr-2 ${q.correctAnswer === 'A' ? 'text-indigo-400' : 'text-slate-500'}">A.</span> ${escapeHtml(q.opt_A || '')}
-                        </div>
-                        <div class="p-3 rounded-xl border transition-colors ${q.correctAnswer === 'B' ? 'bg-indigo-900/40 border-indigo-500/50 text-indigo-200 font-medium' : 'bg-slate-950/50 border-slate-800'}">
-                            <span class="font-black mr-2 ${q.correctAnswer === 'B' ? 'text-indigo-400' : 'text-slate-500'}">B.</span> ${escapeHtml(q.opt_B || '')}
-                        </div>
-                        <div class="p-3 rounded-xl border transition-colors ${q.correctAnswer === 'C' ? 'bg-indigo-900/40 border-indigo-500/50 text-indigo-200 font-medium' : 'bg-slate-950/50 border-slate-800'}">
-                            <span class="font-black mr-2 ${q.correctAnswer === 'C' ? 'text-indigo-400' : 'text-slate-500'}">C.</span> ${escapeHtml(q.opt_C || '')}
-                        </div>
-                        <div class="p-3 rounded-xl border transition-colors ${q.correctAnswer === 'D' ? 'bg-indigo-900/40 border-indigo-500/50 text-indigo-200 font-medium' : 'bg-slate-950/50 border-slate-800'}">
-                            <span class="font-black mr-2 ${q.correctAnswer === 'D' ? 'text-indigo-400' : 'text-slate-500'}">D.</span> ${escapeHtml(q.opt_D || '')}
-                        </div>
+                        ${optionsList.map(opt => `
+                            <div class="p-3 rounded-xl border transition-colors ${activeCorrectAnswer === opt.key ? 'bg-indigo-900/40 border-indigo-500/50 text-indigo-200 font-medium' : 'bg-slate-950/50 border-slate-800'}">
+                                <span class="font-black mr-2 ${activeCorrectAnswer === opt.key ? 'text-indigo-400' : 'text-slate-500'}">${opt.key}.</span> ${escapeHtml(opt.text)}
+                            </div>
+                        `).join('')}
                     </div>
                 `;
             } else {
@@ -1251,17 +1361,27 @@
                 <div class="flex items-center justify-between border-b border-slate-800/80 pb-3 mb-3">
                     <div class="flex items-center gap-3">
                         <span class="w-7 h-7 rounded-lg bg-slate-800 border border-slate-700 text-xs font-bold text-slate-300 flex items-center justify-center">
-                            Câu${localIdx}
+                            Câu ${localIdx}
                         </span>
                         <span class="text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-md ${isMcq ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-purple-500/10 text-purple-400 border border-purple-500/20'}">
                             ${isMcq ? 'Trắc nghiệm' : 'Tự luận'}
                         </span>
+                        ${isShuffled ? `
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1">
+                                <i class="fas fa-random text-[9px]"></i> Đã xáo C/D
+                            </span>
+                        ` : ''}
                     </div>
                     <div class="flex items-center gap-1.5">
-                        <button onclick="editQuizItem('${q.id}')" class="w-8 h-8 flex items-center justify-center bg-slate-900 border border-slate-700 text-blue-400 hover:bg-blue-600 hover:text-white rounded-lg transition-colors shadow-sm" title="Sửa câu hỏi">
+                        ${isMcq ? `
+                            <button onclick="toggleShufflePreview('${qOriginal.id}')" class="px-2.5 py-1.5 flex items-center gap-1.5 text-xs font-bold ${isShuffled ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-slate-900 text-slate-400 border-slate-700'} hover:bg-amber-500/30 rounded-lg transition-colors border shadow-sm" title="Thử xáo trộn ưu tiên C/D">
+                                <i class="fas fa-random"></i> <span class="hidden sm:inline">${isShuffled ? 'Gốc' : 'Thử xáo'}</span>
+                            </button>
+                        ` : ''}
+                        <button onclick="editQuizItem('${qOriginal.id}')" class="w-8 h-8 flex items-center justify-center bg-slate-900 border border-slate-700 text-blue-400 hover:bg-blue-600 hover:text-white rounded-lg transition-colors shadow-sm" title="Sửa câu hỏi">
                             <i class="fas fa-edit text-xs"></i>
                         </button>
-                        <button onclick="requestDelete('quiz', '${q.id}')" class="w-8 h-8 flex items-center justify-center bg-slate-900 border border-slate-700 text-rose-400 hover:bg-rose-600 hover:text-white rounded-lg transition-colors shadow-sm" title="Xóa câu hỏi">
+                        <button onclick="requestDelete('quiz', '${qOriginal.id}')" class="w-8 h-8 flex items-center justify-center bg-slate-900 border border-slate-700 text-rose-400 hover:bg-rose-600 hover:text-white rounded-lg transition-colors shadow-sm" title="Xóa câu hỏi">
                             <i class="fas fa-trash-alt text-xs"></i>
                         </button>
                     </div>
@@ -1290,9 +1410,8 @@
 
         window.nextPage = function() {
             quizGroupCurrentPage++;
-            renderQuizList(); // Inside render, it checks if it exceeds max
+            renderQuizList();
         };
-
 
         document.getElementById('questionForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -1340,11 +1459,11 @@
                 if (id) {
                     await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'questions', id), qData);
                     showToast("Cập nhật câu hỏi thành công!");
-                    cancelEditMode(); // Exit edit mode
+                    cancelEditMode();
                 } else {
                     await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'questions'), qData);
                     showToast("Đã lưu! Bạn có thể tiếp tục nhập câu tiếp theo.");
-                    clearQuizContentOnly(); // CONTINUOUS ENTRY: Clear content, keep selects
+                    clearQuizContentOnly();
                 }
             } catch (err) {
                 console.error(err);
@@ -1376,7 +1495,6 @@
             document.getElementById('editQuizId').value = id;
             document.getElementById('quizType').value = item.type;
             
-            // Set cascading dropdowns carefully
             document.getElementById('quizSubject').value = item.subject;
             onQuizFormSubjectChange(false);
             document.getElementById('quizTopic').value = item.topic;
@@ -1409,10 +1527,9 @@
             document.getElementById('editQuizId').value = '';
             document.getElementById('edit-quiz-indicator').classList.add('hidden');
             document.getElementById('submitQuizBtn').innerHTML = `<i class="fas fa-save mr-2"></i>Lưu câu hỏi`;
-            clearQuizContentOnly(); // Clear contents but keep categorization ready for new insert
-            switchQuizSubTab('list'); // Usually user wants to go back to list after cancel edit
+            clearQuizContentOnly();
+            switchQuizSubTab('list');
         };
-
 
         // ================== DELETE LOGIC ==================
         window.requestDelete = function(type, id) {
@@ -1420,7 +1537,6 @@
             deleteTargetId = id;
             document.getElementById('deleteModal').classList.remove('hidden');
             document.getElementById('deleteModal').classList.add('flex');
-            // Small timeout for transition
             setTimeout(() => {
                 document.getElementById('deleteModal').classList.add('opacity-100');
             }, 10);
@@ -1463,7 +1579,6 @@
         window.renderStats = function() {
             const container = document.getElementById('subjectStatsContainer');
             
-            // Lấy danh sách subject duy nhất từ cả Docs và Questions
             const allSubjectsSet = new Set([...allLinks.map(l=>l.subject), ...allQuestions.map(q=>q.subject)]);
             const allSubjects = Array.from(allSubjectsSet).filter(Boolean).sort();
 
