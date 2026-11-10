@@ -2,6 +2,9 @@
         const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPan-KQDfgVodlpBL06ZjkSrIKUTgS3syVxJCZ67JhJaMktXfjz_99c6WptPuzjzLN_g/exec";
 
         const allExternalLinks = [
+            "/so_cuu_di_vat_duong_tho.html",
+            "/csdl_giai_phau.html",
+            "/giai_phau.html",
             "/đo_huyet_ap.html",
             "/rua_tay.html",
             "/hoi_suc_tim_phoi_co_ban.html",

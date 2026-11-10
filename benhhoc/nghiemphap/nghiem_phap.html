@@ -1,264 +1,504 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phục hồi chức năng cơ xương-Nguyễn Mai Đan Trường</title>
-     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
     <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
     <meta property="og:image" content="/hinhanh/logo_web.png">
     <meta property="og:url" content="https://dantruongag.id.vn">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" href="/hinhanh/logo_web.png" type="">
+    
+    <link rel="icon" href="/hinhanh/logo_web.png" type="image/png">
     <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/banner_trang_con.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+
     <style>
-        /* CSS Truyền Thống & Hiện Đại */
-        :root {
-            --primary-color: #2563eb;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        
+        /* Custom Dark Scrollbar */
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
         }
 
-        .main-content-section {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        /* Glassmorphism Card Hover Effects */
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        h1.page-title {
-            margin-bottom: 30px;
-            color: var(--primary-color);
-        }
-
-        /* Container chính cho các thẻ card */
-        #content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            width: 100%;
-            max-width: 1200px;
-        }
-
-        /* Cấu trúc Card */
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card:hover {
+        .card-hover:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 30px -10px rgba(14, 165, 233, 0.15), 0 10px 15px -5px rgba(0, 0, 0, 0.5);
         }
 
-        /* Div chứa ảnh theo yêu cầu */
-        #image-container {
-            width: 100%;
-            height: 200px;
-            background-color: #e2e8f0;
-            overflow: hidden;
+        /* Custom Modal Transitions */
+        .modal-backdrop {
+            transition: opacity 0.3s ease-out;
+        }
+        .modal-panel {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        #image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .card-body {
-            padding: 20px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        /* Tiêu đề h1 theo yêu cầu */
-        .card-body h1 {
-            font-size: 1.25rem;
-            margin: 0 0 15px 0;
-            color: var(--text-main);
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        /* Nút xem ngay */
-        .btn-view {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            text-align: center;
-            padding: 10px 20px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background-color 0.2s;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-view:hover {
-            background-color: #1d4ed8;
-        }
-
-        /* Hiệu ứng loading */
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .error-msg {
-            color: #ef4444;
-            font-weight: bold;
-            padding: 20px;
+        /* Animated Glowing Effect */
+        .glow-cyan {
+            box-shadow: 0 0 25px -5px rgba(14, 165, 233, 0.3);
         }
     </style>
 </head>
-<body class="bg-gray-900">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white">    
     <div id="header-placeholder"></div>
     <div id="search-placeholder"></div>
 
-    <header class="main-banner_trang_con">
-        <div class="banner_trang_con-overlay"></div>
-        <div class="hbanner_trang_con-image-bg"></div>
+    <!-- MAIN WRAPPER WITH 20PX TOP MARGIN (pt-5) AS REQUESTED -->
+    <div class="pt-5 pb-12 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-6 flex-1 flex flex-col">
 
-        <div class="hbanner_trang_con-content">
-            <h1 class="main-title">NGHIỆM PHÁP</h1>
-            <p class="sub-text">Phục hồi chức năng là biện pháp giảm tối đa tác động của giảm chức năng và tàn tật, từ đó, giúp người bệnh hội nhập hoặc tái hội nhập với xã hội. Những chức năng này có thể thuộc về chức năng thể chất hoặc tâm thần (khả năng nhận thức, tư duy,…)</p>
-            <div class="hbanner_trang_con-tabs-wrap">
-                <div id="category-tabs" class="category-scroll" aria-label="Danh mục bài viết"></div>
+        <!-- TOP BAR: TIÊU ĐỀ THƯƠNG HIỆU & THỐNG KÊ (DỜI XUỐNG CÁCH LỀ TRÊN 20PX) -->
+        <div class="bg-slate-900/90 backdrop-blur-xl p-5 sm:p-7 rounded-3xl shadow-2xl border border-slate-800/80 flex flex-col lg:flex-row gap-5 items-center justify-between glow-cyan">
+            
+            <!-- Tiêu đề thương hiệu nhỏ/Thống kê -->
+            <div class="flex items-center gap-4 w-full lg:w-auto">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-600 via-indigo-600 to-violet-600 text-white flex items-center justify-center text-2xl shadow-lg shadow-sky-500/25 shrink-0 ring-1 ring-white/10">
+                    <i class="fa-solid fa-brain-circuit"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                            Chuyên khoa Y học
+                        </span>
+                    </div>
+                    <h1 class="text-lg sm:text-2xl font-extrabold text-slate-100 tracking-tight mt-0.5">
+                        TRIỆU CHỨNG & NGHIỆM PHÁP CHẤN THƯƠNG CHỈNH HÌNH
+                    </h1>
+                    <p class="text-xs sm:text-sm font-medium text-slate-400 flex items-center gap-2 mt-1" id="totalCount">
+                        <i class="fa-solid fa-spinner animate-spin text-sky-400"></i> Đang kết nối dữ liệu...
+                    </p>
+                </div>
+            </div>
+
+            <!-- Công cụ Tìm kiếm & Lọc -->
+            <div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+                <!-- Search Input -->
+                <div class="relative w-full sm:w-72">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                    </span>
+                    <input type="text" id="searchInput" placeholder="Tìm tên nghiệm pháp, chủ đề..." 
+                        class="w-full pl-10 pr-4 py-2.5 bg-slate-950/80 border border-slate-700/80 rounded-2xl text-sm font-medium text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all shadow-inner">
+                </div>
+
+                <!-- Topic Select Filter -->
+                <div class="relative w-full sm:w-56">
+                    <select id="topicFilter" class="w-full appearance-none px-4 py-2.5 bg-slate-950/80 border border-slate-700/80 rounded-2xl text-sm font-medium text-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all cursor-pointer shadow-inner">
+                        <option value="">Tất cả chủ đề</option>
+                    </select>
+                    <span class="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-chevron-down text-xs"></i>
+                    </span>
+                </div>
             </div>
         </div>
-    </header>
 
-<section class="main-content-section">
-    <div id="loader" class="loader"></div>
-    <div id="content-grid"></div>
-</section>
+        <!-- SYNC STATUS INDICATOR -->
+        <div id="loadingStatus" class="flex items-center justify-center gap-3 py-16 text-slate-400">
+            <div class="w-7 h-7 border-3 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-sm font-semibold tracking-wide">Đang tải cơ sở dữ liệu lâm sàng...</span>
+        </div>
 
-<script>
-    const DEFAULT_IMAGE = "/hinhanh/logo_web.png";
-    
-    const pageUrls = [
-        "/benhhoc/nghiemphap/Cozens_test.html",
-        "/benhhoc/nghiemphap/Epicondylitis_test.html",
-        "/benhhoc/nghiemphap/dau_hieu_lachman.html",
-        "/benhhoc/nghiemphap/dau_hieu_ngan_keo.html",
-        "/benhhoc/nghiemphap/Lasegue_test.html",
-        "/benhhoc/nghiemphap/Schwartz_test.html"
-    ];
+        <!-- CARDS GRID CONTAINER (GIAO DIỆN TỐI & HIỆN ĐẠI) -->
+        <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+            <!-- Dynamic Cards Injected Here -->
+        </div>
 
-    async function fetchData() {
-        const grid = document.getElementById('content-grid');
-        const loader = document.getElementById('loader');
+        <!-- EMPTY STATE -->
+        <div id="emptyState" class="hidden flex-col items-center justify-center py-20 bg-slate-900/60 rounded-3xl border border-dashed border-slate-800 text-center">
+            <div class="w-16 h-16 bg-slate-800 text-slate-500 rounded-2xl flex items-center justify-center text-2xl mb-4 border border-slate-700">
+                <i class="fa-solid fa-folder-open"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-200">Không tìm thấy nghiệm pháp phù hợp</h3>
+            <p class="text-xs text-slate-400 mt-1 max-w-xs">Hãy thử kiểm tra từ khóa tìm kiếm hoặc bỏ chọn bộ lọc chủ đề.</p>
+        </div>
 
-        try {
-            const fetchPromises = pageUrls.map(async (url) => {
-                try {
-                    const response = await fetch(url);
-                    if (!response.ok) return null;
-                    
-                    const htmlText = await response.text();
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(htmlText, 'text/html');
-                    
-                    // Lấy thẻ ảnh bên trong container của file HTML con
-                    const imgElement = doc.querySelector('#image-container img');
-                    let imageSrc = imgElement ? imgElement.getAttribute('src') : null;
+    </div>
 
-                    // KIỂM TRA: Nếu không có src hoặc src trống, dùng ảnh mặc định
-                    if (!imageSrc || imageSrc.trim() === "" || imageSrc.includes('undefined')) {
-                        imageSrc = DEFAULT_IMAGE;
-                    } else {
-                        // Xử lý trường hợp đường dẫn tương đối trong file con
-                        // (Ví dụ file con ghi src="anh.jpg", ta cần chuyển thành "/path/to/anh.jpg")
-                        if (!imageSrc.startsWith('http') && !imageSrc.startsWith('/')) {
-                            const baseUrl = url.substring(0, url.lastIndexOf('/') + 1);
-                            imageSrc = baseUrl + imageSrc;
-                        }
-                    }
+    <!-- MODAL CHI TIẾT NGHIỆM PHÁP (GIAO DIỆN TỐI & HIỆN ĐẠI Bổ Sung Dương/Âm Tính) -->
+    <div id="detailModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 hidden">
+        <!-- Backdrop -->
+        <div onclick="closeDetailModal()" class="modal-backdrop fixed inset-0 bg-slate-950/80 backdrop-blur-md opacity-0"></div>
 
-                    const titleText = doc.querySelector('h1')?.innerText || 'Tiêu đề chưa xác định';
-                    
-                    return {
-                        url: url,
-                        image: imageSrc,
-                        title: titleText
-                    };
-                } catch (e) {
-                    console.error(`Lỗi khi tải ${url}:`, e);
-                    return null;
+        <!-- Modal Panel -->
+        <div class="modal-panel relative bg-slate-900 border border-slate-800 w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden z-10 transform scale-95 opacity-0 flex flex-col max-h-[90vh]">
+            
+            <!-- Modal Header -->
+            <div class="px-6 py-5 bg-slate-950/60 border-b border-slate-800/80 flex items-start justify-between gap-4">
+                <div>
+                    <span id="modalTopic" class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-sky-500/10 text-sky-400 border border-sky-500/20 mb-2">Chủ đề</span>
+                    <h2 id="modalTitle" class="text-xl sm:text-2xl font-extrabold text-slate-100 leading-snug">Tên Nghiệm Pháp</h2>
+                </div>
+                <button onclick="closeDetailModal()" class="w-9 h-9 rounded-xl bg-slate-800 text-slate-400 hover:text-slate-100 hover:bg-slate-700 flex items-center justify-center transition-colors shrink-0">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body (Scrollable) -->
+            <div class="p-6 space-y-6 overflow-y-auto flex-1">
+                
+                <!-- Mục Đích -->
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2 text-sky-400 font-bold text-xs uppercase tracking-wider">
+                        <i class="fa-solid fa-bullseye"></i>
+                        <span>Mục Đích Khám</span>
+                    </div>
+                    <div id="modalPurpose" class="p-4 bg-slate-950/60 border border-slate-800/80 rounded-2xl text-slate-300 text-sm leading-relaxed">
+                        -
+                    </div>
+                </div>
+
+                <!-- Cách Thực Hiện -->
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2 text-indigo-400 font-bold text-xs uppercase tracking-wider">
+                        <i class="fa-solid fa-hand-holding-medical"></i>
+                        <span>Cách Thực Hiện</span>
+                    </div>
+                    <div id="modalMethod" class="p-4 bg-slate-950/60 border border-slate-800/80 rounded-2xl text-slate-300 text-sm leading-relaxed whitespace-pre-line">
+                        -
+                    </div>
+                </div>
+
+                <!-- DƯƠNG TÍNH & ÂM TÍNH GRID -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Dương tính -->
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase tracking-wider">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Dương Tính (+)</span>
+                        </div>
+                        <div id="modalPositive" class="p-4 bg-emerald-950/30 border border-emerald-800/40 rounded-2xl text-emerald-200 text-sm leading-relaxed whitespace-pre-line min-h-[90px]">
+                            -
+                        </div>
+                    </div>
+
+                    <!-- Âm tính -->
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2 text-sky-400 font-bold text-xs uppercase tracking-wider">
+                            <i class="fa-solid fa-circle-minus"></i>
+                            <span>Âm Tính (-)</span>
+                        </div>
+                        <div id="modalNegative" class="p-4 bg-sky-950/30 border border-sky-800/40 rounded-2xl text-sky-200 text-sm leading-relaxed whitespace-pre-line min-h-[90px]">
+                            -
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Hướng Dẫn -->
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2 text-rose-400 font-bold text-xs uppercase tracking-wider">
+                        <i class="fa-solid fa-circle-play"></i>
+                        <span>Video Hướng Dẫn</span>
+                    </div>
+                    <div id="modalVideoContainer" class="rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 aspect-video relative flex items-center justify-center text-slate-500 text-sm shadow-inner">
+                        <!-- Dynamic iframe injected here -->
+                    </div>
+                </div>
+
+                <!-- Ghi Chú & Lưu Ý Lâm Sàng -->
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
+                        <i class="fa-solid fa-note-sticky"></i>
+                        <span>Ghi Chú & Lưu Ý Lâm Sàng</span>
+                    </div>
+                    <div id="modalNotes" class="p-4 bg-amber-950/20 border border-amber-800/40 rounded-2xl text-amber-200 text-sm leading-relaxed">
+                        -
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 bg-slate-950/60 border-t border-slate-800/80 flex justify-end">
+                <button onclick="closeDetailModal()" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-white text-sm font-semibold rounded-xl transition-all shadow-md active:scale-95 cursor-pointer">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE & CORE LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Cấu hình Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
+            authDomain: "dulieuweb-6541e.firebaseapp.com",
+            projectId: "dulieuweb-6541e",
+            storageBucket: "dulieuweb-6541e.firebasestorage.app",
+            messagingSenderId: "215480268517",
+            appId: "1:215480268517:web:16600eafd6839fee5dc60c"
+        };
+
+        const currentAppId = typeof __app_id !== 'undefined' ? __app_id : 'motor-exam-db';
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let examDatabase = [];
+
+        async function initApp() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
                 }
+
+                // Path tuân thủ Rule 1
+                const dataRef = collection(db, 'artifacts', currentAppId, 'public', 'data', 'motor_exams');
+
+                // Lắng nghe dữ liệu realtime
+                onSnapshot(dataRef, (snapshot) => {
+                    examDatabase = [];
+                    snapshot.forEach((docSnap) => {
+                        examDatabase.push({ id: docSnap.id, ...docSnap.data() });
+                    });
+
+                    document.getElementById('loadingStatus').classList.add('hidden');
+                    updateTopicDropdown();
+                    renderCards();
+                }, (error) => {
+                    console.error("Lỗi Firestore:", error);
+                    document.getElementById('loadingStatus').innerHTML = `
+                        <div class="text-rose-400 font-semibold flex items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            Không thể truy cập dữ liệu trực tuyến.
+                        </div>
+                    `;
+                });
+
+            } catch (err) {
+                console.error("Lỗi xác thực:", err);
+            }
+        }
+
+        function updateTopicDropdown() {
+            const topicSelect = document.getElementById('topicFilter');
+            const selectedVal = topicSelect.value;
+            const topics = [...new Set(examDatabase.map(item => item.topic).filter(Boolean))];
+
+            topicSelect.innerHTML = '<option value="">Tất cả chủ đề</option>' + 
+                topics.map(t => `<option value="${escapeHtml(t)}" ${t === selectedVal ? 'selected' : ''}>${escapeHtml(t)}</option>`).join('');
+        }
+
+        window.renderCards = function() {
+            const cardsGrid = document.getElementById('cardsGrid');
+            const emptyState = document.getElementById('emptyState');
+            const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+            const topicVal = document.getElementById('topicFilter').value;
+
+            const filteredExams = examDatabase.filter(item => {
+                const matchSearch = (item.name && item.name.toLowerCase().includes(searchVal)) ||
+                                    (item.topic && item.topic.toLowerCase().includes(searchVal)) ||
+                                    (item.purpose && item.purpose.toLowerCase().includes(searchVal)) ||
+                                    (item.positive && item.positive.toLowerCase().includes(searchVal));
+                const matchTopic = topicVal === "" || item.topic === topicVal;
+                return matchSearch && matchTopic;
             });
 
-            const results = await Promise.all(fetchPromises);
-            loader.style.display = 'none';
+            document.getElementById('totalCount').innerHTML = `<i class="fa-solid fa-database text-sky-400"></i> Hiển thị <span class="text-sky-400 font-bold">${filteredExams.length}</span> / ${examDatabase.length} nghiệm pháp`;
 
-            results.filter(item => item !== null).forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'card';
-
-                card.innerHTML = `
-                    <div id="image-container">
-                        <img src="${item.image}" 
-                             alt="${item.title}" 
-                             onerror="this.onerror=null; this.src='${DEFAULT_IMAGE}';">
-                    </div>
-                    <div class="card-body">
-                        <h1>${item.title}</h1>
-                        <a href="${item.url}" class="btn-view">Xem ngay</a>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-
-            if (grid.children.length === 0) {
-                grid.innerHTML = '<p class="error-msg">Không tìm thấy dữ liệu. Vui lòng kiểm tra lại đường dẫn file.</p>';
+            if (filteredExams.length === 0) {
+                cardsGrid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+                return;
             }
 
-        } catch (error) {
-            if (loader) loader.style.display = 'none';
-            grid.innerHTML = `<p class="error-msg">Lỗi hệ thống: ${error.message}</p>`;
+            emptyState.classList.add('hidden');
+            emptyState.classList.remove('flex');
+            cardsGrid.classList.remove('hidden');
+
+            cardsGrid.innerHTML = filteredExams.map(item => `
+                <div class="card-hover bg-slate-900/90 rounded-3xl p-6 border border-slate-800 flex flex-col justify-between space-y-4 shadow-xl relative overflow-hidden group">
+                    <div class="space-y-3">
+                        
+                        <h3 class="text-lg font-bold text-slate-100 leading-snug line-clamp-2 group-hover:text-sky-400 transition-colors">
+                            ${escapeHtml(item.name || 'Nghiệm pháp')}
+                        </h3>
+
+                        <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+                            <span class="text-slate-300 font-semibold">Mục đích:</span> ${escapeHtml(item.purpose || 'Đang cập nhật...')}
+                        </p>
+
+                        <!-- Thẻ Hiển Thị Nhanh Kết Quả Dương Tính/Âm Tính -->
+                        <div class="grid grid-cols-2 gap-2 pt-1">
+                            <div class="p-2.5 rounded-xl bg-emerald-950/20 border border-emerald-900/30 text-emerald-300 text-xs">
+                                <div class="font-bold flex items-center gap-1 mb-0.5 text-emerald-400">
+                                    <i class="fa-solid fa-circle-check text-[10px]"></i> Dương tính
+                                </div>
+                                <p class="line-clamp-2 text-[11px] text-emerald-200/80">${escapeHtml(item.positive || '-')}</p>
+                            </div>
+                            <div class="p-2.5 rounded-xl bg-sky-950/20 border border-sky-900/30 text-sky-300 text-xs">
+                                <div class="font-bold flex items-center gap-1 mb-0.5 text-sky-400">
+                                    <i class="fa-solid fa-circle-minus text-[10px]"></i> Âm tính
+                                </div>
+                                <p class="line-clamp-2 text-[11px] text-sky-200/80">${escapeHtml(item.negative || '-')}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between">
+                        <span class="inline-block px-3 py-1 rounded-xl text-xs font-bold bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                                <i class="fa-solid fa-layer-group mr-1 text-[10px]"></i>
+                                ${escapeHtml(item.topic || 'Chưa phân loại')}
+                        </span>
+                        <button onclick="openDetailModal('${item.id}')" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-sky-600 text-slate-200 hover:text-white font-medium px-4 py-2 rounded-xl text-xs transition-all shadow-md active:scale-95 cursor-pointer">
+                            <span>Chi tiết</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
         }
-    }
 
-    window.onload = fetchData;
-</script>
+        document.getElementById('searchInput').addEventListener('input', renderCards);
+        document.getElementById('topicFilter').addEventListener('change', renderCards);
+
+        window.openDetailModal = function(id) {
+            const item = examDatabase.find(rec => rec.id === id);
+            if (!item) return;
+
+            document.getElementById('modalTopic').innerText = item.topic || 'Chưa phân loại';
+            document.getElementById('modalTitle').innerText = item.name || 'Nghiệm pháp';
+            document.getElementById('modalPurpose').innerText = item.purpose || 'Chưa cập nhật nội dung mục đích.';
+            document.getElementById('modalMethod').innerText = item.method || 'Chưa cập nhật các bước thực hiện.';
+            document.getElementById('modalPositive').innerText = item.positive || 'Chưa cập nhật dấu hiệu dương tính.';
+            document.getElementById('modalNegative').innerText = item.negative || 'Chưa cập nhật dấu hiệu âm tính.';
+            document.getElementById('modalNotes').innerText = item.notes || 'Không có ghi chú thêm.';
+
+            const videoContainer = document.getElementById('modalVideoContainer');
+            if (item.video && item.video.trim() !== '') {
+                const url = item.video.trim();
+                let embedUrl = url;
+
+                if (url.includes('youtube.com/watch?v=')) {
+                    const videoId = url.split('watch?v=')[1]?.split('&')[0];
+                    embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                } else if (url.includes('youtu.be/')) {
+                    const videoId = url.split('youtu.be/')[1]?.split('?')[0];
+                    embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                }
+
+                if (embedUrl.startsWith('http')) {
+                    videoContainer.innerHTML = `
+                        <iframe src="${embedUrl}" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    `;
+                } else {
+                    videoContainer.innerHTML = `
+                        <div class="p-4 text-center">
+                            <i class="fa-solid fa-link text-2xl mb-2 text-rose-400"></i>
+                            <p class="mb-2 text-slate-300">Xem video qua đường dẫn:</p>
+                            <a href="${escapeHtml(url)}" target="_blank" class="text-sky-400 underline font-semibold text-xs break-all">${escapeHtml(url)}</a>
+                        </div>
+                    `;
+                }
+            } else {
+                videoContainer.innerHTML = `
+                    <div class="flex flex-col items-center justify-center p-6 text-slate-500">
+                        <i class="fa-solid fa-video-slash text-2xl mb-2"></i>
+                        <span>Chưa có video minh họa cho nghiệm pháp này</span>
+                    </div>
+                `;
+            }
+
+            const modal = document.getElementById('detailModal');
+            const backdrop = modal.querySelector('.modal-backdrop');
+            const panel = modal.querySelector('.modal-panel');
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                backdrop.classList.remove('opacity-0');
+                backdrop.classList.add('opacity-100');
+                
+                panel.classList.remove('opacity-0', 'scale-95');
+                panel.classList.add('opacity-100', 'scale-100');
+            }, 10);
+        }
+
+        window.closeDetailModal = function() {
+            const modal = document.getElementById('detailModal');
+            const backdrop = modal.querySelector('.modal-backdrop');
+            const panel = modal.querySelector('.modal-panel');
+
+            backdrop.classList.remove('opacity-100');
+            backdrop.classList.add('opacity-0');
+
+            panel.classList.remove('opacity-100', 'scale-100');
+            panel.classList.add('opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.getElementById('modalVideoContainer').innerHTML = '';
+            }, 300);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        window.onload = initApp;
+    </script>
     
-        <div id="footer-placeholder"></div>
+    <div id="footer-placeholder"></div>
 
-        <script src="/script.js"></script>
-        <script src="/banner_trang_con.js"></script>
+    <script src="/script.js"></script>
 </body>
 </html>

@@ -3,160 +3,438 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>6 Bước rửa tay đúng cách- Nguyễn Mai Đan Trường</title>
-    <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám định thôi nào!.">
+    <title>Quy trình 6 bước rửa tay</title>
+     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
     <meta property="og:image" content="/hinhanh/logo_web.png">
     <meta property="og:url" content="https://dantruongag.id.vn">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" href="/hinhanh/logo_web.png" type="">
     <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/giai_phau/giai_phau.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><!-- SweetAlert2 for beautiful pop-ups -->
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Swiper.js for banner slider -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- Confetti.js for effects -->
     
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: 0.4, transform: 'scale(1)' },
+                            '50%': { opacity: 0.8, transform: 'scale(1.05)' },
+                        }
+                    },
+                    animation: {
+                        float: 'float 4s ease-in-out infinite',
+                        pulseGlow: 'pulseGlow 3s ease-in-out infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
-        /* Thiết lập font Inter mặc định */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100.900&display=swap');
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7f9fb; /* Nền trắng xanh nhạt */
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #0f172a; /* Deep Slate Dark Background */
+            min-height: 100vh;
+            color: #f8fafc;
         }
-        /* Style cho thẻ bước rửa tay */
-        .step-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        /* Dark Glassmorphism Effect */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .step-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(45, 120, 255, 0.2);
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #38bdf8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0284c7;
+        }
+
+        /* Water Droplet Glow for Dark Mode */
+        .water-bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(56, 189, 248, 0.3), rgba(14, 165, 233, 0.05));
+            box-shadow: inset 0 0 15px rgba(56, 189, 248, 0.2), 0 4px 20px rgba(14, 165, 233, 0.2);
+            pointer-events: none;
         }
     </style>
 </head>
-    <body class="bg-gray-900">
+<body class="text-slate-100 antialiased relative overflow-x-hidden">
     <div id="header-placeholder"></div>
-    <div id="search-placeholder"></div>
+    <div id="search-placeholder"></div> 
+    <!-- Ambient Background Bubbles & Glows -->
+    <div class="water-bubble w-40 h-40 -top-10 -left-10 animate-float opacity-80"></div>
+    <div class="water-bubble w-64 h-64 top-1/3 -right-20 animate-float opacity-60" style="animation-delay: 1.5s;"></div>
+    <div class="water-bubble w-32 h-32 bottom-20 left-10 animate-float opacity-70" style="animation-delay: 2.5s;"></div>
 
-        <!-- Main Content -->
-    <main id="main-content">
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
 
-    <!-- Khu vực chính chứa Tiêu đề và 6 Bước Rửa Tay -->
-    <main class="container mx-auto px-4 py-12">
-        <div class="text-center mb-10 pt-4 pb-4">
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-700 mb-3">
-                6 BƯỚC RỬA TAY ĐÚNG CÁCH
+        <!-- Hero Banner Section -->
+        <section class="text-center max-w-3xl mx-auto mb-16 relative">
+            <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-950/80 text-emerald-400 text-xs sm:text-sm font-bold uppercase tracking-wider mb-4 border border-emerald-800/50 shadow-sm">
+                <i class="fa-solid fa-shield-halved text-emerald-400"></i> Khuyến Nghị Chuẩn Y Tế (WHO)
+            </span>
+            <h1 class="text-3xl sm:text-5xl font-black text-white leading-tight mb-4 tracking-tight">
+                Quy Trình <span class="bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 bg-clip-text text-transparent">6 Bước Rửa Tay</span> Đúng Cách
             </h1>
-            <img src="/hinhanh/rua_tay.png" alt="" style="display: none;">
+            <p class="text-slate-400 text-base sm:text-lg leading-relaxed mb-8">
+                Rửa tay thường xuyên với xà phòng là biện pháp đơn giản, hiệu quả nhất để phòng chống nguy cơ lây nhiễm vi khuẩn và dịch bệnh.
+            </p>
 
-        </div>
+            <!-- Quick Stats Bar -->
+            <div class="grid grid-cols-3 gap-3 sm:gap-6 max-w-xl mx-auto">
+                <div class="glass-card p-3 sm:p-4 rounded-2xl shadow-lg text-center">
+                    <p class="text-2xl sm:text-3xl font-black text-cyan-400">30s</p>
+                    <p class="text-xs text-slate-400 font-medium">Thời gian tối thiểu</p>
+                </div>
+                <div class="glass-card p-3 sm:p-4 rounded-2xl shadow-lg text-center">
+                    <p class="text-2xl sm:text-3xl font-black text-sky-400">6</p>
+                    <p class="text-xs text-slate-400 font-medium">Bước tiêu chuẩn</p>
+                </div>
+                <div class="glass-card p-3 sm:p-4 rounded-2xl shadow-lg text-center">
+                    <p class="text-2xl sm:text-3xl font-black text-emerald-400">99.9%</p>
+                    <p class="text-xs text-slate-400 font-medium">Sạch vi khuẩn</p>
+                </div>
+            </div>
+        </section>
 
-        <!-- Lưới 6 Bước Rửa Tay -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Steps Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
 
             <!-- BƯỚC 1 -->
-            <div class="step-card bg-white p-6 rounded-2xl shadow-md border-t-4 border-blue-500 flex flex-col items-center text-center">
-                <div class="text-4xl font-extrabold text-white bg-blue-500 rounded-full h-12 w-12 flex items-center justify-center mb-4 shadow-lg">1</div>
-                <h3 class="text-xl font-bold mb-3 text-blue-700">Làm ướt & Tạo bọt</h3>
-                <div class="mb-4 w-full h-40 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
-                    <!-- HÌNH ẢNH BƯỚC 1 -->
-                    <img 
-                        src="/hinhanh/rua_tay_buoc1.png" 
-                        alt="Hình ảnh Bước 1: Làm ướt và Tạo bọt" 
-                        class="w-full h-full object-cover rounded-lg"
-                        onerror="this.onerror=null;this.src='https://placehold.co/160x160/9CA3AF/ffffff?text=LỖI+TẢI+HÌNH'"
-                    />
+            <div class="glass-card rounded-3xl p-6 shadow-2xl hover:shadow-cyan-500/20 transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group border border-slate-700/50 hover:border-cyan-500/50">
+                <div>
+                    <!-- Step Badge Header -->
+                    <div class="flex items-center justify-between mb-5">
+                        <span class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 text-white font-extrabold text-xl flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
+                            01
+                        </span>
+                        <span class="px-3 py-1 rounded-full bg-cyan-950/80 text-cyan-400 text-xs font-bold uppercase tracking-wider border border-cyan-800/50">
+                            Khởi động
+                        </span>
+                    </div>
+
+                    <!-- Title -->
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">
+                        Làm ướt & Tạo bọt
+                    </h3>
+
+                    <!-- Image Container -->
+                    <div class="relative w-full h-48 mb-5 rounded-2xl bg-slate-900/90 overflow-hidden flex items-center justify-center p-2 border border-slate-800">
+                        <img 
+                            src="/hinhanh/rua_tay_buoc1.png" 
+                            alt="Bước 1: Làm ướt và Tạo bọt" 
+                            class="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
+                            onerror="this.onerror=null;this.src='https://placehold.co/400x300/0f172a/38bdf8?text=B%C6%B0%E1%BB%9Bc+1%3A+T%E1%BA%A1o+b%E1%BB%8Dt'"
+                        />
+                    </div>
+
+                    <!-- Description -->
+                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                        Làm ướt hai bàn tay bằng nước sạch. Thoa xà phòng vào lòng bàn tay và chà xát 2 lòng bàn tay vào nhau để tạo bọt mịn.
+                    </p>
                 </div>
-                <p class="text-gray-600">Làm ướt tay bằng nước. Lấy xà phòng (hoặc dung dịch rửa tay) và chà hai lòng bàn tay vào nhau.</p>
+
+                <!-- Footer tip -->
+                <div class="pt-4 border-t border-slate-700/60 flex items-center text-xs text-slate-400 gap-2">
+                    <i class="fa-solid fa-lightbulb text-amber-400"></i>
+                    <span>Nên dùng nước chảy tự nhiên từ vòi.</span>
+                </div>
             </div>
 
             <!-- BƯỚC 2 -->
-            <div class="step-card bg-white p-6 rounded-2xl shadow-md border-t-4 border-green-500 flex flex-col items-center text-center">
-                <div class="text-4xl font-extrabold text-white bg-green-500 rounded-full h-12 w-12 flex items-center justify-center mb-4 shadow-lg">2</div>
-                <h3 class="text-xl font-bold mb-3 text-green-700">Chà mu bàn tay</h3>
-                <div class="mb-4 w-full h-40 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
-                    <!-- HÌNH ẢNH BƯỚC 2 -->
-                    <img 
-                        src="/hinhanh/rua_tay_buoc2.png" 
-                        alt="Hình ảnh Bước 2: Chà mu bàn tay" 
-                        class="w-full h-full object-cover rounded-lg"
-                        onerror="this.onerror=null;this.src='https://placehold.co/160x160/9CA3AF/ffffff?text=LỖI+TẢI+HÌNH'"
-                    />
+            <div class="glass-card rounded-3xl p-6 shadow-2xl hover:shadow-emerald-500/20 transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group border border-slate-700/50 hover:border-emerald-500/50">
+                <div>
+                    <!-- Step Badge Header -->
+                    <div class="flex items-center justify-between mb-5">
+                        <span class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-extrabold text-xl flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+                            02
+                        </span>
+                        <span class="px-3 py-1 rounded-full bg-emerald-950/80 text-emerald-400 text-xs font-bold uppercase tracking-wider border border-emerald-800/50">
+                            Mu bàn tay
+                        </span>
+                    </div>
+
+                    <!-- Title -->
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-emerald-400 transition-colors">
+                        Chà mu bàn tay
+                    </h3>
+
+                    <!-- Image Container -->
+                    <div class="relative w-full h-48 mb-5 rounded-2xl bg-slate-900/90 overflow-hidden flex items-center justify-center p-2 border border-slate-800">
+                        <img 
+                            src="/hinhanh/rua_tay_buoc2.png" 
+                            alt="Bước 2: Chà mu bàn tay" 
+                            class="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
+                            onerror="this.onerror=null;this.src='https://placehold.co/400x300/0f172a/34d399?text=B%C6%B0%E1%BB%9Bc+2%3A+Ch%C3%A0+mu+b%C3%A0n+tay'"
+                        />
+                    </div>
+
+                    <!-- Description -->
+                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                        Dùng lòng bàn tay này chà xát lên mu bàn tay và kẽ ngoài các ngón tay của bàn tay kia và làm ngược lại.
+                    </p>
                 </div>
-                <p class="text-gray-600">Dùng lòng bàn tay này chà lên mu bàn tay kia và ngược lại. Đan xen các ngón tay.</p>
+
+                <!-- Footer tip -->
+                <div class="pt-4 border-t border-slate-700/60 flex items-center text-xs text-slate-400 gap-2">
+                    <i class="fa-solid fa-arrows-rotate text-emerald-400"></i>
+                    <span>Đổi tay và thực hiện tối thiểu 5 lần.</span>
+                </div>
             </div>
 
             <!-- BƯỚC 3 -->
-            <div class="step-card bg-white p-6 rounded-2xl shadow-md border-t-4 border-yellow-500 flex flex-col items-center text-center">
-                <div class="text-4xl font-extrabold text-white bg-yellow-500 rounded-full h-12 w-12 flex items-center justify-center mb-4 shadow-lg">3</div>
-                <h3 class="text-xl font-bold mb-3 text-yellow-700">Chà kẽ ngón tay</h3>
-                <div class="mb-4 w-full h-40 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
-                    <!-- HÌNH ẢNH BƯỚC 3 -->
-                    <img 
-                        src="/hinhanh/rua_tay_buoc3.png" 
-                        alt="Hình ảnh Bước 3: Chà kẽ ngón tay" 
-                        class="w-full h-full object-cover rounded-lg"
-                        onerror="this.onerror=null;this.src='https://placehold.co/160x160/9CA3AF/ffffff?text=LỖI+TẢI+HÌNH'"
-                    />
+            <div class="glass-card rounded-3xl p-6 shadow-2xl hover:shadow-amber-500/20 transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group border border-slate-700/50 hover:border-amber-500/50">
+                <div>
+                    <!-- Step Badge Header -->
+                    <div class="flex items-center justify-between mb-5">
+                        <span class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white font-extrabold text-xl flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:scale-110 transition-transform">
+                            03
+                        </span>
+                        <span class="px-3 py-1 rounded-full bg-amber-950/80 text-amber-400 text-xs font-bold uppercase tracking-wider border border-amber-800/50">
+                            Kẽ ngón tay
+                        </span>
+                    </div>
+
+                    <!-- Title -->
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-amber-400 transition-colors">
+                        Chà kẽ trong ngón tay
+                    </h3>
+
+                    <!-- Image Container -->
+                    <div class="relative w-full h-48 mb-5 rounded-2xl bg-slate-900/90 overflow-hidden flex items-center justify-center p-2 border border-slate-800">
+                        <img 
+                            src="/hinhanh/rua_tay_buoc3.png" 
+                            alt="Bước 3: Chà kẽ ngón tay" 
+                            class="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
+                            onerror="this.onerror=null;this.src='https://placehold.co/400x300/0f172a/fbbf24?text=B%C6%B0%E1%BB%9Bc+3%3A+Ch%C3%A0+k%E1%BA%BD+ng%C3%B3n+tay'"
+                        />
+                    </div>
+
+                    <!-- Description -->
+                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                        Chà hai lòng bàn tay vào nhau, miết mạnh các kẽ ngón tay miết từ trong ra ngoài để làm sạch bụi bẩn tích tụ.
+                    </p>
                 </div>
-                <p class="text-gray-600">Chà hai lòng bàn tay vào nhau, miết mạnh các kẽ ngón tay (tay đan vào nhau).</p>
+
+                <!-- Footer tip -->
+                <div class="pt-4 border-t border-slate-700/60 flex items-center text-xs text-slate-400 gap-2">
+                    <i class="fa-solid fa-hand text-amber-400"></i>
+                    <span>Đan các ngón tay đan chặt vào nhau.</span>
+                </div>
             </div>
 
             <!-- BƯỚC 4 -->
-            <div class="step-card bg-white p-6 rounded-2xl shadow-md border-t-4 border-red-500 flex flex-col items-center text-center">
-                <div class="text-4xl font-extrabold text-white bg-red-500 rounded-full h-12 w-12 flex items-center justify-center mb-4 shadow-lg">4</div>
-                <h3 class="text-xl font-bold mb-3 text-red-700">Chà mặt ngoài ngón tay</h3>
-                <div class="mb-4 w-full h-40 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
-                    <!-- HÌNH ẢNH BƯỚC 4 -->
-                    <img 
-                        src="/hinhanh/rua_tay_buoc4.png" 
-                        alt="Hình ảnh Bước 4: Chà mặt ngoài ngón tay" 
-                        class="w-full h-full object-cover rounded-lg"
-                        onerror="this.onerror=null;this.src='https://placehold.co/160x160/9CA3AF/ffffff?text=LỖI+TẢI+HÌNH'"
-                    />
+            <div class="glass-card rounded-3xl p-6 shadow-2xl hover:shadow-rose-500/20 transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group border border-slate-700/50 hover:border-rose-500/50">
+                <div>
+                    <!-- Step Badge Header -->
+                    <div class="flex items-center justify-between mb-5">
+                        <span class="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 text-white font-extrabold text-xl flex items-center justify-center shadow-lg shadow-rose-500/20 group-hover:scale-110 transition-transform">
+                            04
+                        </span>
+                        <span class="px-3 py-1 rounded-full bg-rose-950/80 text-rose-400 text-xs font-bold uppercase tracking-wider border border-rose-800/50">
+                            Mặt ngoài ngón
+                        </span>
+                    </div>
+
+                    <!-- Title -->
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-rose-400 transition-colors">
+                        Chà mặt ngoài ngón tay
+                    </h3>
+
+                    <!-- Image Container -->
+                    <div class="relative w-full h-48 mb-5 rounded-2xl bg-slate-900/90 overflow-hidden flex items-center justify-center p-2 border border-slate-800">
+                        <img 
+                            src="/hinhanh/rua_tay_buoc4.png" 
+                            alt="Bước 4: Chà mặt ngoài ngón tay" 
+                            class="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
+                            onerror="this.onerror=null;this.src='https://placehold.co/400x300/0f172a/fb7185?text=B%C6%B0%E1%BB%9Bc+4%3A+Ch%C3%A0+m%E1%BA%B7t+ngo%C3%A0i'"
+                        />
+                    </div>
+
+                    <!-- Description -->
+                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                        Chà mặt ngoài các ngón tay này vào lòng bàn tay kia. Khum bàn tay lại và xoay đều cả hai bên.
+                    </p>
                 </div>
-                <p class="text-gray-600">Dùng mặt ngoài các ngón tay của bàn tay này chà xát vào lòng bàn tay kia.</p>
+
+                <!-- Footer tip -->
+                <div class="pt-4 border-t border-slate-700/60 flex items-center text-xs text-slate-400 gap-2">
+                    <i class="fa-solid fa-lock text-rose-400"></i>
+                    <span>Giữ các khớp ngón tay tiếp xúc đều.</span>
+                </div>
             </div>
 
             <!-- BƯỚC 5 -->
-            <div class="step-card bg-white p-6 rounded-2xl shadow-md border-t-4 border-indigo-500 flex flex-col items-center text-center">
-                <div class="text-4xl font-extrabold text-white bg-indigo-500 rounded-full h-12 w-12 flex items-center justify-center mb-4 shadow-lg">5</div>
-                <h3 class="text-xl font-bold mb-3 text-indigo-700">Chà ngón cái</h3>
-                <div class="mb-4 w-full h-40 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
-                    <!-- HÌNH ẢNH BƯỚC 5 -->
-                    <img 
-                        src="/hinhanh/rua_tay_buoc5.png" 
-                        alt="Hình ảnh Bước 5: Chà ngón cái" 
-                        class="w-full h-full object-cover rounded-lg"
-                        onerror="this.onerror=null;this.src='https://placehold.co/160x160/9CA3AF/ffffff?text=LỖI+TẢI+HÌNH'"
-                    />
+            <div class="glass-card rounded-3xl p-6 shadow-2xl hover:shadow-indigo-500/20 transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group border border-slate-700/50 hover:border-indigo-500/50">
+                <div>
+                    <!-- Step Badge Header -->
+                    <div class="flex items-center justify-between mb-5">
+                        <span class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-extrabold text-xl flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:scale-110 transition-transform">
+                            05
+                        </span>
+                        <span class="px-3 py-1 rounded-full bg-indigo-950/80 text-indigo-400 text-xs font-bold uppercase tracking-wider border border-indigo-800/50">
+                            Xoay ngón cái
+                        </span>
+                    </div>
+
+                    <!-- Title -->
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-indigo-400 transition-colors">
+                        Chà ngón tay cái
+                    </h3>
+
+                    <!-- Image Container -->
+                    <div class="relative w-full h-48 mb-5 rounded-2xl bg-slate-900/90 overflow-hidden flex items-center justify-center p-2 border border-slate-800">
+                        <img 
+                            src="/hinhanh/rua_tay_buoc5.png" 
+                            alt="Bước 5: Chà ngón cái" 
+                            class="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
+                            onerror="this.onerror=null;this.src='https://placehold.co/400x300/0f172a/818cf8?text=B%C6%B0%E1%BB%9Bc+5%3A+Ch%C3%A0+ng%C3%B3n+c%C3%A1i'"
+                        />
+                    </div>
+
+                    <!-- Description -->
+                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                        Xoay ngón tay cái của bàn tay này vào lòng bàn tay kia và ngược lại (sử dụng lòng bàn tay ôm trọn ngón cái).
+                    </p>
                 </div>
-                <p class="text-gray-600">Dùng lòng bàn tay này xoay và chà ngón cái của bàn tay kia và ngược lại.</p>
+
+                <!-- Footer tip -->
+                <div class="pt-4 border-t border-slate-700/60 flex items-center text-xs text-slate-400 gap-2">
+                    <i class="fa-solid fa-rotate-right text-indigo-400"></i>
+                    <span>Xoay tròn tối thiểu 5 lần mỗi bên.</span>
+                </div>
             </div>
 
             <!-- BƯỚC 6 -->
-            <div class="step-card bg-white p-6 rounded-2xl shadow-md border-t-4 border-pink-500 flex flex-col items-center text-center">
-                <div class="text-4xl font-extrabold text-white bg-pink-500 rounded-full h-12 w-12 flex items-center justify-center mb-4 shadow-lg">6</div>
-                <h3 class="text-xl font-bold mb-3 text-pink-700">Chà đầu ngón tay & Rửa sạch</h3>
-                <div class="mb-4 w-full h-40 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
-                    <!-- HÌNH ẢNH BƯỚC 6 -->
-                    <img 
-                        src="/hinhanh/rua_tay_buoc6.png" 
-                        alt="Hình ảnh Bước 6: Chà đầu ngón tay và Rửa sạch" 
-                        class="w-full h-full object-cover rounded-lg"
-                        onerror="this.onerror=null;this.src='https://placehold.co/160x160/9CA3AF/ffffff?text=LỖI+TẢI+HÌNH'"
-                    />
+            <div class="glass-card rounded-3xl p-6 shadow-2xl hover:shadow-teal-500/20 transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group border border-slate-700/50 hover:border-teal-500/50">
+                <div>
+                    <!-- Step Badge Header -->
+                    <div class="flex items-center justify-between mb-5">
+                        <span class="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-600 text-white font-extrabold text-xl flex items-center justify-center shadow-lg shadow-teal-500/20 group-hover:scale-110 transition-transform">
+                            06
+                        </span>
+                        <span class="px-3 py-1 rounded-full bg-teal-950/80 text-teal-400 text-xs font-bold uppercase tracking-wider border border-teal-800/50">
+                            Rửa sạch
+                        </span>
+                    </div>
+
+                    <!-- Title -->
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-teal-400 transition-colors">
+                        Đầu ngón tay & Nước sạch
+                    </h3>
+
+                    <!-- Image Container -->
+                    <div class="relative w-full h-48 mb-5 rounded-2xl bg-slate-900/90 overflow-hidden flex items-center justify-center p-2 border border-slate-800">
+                        <img 
+                            src="/hinhanh/rua_tay_buoc6.png" 
+                            alt="Bước 6: Chà đầu ngón tay và Rửa sạch" 
+                            class="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
+                            onerror="this.onerror=null;this.src='https://placehold.co/400x300/0f172a/2dd4bf?text=B%C6%B0%E1%BB%9Bc+6%3A+R%E1%BB%ADa+s%E1%BA%A1ch'"
+                        />
+                    </div>
+
+                    <!-- Description -->
+                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                        Chụm các đầu ngón tay lại và xoay vào lòng bàn tay kia. Rửa sạch tay dưới vòi nước chảy đến cổ tay và lau khô.
+                    </p>
                 </div>
-                <p class="text-gray-600">Chụm đầu ngón tay chà vào lòng bàn tay kia. Sau đó, rửa sạch tay dưới vòi nước chảy.</p>
+
+                <!-- Footer tip -->
+                <div class="pt-4 border-t border-slate-700/60 flex items-center text-xs text-slate-400 gap-2">
+                    <i class="fa-solid fa-faucet-drip text-teal-400"></i>
+                    <span>Lau khô bằng khăn sạch dùng 1 lần.</span>
+                </div>
             </div>
-        </div>
+
+        </section>
+
+        <!-- Interactive Hygiene Tips Section -->
+        <section class="glass-card rounded-3xl p-8 sm:p-10 shadow-2xl border border-slate-700/60 relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-60 h-60 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="relative z-10">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-sky-950 text-sky-400 text-xs font-bold mb-3 border border-sky-800/50">
+                    <i class="fa-solid fa-clock"></i> THỜI ĐIỂM QUAN TRỌNG
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-4">Khi nào bạn nhất định phải rửa tay?</h2>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-sm text-slate-300">
+                    <div class="flex items-center gap-3 bg-slate-800/80 p-3.5 rounded-xl border border-slate-700/50">
+                        <span class="w-8 h-8 rounded-lg bg-rose-950/80 text-rose-400 border border-rose-800/50 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-utensils"></i>
+                        </span>
+                        <span>Trước khi ăn & chế biến thực phẩm</span>
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-800/80 p-3.5 rounded-xl border border-slate-700/50">
+                        <span class="w-8 h-8 rounded-lg bg-indigo-950/80 text-indigo-400 border border-indigo-800/50 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-restroom"></i>
+                        </span>
+                        <span>Sau khi đi vệ sinh</span>
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-800/80 p-3.5 rounded-xl border border-slate-700/50">
+                        <span class="w-8 h-8 rounded-lg bg-amber-950/80 text-amber-400 border border-amber-800/50 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-box text-sm"></i>
+                        </span>
+                        <span>Sau khi cầm nắm rác hay đồ vật công cộng</span>
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-800/80 p-3.5 rounded-xl border border-slate-700/50">
+                        <span class="w-8 h-8 rounded-lg bg-emerald-950/80 text-emerald-400 border border-emerald-800/50 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-face-mask"></i>
+                        </span>
+                        <span>Sau khi ho, hắt hơi hoặc tháo khẩu trang</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
-
-
     <div id="footer-placeholder"></div>
 
-        <script src="/script.js"></script>
-        <script src="/baiviet_trang_chu.js"></script>
+      <script src="/script.js"></script>
 </body>
 </html>

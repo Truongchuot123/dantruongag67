@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tra Cứu Giải Phẫu Cơ Học</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0f172a',
+                        cardbg: '#1e293b',
+                        borderbg: '#334155',
+                        accenten: '#38bdf8', // Màu xanh lam nổi bật cho tên tiếng Anh
+                        tablelabel: '#fef08a', // Màu vàng nhạt nổi bật theo hình mẫu cho nhãn bảng
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .formatted-content p {
+            margin-bottom: 0.25rem;
+        }
+        /* Style bảng chi tiết giải phẫu theo ảnh mẫu */
+        .anatomy-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .anatomy-table th, .anatomy-table td {
+            border: 1px solid #475569;
+            padding: 10px 14px;
+        }
+        .anatomy-table .label-cell {
+            background-color: #fef08a; /* Vàng nhạt giống ảnh mẫu */
+            color: #0f172a;
+            font-weight: 700;
+            width: 140px;
+            vertical-align: middle;
+            font-size: 0.95rem;
+        }
+        .anatomy-table .value-cell {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            vertical-align: top;
+        }
+    </style>
+</head>
+<body class="bg-darkbg text-slate-100 min-h-screen pt-[20px] px-4 md:px-8 pb-12">
+
+    <div class="max-w-[1600px] mx-auto space-y-6">
+
+        <!-- Toolbar: Tìm kiếm & Lọc vùng -->
+        <div class="bg-cardbg p-5 rounded-2xl border border-borderbg shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <div class="p-3 bg-sky-500/10 border border-sky-500/20 rounded-xl text-sky-400">
+                    <i class="fa-solid fa-heart-pulse text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-black text-white tracking-wide">TRA CỨU GIẢI PHẪU CƠ</h1>
+                    <p class="text-xs text-slate-400">Khám phá & tra cứu chi tiết thông tin hệ cơ trên cơ thể</p>
+                </div>
+            </div>
+
+            <!-- Search & Filter Controls -->
+            <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+                <!-- Search Box -->
+                <div class="relative w-full sm:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="searchInput" placeholder="Tìm tên tiếng Việt hoặc tiếng Anh..." 
+                        class="w-full pl-10 pr-4 py-2.5 bg-darkbg border border-borderbg rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400 transition-all">
+                </div>
+
+                <!-- Region Filter -->
+                <select id="filterRegion" class="w-full sm:w-52 bg-darkbg border border-borderbg rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-sky-400 transition-all cursor-pointer">
+                    <option value="">-- Tất cả các vùng --</option>
+                    <option value="Đầu - Mặt - Cổ">Đầu - Mặt - Cổ</option>
+                    <option value="Ngực - Lưng">Ngực - Lưng</option>
+                    <option value="Bụng - Chậu">Bụng - Chậu</option>
+                    <option value="Chi trên">Chi trên</option>
+                    <option value="Chi dưới">Chi dưới</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Dynamic Grid of Cards -->
+        <div id="cardsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Loading state -->
+            <div class="col-span-full text-center py-20 bg-cardbg/50 rounded-2xl border border-borderbg">
+                <i class="fa-solid fa-circle-notch fa-spin text-4xl text-sky-400 mb-3"></i>
+                <p class="text-slate-400 font-medium">Đang tải danh sách cơ...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal Chi Tiết Giải Phẫu -->
+    <div id="detailModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+        <div class="bg-cardbg border border-borderbg w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden my-auto relative max-h-[92vh] flex flex-col transform transition-all duration-300">
+            
+            <!-- Modal Header Sticky -->
+            <div class="px-6 py-4 border-b border-borderbg bg-slate-800/90 flex justify-between items-center sticky top-0 z-10 backdrop-blur-md">
+                <span class="text-xs font-semibold px-3 py-1 rounded-full bg-sky-950 text-sky-300 border border-sky-800/60" id="modalVung">
+                    Vùng
+                </span>
+                <button id="btnCloseModal" class="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 hover:text-white hover:bg-slate-700 transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content Scrollable -->
+            <div class="p-6 overflow-y-auto space-y-6">
+                
+                <!-- 1. Tên cơ tiếng Việt & tiếng Anh nổi bật ở giữa -->
+                <div class="text-center space-y-1 py-2">
+                    <h2 id="modalTenVN" class="text-2xl sm:text-3xl font-black text-white tracking-tight">Tên Cơ Tiếng Việt</h2>
+                    <p id="modalTenEN" class="text-lg sm:text-xl font-bold text-accenten italic">Muscle English Name</p>
+                </div>
+
+                <!-- 2. Hình ảnh cơ -->
+                <div class="flex justify-center">
+                    <div class="relative max-w-md w-full rounded-2xl overflow-hidden border border-borderbg bg-darkbg p-2 shadow-inner">
+                        <img id="modalHinhAnh" src="" alt="Hình ảnh cơ" class="w-full max-h-72 object-contain rounded-xl mx-auto">
+                    </div>
+                </div>
+
+                <!-- 3. Giới thiệu / Ghi chú nhanh (Nếu có) -->
+                <div id="modalGioiThieuWrapper" class="bg-darkbg/60 p-4 rounded-xl border border-borderbg/60 hidden">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-sky-400"></i> Giới thiệu tổng quan
+                    </h4>
+                    <div id="modalGioiThieu" class="text-sm text-slate-300 leading-relaxed formatted-content"></div>
+                </div>
+
+                <!-- 4. Bảng Giải Phẫu chuẩn (Nguyên ủy, Bám tận, Chức năng, TK chi phối) -->
+                <div class="space-y-2">
+                    <h4 class="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-table-cells text-yellow-400"></i> Chi tiết đặc điểm giải phẫu
+                    </h4>
+                    <div class="overflow-x-auto rounded-xl border border-slate-700 shadow-md">
+                        <table class="anatomy-table">
+                            <tbody>
+                                <tr>
+                                    <td class="label-cell">Nguyên ủy</td>
+                                    <td id="modalNguyenUy" class="value-cell formatted-content">---</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-cell">Bám tận</td>
+                                    <td id="modalBamTan" class="value-cell formatted-content">---</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-cell">Chức năng</td>
+                                    <td id="modalChucNang" class="value-cell formatted-content">---</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-cell">TK chi phối</td>
+                                    <td id="modalThanKinh" class="value-cell formatted-content">---</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 5. Các bệnh lý thường gặp -->
+                <div class="bg-red-950/20 border border-red-900/40 p-4 rounded-xl space-y-1">
+                    <h4 class="text-sm font-bold text-red-400 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-triangle-exclamation text-red-400"></i> Các bệnh lý liên quan / thường gặp
+                    </h4>
+                    <div id="modalBenhLy" class="text-sm text-slate-200 leading-relaxed formatted-content pt-1">---</div>
+                </div>
+
+                <!-- 6. Ghi chú -->
+                <div class="bg-slate-800/50 border border-borderbg p-4 rounded-xl space-y-1">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-note-sticky text-indigo-400"></i> Ghi chú thêm
+                    </h4>
+                    <div id="modalGhiChu" class="text-sm text-slate-300 leading-relaxed formatted-content pt-1">---</div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-3 border-t border-borderbg bg-slate-800/80 flex justify-end">
+                <button id="btnCloseModalBottom" class="px-5 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold rounded-xl transition shadow-md">
+                    Đóng cửa sổ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Modules -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInAnonymously, 
+            signInWithCustomToken, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            onSnapshot 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Cấu hình Firebase của bạn
+        const firebaseConfig = {
+            apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
+            authDomain: "dulieuweb-6541e.firebaseapp.com",
+            projectId: "dulieuweb-6541e",
+            storageBucket: "dulieuweb-6541e.firebasestorage.app",
+            messagingSenderId: "215480268517",
+            appId: "1:215480268517:web:16600eafd6839fee5dc60c"
+        };
+
+        // Khởi tạo Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let allMuscles = [];
+        let currentUser = null;
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'giai-phau-app';
+        const collectionPath = collection(db, 'artifacts', appId, 'public', 'data', 'co_giai_phau');
+
+        // Xác thực người dùng
+        async function initAuth() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.error("Lỗi xác thực Firebase:", err);
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                loadMusclesData();
+            }
+        });
+
+        // Tải dữ liệu thời gian thực
+        function loadMusclesData() {
+            if (!currentUser) return;
+
+            onSnapshot(collectionPath, (snapshot) => {
+                allMuscles = [];
+                snapshot.forEach((docSnap) => {
+                    allMuscles.push({
+                        id: docSnap.id,
+                        ...docSnap.data()
+                    });
+                });
+                renderCards();
+            }, (error) => {
+                console.error("Lỗi lấy dữ liệu:", error);
+                document.getElementById('cardsGrid').innerHTML = `
+                    <div class="col-span-full text-center py-10 text-red-400">
+                        <i class="fa-solid fa-triangle-exclamation text-3xl mb-2"></i>
+                        <p>Không thể kết nối hoặc tải dữ liệu từ máy chủ.</p>
+                    </div>
+                `;
+            });
+        }
+
+        // Render thẻ CARD
+        function renderCards() {
+            const grid = document.getElementById('cardsGrid');
+            const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+            const filterRegion = document.getElementById('filterRegion').value;
+
+            // Lọc danh sách theo tìm kiếm và vùng
+            const filtered = allMuscles.filter(item => {
+                const matchRegion = !filterRegion || item.vung === filterRegion;
+                const matchSearch = !searchVal || 
+                    (item.tenVN && item.tenVN.toLowerCase().includes(searchVal)) ||
+                    (item.tenEN && item.tenEN.toLowerCase().includes(searchVal));
+                return matchRegion && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-16 bg-cardbg/40 rounded-2xl border border-borderbg">
+                        <i class="fa-regular fa-compass text-4xl text-slate-500 mb-3"></i>
+                        <p class="text-slate-400 font-medium">Không tìm thấy cơ giải phẫu phù hợp.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => `
+                <div class="bg-cardbg border border-borderbg hover:border-sky-500/50 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between group transition-all duration-300 hover:-translate-y-1">
+                    <div>
+                        <!-- Container ảnh Card -->
+                        <div class="relative h-48 bg-slate-900 border-b border-borderbg overflow-hidden flex items-center justify-center p-3">
+                            <img src="${escapeHTML(item.hinhAnh || '')}" 
+                                 alt="${escapeHTML(item.tenVN || 'Cơ')}"
+                                 onerror="this.onerror=null; this.src='https://placehold.co/400x300/1e293b/38bdf8?text=Hinh+Anh+Giai+Phau';"
+                                 class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-300">
+                            <span class="absolute top-3 left-3 bg-indigo-950/80 backdrop-blur-md text-indigo-300 text-[11px] font-semibold px-2.5 py-1 rounded-lg border border-indigo-700/50 shadow">
+                                ${escapeHTML(item.vung || 'Chưa phân vùng')}
+                            </span>
+                        </div>
+
+                        <!-- Nội dung thẻ -->
+                        <div class="p-4 space-y-1.5">
+                            <h3 class="font-bold text-lg text-white group-hover:text-sky-400 transition-colors line-clamp-1">
+                                ${escapeHTML(item.tenVN || 'Chưa có tên')}
+                            </h3>
+                            <p class="text-sm font-semibold text-accenten italic line-clamp-1">
+                                ${escapeHTML(item.tenEN || '')}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Nút Xem Thêm -->
+                    <div class="p-4 pt-0">
+                        <button onclick="openDetailModal('${item.id}')" 
+                                class="w-full py-2.5 px-4 bg-slate-800 hover:bg-sky-600 text-slate-200 hover:text-white text-sm font-semibold rounded-xl border border-slate-700 hover:border-sky-500 shadow-md transition-all duration-200 flex items-center justify-center gap-2">
+                            <span>Xem thêm</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Escape HTML
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        // Mở Modal xem thông tin chi tiết
+        window.openDetailModal = function(id) {
+            const item = allMuscles.find(m => m.id === id);
+            if (!item) return;
+
+            document.getElementById('modalVung').textContent = item.vung || 'Chưa rõ vùng';
+            document.getElementById('modalTenVN').textContent = item.tenVN || '';
+            document.getElementById('modalTenEN').textContent = item.tenEN || '';
+            
+            const imgElem = document.getElementById('modalHinhAnh');
+            imgElem.src = item.hinhAnh || '';
+            imgElem.onerror = function() {
+                this.onerror = null;
+                this.src = 'https://placehold.co/500x300/1e293b/38bdf8?text=Hinh+Anh+Giai+Phau';
+            };
+
+            // Bảng 4 mục chính
+            document.getElementById('modalNguyenUy').innerHTML = item.nguyenUy || '<span class="text-slate-500">Chưa cập nhật</span>';
+            document.getElementById('modalBamTan').innerHTML = item.bamTan || '<span class="text-slate-500">Chưa cập nhật</span>';
+            document.getElementById('modalChucNang').innerHTML = item.chucNang || '<span class="text-slate-500">Chưa cập nhật</span>';
+            document.getElementById('modalThanKinh').innerHTML = item.thanKinh || '<span class="text-slate-500">Chưa cập nhật</span>';
+
+            // Bệnh lý & Ghi chú
+            document.getElementById('modalBenhLy').innerHTML = item.benhLy || '<span class="text-slate-500 italic">Chưa ghi nhận bệnh lý liên quan</span>';
+            document.getElementById('modalGhiChu').innerHTML = item.ghiChu || '<span class="text-slate-500 italic">Không có ghi chú thêm</span>';
+
+            document.getElementById('detailModal').classList.remove('hidden');
+        };
+
+        // Đóng Modal
+        const closeModal = () => document.getElementById('detailModal').classList.add('hidden');
+        document.getElementById('btnCloseModal').addEventListener('click', closeModal);
+        document.getElementById('btnCloseModalBottom').addEventListener('click', closeModal);
+
+        // Đóng Modal khi click ngoài khung
+        document.getElementById('detailModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('detailModal')) {
+                closeModal();
+            }
+        });
+
+        // Tìm kiếm & Lọc Realtime
+        document.getElementById('searchInput').addEventListener('input', renderCards);
+        document.getElementById('filterRegion').addEventListener('change', renderCards);
+
+        // Khởi tạo
+        initAuth();
+    </script>
+</body>
+</html>

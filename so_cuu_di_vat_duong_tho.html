@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sơ cứu dị vặt đường thở</title>
+    <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
+    <meta property="og:image" content="https://placehold.co/600x400/0f172a/3b82f6?text=Dan+Truong">
+    <meta property="og:url" content="https://dantruongag.id.vn">
+    <link class="js-favicon" rel="icon" href="/hinhanh/logo_web.png" type="">
+    <link rel="stylesheet" href="/style.css">
+    <!-- Tailwind CSS & FontAwesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Thư viện Font chữ hiện đại -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        emergency: {
+                            50: '#fef2f2',
+                            100: '#fee2e2',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar and smooth transitions */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="theme-indigo bg-[#0b0f19] text-gray-100 overflow-x-hidden selection:bg-indigo-500 selection:text-white">
+
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+    <div id="search-placeholder"></div>
+
+    <!-- Main Wrapper Container (No Header/Footer, top margin 20px) -->
+    <main class="max-w-4xl mx-auto space-y-6">
+
+        <!-- Emergency Alert Banner -->
+        <div class="bg-gradient-to-r from-red-600 via-rose-600 to-red-700 text-white rounded-2xl shadow-xl p-6 sm:p-8 relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div class="relative z-10">
+                <div class="flex items-center space-x-3 mb-2">
+                    <span class="flex h-3 w-3 relative">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-300 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-3 w-3 bg-yellow-400"></span>
+                    </span>
+                    <span class="bg-red-800/80 text-red-100 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-red-400/30">Cấp cứu khẩn cấp</span>
+                </div>
+                <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-2">SƠ CỨU DỊ VẶT ĐƯỜNG THỞ</h1>
+                <p class="text-red-100 text-sm sm:text-base leading-relaxed max-w-2xl">
+                    Hóc dị vật ở trẻ em và người lớn là tình huống cấp cứu tối khẩn cấp gây tắc nghẽn đường thở, ngừng thở và tử vong nhanh chóng nếu không xử trí kịp thời.
+                </p>
+            </div>
+        </div>
+
+        <!-- Interactive Triage Assistant: Quick Navigation based on patient profile -->
+        <section class="bg-white rounded-2xl shadow-md p-5 sm:p-6 border border-slate-200">
+            <h2 class="text-lg font-bold text-slate-900 mb-3 flex items-center">
+                <i class="fa-solid fa-stethoscope text-teal-600 mr-2"></i> Chọn đối tượng cần sơ cứu
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <button onclick="switchTab('infant')" id="btn-infant" class="triage-btn text-left p-4 rounded-xl border-2 border-teal-500 bg-teal-50/50 hover:bg-teal-50 transition-all flex items-center space-x-4 shadow-sm group">
+                    <div class="w-12 h-12 rounded-full bg-teal-600 text-white flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-baby"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold text-teal-900">Trẻ Sơ Sinh & Nhũ Nhi</div>
+                        <div class="text-xs text-teal-700 font-medium">Dưới 1 tuổi • Vỗ lưng & Ấn ngực</div>
+                    </div>
+                </button>
+
+                <button onclick="switchTab('adult')" id="btn-adult" class="triage-btn text-left p-4 rounded-xl border-2 border-slate-200 bg-white hover:bg-slate-50 transition-all flex items-center space-x-4 shadow-sm group">
+                    <div class="w-12 h-12 rounded-full bg-rose-600 text-white flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-child-reaching"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold text-slate-900">Trẻ Lớn & Người Lớn</div>
+                        <div class="text-xs text-slate-500 font-medium">Thủ thuật Heimlich (Tỉnh / Hôn mê)</div>
+                    </div>
+                </button>
+            </div>
+        </section>
+
+        <!-- Section I & II: Nguyên nhân & Dấu hiệu nhận biết (Collapsible / Accordion or Card Grid) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Nguyên nhân -->
+            <div class="bg-white rounded-2xl shadow-md p-6 border border-slate-200">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">I. Nguyên nhân thường gặp</h3>
+                </div>
+                <ul class="space-y-3">
+                    <li class="flex items-start space-x-3 p-3 rounded-xl bg-amber-50/50 border border-amber-100">
+                        <i class="fa-solid fa-droplet text-amber-600 mt-1"></i>
+                        <div>
+                            <span class="font-semibold text-slate-900">Sặc sữa, cháo, cơm, thuốc:</span>
+                            <p class="text-xs text-slate-600 mt-0.5">Phổ biến ở trẻ nhỏ khi bú sai tư thế hoặc nuốt vội.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-3 p-3 rounded-xl bg-amber-50/50 border border-amber-100">
+                        <i class="fa-solid fa-puzzle-piece text-amber-600 mt-1"></i>
+                        <div>
+                            <span class="font-semibold text-slate-900">Hóc dị vật (vật nhỏ, đồ chơi, hạt):</span>
+                            <p class="text-xs text-slate-600 mt-0.5">Trẻ ngậm đồ vật khi đang chạy nhảy, cười đùa.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Dấu hiệu nhận biết -->
+            <div class="bg-white rounded-2xl shadow-md p-6 border border-slate-200">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-eye"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">II. Dấu hiệu nhận biết</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                    <div class="p-2.5 rounded-lg bg-red-50 text-red-900 flex items-center space-x-2">
+                        <i class="fa-solid fa-wind text-red-500"></i>
+                        <span>Ho sặc sụa đột ngột</span>
+                    </div>
+                    <div class="p-2.5 rounded-lg bg-red-50 text-red-900 flex items-center space-x-2">
+                        <i class="fa-solid fa-lungs text-red-500"></i>
+                        <span>Khó thở, thở rít</span>
+                    </div>
+                    <div class="p-2.5 rounded-lg bg-red-50 text-red-900 flex items-center space-x-2">
+                        <i class="fa-solid fa-face-dizzy text-red-500"></i>
+                        <span>Tím tái môi và mặt</span>
+                    </div>
+                    <div class="p-2.5 rounded-lg bg-red-50 text-red-900 flex items-center space-x-2">
+                        <i class="fa-solid fa-comment-slash text-red-500"></i>
+                        <span>Không nói / khóc được</span>
+                    </div>
+                    <div class="p-2.5 rounded-lg bg-red-50 text-red-900 col-span-full flex items-center space-x-2">
+                        <i class="fa-solid fa-hand-holding-medical text-red-500"></i>
+                        <span>Trẻ ôm cổ, biểu hiện nghẹt thở hoảng loạn</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section III: Sơ cứu chi tiết (Tabbed Content) -->
+        <section class="bg-white rounded-2xl shadow-md p-6 sm:p-8 border border-slate-200">
+            <div class="flex items-center justify-between mb-6 border-b pb-4">
+                <div>
+                    <h2 class="text-xl font-extrabold text-slate-900 flex items-center">
+                        <i class="fa-solid fa-kit-medical text-teal-600 mr-2"></i> III. Hướng Dẫn Sơ Cứu Chi Tiết
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">Chọn đúng kỹ thuật theo độ tuổi và tình trạng bệnh nhân.</p>
+                </div>
+            </div>
+
+            <!-- TAB 1: INFANT (< 1 tuổi) -->
+            <div id="content-infant" class="tab-content active space-y-6">
+                <div class="bg-teal-50 border-l-4 border-teal-600 p-4 rounded-r-xl">
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-circle-info text-teal-600 mt-1 mr-3 text-lg"></i>
+                        <div>
+                            <span class="font-bold text-teal-900">Lưu ý quan trọng cho trẻ sơ sinh & nhũ nhi:</span>
+                            <p class="text-sm text-teal-800 mt-0.5">
+                                <strong>KHÔNG</strong> sử dụng thủ thuật Heimlich đối với trẻ sơ sinh và nhũ nhi do nguy cơ gây chấn thương tạng nội tạng. Thay vào đó, áp dụng tuyệt đối kết hợp <strong>Thủ thuật vỗ lưng ấn ngực</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 1: Vỗ lưng -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <div class="md:col-span-7 space-y-3">
+                        <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-teal-600 text-white">
+                            Bước 1: Vỗ Lưng (5 lần)
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-900">Kỹ thuật vỗ lưng trẻ nhỏ</h4>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Đặt trẻ nằm sấp dọc theo cánh tay cấp cứu viên, đầu thấp hơn ngực. Người cứu đặt tay dọc lên đùi mình và dùng gót bàn tay còn lại vỗ nhẹ và nhanh <strong>5 cái</strong> lên lưng trẻ ở vùng giữa hai xương bả vai.
+                        </p>
+                        <div class="flex items-center text-xs text-teal-700 font-semibold space-x-2">
+                            <i class="fa-solid fa-check-circle"></i>
+                            <span>Tần suất: Dứt khoát, lực vừa phải để đẩy dị vật.</span>
+                        </div>
+                    </div>
+                    <div class="md:col-span-5">
+                        <div class="rounded-xl overflow-hidden shadow-md aspect-video bg-slate-200 relative">
+                            <img src="/hinhanh/Trang chủ/di_vat_duong_tho.jpg" alt="Ấn ngực sơ sinh" class="w-full h-full object-cover">
+                        </div>
+                        <p class="text-center text-[11px] text-slate-400 mt-1">Kỹ thuật vỗ lưng</p>
+                    </div>
+                </div>
+
+                <!-- Step 2: Ấn ngực -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <div class="md:col-span-7 space-y-3">
+                        <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-teal-600 text-white">
+                            Bước 2: Ấn Ngực (5 lần)
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-900">Kỹ thuật ấn ngực nếu dị vật chưa ra</h4>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Nếu dị vật vẫn chưa bật ra, lật ngược trẻ lại ở tư thế ngửa, đặt nằm dọc trên đùi với đầu thấp. Dùng 2 ngón tay ấn ngực <strong>5 lần</strong> tại vị trí ép tim (ngay dưới đường nối hai núm vú).
+                        </p>
+                        <div class="flex items-center text-xs text-teal-700 font-semibold space-x-2">
+                            <i class="fa-solid fa-clock"></i>
+                            <span>Tần suất ấn: 1 lần / giây. Lặp lại chu kỳ vỗ lưng - ấn ngực đến khi trẻ khóc hoặc dị vật văng ra.</span>
+                        </div>
+                    </div>
+                    <div class="md:col-span-5">
+                        <div class="rounded-xl overflow-hidden shadow-md aspect-video bg-slate-200 relative">
+                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/ShaNuST_58A?si=NzBJz_KDzii1wVQM" title="Infant Choking First Aid" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <p class="text-center text-[11px] text-slate-400 mt-1">Vidieo thực hiện kỹ thuật vỗ lưng ấn ngực</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: ADULT / OLDER CHILDREN (Heimlich) -->
+            <div id="content-adult" class="tab-content space-y-6">
+                <div class="bg-rose-50 border-l-4 border-rose-600 p-4 rounded-r-xl">
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-circle-info text-rose-600 mt-1 mr-3 text-lg"></i>
+                        <div>
+                            <span class="font-bold text-rose-900">Cơ chế Thủ thuật Heimlich:</span>
+                            <p class="text-sm text-rose-800 mt-0.5">
+                                Ấn mạnh vào bụng dưới xương ức nhằm tăng áp lực lồng ngực đột ngột, đẩy không khí từ phổi ép dị vật tống ra ngoài.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub-tabs for Standing vs Lying Heimlich -->
+                <div class="flex space-x-2 border-b pb-2">
+                    <button onclick="switchHeimlich('standing')" id="subbtn-standing" class="heimlich-subbtn px-4 py-2 rounded-lg text-sm font-bold bg-rose-600 text-white shadow-sm transition-all">
+                        <i class="fa-solid fa-person mr-1.5"></i> Tư thế đứng (Bệnh nhân TỈNH)
+                    </button>
+                    <button onclick="switchHeimlich('lying')" id="subbtn-lying" class="heimlich-subbtn px-4 py-2 rounded-lg text-sm font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition-all">
+                        <i class="fa-solid fa-bed mr-1.5"></i> Tư thế nằm (Bệnh nhân HÔN MÊ)
+                    </button>
+                </div>
+
+                <!-- Heimlich Standing -->
+                <div id="heimlich-standing" class="heimlich-content space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                        <div class="md:col-span-7 space-y-3">
+                            <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-rose-600 text-white">
+                                Heimlich Tư Thế Đứng
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900">Thực hiện cho người bệnh còn tỉnh</h4>
+                            <ul class="space-y-2 text-sm text-slate-600">
+                                <li class="flex items-start space-x-2">
+                                    <i class="fa-solid fa-check text-rose-600 mt-1"></i>
+                                    <span>Đứng phía sau lưng nạn nhân, vòng 2 tay ôm lấy lưng/eo nạn nhân.</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fa-solid fa-check text-rose-600 mt-1"></i>
+                                    <span>Nắm tay thành quả đấm đặt vào vùng thượng vị (giữa rốn và mũi ức), bàn tay kia chồng lên siết chặt.</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fa-solid fa-check text-rose-600 mt-1"></i>
+                                    <span>Ấn mạnh và nhanh hướng: <strong>Từ trước ra sau, từ dưới lên trên</strong> mạnh mẽ.</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fa-solid fa-check text-rose-600 mt-1"></i>
+                                    <span>Lặp lại liên tục <strong>6 – 10 lần</strong> cho đến khi dị vật văng ra hoặc nạn nhân thở được.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="md:col-span-5">
+                            <div class="rounded-xl overflow-hidden shadow-md aspect-video bg-slate-200 relative">
+                                <iframe class="w-full h-full" src="https://www.youtube.com/embed/8R3RWC-xx1I?si=irOcibPBvOG00c1Z" title="Heimlich Maneuver Adult" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <p class="text-center text-[11px] text-slate-400 mt-1">Heimlich Tư Thế ngồi</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Heimlich Lying -->
+                <div id="heimlich-lying" class="heimlich-content hidden space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                        <div class="md:col-span-7 space-y-3">
+                            <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-rose-600 text-white">
+                                Heimlich Tư Thế Nằm
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900">Thực hiện cho bệnh nhân hôn mê / ngất xỉu</h4>
+                            <ul class="space-y-2 text-sm text-slate-600">
+                                <li class="flex items-start space-x-2">
+                                    <i class="fa-solid fa-check text-rose-600 mt-1"></i>
+                                    <span>Đặt bệnh nhân nằm ngửa trên mặt phẳng cứng. Người cứu quỳ gối ngồi phía trên đùi hoặc hai bên hông nạn nhân.</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fa-solid fa-check text-rose-600 mt-1"></i>
+                                    <span>Đặt lòng bàn tay thứ nhất lên vùng thượng vị (dưới xương ức, trên rốn).</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fa-solid fa-check text-rose-600 mt-1"></i>
+                                    <span>Đặt bàn tay thứ hai chồng lên bàn tay thứ nhất.</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fa-solid fa-check text-rose-600 mt-1"></i>
+                                    <span>Ấn mạnh và nhanh bụng theo hướng: <strong>Từ dưới lên trên</strong> để tạo áp lực tống dị vật.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="md:col-span-5">
+                            <div class="rounded-xl overflow-hidden shadow-md aspect-video bg-slate-200 relative">
+                                <img src="/hinhanh/Trang chủ/Heimlich_nam_ngua.jpg" alt="Heimlich nằm" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-center text-[11px] text-slate-400 mt-1">Heimlich Tư Thế Nằm</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JavaScript for Tab Switching Logic -->
+    <script>
+        function switchTab(type) {
+            const btnInfant = document.getElementById('btn-infant');
+            const btnAdult = document.getElementById('btn-adult');
+            const contentInfant = document.getElementById('content-infant');
+            const contentAdult = document.getElementById('content-adult');
+
+            if (type === 'infant') {
+                btnInfant.className = "triage-btn text-left p-4 rounded-xl border-2 border-teal-500 bg-teal-50/50 hover:bg-teal-50 transition-all flex items-center space-x-4 shadow-sm group";
+                btnInfant.querySelector('div:first-child').className = "w-12 h-12 rounded-full bg-teal-600 text-white flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform";
+                btnInfant.querySelector('.font-bold').className = "font-bold text-teal-900";
+                
+                btnAdult.className = "triage-btn text-left p-4 rounded-xl border-2 border-slate-200 bg-white hover:bg-slate-50 transition-all flex items-center space-x-4 shadow-sm group";
+                btnAdult.querySelector('div:first-child').className = "w-12 h-12 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform";
+                btnAdult.querySelector('.font-bold').className = "font-bold text-slate-700";
+
+                contentInfant.classList.add('active');
+                contentAdult.classList.remove('active');
+            } else {
+                btnAdult.className = "triage-btn text-left p-4 rounded-xl border-2 border-rose-500 bg-rose-50/50 hover:bg-rose-50 transition-all flex items-center space-x-4 shadow-sm group";
+                btnAdult.querySelector('div:first-child').className = "w-12 h-12 rounded-full bg-rose-600 text-white flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform";
+                btnAdult.querySelector('.font-bold').className = "font-bold text-rose-900";
+
+                btnInfant.className = "triage-btn text-left p-4 rounded-xl border-2 border-slate-200 bg-white hover:bg-slate-50 transition-all flex items-center space-x-4 shadow-sm group";
+                btnInfant.querySelector('div:first-child').className = "w-12 h-12 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform";
+                btnInfant.querySelector('.font-bold').className = "font-bold text-slate-700";
+
+                contentAdult.classList.add('active');
+                contentInfant.classList.remove('active');
+            }
+        }
+
+        function switchHeimlich(pos) {
+            const btnStanding = document.getElementById('subbtn-standing');
+            const btnLying = document.getElementById('subbtn-lying');
+            const contentStanding = document.getElementById('heimlich-standing');
+            const contentLying = document.getElementById('heimlich-lying');
+
+            if (pos === 'standing') {
+                btnStanding.className = "heimlich-subbtn px-4 py-2 rounded-lg text-sm font-bold bg-rose-600 text-white shadow-sm transition-all";
+                btnLying.className = "heimlich-subbtn px-4 py-2 rounded-lg text-sm font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition-all";
+                contentStanding.classList.remove('hidden');
+                contentLying.classList.add('hidden');
+            } else {
+                btnLying.className = "heimlich-subbtn px-4 py-2 rounded-lg text-sm font-bold bg-rose-600 text-white shadow-sm transition-all";
+                btnStanding.className = "heimlich-subbtn px-4 py-2 rounded-lg text-sm font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition-all";
+                contentLying.classList.remove('hidden');
+                contentStanding.classList.add('hidden');
+            }
+        }
+    </script>
+
+    
+    <div id="footer-placeholder"></div>
+    <script src="/script.js"></script>
+</body>
+</html>
