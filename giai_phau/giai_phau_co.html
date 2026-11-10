@@ -1,87 +1,435 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Studying anatomy</title>
-    
-     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:image" content="/hinhanh/logo_web.png">
-    <meta property="og:url" content="https://dantruongag.id.vn">
-    
+    <title>Tra Cứu Giải Phẫu Cơ Học</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/banner_trang_con.css">
-    <link rel="stylesheet" href="/giai_phau/giai_phau.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
- 
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0f172a',
+                        cardbg: '#1e293b',
+                        borderbg: '#334155',
+                        accenten: '#38bdf8', // Màu xanh lam nổi bật cho tên tiếng Anh
+                        tablelabel: '#fef08a', // Màu vàng nhạt nổi bật cho nhãn bảng
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .formatted-content p {
+            margin-bottom: 0.25rem;
+        }
+        /* Style bảng chi tiết giải phẫu chuẩn */
+        .anatomy-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .anatomy-table th, .anatomy-table td {
+            border: 1px solid #475569;
+            padding: 10px 14px;
+        }
+        .anatomy-table .label-cell {
+            background-color: #fef08a; /* Vàng nhạt */
+            color: #0f172a;
+            font-weight: 700;
+            width: 140px;
+            vertical-align: middle;
+            font-size: 0.95rem;
+        }
+        .anatomy-table .value-cell {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            vertical-align: top;
+        }
+    </style>
 </head>
-    <body class="bg-gray-900"> 
-    
-    <div id="header-placeholder"></div>
-    <div id="search-placeholder"></div>
-<!-- giới thiệu khi đăng nhập -->
-    <header class="main-banner_trang_con">
-        <div class="banner_trang_con-overlay"></div>
-        <div class="hbanner_trang_con-image-bg"></div>
+<body class="bg-darkbg text-slate-100 min-h-screen pt-[20px] px-4 md:px-8 pb-12">
 
-        <div class="hbanner_trang_con-content">
-            <h1 class="main-title">GIẢI PHẨU CƠ</h1>
-            <p class="sub-text">Khám phá cấu trúc và chức năng của các cơ trong cơ thể người</p>
-            <div class="hbanner_trang_con-tabs-wrap">
-                <div id="category-tabs" class="category-scroll" aria-label="Danh mục bài viết"></div>
+    <div class="max-w-[1600px] mx-auto space-y-6">
+
+        <!-- Toolbar: Tìm kiếm & Lọc vùng -->
+        <div class="bg-cardbg p-5 rounded-2xl border border-borderbg shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <div class="p-3 bg-sky-500/10 border border-sky-500/20 rounded-xl text-sky-400">
+                    <i class="fa-solid fa-heart-pulse text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-black text-white tracking-wide">TRA CỨU GIẢI PHẪU CƠ</h1>
+                    <p class="text-xs text-slate-400">Khám phá & tra cứu chi tiết thông tin hệ cơ trên cơ thể</p>
+                </div>
+            </div>
+
+            <!-- Search & Filter Controls -->
+            <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+                <div class="relative w-full sm:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="searchInput" placeholder="Tìm tên tiếng Việt hoặc tiếng Anh..." 
+                        class="w-full pl-10 pr-4 py-2.5 bg-darkbg border border-borderbg rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400 transition-all">
+                </div>
+
+                <select id="filterRegion" class="w-full sm:w-52 bg-darkbg border border-borderbg rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-sky-400 transition-all cursor-pointer">
+                    <option value="">-- Tất cả các vùng --</option>
+                    <option value="Đầu - Mặt - Cổ">Đầu - Mặt - Cổ</option>
+                    <option value="Ngực - Lưng">Ngực - Lưng</option>
+                    <option value="Bụng - Chậu">Bụng - Chậu</option>
+                    <option value="Chi trên">Chi trên</option>
+                    <option value="Chi dưới">Chi dưới</option>
+                </select>
             </div>
         </div>
-    </header>
-        <section class="noidung_kham_pha_them">
-            <div class="limb-section">
-                <h4>Chi trên</h4>
-                <div class="card_kha_meht_ahpm"> <button id="upper-scroll-left" class="scroll-btn left hidden">&#10094;</button>
-                    <div class="suggestion-container" id="suggestion-container-upper"></div>
-                    <button id="upper-scroll-right" class="scroll-btn right">&#10095;</button>
-                </div>
+
+        <!-- Dynamic Grid of Cards -->
+        <div id="cardsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="col-span-full text-center py-20 bg-cardbg/50 rounded-2xl border border-borderbg">
+                <i class="fa-solid fa-circle-notch fa-spin text-4xl text-sky-400 mb-3"></i>
+                <p class="text-slate-400 font-medium">Đang tải danh sách cơ...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal Chi Tiết Giải Phẫu -->
+    <div id="detailModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+        <div class="bg-cardbg border border-borderbg w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden my-auto relative max-h-[92vh] flex flex-col transform transition-all duration-300">
+            
+            <!-- Modal Header Sticky -->
+            <div class="px-6 py-4 border-b border-borderbg bg-slate-800/90 flex justify-between items-center sticky top-0 z-10 backdrop-blur-md">
+                <span class="text-xs font-semibold px-3 py-1 rounded-full bg-sky-950 text-sky-300 border border-sky-800/60" id="modalVung">
+                    Vùng
+                </span>
+                <button id="btnCloseModal" class="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 hover:text-white hover:bg-slate-700 transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
             </div>
 
-            <div class="limb-section">
-                <h4>Chi dưới</h4>
-                <div class="card_kha_meht_ahpm"> <button id="lower-scroll-left" class="scroll-btn left hidden">&#10094;</button>
-                    <div class="suggestion-container" id="suggestion-container-lower"></div>
-                    <button id="lower-scroll-right" class="scroll-btn right">&#10095;</button>
+            <!-- Modal Content Scrollable -->
+            <div class="p-6 overflow-y-auto space-y-6">
+                
+                <!-- Tên cơ tiếng Việt & tiếng Anh -->
+                <div class="text-center space-y-1 py-2">
+                    <h2 id="modalTenVN" class="text-2xl sm:text-3xl font-black text-white tracking-tight">Tên Cơ Tiếng Việt</h2>
+                    <p id="modalTenEN" class="text-lg sm:text-xl font-bold text-accenten italic">Muscle English Name</p>
                 </div>
+
+                <!-- Hình ảnh cơ -->
+                <div class="flex justify-center">
+                    <div class="relative max-w-md w-full rounded-2xl overflow-hidden border border-borderbg bg-darkbg p-2 shadow-inner">
+                        <img id="modalHinhAnh" src="" alt="Hình ảnh cơ" class="w-full max-h-72 object-contain rounded-xl mx-auto">
+                    </div>
+                </div>
+
+                <!-- ĐẠI CƯƠNG -->
+                <div class="bg-slate-800/70 border border-indigo-500/30 p-4.5 rounded-2xl space-y-2 shadow-lg">
+                    <h4 class="text-sm font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-book-open text-indigo-400"></i> Đại cương
+                    </h4>
+                    <div id="modalDaiCuong" class="text-sm text-slate-200 leading-relaxed formatted-content pt-1">---</div>
+                </div>
+
+                <!-- CONTAINER CHO CÁC BẢNG GIẢI PHẪU (ĐƯỢC TẠO ĐỘNG) -->
+                <div class="space-y-6" id="modalTablesContainer">
+                    <!-- Dynamic anatomy tables will be inserted here -->
+                </div>
+
+                <!-- Bệnh lý thường gặp -->
+                <div class="bg-red-950/20 border border-red-900/40 p-4 rounded-xl space-y-1">
+                    <h4 class="text-sm font-bold text-red-400 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-triangle-exclamation text-red-400"></i> Các bệnh lý liên quan / thường gặp
+                    </h4>
+                    <div id="modalBenhLy" class="text-sm text-slate-200 leading-relaxed formatted-content pt-1">---</div>
+                </div>
+
+                <!-- Ghi chú tổng quan -->
+                <div class="bg-slate-800/50 border border-borderbg p-4 rounded-xl space-y-1">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-note-sticky text-indigo-400"></i> Ghi chú thêm
+                    </h4>
+                    <div id="modalGhiChu" class="text-sm text-slate-300 leading-relaxed formatted-content pt-1">---</div>
+                </div>
+
             </div>
 
-            <div class="limb-section">
-                <h4>Lưng</h4>
-                <div class="card_kha_meht_ahpm"> <button id="back-scroll-left" class="scroll-btn left hidden">&#10094;</button>
-                    <div class="suggestion-container" id="suggestion-container-back"></div>
-                    <button id="back-scroll-right" class="scroll-btn right">&#10095;</button>
-                </div>
+            <!-- Modal Footer -->
+            <div class="px-6 py-3 border-t border-borderbg bg-slate-800/80 flex justify-end">
+                <button id="btnCloseModalBottom" class="px-5 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold rounded-xl transition shadow-md">
+                    Đóng cửa sổ
+                </button>
             </div>
+        </div>
+    </div>
 
-            <div class="limb-section">
-                <h4>Đầu - mặt - cổ</h4>
-                <div class="card_kha_meht_ahpm"> <button id="Head_and_Neck_Anatomy-scroll-left" class="scroll-btn left hidden">&#10094;</button>
-                    <div class="suggestion-container" id="suggestion-container-Head_and_Neck_Anatomy"></div>
-                    <button id="Head_and_Neck_Anatomy-scroll-right" class="scroll-btn right">&#10095;</button>
+    <!-- Firebase SDK Modules -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInAnonymously, 
+            signInWithCustomToken, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            onSnapshot 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
+            authDomain: "dulieuweb-6541e.firebaseapp.com",
+            projectId: "dulieuweb-6541e",
+            storageBucket: "dulieuweb-6541e.firebasestorage.app",
+            messagingSenderId: "215480268517",
+            appId: "1:215480268517:web:16600eafd6839fee5dc60c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let allMuscles = [];
+        let currentUser = null;
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'giai-phau-app';
+        const collectionPath = collection(db, 'artifacts', appId, 'public', 'data', 'co_giai_phau');
+
+        async function initAuth() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.error("Lỗi xác thực Firebase:", err);
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                loadMusclesData();
+            }
+        });
+
+        function loadMusclesData() {
+            if (!currentUser) return;
+
+            onSnapshot(collectionPath, (snapshot) => {
+                allMuscles = [];
+                snapshot.forEach((docSnap) => {
+                    allMuscles.push({
+                        id: docSnap.id,
+                        ...docSnap.data()
+                    });
+                });
+                renderCards();
+            }, (error) => {
+                console.error("Lỗi lấy dữ liệu:", error);
+                document.getElementById('cardsGrid').innerHTML = `
+                    <div class="col-span-full text-center py-10 text-red-400">
+                        <i class="fa-solid fa-triangle-exclamation text-3xl mb-2"></i>
+                        <p>Không thể kết nối hoặc tải dữ liệu từ máy chủ.</p>
+                    </div>
+                `;
+            });
+        }
+
+        function renderCards() {
+            const grid = document.getElementById('cardsGrid');
+            const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+            const filterRegion = document.getElementById('filterRegion').value;
+
+            const filtered = allMuscles.filter(item => {
+                const matchRegion = !filterRegion || item.vung === filterRegion;
+                const matchSearch = !searchVal || 
+                    (item.tenVN && item.tenVN.toLowerCase().includes(searchVal)) ||
+                    (item.tenEN && item.tenEN.toLowerCase().includes(searchVal));
+                return matchRegion && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-16 bg-cardbg/40 rounded-2xl border border-borderbg">
+                        <i class="fa-regular fa-compass text-4xl text-slate-500 mb-3"></i>
+                        <p class="text-slate-400 font-medium">Không tìm thấy cơ giải phẫu phù hợp.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => `
+                <div class="relative h-[340px] bg-slate-900 border border-borderbg hover:border-sky-500/60 rounded-2xl overflow-hidden shadow-xl group transition-all duration-300 hover:-translate-y-1">
+                    <img src="${escapeHTML(item.hinhAnh || '')}" 
+                         alt="${escapeHTML(item.tenVN || 'Cơ')}"
+                         onerror="this.onerror=null; this.src='https://placehold.co/400x500/1e293b/38bdf8?text=Hinh+Anh+Giai+Phau';"
+                         class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-out">
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-black/30 group-hover:via-slate-950/70 transition-colors duration-300"></div>
+
+                    <span class="absolute top-3 left-3 bg-indigo-950/80 backdrop-blur-md text-indigo-300 text-[11px] font-semibold px-2.5 py-1 rounded-lg border border-indigo-700/50 shadow-md z-10">
+                        ${escapeHTML(item.vung || 'Chưa phân vùng')}
+                    </span>
+
+                    <div class="absolute inset-x-0 bottom-0 p-4 space-y-3 z-10 flex flex-col justify-end">
+                        <div class="space-y-1">
+                            <h3 class="font-black text-lg text-white group-hover:text-sky-400 transition-colors line-clamp-1 drop-shadow-md">
+                                ${escapeHTML(item.tenVN || 'Chưa có tên')}
+                            </h3>
+                            <p class="text-sm font-semibold text-accenten italic line-clamp-1 drop-shadow">
+                                ${escapeHTML(item.tenEN || '')}
+                            </p>
+                        </div>
+
+                        <button onclick="openDetailModal('${item.id}')" 
+                                class="w-full py-2.5 px-4 bg-slate-900/80 hover:bg-sky-600 text-slate-100 hover:text-white text-sm font-semibold rounded-xl border border-slate-700 hover:border-sky-500 shadow-lg backdrop-blur-sm transition-all duration-200 flex items-center justify-center gap-2">
+                            <span>Xem thêm</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
+            `).join('');
+        }
 
-        </section>
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
 
+        // Mở Modal xem thông tin chi tiết
+        window.openDetailModal = function(id) {
+            const item = allMuscles.find(m => m.id === id);
+            if (!item) return;
 
-       
-    <div id="footer-placeholder"></div>
-    
-    <script src="/script.js"></script>
-    <script src="/search.js"></script>
-    <script src="/giai_phau/giai_phau.js"></script>
-    <script src="/banner_trang_con.js"></script>
+            document.getElementById('modalVung').textContent = item.vung || 'Chưa rõ vùng';
+            document.getElementById('modalTenVN').textContent = item.tenVN || '';
+            document.getElementById('modalTenEN').textContent = item.tenEN || '';
+            
+            const imgElem = document.getElementById('modalHinhAnh');
+            imgElem.src = item.hinhAnh || '';
+            imgElem.onerror = function() {
+                this.onerror = null;
+                this.src = 'https://placehold.co/500x300/1e293b/38bdf8?text=Hinh+Anh+Giai+Phau';
+            };
+
+            // Đại Cương
+            document.getElementById('modalDaiCuong').innerHTML = item.daiCuong || '<span class="text-slate-500 italic">Chưa có thông tin đại cương</span>';
+
+            // Xử lý Render danh sách các bảng giải phẫu theo từng nhóm cơ
+            const tablesContainer = document.getElementById('modalTablesContainer');
+            tablesContainer.innerHTML = '';
+
+            let tablesList = item.bangChiTiet;
+            // Nếu là dữ liệu phiên bản cũ không có mảng `bangChiTiet`, fallback về cấu trúc đơn
+            if (!Array.isArray(tablesList) || tablesList.length === 0) {
+                tablesList = [{
+                    tenCơNhom: item.tenVN || 'Đặc điểm giải phẫu',
+                    nguyenUy: item.nguyenUy || '',
+                    bamTan: item.bamTan || '',
+                    chucNang: item.chucNang || '',
+                    thanKinh: item.thanKinh || '',
+                    ghiChu: item.ghiChu || ''
+                }];
+            }
+
+            tablesList.forEach((tb, idx) => {
+                const tableSection = document.createElement('div');
+                tableSection.className = 'space-y-2 pt-1';
+                
+                tableSection.innerHTML = `
+                    <!-- TIÊU ĐỀ TÊN CÁC CƠ THUỘC NHÓM CƠ PHÍA TRÊN MỖI BẢNG -->
+                    <div class="bg-gradient-to-r from-sky-950/80 to-slate-900 border-l-4 border-sky-400 px-4 py-2.5 rounded-r-xl shadow-md flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-sky-400"></i>
+                        <h3 class="text-base font-bold text-sky-200 tracking-wide">
+                            ${escapeHTML(tb.tenCơNhom || `Nhóm Cơ #${idx + 1}`)}
+                        </h3>
+                    </div>
+
+                    <!-- BẢNG GIẢI PHẪU CHI TIẾT -->
+                    <div class="overflow-x-auto rounded-xl border border-slate-700 shadow-md">
+                        <table class="anatomy-table">
+                            <tbody>
+                                <tr>
+                                    <td class="label-cell">Nguyên ủy</td>
+                                    <td class="value-cell formatted-content">${tb.nguyenUy || '<span class="text-slate-500">Chưa cập nhật</span>'}</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-cell">Bám tận</td>
+                                    <td class="value-cell formatted-content">${tb.bamTan || '<span class="text-slate-500">Chưa cập nhật</span>'}</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-cell">Chức năng</td>
+                                    <td class="value-cell formatted-content">${tb.chucNang || '<span class="text-slate-500">Chưa cập nhật</span>'}</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-cell">TK chi phối</td>
+                                    <td class="value-cell formatted-content">${tb.thanKinh || '<span class="text-slate-500">Chưa cập nhật</span>'}</td>
+                                </tr>
+                                ${tb.ghiChu ? `
+                                <tr>
+                                    <td class="label-cell" style="background-color: #e2e8f0; color: #1e293b;">Ghi chú</td>
+                                    <td class="value-cell formatted-content text-slate-300">${tb.ghiChu}</td>
+                                </tr>
+                                ` : ''}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                tablesContainer.appendChild(tableSection);
+            });
+
+            // Bệnh lý & Ghi chú chung
+            document.getElementById('modalBenhLy').innerHTML = item.benhLy || '<span class="text-slate-500 italic">Chưa ghi nhận bệnh lý liên quan</span>';
+            document.getElementById('modalGhiChu').innerHTML = item.ghiChu || '<span class="text-slate-500 italic">Không có ghi chú thêm</span>';
+
+            document.getElementById('detailModal').classList.remove('hidden');
+        };
+
+        const closeModal = () => document.getElementById('detailModal').classList.add('hidden');
+        document.getElementById('btnCloseModal').addEventListener('click', closeModal);
+        document.getElementById('btnCloseModalBottom').addEventListener('click', closeModal);
+
+        document.getElementById('detailModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('detailModal')) {
+                closeModal();
+            }
+        });
+
+        document.getElementById('searchInput').addEventListener('input', renderCards);
+        document.getElementById('filterRegion').addEventListener('change', renderCards);
+
+        initAuth();
+    </script>
 </body>
 </html>

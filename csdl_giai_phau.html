@@ -15,7 +15,8 @@
                         darkbg: '#0f172a',
                         cardbg: '#1e293b',
                         borderbg: '#334155',
-                        accenten: '#38bdf8', // Màu xanh lam nổi bật cho tên tiếng Anh
+                        accenten: '#38bdf8',
+                        tablelabel: '#fef08a'
                     }
                 }
             }
@@ -31,7 +32,6 @@
             background-color: #0f172a;
             color: #f8fafc;
         }
-        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -61,10 +61,9 @@
             background-color: #475569;
             color: #ffffff;
         }
-        /* Style cho vùng soạn thảo rich text */
         .editable-area {
-            min-height: 80px;
-            max-height: 200px;
+            min-height: 60px;
+            max-height: 150px;
             overflow-y: auto;
             border: 1px solid #334155;
             border-radius: 0.5rem;
@@ -75,22 +74,22 @@
         }
         .editable-area:focus {
             border-color: #6366f1;
-            ring: 2px solid #6366f1;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
         }
     </style>
 </head>
-<body class="bg-darkbg text-slate-100 min-h-screen pt-[20px] px-4 md:px-8 pb-10">
+<body class="bg-darkbg text-slate-100 min-h-screen pt-4 md:pt-6 px-3 sm:px-6 md:px-8 pb-10">
 
     <div class="max-w-[1700px] mx-auto space-y-6">
 
         <!-- Top Controls / Toolbar -->
         <div class="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 bg-cardbg p-4 rounded-xl border border-borderbg shadow-lg">
             <div class="flex items-center gap-3">
-                <div class="p-3 bg-indigo-600/20 rounded-lg text-indigo-400">
+                <div class="p-3 bg-indigo-600/20 rounded-lg text-indigo-400 shrink-0">
                     <i class="fa-solid fa-bone text-2xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold text-white tracking-wide">QUẢN LÝ NỘI DUNG GIẢI PHẪU CƠ</h1>
+                    <h1 class="text-lg sm:text-xl font-bold text-white tracking-wide">QUẢN LÝ NỘI DUNG GIẢI PHẪU CƠ</h1>
                     <p class="text-xs text-slate-400">Hệ thống lưu trữ & tra cứu thuật ngữ giải phẫu học</p>
                 </div>
             </div>
@@ -99,7 +98,7 @@
                 <!-- Search Box -->
                 <div class="relative flex-1 sm:w-64">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                    <input type="text" id="searchInput" placeholder="Tìm tên cơ, vùng, thần kinh..." 
+                    <input type="text" id="searchInput" placeholder="Tìm tên cơ, vùng..." 
                         class="w-full pl-9 pr-4 py-2 bg-darkbg border border-borderbg rounded-lg text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
                 </div>
                 
@@ -114,7 +113,7 @@
                 </select>
 
                 <!-- Add Button -->
-                <button id="btnOpenModal" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-lg text-sm shadow-lg shadow-indigo-600/30 transition-all duration-200 active:scale-95">
+                <button id="btnOpenModal" class="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-lg text-sm shadow-lg shadow-indigo-600/30 transition-all duration-200 active:scale-95 shrink-0">
                     <i class="fa-solid fa-plus"></i> Thêm Cơ Mới
                 </button>
             </div>
@@ -123,28 +122,25 @@
         <!-- Table Container -->
         <div class="bg-cardbg border border-borderbg rounded-xl shadow-xl overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse min-w-[1200px]">
+                <table class="w-full text-left border-collapse min-w-[1350px]">
                     <thead>
                         <tr class="bg-slate-800/80 text-slate-300 text-xs font-semibold uppercase tracking-wider border-b border-borderbg">
                             <th class="p-3.5 w-28">Vùng</th>
                             <th class="p-3.5 w-44">Tên cơ (VN)</th>
-                            <th class="p-3.5 w-48 text-accenten">Tên cơ (EN)</th>
+                            <th class="p-3.5 w-44 text-accenten">Tên cơ (EN)</th>
                             <th class="p-3.5 w-24 text-center">Hình ảnh</th>
-                            <th class="p-3.5 w-48">Nguyên ủy</th>
-                            <th class="p-3.5 w-48">Bám tận</th>
-                            <th class="p-3.5 w-48">Chức năng</th>
-                            <th class="p-3.5 w-40">Thần kinh</th>
+                            <th class="p-3.5 w-48">Đại cương</th>
+                            <th class="p-3.5 w-64">Số nhóm/bảng giải phẫu</th>
                             <th class="p-3.5 w-48">Bệnh lý liên quan</th>
-                            <th class="p-3.5 w-40">Ghi chú</th>
+                            <th class="p-3.5 w-36">Ghi chú</th>
                             <th class="p-3.5 w-24 text-center sticky right-0 bg-slate-800 shadow-lg">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody id="anatomyTableBody" class="divide-y divide-borderbg/60 text-sm">
-                        <!-- Table content dynamically generated -->
                         <tr>
-                            <td colspan="11" class="text-center py-12 text-slate-400">
+                            <td colspan="9" class="text-center py-12 text-slate-400">
                                 <i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-indigo-400"></i>
-                                <p>Đang tải dữ liệu từ hệ thống...</p>
+                                <p>Đang tải dữ liệu...</p>
                             </td>
                         </tr>
                     </tbody>
@@ -155,27 +151,27 @@
     </div>
 
     <!-- Modal Form (Create / Edit) -->
-    <div id="anatomyModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-cardbg border border-borderbg w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden my-8 transform transition-all">
+    <div id="anatomyModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+        <div class="bg-cardbg border border-borderbg w-full max-w-5xl rounded-xl shadow-2xl overflow-hidden my-4 sm:my-8 max-h-[95vh] flex flex-col transform transition-all">
             <!-- Modal Header -->
-            <div class="flex justify-between items-center px-6 py-4 border-b border-borderbg bg-slate-800/50">
-                <h3 id="modalTitle" class="text-lg font-bold text-white flex items-center gap-2">
+            <div class="flex justify-between items-center px-4 sm:px-6 py-3 sm:py-4 border-b border-borderbg bg-slate-800/50 shrink-0">
+                <h3 id="modalTitle" class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
                     <i class="fa-solid fa-pen-to-square text-indigo-400"></i> Thêm Dữ Liệu Cơ Mới
                 </h3>
-                <button id="btnCloseModal" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-700 transition">
+                <button id="btnCloseModal" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-700 transition">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
 
-            <!-- Form -->
-            <form id="anatomyForm" class="p-6 space-y-5">
+            <!-- Form Body - Scrollable -->
+            <form id="anatomyForm" class="p-4 sm:p-6 space-y-5 overflow-y-auto flex-1">
                 <input type="hidden" id="docId" value="">
 
                 <!-- Row 1: Vùng, Tên VN, Tên EN -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Vùng cơ <span class="text-red-400">*</span></label>
-                        <select id="inputVung" required class="w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500">
+                        <select id="inputVung" required class="w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-indigo-500">
                             <option value="Đầu - Mặt - Cổ">Đầu - Mặt - Cổ</option>
                             <option value="Ngực - Lưng">Ngực - Lưng</option>
                             <option value="Bụng - Chậu">Bụng - Chậu</option>
@@ -184,72 +180,77 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Tên cơ (Tiếng Việt) <span class="text-red-400">*</span></label>
-                        <input type="text" id="inputTenVN" required placeholder="Ví dụ: Cơ nhị đầu cánh tay" class="w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500">
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Tên nhóm cơ / Tên cơ (VN) <span class="text-red-400">*</span></label>
+                        <input type="text" id="inputTenVN" required placeholder="Ví dụ: Các cơ cánh tay" class="w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-indigo-500">
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1 text-accenten">Tên cơ (Tiếng Anh) <span class="text-red-400">*</span></label>
-                        <input type="text" id="inputTenEN" required placeholder="Ví dụ: Biceps brachii" class="w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-accenten font-medium focus:outline-none focus:border-sky-400">
+                    <div class="sm:col-span-2 md:col-span-1">
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1 text-accenten">Tên cơ / Nhóm cơ (EN) <span class="text-red-400">*</span></label>
+                        <input type="text" id="inputTenEN" required placeholder="Ví dụ: Brachial muscles" class="w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-accenten text-sm font-medium focus:outline-none focus:border-sky-400">
                     </div>
                 </div>
 
-                <!-- Row 2: Link Ảnh -->
+                <!-- Link Ảnh -->
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Đường dẫn / Link Hình ảnh</label>
-                    <input type="text" id="inputHinhAnh" placeholder="Ví dụ: /hinhanh/co-nhi-dau.jpg hoặc https://link-anh.com/co.png" class="w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500">
+                    <input type="text" id="inputHinhAnh" placeholder="Ví dụ: https://link-anh.com/co.png" class="w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-indigo-500">
                 </div>
 
-                <!-- Shared Rich Text Toolbar -->
-                <div class="bg-slate-800/80 p-2 rounded-lg border border-borderbg flex flex-wrap gap-2 items-center text-xs">
-                    <span class="text-slate-400 font-semibold mr-2">Công cụ định dạng:</span>
-                    <button type="button" onclick="formatDoc('bold')" class="editor-btn" title="In đậm (Ctrl+B)"><i class="fa-solid fa-bold"></i> Đậm</button>
-                    <button type="button" onclick="formatDoc('italic')" class="editor-btn" title="In nghiêng (Ctrl+I)"><i class="fa-solid fa-italic"></i> Nghiêng</button>
+                <!-- Rich Text Tools -->
+                <div class="bg-slate-800/80 p-2 rounded-lg border border-borderbg flex flex-wrap gap-1.5 sm:gap-2 items-center text-xs">
+                    <span class="text-slate-400 font-semibold mr-1">Định dạng ô soạn thảo:</span>
+                    <button type="button" onclick="formatDoc('bold')" class="editor-btn" title="In đậm"><i class="fa-solid fa-bold"></i> Đậm</button>
+                    <button type="button" onclick="formatDoc('italic')" class="editor-btn" title="In nghiêng"><i class="fa-solid fa-italic"></i> Nghiêng</button>
                     <button type="button" onclick="formatDoc('underline')" class="editor-btn" title="Gạch chân"><i class="fa-solid fa-underline"></i> Gạch chân</button>
                     
-                    <div class="h-4 w-[1px] bg-slate-600 mx-1"></div>
+                    <div class="h-4 w-[1px] bg-slate-600 mx-1 hidden sm:block"></div>
                     
-                    <span class="text-slate-400">Màu chữ:</span>
-                    <button type="button" onclick="formatDoc('foreColor', '#f87171')" class="w-5 h-5 rounded bg-red-400 hover:scale-110 transition"></button>
-                    <button type="button" onclick="formatDoc('foreColor', '#fbbf24')" class="w-5 h-5 rounded bg-amber-400 hover:scale-110 transition"></button>
-                    <button type="button" onclick="formatDoc('foreColor', '#34d399')" class="w-5 h-5 rounded bg-emerald-400 hover:scale-110 transition"></button>
-                    <button type="button" onclick="formatDoc('foreColor', '#38bdf8')" class="w-5 h-5 rounded bg-sky-400 hover:scale-110 transition"></button>
-                    <button type="button" onclick="formatDoc('foreColor', '#c084fc')" class="w-5 h-5 rounded bg-purple-400 hover:scale-110 transition"></button>
-                    <button type="button" onclick="formatDoc('foreColor', '#ffffff')" class="w-5 h-5 rounded bg-white border border-slate-500 hover:scale-110 transition"></button>
-                    <button type="button" onclick="formatDoc('removeFormat')" class="editor-btn ml-auto"><i class="fa-solid fa-eraser"></i> Xóa định dạng</button>
+                    <button type="button" onclick="formatDoc('foreColor', '#f87171')" class="w-5 h-5 rounded bg-red-400 hover:scale-110 transition shrink-0" title="Đỏ"></button>
+                    <button type="button" onclick="formatDoc('foreColor', '#fbbf24')" class="w-5 h-5 rounded bg-amber-400 hover:scale-110 transition shrink-0" title="Vàng"></button>
+                    <button type="button" onclick="formatDoc('foreColor', '#34d399')" class="w-5 h-5 rounded bg-emerald-400 hover:scale-110 transition shrink-0" title="Xanh lá"></button>
+                    <button type="button" onclick="formatDoc('foreColor', '#38bdf8')" class="w-5 h-5 rounded bg-sky-400 hover:scale-110 transition shrink-0" title="Xanh dương"></button>
+                    <button type="button" onclick="formatDoc('foreColor', '#ffffff')" class="w-5 h-5 rounded bg-white border border-slate-500 hover:scale-110 transition shrink-0" title="Trắng"></button>
+                    <button type="button" onclick="formatDoc('removeFormat')" class="editor-btn ml-auto"><i class="fa-solid fa-eraser"></i> Xóa Đ.Dạng</button>
                 </div>
 
-                <!-- Rich Text Editable Fields -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Nguyên ủy</label>
-                        <div id="editorNguyenUy" contenteditable="true" class="editable-area"></div>
+                <!-- Đại cương -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Đại cương</label>
+                    <div id="editorDaiCuong" contenteditable="true" class="editable-area text-sm"></div>
+                </div>
+
+                <!-- SECTION: Danh sách các bảng chi tiết nhóm cơ -->
+                <div class="space-y-4 pt-3 border-t border-slate-700">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-sm font-bold text-yellow-400 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-table-list"></i> Các Bảng Chi Tiết Giải Phẫu (Nguyên Ủy, Bám Tận, Chức Năng...)
+                        </h4>
+                        <button type="button" id="btnAddDetailTable" class="px-3 py-1.5 bg-emerald-650 hover:bg-emerald-600 bg-emerald-600 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow transition">
+                            <i class="fa-solid fa-plus"></i> Thêm Bảng Mới
+                        </button>
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Bám tận</label>
-                        <div id="editorBamTan" contenteditable="true" class="editable-area"></div>
+
+                    <!-- Dynamic Tables Container -->
+                    <div id="detailTablesContainer" class="space-y-4">
+                        <!-- Dynamic sub-tables will be injected here -->
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Chức năng</label>
-                        <div id="editorChucNang" contenteditable="true" class="editable-area"></div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Thần kinh chi phối</label>
-                        <div id="editorThanKinh" contenteditable="true" class="editable-area"></div>
-                    </div>
+                </div>
+
+                <!-- Bệnh lý & Ghi chú chung -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-slate-700">
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Các bệnh lý liên quan</label>
-                        <div id="editorBenhLy" contenteditable="true" class="editable-area"></div>
+                        <div id="editorBenhLy" contenteditable="true" class="editable-area text-sm"></div>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Ghi chú</label>
-                        <div id="editorGhiChu" contenteditable="true" class="editable-area"></div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Ghi chú tổng quan</label>
+                        <div id="editorGhiChu" contenteditable="true" class="editable-area text-sm"></div>
                     </div>
                 </div>
 
                 <!-- Modal Actions -->
-                <div class="flex justify-end gap-3 pt-4 border-t border-borderbg">
-                    <button type="button" id="btnCancel" class="px-4 py-2 rounded-lg border border-borderbg text-slate-300 hover:bg-slate-800 transition">Hủy bỏ</button>
-                    <button type="submit" id="btnSave" class="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium shadow-lg shadow-indigo-600/30 transition flex items-center gap-2">
+                <div class="flex justify-end gap-3 pt-4 border-t border-borderbg shrink-0">
+                    <button type="button" id="btnCancel" class="px-4 py-2 rounded-lg border border-borderbg text-slate-300 hover:bg-slate-800 transition text-sm">Hủy bỏ</button>
+                    <button type="submit" id="btnSave" class="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium shadow-lg shadow-indigo-600/30 transition flex items-center gap-2 text-sm">
                         <i class="fa-solid fa-floppy-disk"></i> Lưu thông tin
                     </button>
                 </div>
@@ -259,16 +260,31 @@
 
     <!-- Image Preview Modal -->
     <div id="imgPreviewModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" onclick="closeImgPreview()">
-        <div class="relative max-w-3xl max-h-[85vh] bg-cardbg p-2 rounded-xl border border-borderbg overflow-hidden shadow-2xl">
-            <button class="absolute top-3 right-3 text-white bg-black/60 rounded-full w-8 h-8 flex items-center justify-center hover:bg-black/90">
+        <div class="relative max-w-3xl max-h-[85vh] bg-cardbg p-2 rounded-xl border border-borderbg overflow-hidden shadow-2xl" onclick="event.stopPropagation()">
+            <button onclick="closeImgPreview()" class="absolute top-3 right-3 text-white bg-black/60 rounded-full w-8 h-8 flex items-center justify-center hover:bg-black/90 transition z-10">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-            <img id="previewImgSrc" src="" alt="Hình phóng to" class="max-w-full max-h-[80vh] object-contain rounded-lg">
+            <img id="previewImgSrc" src="" alt="Hình phóng to" class="max-w-full max-h-[80vh] object-contain rounded-lg mx-auto">
         </div>
     </div>
 
-    <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-indigo-600 text-white px-5 py-3 rounded-xl shadow-2xl z-50 hidden flex items-center gap-3 border border-indigo-400/30 transition-all duration-300">
+    <!-- Delete Modal -->
+    <div id="confirmDeleteModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-cardbg border border-borderbg w-full max-w-md rounded-xl p-6 shadow-2xl space-y-4">
+            <div class="flex items-center gap-3 text-red-400">
+                <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                <h3 class="text-lg font-bold text-white">Xác nhận xóa dữ liệu</h3>
+            </div>
+            <p class="text-slate-300 text-sm">Bạn có chắc chắn muốn xóa dữ liệu cơ này không?</p>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" id="btnCancelDelete" class="px-4 py-2 rounded-lg border border-borderbg text-slate-300 hover:bg-slate-800 transition text-sm">Hủy bỏ</button>
+                <button type="button" id="btnConfirmDelete" class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white font-medium shadow-lg shadow-red-600/30 transition text-sm">Xóa</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-indigo-600 text-white px-5 py-3 rounded-xl shadow-2xl z-50 hidden flex items-center gap-3 border border-indigo-400/30 transition-all duration-300 text-sm">
         <i class="fa-solid fa-circle-check text-xl"></i>
         <span id="toastMsg">Thao tác thành công!</span>
     </div>
@@ -292,7 +308,6 @@
             onSnapshot 
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Cấu hình Firebase do người dùng cung cấp
         const firebaseConfig = {
             apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
             authDomain: "dulieuweb-6541e.firebaseapp.com",
@@ -302,25 +317,22 @@
             appId: "1:215480268517:web:16600eafd6839fee5dc60c"
         };
 
-        // Khởi tạo Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Biến toàn cục dữ liệu
         let allMuscles = [];
         let currentUser = null;
+        let deleteTargetId = null;
+        let tableCounter = 0;
 
-        // Định dạng đường dẫn Firestore công khai theo quy tắc
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'giai-phau-app';
         const collectionPath = collection(db, 'artifacts', appId, 'public', 'data', 'co_giai_phau');
 
-        // Hàm Rich Text Editor
         window.formatDoc = function(cmd, value = null) {
             document.execCommand(cmd, false, value);
         };
 
-        // Đăng nhập Firebase
         async function initAuth() {
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -340,7 +352,6 @@
             }
         });
 
-        // Tải dữ liệu Thời gian thực từ Firestore
         function loadMusclesData() {
             if (!currentUser) return;
 
@@ -359,27 +370,25 @@
             });
         }
 
-        // Render bảng dữ liệu
+        // Render Bảng Quản Lý
         function renderTable() {
             const tbody = document.getElementById('anatomyTableBody');
             const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
             const filterRegion = document.getElementById('filterRegion').value;
 
-            // Lọc dữ liệu
             const filtered = allMuscles.filter(item => {
                 const matchRegion = !filterRegion || item.vung === filterRegion;
                 const matchSearch = !searchVal || 
                     (item.tenVN && item.tenVN.toLowerCase().includes(searchVal)) ||
                     (item.tenEN && item.tenEN.toLowerCase().includes(searchVal)) ||
-                    (item.vung && item.vung.toLowerCase().includes(searchVal)) ||
-                    (item.thanKinh && item.thanKinh.toLowerCase().includes(searchVal));
+                    (item.vung && item.vung.toLowerCase().includes(searchVal));
                 return matchRegion && matchSearch;
             });
 
             if (filtered.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="11" class="text-center py-10 text-slate-400">
+                        <td colspan="9" class="text-center py-10 text-slate-400">
                             <i class="fa-regular fa-folder-open text-3xl mb-2"></i>
                             <p>Không tìm thấy dữ liệu phù hợp.</p>
                         </td>
@@ -388,7 +397,9 @@
                 return;
             }
 
-            tbody.innerHTML = filtered.map(item => `
+            tbody.innerHTML = filtered.map(item => {
+                const tablesCount = Array.isArray(item.bangChiTiet) ? item.bangChiTiet.length : 1;
+                return `
                 <tr class="hover:bg-slate-800/50 transition-colors group">
                     <td class="p-3.5 align-top font-medium text-indigo-300">
                         <span class="inline-block px-2.5 py-1 rounded-md bg-indigo-950/60 border border-indigo-800/50 text-xs">
@@ -406,27 +417,102 @@
                                  class="w-14 h-14 object-cover rounded-lg border border-borderbg hover:scale-105 transition cursor-pointer mx-auto shadow-sm">
                         ` : '<span class="text-slate-600 italic text-xs">Không có</span>'}
                     </td>
-                    <td class="p-3.5 align-top text-slate-300 rich-editor-content">${item.nguyenUy || '-'}</td>
-                    <td class="p-3.5 align-top text-slate-300 rich-editor-content">${item.bamTan || '-'}</td>
-                    <td class="p-3.5 align-top text-slate-300 rich-editor-content">${item.chucNang || '-'}</td>
-                    <td class="p-3.5 align-top text-slate-300 rich-editor-content">${item.thanKinh || '-'}</td>
-                    <td class="p-3.5 align-top text-slate-300 rich-editor-content">${item.benhLy || '-'}</td>
-                    <td class="p-3.5 align-top text-slate-400 rich-editor-content text-xs">${item.ghiChu || '-'}</td>
-                    <td class="p-3.5 align-top text-center sticky right-0 bg-cardbg group-hover:bg-slate-800/90 transition-colors shadow-l">
+                    <td class="p-3.5 align-top text-slate-300 rich-editor-content">${truncateWords(item.daiCuong, 20)}</td>
+                    <td class="p-3.5 align-top text-slate-300">
+                        <span class="px-2.5 py-1 rounded-full bg-amber-950/60 text-amber-300 border border-amber-700/50 text-xs font-semibold">
+                            <i class="fa-solid fa-layer-group text-xs mr-1"></i> ${tablesCount} Bảng chi tiết
+                        </span>
+                    </td>
+                    <td class="p-3.5 align-top text-slate-300 rich-editor-content">${truncateWords(item.benhLy, 20)}</td>
+                    <td class="p-3.5 align-top text-slate-400 rich-editor-content text-xs">${truncateWords(item.ghiChu, 20)}</td>
+                    <td class="p-3.5 align-top text-center sticky right-0 bg-cardbg group-hover:bg-slate-800/90 transition-colors">
                         <div class="flex items-center justify-center gap-2">
                             <button onclick="editMuscle('${item.id}')" class="p-1.5 bg-slate-700 hover:bg-indigo-600 text-slate-200 hover:text-white rounded-lg transition" title="Chỉnh sửa">
                                 <i class="fa-solid fa-pen text-xs"></i>
                             </button>
-                            <button onclick="deleteMuscle('${item.id}')" class="p-1.5 bg-slate-700 hover:bg-red-600 text-slate-200 hover:text-white rounded-lg transition" title="Xóa">
+                            <button onclick="promptDeleteMuscle('${item.id}')" class="p-1.5 bg-slate-700 hover:bg-red-600 text-slate-200 hover:text-white rounded-lg transition" title="Xóa">
                                 <i class="fa-solid fa-trash text-xs"></i>
                             </button>
                         </div>
                     </td>
                 </tr>
-            `).join('');
+            `}).join('');
         }
 
-        // An toàn chuỗi HTML
+        // Tạo giao diện một Bảng Chi Tiết con trong Modal
+        function addDetailTableBlock(data = {}) {
+            tableCounter++;
+            const tableId = `sub_table_${tableCounter}`;
+            const container = document.getElementById('detailTablesContainer');
+
+            const card = document.createElement('div');
+            card.className = 'sub-table-card bg-slate-900 border border-slate-700 rounded-xl p-4 space-y-3 relative shadow-inner';
+            card.id = tableId;
+
+            card.innerHTML = `
+                <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+                    <span class="text-xs font-bold text-sky-400 uppercase tracking-wide flex items-center gap-2">
+                        <i class="fa-solid fa-table"></i> Bảng chi tiết cơ #${container.children.length + 1}
+                    </span>
+                    <button type="button" onclick="removeSubTable('${tableId}')" class="text-red-400 hover:text-red-300 text-xs font-semibold flex items-center gap-1 hover:bg-red-950/40 px-2 py-1 rounded transition">
+                        <i class="fa-solid fa-trash"></i> Xóa Bảng
+                    </button>
+                </div>
+
+                <!-- Tên các cơ thuộc nhóm/bảng -->
+                <div>
+                    <label class="block text-xs font-semibold text-amber-300 uppercase mb-1">Tên các cơ thuộc nhóm / tiêu đề bảng <span class="text-red-400">*</span></label>
+                    <input type="text" class="input-sub-ten-co w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-amber-400 font-medium" 
+                           placeholder="Ví dụ: Nhóm Cơ Nhị Đầu & Cơ Cánh Tay" value="${escapeHTML(data.tenCơNhom || '')}" required>
+                </div>
+
+                <!-- Grid các đặc điểm giải phẫu -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Nguyên ủy</label>
+                        <div class="editor-sub-nguyen-uy editable-area text-sm" contenteditable="true">${data.nguyenUy || ''}</div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Bám tận</label>
+                        <div class="editor-sub-bam-tan editable-area text-sm" contenteditable="true">${data.bamTan || ''}</div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Chức năng</label>
+                        <div class="editor-sub-chuc-nang editable-area text-sm" contenteditable="true">${data.chucNang || ''}</div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Thần kinh chi phối</label>
+                        <div class="editor-sub-than-kinh editable-area text-sm" contenteditable="true">${data.thanKinh || ''}</div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Ghi chú (nếu có)</label>
+                        <div class="editor-sub-ghi-chu editable-area text-sm" contenteditable="true">${data.ghiChu || ''}</div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        }
+
+        window.removeSubTable = function(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        };
+
+        document.getElementById('btnAddDetailTable').addEventListener('click', () => {
+            addDetailTableBlock();
+        });
+
+        function truncateWords(htmlContent, maxWords = 20) {
+            if (!htmlContent) return '-';
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = htmlContent;
+            const plainText = (tempDiv.textContent || tempDiv.innerText || '').trim();
+            if (!plainText) return '-';
+            const words = plainText.split(/\s+/);
+            if (words.length <= maxWords) return htmlContent;
+            return `${escapeHTML(words.slice(0, maxWords).join(' '))} ...`;
+        }
+
         function escapeHTML(str) {
             if (!str) return '';
             return str.replace(/[&<>'"]/g, 
@@ -434,43 +520,66 @@
             );
         }
 
-        // Mở Modal Thêm mới
+        // Mở Modal Thêm Mới
         document.getElementById('btnOpenModal').addEventListener('click', () => {
             document.getElementById('anatomyForm').reset();
             document.getElementById('docId').value = '';
             document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-plus text-indigo-400"></i> Thêm Dữ Liệu Cơ Mới';
-            
-            // Clear contenteditable fields
-            document.getElementById('editorNguyenUy').innerHTML = '';
-            document.getElementById('editorBamTan').innerHTML = '';
-            document.getElementById('editorChucNang').innerHTML = '';
-            document.getElementById('editorThanKinh').innerHTML = '';
+            document.getElementById('editorDaiCuong').innerHTML = '';
             document.getElementById('editorBenhLy').innerHTML = '';
             document.getElementById('editorGhiChu').innerHTML = '';
+            
+            document.getElementById('detailTablesContainer').innerHTML = '';
+            // Mặc định tạo 1 bảng
+            addDetailTableBlock();
 
             document.getElementById('anatomyModal').classList.remove('hidden');
         });
 
-        // Đóng Modal
         const closeModal = () => document.getElementById('anatomyModal').classList.add('hidden');
         document.getElementById('btnCloseModal').addEventListener('click', closeModal);
         document.getElementById('btnCancel').addEventListener('click', closeModal);
 
-        // Lưu / Chỉnh sửa dữ liệu vào Firestore
+        // Submit Form
         document.getElementById('anatomyForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!currentUser) return;
 
             const docId = document.getElementById('docId').value;
+            
+            // Lấy danh sách sub-tables
+            const tableCards = document.querySelectorAll('#detailTablesContainer .sub-table-card');
+            const bangChiTiet = [];
+
+            tableCards.forEach(card => {
+                bangChiTiet.push({
+                    tenCơNhom: card.querySelector('.input-sub-ten-co').value.trim(),
+                    nguyenUy: card.querySelector('.editor-sub-nguyen-uy').innerHTML,
+                    bamTan: card.querySelector('.editor-sub-bam-tan').innerHTML,
+                    chucNang: card.querySelector('.editor-sub-chuc-nang').innerHTML,
+                    thanKinh: card.querySelector('.editor-sub-than-kinh').innerHTML,
+                    ghiChu: card.querySelector('.editor-sub-ghi-chu').innerHTML
+                });
+            });
+
+            // Nếu không có bảng con nào thì không cho lưu
+            if (bangChiTiet.length === 0) {
+                showToast("Bạn cần thêm ít nhất 1 bảng chi tiết giải phẫu!", "error");
+                return;
+            }
+
             const data = {
                 vung: document.getElementById('inputVung').value,
                 tenVN: document.getElementById('inputTenVN').value.trim(),
                 tenEN: document.getElementById('inputTenEN').value.trim(),
                 hinhAnh: document.getElementById('inputHinhAnh').value.trim(),
-                nguyenUy: document.getElementById('editorNguyenUy').innerHTML,
-                bamTan: document.getElementById('editorBamTan').innerHTML,
-                chucNang: document.getElementById('editorChucNang').innerHTML,
-                thanKinh: document.getElementById('editorThanKinh').innerHTML,
+                daiCuong: document.getElementById('editorDaiCuong').innerHTML,
+                bangChiTiet: bangChiTiet,
+                // Dữ liệu fallback tương thích cũ
+                nguyenUy: bangChiTiet[0]?.nguyenUy || '',
+                bamTan: bangChiTiet[0]?.bamTan || '',
+                chucNang: bangChiTiet[0]?.chucNang || '',
+                thanKinh: bangChiTiet[0]?.thanKinh || '',
                 benhLy: document.getElementById('editorBenhLy').innerHTML,
                 ghiChu: document.getElementById('editorGhiChu').innerHTML,
                 updatedAt: new Date().toISOString()
@@ -478,14 +587,12 @@
 
             try {
                 if (docId) {
-                    // Update
                     const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'co_giai_phau', docId);
                     await setDoc(docRef, data, { merge: true });
-                    showToast("Cập nhật thông tin cơ thành công!");
+                    showToast("Cập nhật thành công!");
                 } else {
-                    // Create
                     await addDoc(collectionPath, data);
-                    showToast("Thêm mới dữ liệu cơ thành công!");
+                    showToast("Thêm dữ liệu thành công!");
                 }
                 closeModal();
             } catch (error) {
@@ -494,7 +601,7 @@
             }
         });
 
-        // Đưa dữ liệu lên Modal để Sửa
+        // Edit
         window.editMuscle = function(id) {
             const item = allMuscles.find(m => m.id === id);
             if (!item) return;
@@ -505,32 +612,59 @@
             document.getElementById('inputTenEN').value = item.tenEN || '';
             document.getElementById('inputHinhAnh').value = item.hinhAnh || '';
 
-            document.getElementById('editorNguyenUy').innerHTML = item.nguyenUy || '';
-            document.getElementById('editorBamTan').innerHTML = item.bamTan || '';
-            document.getElementById('editorChucNang').innerHTML = item.chucNang || '';
-            document.getElementById('editorThanKinh').innerHTML = item.thanKinh || '';
+            document.getElementById('editorDaiCuong').innerHTML = item.daiCuong || '';
             document.getElementById('editorBenhLy').innerHTML = item.benhLy || '';
             document.getElementById('editorGhiChu').innerHTML = item.ghiChu || '';
+
+            // Đưa danh sách các sub-table vào container
+            const container = document.getElementById('detailTablesContainer');
+            container.innerHTML = '';
+
+            if (Array.isArray(item.bangChiTiet) && item.bangChiTiet.length > 0) {
+                item.bangChiTiet.forEach(tb => addDetailTableBlock(tb));
+            } else {
+                // Tương thích dữ liệu cũ
+                addDetailTableBlock({
+                    tenCơNhom: item.tenVN || '',
+                    nguyenUy: item.nguyenUy || '',
+                    bamTan: item.bamTan || '',
+                    chucNang: item.chucNang || '',
+                    thanKinh: item.thanKinh || '',
+                    ghiChu: item.ghiChu || ''
+                });
+            }
 
             document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-pen-to-square text-indigo-400"></i> Chỉnh Sửa Thông Tin Cơ';
             document.getElementById('anatomyModal').classList.remove('hidden');
         };
 
-        // Xóa cơ
-        window.deleteMuscle = async function(id) {
-            if (confirm("Bạn có chắc chắn muốn xóa dữ liệu cơ này không?")) {
-                try {
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'co_giai_phau', id);
-                    await deleteDoc(docRef);
-                    showToast("Đã xóa dữ liệu thành công!");
-                } catch (err) {
-                    console.error("Lỗi xóa:", err);
-                    showToast("Không thể xóa dữ liệu!", "error");
-                }
-            }
+        // Delete Logic
+        window.promptDeleteMuscle = function(id) {
+            deleteTargetId = id;
+            document.getElementById('confirmDeleteModal').classList.remove('hidden');
         };
 
-        // Xem ảnh phóng to
+        document.getElementById('btnCancelDelete').addEventListener('click', () => {
+            deleteTargetId = null;
+            document.getElementById('confirmDeleteModal').classList.add('hidden');
+        });
+
+        document.getElementById('btnConfirmDelete').addEventListener('click', async () => {
+            if (!deleteTargetId) return;
+            const id = deleteTargetId;
+            deleteTargetId = null;
+            document.getElementById('confirmDeleteModal').classList.add('hidden');
+
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'co_giai_phau', id);
+                await deleteDoc(docRef);
+                showToast("Đã xóa dữ liệu thành công!");
+            } catch (err) {
+                console.error("Lỗi xóa:", err);
+                showToast("Không thể xóa dữ liệu!", "error");
+            }
+        });
+
         window.openImgPreview = function(url) {
             document.getElementById('previewImgSrc').src = url;
             document.getElementById('imgPreviewModal').classList.remove('hidden');
@@ -539,11 +673,9 @@
             document.getElementById('imgPreviewModal').classList.add('hidden');
         };
 
-        // Tìm kiếm và Lọc
         document.getElementById('searchInput').addEventListener('input', renderTable);
         document.getElementById('filterRegion').addEventListener('change', renderTable);
 
-        // Toast thông báo
         function showToast(msg, type = "success") {
             const toast = document.getElementById('toast');
             const toastMsg = document.getElementById('toastMsg');
@@ -563,7 +695,6 @@
             }, 3000);
         }
 
-        // Chạy khởi tạo Auth
         initAuth();
     </script>
 </body>
