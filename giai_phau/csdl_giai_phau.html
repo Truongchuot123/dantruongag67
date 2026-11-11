@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản Lý Nội Dung Giải Phẫu Cơ</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -22,10 +24,7 @@
             }
         }
     </script>
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom Scrollbar & Editable Area Style -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -69,12 +68,22 @@
             border-radius: 0.5rem;
             padding: 0.5rem 0.75rem;
             background-color: #0f172a;
-            color: #f8fafc;
+            color: #f8fafc !important;
             outline: none;
         }
         .editable-area:focus {
             border-color: #6366f1;
             box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+        /* Cố định văn bản dán luôn giữ màu chữ trắng */
+        .editable-area,
+        .editable-area *,
+        .editable-area span,
+        .editable-area p,
+        .editable-area div,
+        .editable-area font {
+            color: #f8fafc !important;
+            background-color: transparent !important;
         }
     </style>
 </head>
@@ -128,9 +137,9 @@
                             <th class="p-3.5 w-28">Vùng</th>
                             <th class="p-3.5 w-44">Tên cơ (VN)</th>
                             <th class="p-3.5 w-44 text-accenten">Tên cơ (EN)</th>
-                            <th class="p-3.5 w-24 text-center">Hình ảnh</th>
+                            <th class="p-3.5 w-44 text-center">Hình ảnh & Ghi chú</th>
                             <th class="p-3.5 w-48">Đại cương</th>
-                            <th class="p-3.5 w-64">Số nhóm/bảng giải phẫu</th>
+                            <th class="p-3.5 w-44">Số nhóm/bảng giải phẫu</th>
                             <th class="p-3.5 w-48">Bệnh lý liên quan</th>
                             <th class="p-3.5 w-36">Ghi chú</th>
                             <th class="p-3.5 w-24 text-center sticky right-0 bg-slate-800 shadow-lg">Thao tác</th>
@@ -170,7 +179,7 @@
                 <!-- Row 1: Vùng, Tên VN, Tên EN -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Vùng cơ <span class="text-red-400">*</span></label>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Vùng <span class="text-red-400">*</span></label>
                         <select id="inputVung" required class="w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-indigo-500">
                             <option value="Đầu - Mặt - Cổ">Đầu - Mặt - Cổ</option>
                             <option value="Ngực - Lưng">Ngực - Lưng</option>
@@ -180,35 +189,40 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Tên nhóm cơ / Tên cơ (VN) <span class="text-red-400">*</span></label>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Tên cơ <span class="text-red-400">*</span></label>
                         <input type="text" id="inputTenVN" required placeholder="Ví dụ: Các cơ cánh tay" class="w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-indigo-500">
                     </div>
                     <div class="sm:col-span-2 md:col-span-1">
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1 text-accenten">Tên cơ / Nhóm cơ (EN) <span class="text-red-400">*</span></label>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1 text-accenten">Tên cơ tiếng anh <span class="text-red-400">*</span></label>
                         <input type="text" id="inputTenEN" required placeholder="Ví dụ: Brachial muscles" class="w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-accenten text-sm font-medium focus:outline-none focus:border-sky-400">
                     </div>
                 </div>
 
-                <!-- Link Ảnh -->
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Đường dẫn / Link Hình ảnh</label>
-                    <input type="text" id="inputHinhAnh" placeholder="Ví dụ: https://link-anh.com/co.png" class="w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-indigo-500">
+                <!-- SECTION: Danh Sách Hình Ảnh Chi Tiết -->
+                <div class="p-4 bg-slate-900 border border-slate-700 rounded-xl space-y-3">
+                    <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+                        <label class="text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-images"></i> Danh Sách Hình Ảnh Giải Phẫu & Chú Thích
+                        </label>
+                        <button type="button" id="btnAddImageRow" class="px-3 py-1 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1 shadow transition">
+                            <i class="fa-solid fa-plus"></i> Thêm Ảnh
+                        </button>
+                    </div>
+                    
+                    <div id="imageRowsContainer" class="space-y-3">
+                        <!-- Dynamic Image Inputs Will Be Added Here -->
+                    </div>
                 </div>
 
                 <!-- Rich Text Tools -->
                 <div class="bg-slate-800/80 p-2 rounded-lg border border-borderbg flex flex-wrap gap-1.5 sm:gap-2 items-center text-xs">
-                    <span class="text-slate-400 font-semibold mr-1">Định dạng ô soạn thảo:</span>
+                    <span class="text-slate-400 font-semibold mr-1">Định dạng</span>
                     <button type="button" onclick="formatDoc('bold')" class="editor-btn" title="In đậm"><i class="fa-solid fa-bold"></i> Đậm</button>
                     <button type="button" onclick="formatDoc('italic')" class="editor-btn" title="In nghiêng"><i class="fa-solid fa-italic"></i> Nghiêng</button>
                     <button type="button" onclick="formatDoc('underline')" class="editor-btn" title="Gạch chân"><i class="fa-solid fa-underline"></i> Gạch chân</button>
                     
                     <div class="h-4 w-[1px] bg-slate-600 mx-1 hidden sm:block"></div>
                     
-                    <button type="button" onclick="formatDoc('foreColor', '#f87171')" class="w-5 h-5 rounded bg-red-400 hover:scale-110 transition shrink-0" title="Đỏ"></button>
-                    <button type="button" onclick="formatDoc('foreColor', '#fbbf24')" class="w-5 h-5 rounded bg-amber-400 hover:scale-110 transition shrink-0" title="Vàng"></button>
-                    <button type="button" onclick="formatDoc('foreColor', '#34d399')" class="w-5 h-5 rounded bg-emerald-400 hover:scale-110 transition shrink-0" title="Xanh lá"></button>
-                    <button type="button" onclick="formatDoc('foreColor', '#38bdf8')" class="w-5 h-5 rounded bg-sky-400 hover:scale-110 transition shrink-0" title="Xanh dương"></button>
-                    <button type="button" onclick="formatDoc('foreColor', '#ffffff')" class="w-5 h-5 rounded bg-white border border-slate-500 hover:scale-110 transition shrink-0" title="Trắng"></button>
                     <button type="button" onclick="formatDoc('removeFormat')" class="editor-btn ml-auto"><i class="fa-solid fa-eraser"></i> Xóa Đ.Dạng</button>
                 </div>
 
@@ -222,10 +236,10 @@
                 <div class="space-y-4 pt-3 border-t border-slate-700">
                     <div class="flex justify-between items-center">
                         <h4 class="text-sm font-bold text-yellow-400 uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-table-list"></i> Các Bảng Chi Tiết Giải Phẫu (Nguyên Ủy, Bám Tận, Chức Năng...)
+                            <i class="fa-solid fa-table-list"></i> Bảng Chi Tiết Giải Phẫu
                         </h4>
-                        <button type="button" id="btnAddDetailTable" class="px-3 py-1.5 bg-emerald-650 hover:bg-emerald-600 bg-emerald-600 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow transition">
-                            <i class="fa-solid fa-plus"></i> Thêm Bảng Mới
+                        <button type="button" id="btnAddDetailTable" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow transition">
+                            <i class="fa-solid fa-plus"></i> Thêm Bảng
                         </button>
                     </div>
 
@@ -260,11 +274,12 @@
 
     <!-- Image Preview Modal -->
     <div id="imgPreviewModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" onclick="closeImgPreview()">
-        <div class="relative max-w-3xl max-h-[85vh] bg-cardbg p-2 rounded-xl border border-borderbg overflow-hidden shadow-2xl" onclick="event.stopPropagation()">
+        <div class="relative max-w-3xl max-h-[85vh] bg-cardbg p-3 rounded-xl border border-borderbg overflow-hidden shadow-2xl flex flex-col items-center" onclick="event.stopPropagation()">
             <button onclick="closeImgPreview()" class="absolute top-3 right-3 text-white bg-black/60 rounded-full w-8 h-8 flex items-center justify-center hover:bg-black/90 transition z-10">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-            <img id="previewImgSrc" src="" alt="Hình phóng to" class="max-w-full max-h-[80vh] object-contain rounded-lg mx-auto">
+            <img id="previewImgSrc" src="" alt="Hình phóng to" class="max-w-full max-h-[70vh] object-contain rounded-lg shadow-md">
+            <div id="previewImgCaption" class="mt-3 text-slate-200 text-sm italic text-center font-medium bg-slate-900/80 px-4 py-2 rounded-lg border border-slate-700 w-full max-w-xl"></div>
         </div>
     </div>
 
@@ -325,6 +340,7 @@
         let currentUser = null;
         let deleteTargetId = null;
         let tableCounter = 0;
+        let imageCounter = 0;
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'giai-phau-app';
         const collectionPath = collection(db, 'artifacts', appId, 'public', 'data', 'co_giai_phau');
@@ -332,6 +348,45 @@
         window.formatDoc = function(cmd, value = null) {
             document.execCommand(cmd, false, value);
         };
+
+        // Hàm xử lý loại bỏ hoàn toàn các style/màu chữ rác khi copy dán vào
+        function handleCleanPaste(e) {
+            e.preventDefault();
+            let htmlData = e.clipboardData.getData('text/html');
+            let textData = e.clipboardData.getData('text/plain');
+
+            if (htmlData) {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = htmlData;
+
+                const allElements = tempDiv.querySelectorAll('*');
+                allElements.forEach(el => {
+                    el.style.color = '';
+                    el.style.backgroundColor = '';
+                    el.style.background = '';
+                    if (!el.getAttribute('style')) {
+                        el.removeAttribute('style');
+                    }
+                    if (el.tagName.toLowerCase() === 'font') {
+                        el.removeAttribute('color');
+                        el.removeAttribute('face');
+                        el.removeAttribute('size');
+                    }
+                });
+
+                const cleanHTML = tempDiv.innerHTML;
+                document.execCommand('insertHTML', false, cleanHTML);
+            } else if (textData) {
+                document.execCommand('insertText', false, textData);
+            }
+        }
+
+        document.addEventListener('paste', function(e) {
+            const target = e.target;
+            if (target && target.isContentEditable) {
+                handleCleanPaste(e);
+            }
+        });
 
         async function initAuth() {
             try {
@@ -399,6 +454,15 @@
 
             tbody.innerHTML = filtered.map(item => {
                 const tablesCount = Array.isArray(item.bangChiTiet) ? item.bangChiTiet.length : 1;
+                
+                // Xử lý danh sách hình ảnh (Tương thích cả dữ liệu đơn cũ và mảng danh sách mới)
+                let imagesList = [];
+                if (Array.isArray(item.danhSachHinhAnh) && item.danhSachHinhAnh.length > 0) {
+                    imagesList = item.danhSachHinhAnh;
+                } else if (item.hinhAnh) {
+                    imagesList = [{ url: item.hinhAnh, caption: '' }];
+                }
+
                 return `
                 <tr class="hover:bg-slate-800/50 transition-colors group">
                     <td class="p-3.5 align-top font-medium text-indigo-300">
@@ -409,12 +473,21 @@
                     <td class="p-3.5 align-top font-bold text-white">${escapeHTML(item.tenVN || '')}</td>
                     <td class="p-3.5 align-top font-bold text-accenten">${escapeHTML(item.tenEN || '')}</td>
                     <td class="p-3.5 align-top text-center">
-                        ${item.hinhAnh ? `
-                            <img src="${escapeHTML(item.hinhAnh)}" 
-                                 alt="${escapeHTML(item.tenVN)}" 
-                                 onclick="openImgPreview('${escapeHTML(item.hinhAnh)}')"
-                                 onerror="this.onerror=null; this.src='https://placehold.co/100x100/1e293b/38bdf8?text=Anh+Loi';"
-                                 class="w-14 h-14 object-cover rounded-lg border border-borderbg hover:scale-105 transition cursor-pointer mx-auto shadow-sm">
+                        ${imagesList.length > 0 ? `
+                            <div class="flex flex-col gap-2 items-center">
+                                <div class="flex flex-wrap justify-center gap-1.5 max-w-[160px]">
+                                    ${imagesList.map((img, idx) => `
+                                        <div class="relative group/img cursor-pointer" onclick="openImgPreview('${escapeHTML(img.url)}', '${escapeHTML(img.caption || '')}')">
+                                            <img src="${escapeHTML(img.url)}" 
+                                                 alt="Hình giải phẫu"
+                                                 onerror="this.onerror=null; this.src='https://placehold.co/100x100/1e293b/38bdf8?text=Anh+Loi';"
+                                                 class="w-12 h-12 object-cover rounded-lg border border-borderbg hover:scale-105 transition shadow-sm">
+                                            ${img.caption ? `<span class="absolute bottom-0 right-0 bg-black/70 text-[9px] px-1 text-yellow-300 rounded-tl"><i class="fa-solid fa-comment"></i></span>` : ''}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <span class="text-[11px] text-slate-400 font-medium">(${imagesList.length} ảnh)</span>
+                            </div>
                         ` : '<span class="text-slate-600 italic text-xs">Không có</span>'}
                     </td>
                     <td class="p-3.5 align-top text-slate-300 rich-editor-content">${truncateWords(item.daiCuong, 20)}</td>
@@ -439,6 +512,41 @@
             `}).join('');
         }
 
+        // Tạo dòng nhập Hình Ảnh & Ghi Chú mới
+        function addImageRowBlock(data = {}) {
+            imageCounter++;
+            const rowId = `img_row_${imageCounter}`;
+            const container = document.getElementById('imageRowsContainer');
+
+            const row = document.createElement('div');
+            row.className = 'img-input-row bg-slate-800/60 p-2.5 rounded-lg border border-slate-700/60 flex flex-col sm:flex-row gap-2 items-center';
+            row.id = rowId;
+
+            row.innerHTML = `
+                <div class="flex-1 w-full">
+                    <input type="text" class="input-img-url w-full bg-darkbg border border-borderbg rounded-md px-3 py-1.5 text-slate-200 text-xs focus:outline-none focus:border-sky-400" 
+                           placeholder="Link hình ảnh (URL)..." value="${escapeHTML(data.url || '')}">
+                </div>
+                <div class="flex-1 w-full">
+                    <input type="text" class="input-img-caption w-full bg-darkbg border border-borderbg rounded-md px-3 py-1.5 text-yellow-300 text-xs focus:outline-none focus:border-amber-400" 
+                           placeholder="Ghi chú hình ảnh" value="${escapeHTML(data.caption || '')}">
+                </div>
+                <button type="button" onclick="removeImageRow('${rowId}')" class="text-red-400 hover:text-red-300 p-1.5 hover:bg-red-950/40 rounded transition shrink-0">
+                    <i class="fa-solid fa-trash text-xs"></i>
+                </button>
+            `;
+            container.appendChild(row);
+        }
+
+        window.removeImageRow = function(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        };
+
+        document.getElementById('btnAddImageRow').addEventListener('click', () => {
+            addImageRowBlock();
+        });
+
         // Tạo giao diện một Bảng Chi Tiết con trong Modal
         function addDetailTableBlock(data = {}) {
             tableCounter++;
@@ -459,14 +567,12 @@
                     </button>
                 </div>
 
-                <!-- Tên các cơ thuộc nhóm/bảng -->
                 <div>
                     <label class="block text-xs font-semibold text-amber-300 uppercase mb-1">Tên các cơ thuộc nhóm / tiêu đề bảng <span class="text-red-400">*</span></label>
                     <input type="text" class="input-sub-ten-co w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-amber-400 font-medium" 
                            placeholder="Ví dụ: Nhóm Cơ Nhị Đầu & Cơ Cánh Tay" value="${escapeHTML(data.tenCơNhom || '')}" required>
                 </div>
 
-                <!-- Grid các đặc điểm giải phẫu -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Nguyên ủy</label>
@@ -529,8 +635,10 @@
             document.getElementById('editorBenhLy').innerHTML = '';
             document.getElementById('editorGhiChu').innerHTML = '';
             
+            document.getElementById('imageRowsContainer').innerHTML = '';
+            addImageRowBlock(); // Tạo sẵn 1 dòng nhập ảnh
+
             document.getElementById('detailTablesContainer').innerHTML = '';
-            // Mặc định tạo 1 bảng
             addDetailTableBlock();
 
             document.getElementById('anatomyModal').classList.remove('hidden');
@@ -547,6 +655,17 @@
 
             const docId = document.getElementById('docId').value;
             
+            // Lấy danh sách ảnh & ghi chú
+            const imgRows = document.querySelectorAll('#imageRowsContainer .img-input-row');
+            const danhSachHinhAnh = [];
+            imgRows.forEach(row => {
+                const url = row.querySelector('.input-img-url').value.trim();
+                const caption = row.querySelector('.input-img-caption').value.trim();
+                if (url) {
+                    danhSachHinhAnh.push({ url, caption });
+                }
+            });
+
             // Lấy danh sách sub-tables
             const tableCards = document.querySelectorAll('#detailTablesContainer .sub-table-card');
             const bangChiTiet = [];
@@ -562,7 +681,6 @@
                 });
             });
 
-            // Nếu không có bảng con nào thì không cho lưu
             if (bangChiTiet.length === 0) {
                 showToast("Bạn cần thêm ít nhất 1 bảng chi tiết giải phẫu!", "error");
                 return;
@@ -572,10 +690,10 @@
                 vung: document.getElementById('inputVung').value,
                 tenVN: document.getElementById('inputTenVN').value.trim(),
                 tenEN: document.getElementById('inputTenEN').value.trim(),
-                hinhAnh: document.getElementById('inputHinhAnh').value.trim(),
+                danhSachHinhAnh: danhSachHinhAnh,
+                hinhAnh: danhSachHinhAnh[0]?.url || '', // Giữ trường cũ để tương thích
                 daiCuong: document.getElementById('editorDaiCuong').innerHTML,
                 bangChiTiet: bangChiTiet,
-                // Dữ liệu fallback tương thích cũ
                 nguyenUy: bangChiTiet[0]?.nguyenUy || '',
                 bamTan: bangChiTiet[0]?.bamTan || '',
                 chucNang: bangChiTiet[0]?.chucNang || '',
@@ -610,7 +728,18 @@
             document.getElementById('inputVung').value = item.vung || 'Chi trên';
             document.getElementById('inputTenVN').value = item.tenVN || '';
             document.getElementById('inputTenEN').value = item.tenEN || '';
-            document.getElementById('inputHinhAnh').value = item.hinhAnh || '';
+
+            // Load danh sách hình ảnh
+            const imgContainer = document.getElementById('imageRowsContainer');
+            imgContainer.innerHTML = '';
+            
+            if (Array.isArray(item.danhSachHinhAnh) && item.danhSachHinhAnh.length > 0) {
+                item.danhSachHinhAnh.forEach(img => addImageRowBlock(img));
+            } else if (item.hinhAnh) {
+                addImageRowBlock({ url: item.hinhAnh, caption: '' });
+            } else {
+                addImageRowBlock();
+            }
 
             document.getElementById('editorDaiCuong').innerHTML = item.daiCuong || '';
             document.getElementById('editorBenhLy').innerHTML = item.benhLy || '';
@@ -623,7 +752,6 @@
             if (Array.isArray(item.bangChiTiet) && item.bangChiTiet.length > 0) {
                 item.bangChiTiet.forEach(tb => addDetailTableBlock(tb));
             } else {
-                // Tương thích dữ liệu cũ
                 addDetailTableBlock({
                     tenCơNhom: item.tenVN || '',
                     nguyenUy: item.nguyenUy || '',
@@ -665,8 +793,15 @@
             }
         });
 
-        window.openImgPreview = function(url) {
+        window.openImgPreview = function(url, caption = '') {
             document.getElementById('previewImgSrc').src = url;
+            const captionEl = document.getElementById('previewImgCaption');
+            if (caption) {
+                captionEl.textContent = caption;
+                captionEl.classList.remove('hidden');
+            } else {
+                captionEl.classList.add('hidden');
+            }
             document.getElementById('imgPreviewModal').classList.remove('hidden');
         };
         window.closeImgPreview = function() {

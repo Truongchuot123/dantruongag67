@@ -141,10 +141,35 @@
                     <p id="modalTenEN" class="text-lg sm:text-xl font-bold text-accenten italic">Muscle English Name</p>
                 </div>
 
-                <!-- Hình ảnh cơ -->
-                <div class="flex justify-center">
-                    <div class="relative max-w-md w-full rounded-2xl overflow-hidden border border-borderbg bg-darkbg p-2 shadow-inner">
-                        <img id="modalHinhAnh" src="" alt="Hình ảnh cơ" class="w-full max-h-72 object-contain rounded-xl mx-auto">
+                <!-- Carousel trượt danh sách hình ảnh & chú thích -->
+                <div id="modalImageCarousel" class="relative max-w-xl mx-auto w-full bg-slate-900 border border-borderbg rounded-2xl overflow-hidden p-3 shadow-xl">
+                    <!-- Khung ảnh chính -->
+                    <div class="relative w-full h-64 sm:h-80 flex items-center justify-center overflow-hidden rounded-xl bg-darkbg" id="carouselTouchContainer">
+                        <img id="modalHinhAnh" src="" alt="Hình ảnh cơ" class="max-w-full max-h-full object-contain rounded-lg transition-all duration-300">
+                        
+                        <!-- Nút Trượt Trái -->
+                        <button id="btnPrevImg" onclick="changeCarouselSlide(-1)" class="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-sky-600 text-white flex items-center justify-center transition backdrop-blur-md shadow-lg z-10">
+                            <i class="fa-solid fa-chevron-left text-sm"></i>
+                        </button>
+                        <!-- Nút Trượt Phải -->
+                        <button id="btnNextImg" onclick="changeCarouselSlide(1)" class="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-sky-600 text-white flex items-center justify-center transition backdrop-blur-md shadow-lg z-10">
+                            <i class="fa-solid fa-chevron-right text-sm"></i>
+                        </button>
+                        
+                        <!-- Số thứ tự ảnh -->
+                        <span id="carouselCounter" class="absolute top-2 right-2 bg-black/70 text-slate-200 text-xs px-2.5 py-1 rounded-full border border-slate-700 backdrop-blur-sm">
+                            1 / 1
+                        </span>
+                    </div>
+
+                    <!-- Ghi chú / Chú thích ảnh -->
+                    <div id="carouselCaption" class="mt-3 text-center text-sm font-medium text-amber-300 bg-slate-800/80 px-4 py-2 rounded-xl border border-slate-700/80 min-h-[40px] flex items-center justify-center">
+                        <!-- Caption injected here -->
+                    </div>
+
+                    <!-- Chấm Dots chuyển ảnh -->
+                    <div id="carouselDots" class="flex justify-center items-center gap-1.5 mt-2">
+                        <!-- Dots injected here -->
                     </div>
                 </div>
 
@@ -218,9 +243,46 @@
 
         let allMuscles = [];
         let currentUser = null;
+        let currentCarouselImages = [];
+        let currentCarouselIndex = 0;
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'giai-phau-app';
         const collectionPath = collection(db, 'artifacts', appId, 'public', 'data', 'co_giai_phau');
+
+        // Hàm xử lý tải lại ảnh thông minh khi tệp HTML ở vị trí thư mục bất kỳ
+        window.handleImageError = function(imgElement, originalSrc) {
+            const fallbackSrc = 'https://placehold.co/400x500/1e293b/38bdf8?text=Hinh+Anh+Giai+Phau';
+            
+            if (!originalSrc) {
+                imgElement.onerror = null;
+                imgElement.src = fallbackSrc;
+                return;
+            }
+
+            const cleanSrc = originalSrc.replace(/^\/+/, '');
+            const retryCount = parseInt(imgElement.getAttribute('data-retry-count') || '0', 10);
+            imgElement.setAttribute('data-retry-count', retryCount + 1);
+
+            // Các đường dẫn thử nghiệm nếu người dùng gõ tên ảnh trực tiếp
+            const candidatePaths = [
+                cleanSrc,
+                'images/' + cleanSrc,
+                'img/' + cleanSrc,
+                'assets/' + cleanSrc,
+                '../' + cleanSrc,
+                '../../' + cleanSrc,
+                '../../../' + cleanSrc,
+                '../images/' + cleanSrc,
+                '../img/' + cleanSrc
+            ];
+
+            if (retryCount < candidatePaths.length) {
+                imgElement.src = candidatePaths[retryCount];
+            } else {
+                imgElement.onerror = null;
+                imgElement.src = fallbackSrc;
+            }
+        };
 
         async function initAuth() {
             try {
@@ -287,11 +349,21 @@
                 return;
             }
 
-            grid.innerHTML = filtered.map(item => `
+            grid.innerHTML = filtered.map(item => {
+                // Lấy duy nhất 1 hình đại diện chính cho thẻ card
+                let coverImg = '';
+                if (Array.isArray(item.danhSachHinhAnh) && item.danhSachHinhAnh.length > 0) {
+                    coverImg = item.danhSachHinhAnh[0].url || '';
+                } else if (item.hinhAnh) {
+                    coverImg = item.hinhAnh;
+                }
+
+                return `
                 <div class="relative h-[340px] bg-slate-900 border border-borderbg hover:border-sky-500/60 rounded-2xl overflow-hidden shadow-xl group transition-all duration-300 hover:-translate-y-1">
-                    <img src="${escapeHTML(item.hinhAnh || '')}" 
+                    <img src="${escapeHTML(coverImg)}" 
                          alt="${escapeHTML(item.tenVN || 'Cơ')}"
-                         onerror="this.onerror=null; this.src='https://placehold.co/400x500/1e293b/38bdf8?text=Hinh+Anh+Giai+Phau';"
+                         data-retry-count="0"
+                         onerror="handleImageError(this, '${escapeHTML(coverImg)}')"
                          class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-out">
 
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-black/30 group-hover:via-slate-950/70 transition-colors duration-300"></div>
@@ -317,7 +389,7 @@
                         </button>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         function escapeHTML(str) {
@@ -335,14 +407,19 @@
             document.getElementById('modalVung').textContent = item.vung || 'Chưa rõ vùng';
             document.getElementById('modalTenVN').textContent = item.tenVN || '';
             document.getElementById('modalTenEN').textContent = item.tenEN || '';
-            
-            const imgElem = document.getElementById('modalHinhAnh');
-            imgElem.src = item.hinhAnh || '';
-            imgElem.onerror = function() {
-                this.onerror = null;
-                this.src = 'https://placehold.co/500x300/1e293b/38bdf8?text=Hinh+Anh+Giai+Phau';
-            };
 
+            // Chuẩn hóa danh sách hình ảnh cho Carousel
+            if (Array.isArray(item.danhSachHinhAnh) && item.danhSachHinhAnh.length > 0) {
+                currentCarouselImages = item.danhSachHinhAnh;
+            } else if (item.hinhAnh) {
+                currentCarouselImages = [{ url: item.hinhAnh, caption: '' }];
+            } else {
+                currentCarouselImages = [];
+            }
+
+            currentCarouselIndex = 0;
+            renderCarouselSlide(item.tenVN);
+            
             // Đại Cương
             document.getElementById('modalDaiCuong').innerHTML = item.daiCuong || '<span class="text-slate-500 italic">Chưa có thông tin đại cương</span>';
 
@@ -351,7 +428,6 @@
             tablesContainer.innerHTML = '';
 
             let tablesList = item.bangChiTiet;
-            // Nếu là dữ liệu phiên bản cũ không có mảng `bangChiTiet`, fallback về cấu trúc đơn
             if (!Array.isArray(tablesList) || tablesList.length === 0) {
                 tablesList = [{
                     tenCơNhom: item.tenVN || 'Đặc điểm giải phẫu',
@@ -368,7 +444,6 @@
                 tableSection.className = 'space-y-2 pt-1';
                 
                 tableSection.innerHTML = `
-                    <!-- TIÊU ĐỀ TÊN CÁC CƠ THUỘC NHÓM CƠ PHÍA TRÊN MỖI BẢNG -->
                     <div class="bg-gradient-to-r from-sky-950/80 to-slate-900 border-l-4 border-sky-400 px-4 py-2.5 rounded-r-xl shadow-md flex items-center gap-2">
                         <i class="fa-solid fa-layer-group text-sky-400"></i>
                         <h3 class="text-base font-bold text-sky-200 tracking-wide">
@@ -376,7 +451,6 @@
                         </h3>
                     </div>
 
-                    <!-- BẢNG GIẢI PHẪU CHI TIẾT -->
                     <div class="overflow-x-auto rounded-xl border border-slate-700 shadow-md">
                         <table class="anatomy-table">
                             <tbody>
@@ -415,6 +489,97 @@
 
             document.getElementById('detailModal').classList.remove('hidden');
         };
+
+        // Render slide ảnh hiện tại trong Carousel
+        function renderCarouselSlide(fallbackName = '') {
+            const imgElem = document.getElementById('modalHinhAnh');
+            const counterElem = document.getElementById('carouselCounter');
+            const captionElem = document.getElementById('carouselCaption');
+            const dotsElem = document.getElementById('carouselDots');
+            const btnPrev = document.getElementById('btnPrevImg');
+            const btnNext = document.getElementById('btnNextImg');
+
+            // Lấy tên cơ tiếng Việt làm tên dự phòng nếu không có sẵn
+            if (!fallbackName) {
+                fallbackName = document.getElementById('modalTenVN').textContent || '';
+            }
+
+            if (currentCarouselImages.length === 0) {
+                imgElem.src = 'https://placehold.co/400x500/1e293b/38bdf8?text=Chua+Co+Hinh+Anh';
+                counterElem.textContent = '0 / 0';
+                captionElem.textContent = fallbackName;
+                dotsElem.innerHTML = '';
+                btnPrev.classList.add('hidden');
+                btnNext.classList.add('hidden');
+                return;
+            }
+
+            const current = currentCarouselImages[currentCarouselIndex];
+            imgElem.setAttribute('data-retry-count', '0');
+            imgElem.onerror = function() {
+                handleImageError(this, current.url || '');
+            };
+            imgElem.src = current.url || '';
+
+            counterElem.textContent = `${currentCarouselIndex + 1} / ${currentCarouselImages.length}`;
+
+            // Hiển thị chú thích ảnh: Nếu có caption thì dùng caption, nếu không thì dùng tên cơ tiếng Việt
+            const captionText = current.caption && current.caption.trim() ? current.caption.trim() : fallbackName;
+            captionElem.innerHTML = `<i class="fa-solid fa-circle-info mr-1.5 text-sky-400"></i> ${escapeHTML(captionText)}`;
+            captionElem.classList.remove('hidden');
+
+            // Nút trượt
+            if (currentCarouselImages.length > 1) {
+                btnPrev.classList.remove('hidden');
+                btnNext.classList.remove('hidden');
+            } else {
+                btnPrev.classList.add('hidden');
+                btnNext.classList.add('hidden');
+            }
+
+            // Dots Navigation
+            dotsElem.innerHTML = currentCarouselImages.map((_, i) => `
+                <button onclick="goToCarouselSlide(${i})" class="w-2.5 h-2.5 rounded-full transition-all ${i === currentCarouselIndex ? 'bg-sky-400 w-6' : 'bg-slate-600 hover:bg-slate-400'}"></button>
+            `).join('');
+        }
+
+        window.changeCarouselSlide = function(direction) {
+            if (currentCarouselImages.length <= 1) return;
+            currentCarouselIndex += direction;
+            if (currentCarouselIndex < 0) {
+                currentCarouselIndex = currentCarouselImages.length - 1;
+            } else if (currentCarouselIndex >= currentCarouselImages.length) {
+                currentCarouselIndex = 0;
+            }
+            renderCarouselSlide();
+        };
+
+        window.goToCarouselSlide = function(index) {
+            if (index >= 0 && index < currentCarouselImages.length) {
+                currentCarouselIndex = index;
+                renderCarouselSlide();
+            }
+        };
+
+        // Hỗ trợ vuốt trượt trên màn hình cảm ứng
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const touchContainer = document.getElementById('carouselTouchContainer');
+        
+        if (touchContainer) {
+            touchContainer.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            touchContainer.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                if (touchStartX - touchEndX > 40) {
+                    window.changeCarouselSlide(1); // Vuốt sang trái -> xem ảnh tiếp
+                } else if (touchEndX - touchStartX > 40) {
+                    window.changeCarouselSlide(-1); // Vuốt sang phải -> xem ảnh trước
+                }
+            }, { passive: true });
+        }
 
         const closeModal = () => document.getElementById('detailModal').classList.add('hidden');
         document.getElementById('btnCloseModal').addEventListener('click', closeModal);

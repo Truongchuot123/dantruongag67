@@ -3,7 +3,8 @@
 
         const allExternalLinks = [
             "/so_cuu_di_vat_duong_tho.html",
-            "/csdl_giai_phau.html",
+            "/giai_phau/csdl_giai_phau.html",
+            "/dulieu_nghiem_phap.html",
             "/giai_phau.html",
             "/đo_huyet_ap.html",
             "/rua_tay.html",
