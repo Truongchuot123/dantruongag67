@@ -90,16 +90,16 @@
     <div id="header-placeholder"></div>
     <div id="search-placeholder"></div>
 
-    <!-- MAIN WRAPPER WITH 20PX TOP MARGIN (pt-5) AS REQUESTED -->
-    <div class="pt-5 pb-12 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-6 flex-1 flex flex-col">
+    <!-- MAIN WRAPPER -->
+    <div class="pt-5 pb-12 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-8 flex-1 flex flex-col">
 
-        <!-- TOP BAR: TIÊU ĐỀ THƯƠNG HIỆU & THỐNG KÊ (DỜI XUỐNG CÁCH LỀ TRÊN 20PX) -->
+        <!-- TOP BAR: TIÊU ĐỀ & BỘ LỌC -->
         <div class="bg-slate-900/90 backdrop-blur-xl p-5 sm:p-7 rounded-3xl shadow-2xl border border-slate-800/80 flex flex-col lg:flex-row gap-5 items-center justify-between glow-cyan">
             
-            <!-- Tiêu đề thương hiệu nhỏ/Thống kê -->
+            <!-- Tiêu đề thương hiệu/Thống kê -->
             <div class="flex items-center gap-4 w-full lg:w-auto">
                 <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-600 via-indigo-600 to-violet-600 text-white flex items-center justify-center text-2xl shadow-lg shadow-sky-500/25 shrink-0 ring-1 ring-white/10">
-                    <i class="fa-solid fa-brain-circuit"></i>
+                    <i class="fa-solid fa-stethoscope"></i>
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
@@ -108,7 +108,7 @@
                         </span>
                     </div>
                     <h1 class="text-lg sm:text-2xl font-extrabold text-slate-100 tracking-tight mt-0.5">
-                        TRIỆU CHỨNG & NGHIỆM PHÁP CHẤN THƯƠNG CHỈNH HÌNH
+                        TRIỆU CHỨNG & NGHIỆM PHÁP LÂM SÀNG
                     </h1>
                     <p class="text-xs sm:text-sm font-medium text-slate-400 flex items-center gap-2 mt-1" id="totalCount">
                         <i class="fa-solid fa-spinner animate-spin text-sky-400"></i> Đang kết nối dữ liệu...
@@ -128,7 +128,7 @@
                 </div>
 
                 <!-- Topic Select Filter -->
-                <div class="relative w-full sm:w-56">
+                <div class="relative w-full sm:w-60">
                     <select id="topicFilter" class="w-full appearance-none px-4 py-2.5 bg-slate-950/80 border border-slate-700/80 rounded-2xl text-sm font-medium text-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all cursor-pointer shadow-inner">
                         <option value="">Tất cả chủ đề</option>
                     </select>
@@ -145,9 +145,9 @@
             <span class="text-sm font-semibold tracking-wide">Đang tải cơ sở dữ liệu lâm sàng...</span>
         </div>
 
-        <!-- CARDS GRID CONTAINER (GIAO DIỆN TỐI & HIỆN ĐẠI) -->
-        <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
-            <!-- Dynamic Cards Injected Here -->
+        <!-- GROUPED TOPIC SECTIONS CONTAINER -->
+        <div id="groupedContainer" class="space-y-10 hidden">
+            <!-- Dynamic Topic Sections & Cards Injected Here -->
         </div>
 
         <!-- EMPTY STATE -->
@@ -161,16 +161,16 @@
 
     </div>
 
-    <!-- MODAL CHI TIẾT NGHIỆM PHÁP (GIAO DIỆN TỐI & HIỆN ĐẠI Bổ Sung Dương/Âm Tính) -->
+    <!-- MODAL CHI TIẾT NGHIỆM PHÁP -->
     <div id="detailModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 hidden">
         <!-- Backdrop -->
         <div onclick="closeDetailModal()" class="modal-backdrop fixed inset-0 bg-slate-950/80 backdrop-blur-md opacity-0"></div>
 
         <!-- Modal Panel -->
-        <div class="modal-panel relative bg-slate-900 border border-slate-800 w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden z-10 transform scale-95 opacity-0 flex flex-col max-h-[90vh]">
+        <div class="modal-panel relative bg-slate-900 border border-slate-800 w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden z-10 transform scale-95 opacity-0 flex flex-col max-h-[92vh]">
             
-            <!-- Modal Header -->
-            <div class="px-6 py-5 bg-slate-950/60 border-b border-slate-800/80 flex items-start justify-between gap-4">
+            <!-- Modal Header: Tên nghiệm pháp & Chủ đề -->
+            <div class="px-6 py-5 bg-slate-950/70 border-b border-slate-800/80 flex items-start justify-between gap-4">
                 <div>
                     <span id="modalTopic" class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-sky-500/10 text-sky-400 border border-sky-500/20 mb-2">Chủ đề</span>
                     <h2 id="modalTitle" class="text-xl sm:text-2xl font-extrabold text-slate-100 leading-snug">Tên Nghiệm Pháp</h2>
@@ -183,72 +183,84 @@
             <!-- Modal Body (Scrollable) -->
             <div class="p-6 space-y-6 overflow-y-auto flex-1">
                 
-                <!-- Mục Đích -->
-                <div class="space-y-2">
-                    <div class="flex items-center gap-2 text-sky-400 font-bold text-xs uppercase tracking-wider">
-                        <i class="fa-solid fa-bullseye"></i>
-                        <span>Mục Đích Khám</span>
-                    </div>
-                    <div id="modalPurpose" class="p-4 bg-slate-950/60 border border-slate-800/80 rounded-2xl text-slate-300 text-sm leading-relaxed">
-                        -
-                    </div>
-                </div>
-
-                <!-- Cách Thực Hiện -->
-                <div class="space-y-2">
-                    <div class="flex items-center gap-2 text-indigo-400 font-bold text-xs uppercase tracking-wider">
-                        <i class="fa-solid fa-hand-holding-medical"></i>
-                        <span>Cách Thực Hiện</span>
-                    </div>
-                    <div id="modalMethod" class="p-4 bg-slate-950/60 border border-slate-800/80 rounded-2xl text-slate-300 text-sm leading-relaxed whitespace-pre-line">
-                        -
-                    </div>
-                </div>
-
-                <!-- DƯƠNG TÍNH & ÂM TÍNH GRID -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Dương tính -->
-                    <div class="space-y-2">
-                        <div class="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase tracking-wider">
-                            <i class="fa-solid fa-circle-check"></i>
-                            <span>Dương Tính (+)</span>
-                        </div>
-                        <div id="modalPositive" class="p-4 bg-emerald-950/30 border border-emerald-800/40 rounded-2xl text-emerald-200 text-sm leading-relaxed whitespace-pre-line min-h-[90px]">
-                            -
-                        </div>
-                    </div>
-
-                    <!-- Âm tính -->
-                    <div class="space-y-2">
-                        <div class="flex items-center gap-2 text-sky-400 font-bold text-xs uppercase tracking-wider">
-                            <i class="fa-solid fa-circle-minus"></i>
-                            <span>Âm Tính (-)</span>
-                        </div>
-                        <div id="modalNegative" class="p-4 bg-sky-950/30 border border-sky-800/40 rounded-2xl text-sky-200 text-sm leading-relaxed whitespace-pre-line min-h-[90px]">
-                            -
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Video Hướng Dẫn -->
+                <!-- 1. Video Hướng Dẫn -->
                 <div class="space-y-2">
                     <div class="flex items-center gap-2 text-rose-400 font-bold text-xs uppercase tracking-wider">
                         <i class="fa-solid fa-circle-play"></i>
-                        <span>Video Hướng Dẫn</span>
+                        <span>Video Minh Họa</span>
                     </div>
                     <div id="modalVideoContainer" class="rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 aspect-video relative flex items-center justify-center text-slate-500 text-sm shadow-inner">
                         <!-- Dynamic iframe injected here -->
                     </div>
                 </div>
 
-                <!-- Ghi Chú & Lưu Ý Lâm Sàng -->
-                <div class="space-y-2">
-                    <div class="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
-                        <i class="fa-solid fa-note-sticky"></i>
-                        <span>Ghi Chú & Lưu Ý Lâm Sàng</span>
+                <!-- 2. Nội Dung Chi Tiết -->
+                <div class="space-y-4">
+                    <!-- Mục Đích -->
+                    <div class="space-y-1.5">
+                        <div class="flex items-center gap-2 text-sky-400 font-bold text-xs uppercase tracking-wider">
+                            <i class="fa-solid fa-bullseye"></i>
+                            <span>Mục Đích</span>
+                        </div>
+                        <div id="modalPurpose" class="p-4 bg-slate-950/60 border border-slate-800/80 rounded-2xl text-slate-300 text-sm leading-relaxed whitespace-pre-line">
+                            -
+                        </div>
                     </div>
-                    <div id="modalNotes" class="p-4 bg-amber-950/20 border border-amber-800/40 rounded-2xl text-amber-200 text-sm leading-relaxed">
-                        -
+
+                    <!-- Tư thế người bệnh & Người khám -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <div class="flex items-center gap-2 text-indigo-400 font-bold text-xs uppercase tracking-wider">
+                                <i class="fa-solid fa-bed-pulse"></i>
+                                <span>Tư Thế Người Bệnh</span>
+                            </div>
+                            <div id="modalPatientPos" class="p-4 bg-slate-950/60 border border-slate-800/80 rounded-2xl text-slate-300 text-sm leading-relaxed whitespace-pre-line min-h-[90px]">
+                                -
+                            </div>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <div class="flex items-center gap-2 text-violet-400 font-bold text-xs uppercase tracking-wider">
+                                <i class="fa-solid fa-user-doctor"></i>
+                                <span>Người Khám</span>
+                            </div>
+                            <div id="modalExaminerPos" class="p-4 bg-slate-950/60 border border-slate-800/80 rounded-2xl text-slate-300 text-sm leading-relaxed whitespace-pre-line min-h-[90px]">
+                                -
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Động Tác -->
+                    <div class="space-y-1.5">
+                        <div class="flex items-center gap-2 text-cyan-400 font-bold text-xs uppercase tracking-wider">
+                            <i class="fa-solid fa-hand-holding-medical"></i>
+                            <span>Động Tác</span>
+                        </div>
+                        <div id="modalAction" class="p-4 bg-slate-950/60 border border-slate-800/80 rounded-2xl text-slate-300 text-sm leading-relaxed whitespace-pre-line">
+                            -
+                        </div>
+                    </div>
+
+                    <!-- Dương Tính -->
+                    <div class="space-y-1.5">
+                        <div class="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase tracking-wider">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Dương Tính (+)</span>
+                        </div>
+                        <div id="modalPositive" class="p-4 bg-emerald-950/25 border border-emerald-800/40 rounded-2xl text-emerald-200 text-sm leading-relaxed whitespace-pre-line">
+                            -
+                        </div>
+                    </div>
+
+                    <!-- Ghi Chú -->
+                    <div class="space-y-1.5">
+                        <div class="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
+                            <i class="fa-solid fa-note-sticky"></i>
+                            <span>Ghi Chú</span>
+                        </div>
+                        <div id="modalNotes" class="p-4 bg-amber-950/20 border border-amber-800/40 rounded-2xl text-amber-200 text-sm leading-relaxed whitespace-pre-line">
+                            -
+                        </div>
                     </div>
                 </div>
 
@@ -269,7 +281,6 @@
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Cấu hình Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
             authDomain: "dulieuweb-6541e.firebaseapp.com",
@@ -295,10 +306,8 @@
                     await signInAnonymously(auth);
                 }
 
-                // Path tuân thủ Rule 1
                 const dataRef = collection(db, 'artifacts', currentAppId, 'public', 'data', 'motor_exams');
 
-                // Lắng nghe dữ liệu realtime
                 onSnapshot(dataRef, (snapshot) => {
                     examDatabase = [];
                     snapshot.forEach((docSnap) => {
@@ -307,7 +316,7 @@
 
                     document.getElementById('loadingStatus').classList.add('hidden');
                     updateTopicDropdown();
-                    renderCards();
+                    renderGroupedCards();
                 }, (error) => {
                     console.error("Lỗi Firestore:", error);
                     document.getElementById('loadingStatus').innerHTML = `
@@ -332,8 +341,8 @@
                 topics.map(t => `<option value="${escapeHtml(t)}" ${t === selectedVal ? 'selected' : ''}>${escapeHtml(t)}</option>`).join('');
         }
 
-        window.renderCards = function() {
-            const cardsGrid = document.getElementById('cardsGrid');
+        window.renderGroupedCards = function() {
+            const groupedContainer = document.getElementById('groupedContainer');
             const emptyState = document.getElementById('emptyState');
             const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
             const topicVal = document.getElementById('topicFilter').value;
@@ -350,7 +359,7 @@
             document.getElementById('totalCount').innerHTML = `<i class="fa-solid fa-database text-sky-400"></i> Hiển thị <span class="text-sky-400 font-bold">${filteredExams.length}</span> / ${examDatabase.length} nghiệm pháp`;
 
             if (filteredExams.length === 0) {
-                cardsGrid.classList.add('hidden');
+                groupedContainer.classList.add('hidden');
                 emptyState.classList.remove('hidden');
                 emptyState.classList.add('flex');
                 return;
@@ -358,53 +367,87 @@
 
             emptyState.classList.add('hidden');
             emptyState.classList.remove('flex');
-            cardsGrid.classList.remove('hidden');
+            groupedContainer.classList.remove('hidden');
 
-            cardsGrid.innerHTML = filteredExams.map(item => `
-                <div class="card-hover bg-slate-900/90 rounded-3xl p-6 border border-slate-800 flex flex-col justify-between space-y-4 shadow-xl relative overflow-hidden group">
-                    <div class="space-y-3">
-                        
-                        <h3 class="text-lg font-bold text-slate-100 leading-snug line-clamp-2 group-hover:text-sky-400 transition-colors">
-                            ${escapeHtml(item.name || 'Nghiệm pháp')}
-                        </h3>
+            // Nhóm dữ liệu theo chủ đề
+            const groupedByTopic = filteredExams.reduce((acc, item) => {
+                const topicKey = (item.topic && item.topic.trim() !== '') ? item.topic.trim() : 'Chưa phân loại';
+                if (!acc[topicKey]) {
+                    acc[topicKey] = [];
+                }
+                acc[topicKey].push(item);
+                return acc;
+            }, {});
 
-                        <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed">
-                            <span class="text-slate-300 font-semibold">Mục đích:</span> ${escapeHtml(item.purpose || 'Đang cập nhật...')}
-                        </p>
-
-                        <!-- Thẻ Hiển Thị Nhanh Kết Quả Dương Tính/Âm Tính -->
-                        <div class="grid grid-cols-2 gap-2 pt-1">
-                            <div class="p-2.5 rounded-xl bg-emerald-950/20 border border-emerald-900/30 text-emerald-300 text-xs">
-                                <div class="font-bold flex items-center gap-1 mb-0.5 text-emerald-400">
-                                    <i class="fa-solid fa-circle-check text-[10px]"></i> Dương tính
-                                </div>
-                                <p class="line-clamp-2 text-[11px] text-emerald-200/80">${escapeHtml(item.positive || '-')}</p>
-                            </div>
-                            <div class="p-2.5 rounded-xl bg-sky-950/20 border border-sky-900/30 text-sky-300 text-xs">
-                                <div class="font-bold flex items-center gap-1 mb-0.5 text-sky-400">
-                                    <i class="fa-solid fa-circle-minus text-[10px]"></i> Âm tính
-                                </div>
-                                <p class="line-clamp-2 text-[11px] text-sky-200/80">${escapeHtml(item.negative || '-')}</p>
-                            </div>
+            // Render từng mục chủ đề và danh sách thẻ card bên dưới
+            groupedContainer.innerHTML = Object.entries(groupedByTopic).map(([topicName, items]) => `
+                <section class="space-y-5">
+                    <!-- Tiêu đề mục chủ đề -->
+                    <div class="flex items-center justify-between border-b border-slate-800/90 pb-3">
+                        <div class="flex items-center gap-3">
+                            <span class="w-1.5 h-7 rounded-full bg-gradient-to-b from-sky-400 to-indigo-600"></span>
+                            <h2 class="text-lg sm:text-xl font-extrabold text-slate-100 tracking-tight uppercase">
+                                ${escapeHtml(topicName)}
+                            </h2>
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-800 text-sky-400 border border-slate-700">
+                                ${items.length}
+                            </span>
                         </div>
                     </div>
 
-                    <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between">
-                        <span class="inline-block px-3 py-1 rounded-xl text-xs font-bold bg-sky-500/10 text-sky-400 border border-sky-500/20">
-                                <i class="fa-solid fa-layer-group mr-1 text-[10px]"></i>
-                                ${escapeHtml(item.topic || 'Chưa phân loại')}
-                        </span>
-                        <button onclick="openDetailModal('${item.id}')" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-sky-600 text-slate-200 hover:text-white font-medium px-4 py-2 rounded-xl text-xs transition-all shadow-md active:scale-95 cursor-pointer">
-                            <span>Chi tiết</span>
-                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                        </button>
+                    <!-- Grid các thẻ card thuộc chủ đề -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        ${items.map(item => `
+                            <div class="card-hover bg-slate-900/90 rounded-3xl border border-slate-800 flex flex-col justify-between shadow-xl overflow-hidden group">
+                                <div>
+                                    <!-- Hình ảnh nghiệm pháp -->
+                                    <div onclick="openDetailModal('${item.id}')" class="aspect-[16/10] w-full bg-slate-950 relative overflow-hidden cursor-pointer border-b border-slate-800/80">
+                                        ${item.image ? `
+                                            <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name || '')}" 
+                                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full flex flex-col items-center justify-center text-slate-600\\'><i class=\\'fa-solid fa-image text-3xl mb-1\\'></i><span class=\\'text-[11px]\\'>Chưa có hình ảnh</span></div>'">
+                                        ` : `
+                                            <div class="w-full h-full flex flex-col items-center justify-center text-slate-600 bg-gradient-to-br from-slate-900 to-slate-950">
+                                                <i class="fa-solid fa-notes-medical text-3xl mb-1.5 text-slate-700"></i>
+                                                <span class="text-[11px] font-medium">Minh họa lâm sàng</span>
+                                            </div>
+                                        `}
+                                        ${item.video ? `
+                                            <span class="absolute top-3 right-3 w-8 h-8 rounded-full bg-rose-600/90 text-white flex items-center justify-center text-xs shadow-lg backdrop-blur-sm" title="Có video hướng dẫn">
+                                                <i class="fa-solid fa-play ml-0.5"></i>
+                                            </span>
+                                        ` : ''}
+                                    </div>
+
+                                    <!-- Tên nghiệm pháp -->
+                                    <div class="p-5 pb-3">
+                                        <h3 onclick="openDetailModal('${item.id}')" class="text-base sm:text-lg font-bold text-slate-100 leading-snug line-clamp-2 group-hover:text-sky-400 transition-colors cursor-pointer">
+                                            ${escapeHtml(item.name || 'Nghiệm pháp')}
+                                        </h3>
+                                    </div>
+                                </div>
+
+                                <!-- Footer Card: Chủ đề & Nút Chi tiết -->
+                                <div class="px-5 pb-5 pt-3 border-t border-slate-800/60 flex items-center justify-between gap-2">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-xl text-[11px] font-bold bg-sky-500/10 text-sky-400 border border-sky-500/20 truncate max-w-[60%]" title="${escapeHtml(item.topic || 'Chưa phân loại')}">
+                                        <i class="fa-solid fa-layer-group mr-1.5 text-[10px] shrink-0"></i>
+                                        <span class="truncate">${escapeHtml(item.topic || 'Chưa phân loại')}</span>
+                                    </span>
+
+                                    <button onclick="openDetailModal('${item.id}')" class="inline-flex items-center gap-1.5 bg-slate-800 hover:bg-sky-600 text-slate-200 hover:text-white font-semibold px-3.5 py-2 rounded-xl text-xs transition-all shadow-md active:scale-95 cursor-pointer shrink-0">
+                                        <span>Chi tiết</span>
+                                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>
-                </div>
+                </section>
             `).join('');
         }
 
-        document.getElementById('searchInput').addEventListener('input', renderCards);
-        document.getElementById('topicFilter').addEventListener('change', renderCards);
+        document.getElementById('searchInput').addEventListener('input', renderGroupedCards);
+        document.getElementById('topicFilter').addEventListener('change', renderGroupedCards);
 
         window.openDetailModal = function(id) {
             const item = examDatabase.find(rec => rec.id === id);
@@ -413,36 +456,61 @@
             document.getElementById('modalTopic').innerText = item.topic || 'Chưa phân loại';
             document.getElementById('modalTitle').innerText = item.name || 'Nghiệm pháp';
             document.getElementById('modalPurpose').innerText = item.purpose || 'Chưa cập nhật nội dung mục đích.';
-            document.getElementById('modalMethod').innerText = item.method || 'Chưa cập nhật các bước thực hiện.';
+            document.getElementById('modalPatientPos').innerText = item.patientPosition || 'Chưa cập nhật tư thế người bệnh.';
+            document.getElementById('modalExaminerPos').innerText = item.examinerPosition || 'Chưa cập nhật vị trí người khám.';
+            document.getElementById('modalAction').innerText = item.action || item.method || 'Chưa cập nhật động tác thực hiện.';
             document.getElementById('modalPositive').innerText = item.positive || 'Chưa cập nhật dấu hiệu dương tính.';
-            document.getElementById('modalNegative').innerText = item.negative || 'Chưa cập nhật dấu hiệu âm tính.';
             document.getElementById('modalNotes').innerText = item.notes || 'Không có ghi chú thêm.';
 
             const videoContainer = document.getElementById('modalVideoContainer');
             if (item.video && item.video.trim() !== '') {
-                const url = item.video.trim();
-                let embedUrl = url;
+                const rawUrl = item.video.trim();
+                // Hỗ trợ đầy đủ các định dạng link YouTube (watch?v=, youtu.be/, shorts/, embed/, live/, m.youtube.com)
+                const ytMatch = rawUrl.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+                // Hỗ trợ link Google Drive
+                const driveMatch = rawUrl.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
 
-                if (url.includes('youtube.com/watch?v=')) {
-                    const videoId = url.split('watch?v=')[1]?.split('&')[0];
-                    embedUrl = `https://www.youtube.com/embed/${videoId}`;
-                } else if (url.includes('youtu.be/')) {
-                    const videoId = url.split('youtu.be/')[1]?.split('?')[0];
-                    embedUrl = `https://www.youtube.com/embed/${videoId}`;
-                }
-
-                if (embedUrl.startsWith('http')) {
+                if (ytMatch && ytMatch[1]) {
+                    const embedUrl = `https://www.youtube.com/embed/${ytMatch[1]}?rel=0&modestbranding=1`;
                     videoContainer.innerHTML = `
-                        <iframe src="${embedUrl}" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe src="${embedUrl}" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    `;
+                } else if (driveMatch && driveMatch[1]) {
+                    const driveEmbedUrl = `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+                    videoContainer.innerHTML = `
+                        <iframe src="${driveEmbedUrl}" class="w-full h-full border-0" allow="autoplay" allowfullscreen></iframe>
                     `;
                 } else {
+                    // Chuẩn hóa đường dẫn nội bộ (ví dụ: vidieo/abc.mp4 -> /vidieo/abc.mp4) và encode ký tự khoảng trắng/tiếng Việt
+                    let normalizedUrl = rawUrl;
+                    if (!/^https?:\/\//i.test(normalizedUrl) && !normalizedUrl.startsWith('/')) {
+                        normalizedUrl = '/' + normalizedUrl;
+                    }
+                    const safeUrl = encodeURI(normalizedUrl);
+
                     videoContainer.innerHTML = `
-                        <div class="p-4 text-center">
-                            <i class="fa-solid fa-link text-2xl mb-2 text-rose-400"></i>
-                            <p class="mb-2 text-slate-300">Xem video qua đường dẫn:</p>
-                            <a href="${escapeHtml(url)}" target="_blank" class="text-sky-400 underline font-semibold text-xs break-all">${escapeHtml(url)}</a>
-                        </div>
+                        <video id="modalHtml5Video" class="w-full h-full bg-black object-contain" controls playsinline preload="metadata">
+                            <source src="${escapeHtml(safeUrl)}">
+                            Trình duyệt của bạn không hỗ trợ phát video này.
+                        </video>
                     `;
+
+                    // Bắt lỗi nếu file video nội bộ không tải được
+                    const videoEl = document.getElementById('modalHtml5Video');
+                    if (videoEl) {
+                        videoEl.addEventListener('error', () => {
+                            videoContainer.innerHTML = `
+                                <div class="flex flex-col items-center justify-center p-6 text-center space-y-2">
+                                    <i class="fa-solid fa-triangle-exclamation text-2xl text-amber-400"></i>
+                                    <p class="text-slate-300 text-sm font-medium">Không thể tải tệp video trực tiếp</p>
+                                    <p class="text-slate-500 text-xs break-all">${escapeHtml(normalizedUrl)}</p>
+                                    <a href="${escapeHtml(safeUrl)}" target="_blank" class="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-400 text-xs font-semibold transition-colors">
+                                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở video trong tab mới
+                                    </a>
+                                </div>
+                            `;
+                        }, true);
+                    }
                 }
             } else {
                 videoContainer.innerHTML = `
@@ -480,7 +548,13 @@
 
             setTimeout(() => {
                 modal.classList.add('hidden');
-                document.getElementById('modalVideoContainer').innerHTML = '';
+                const videoContainer = document.getElementById('modalVideoContainer');
+                const videoEl = videoContainer.querySelector('video');
+                if (videoEl) {
+                    videoEl.pause();
+                    videoEl.src = '';
+                }
+                videoContainer.innerHTML = '';
             }, 300);
         }
 

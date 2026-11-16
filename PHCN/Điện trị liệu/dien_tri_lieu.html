@@ -1,273 +1,1104 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Điện trị liệu</title>
-     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:image" content="/hinhanh/logo_web.png">
-    <meta property="og:url" content="https://dantruongag.id.vn">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Điện Trị Liệu - Phục Hồi Chức Năng</title>
+    <meta name="description" content="Hệ thống kỹ thuật Phục Hồi Chức Năng - Điện Trị Liệu chuyên sâu, trực quan và hiện đại.">
+    <link rel="icon" href="/hinhanh/logo_web.png" onerror="this.href='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>'">
+
+    <!-- Tailwind CSS & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" href="/hinhanh/logo_web.png" type="">
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/banner_trang_con.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Firebase SDKs v11.6.1 Compat -->
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        /* CSS Truyền Thống & Hiện Đại */
         :root {
-            --primary-color: #2563eb;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
+            --bg-gradient: radial-gradient(circle at 12% 10%, rgba(245, 158, 11, 0.14) 0%, transparent 45%),
+                           radial-gradient(circle at 88% 85%, rgba(234, 88, 12, 0.14) 0%, transparent 45%),
+                           #070b14;
+            --card-bg: rgba(15, 23, 42, 0.68);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
         }
 
-        .main-content-section {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
             color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        h1.page-title {
-            margin-bottom: 30px;
-            color: var(--primary-color);
-        }
-
-        /* Container chính cho các thẻ card */
-        #content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            width: 100%;
-            max-width: 1200px;
-        }
-
-        /* Cấu trúc Card */
-        .card {
+        .glass-panel {
             background: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.25);
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        .tech-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                        border-color 0.35s ease;
         }
 
-        /* Div chứa ảnh theo yêu cầu */
-        #image-container {
-            width: 100%;
-            height: 200px;
-            background-color: #e2e8f0;
-            overflow: hidden;
+        .tech-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(245, 158, 11, 0.48);
+            box-shadow: 0 22px 44px -14px rgba(245, 158, 11, 0.24);
         }
 
-        #image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
+        .formatted-prose ul { list-style-type: disc; padding-left: 1.4rem; margin: 0.25rem 0; }
+        .formatted-prose ol { list-style-type: decimal; padding-left: 1.4rem; margin: 0.25rem 0; }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.28); border-radius: 99px; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .animate-fade-up {
+            animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
 
-        .card-body {
-            padding: 20px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        /* Tiêu đề h1 theo yêu cầu */
-        .card-body h1 {
-            font-size: 1.25rem;
-            margin: 0 0 15px 0;
-            color: var(--text-main);
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        /* Nút xem ngay */
-        .btn-view {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            text-align: center;
-            padding: 10px 20px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background-color 0.2s;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-view:hover {
-            background-color: #1d4ed8;
-        }
-
-        /* Hiệu ứng loading */
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .error-msg {
-            color: #ef4444;
-            font-weight: bold;
-            padding: 20px;
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="bg-gray-900">
+<body class="antialiased selection:bg-amber-500 selection:text-slate-950 flex flex-col">
+
+    <!-- Header Placeholder -->
     <div id="header-placeholder"></div>
     <div id="search-placeholder"></div>
 
-    <header class="main-banner_trang_con">
-        <div class="banner_trang_con-overlay"></div>
-        <div class="hbanner_trang_con-image-bg"></div>
+    <!-- HERO SECTION -->
+    <section id="top" class="relative pt-8 sm:pt-12 pb-6 px-4 sm:px-6">
+        <div class="max-w-7xl mx-auto text-center space-y-5 animate-fade-up">
 
-        <div class="hbanner_trang_con-content">
-            <h1 class="main-title">ĐIỆN TRỊ LIỆU</h1>
-            <p class="sub-text">Phục hồi chức năng là biện pháp giảm tối đa tác động của giảm chức năng và tàn tật, từ đó, giúp người bệnh hội nhập hoặc tái hội nhập với xã hội. Những chức năng này có thể thuộc về chức năng thể chất hoặc tâm thần (khả năng nhận thức, tư duy,…)</p>
-            <div class="hbanner_trang_con-tabs-wrap">
-                <div id="category-tabs" class="category-scroll" aria-label="Danh mục bài viết"></div>
+            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.12]">
+                PHỤC HỒI CHỨC NĂNG <br class="hidden sm:inline">
+                <span class="bg-gradient-to-r from-amber-400 via-yellow-300 to-orange-400 bg-clip-text text-transparent">
+                    ĐIỆN TRỊ LIỆU
+                </span>
+            </h1>
+
+            <p class="max-w-2xl mx-auto text-xs sm:text-sm md:text-base text-slate-400 leading-relaxed">
+                Tra cứu nhanh nguyên lý dòng điện, tác dụng sinh lý, chỉ định, chống chỉ định, tai biến, lưu ý kỹ thuật và video thực hành lâm sàng.
+            </p>
+
+            <!-- Search & Quick Filter Bar -->
+            <div class="max-w-2xl mx-auto pt-2">
+                <div class="relative group">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-amber-500/40 to-orange-500/40 rounded-2xl blur opacity-40 group-focus-within:opacity-90 transition duration-300"></div>
+                    <div class="relative flex items-center glass-panel rounded-2xl px-4 sm:px-5 py-3 sm:py-3.5">
+                        <i class="fa-solid fa-magnifying-glass text-slate-400 mr-3 text-base group-focus-within:text-amber-400 transition-colors"></i>
+                        <input type="text" id="article-search" oninput="handleSearch(this.value)"
+                               placeholder="Tìm kiếm kỹ thuật điện trị liệu (VD: TENS, siêu âm, sóng ngắn, hồng ngoại...)"
+                               class="w-full bg-transparent border-none text-sm sm:text-base font-medium placeholder:text-slate-500 focus:outline-none">
+                        <button onclick="clearSearch(true)" id="clear-search-btn" class="hidden text-slate-400 hover:text-rose-400 ml-2 p-1" title="Xóa tìm kiếm">
+                            <i class="fa-solid fa-circle-xmark text-lg"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-    </header>
-
-    <section class="main-content-section">
-    <div id="loader" class="loader"></div>
-    <div id="content-grid"></div>
     </section>
-    <script>
-        const DEFAULT_IMAGE = "/hinhanh/logo_web.png";
-        const pageUrls = [
-            '/PHCN/Điện trị liệu/Parafin.html',
-            '/PHCN/Điện trị liệu/Hongngoai.html',
-            '/PHCN/Điện trị liệu/sieu_am.html',
-            "/PHCN/Điện trị liệu/kich_thich_lien_xuong.html",
-            '/PHCN/Điện trị liệu/Song_ngan.html',
-            '/PHCN/Điện trị liệu/laser_cong-suat_thap.html',
-            "/PHCN/Điện trị liệu/laser_noi_mach.html",
-            "/PHCN/Điện trị liệu/laser_cong_suat_cao.html",
-            '/PHCN/Điện trị liệu/dien_xung.html',
-            '/PHCN/Điện trị liệu/may_keo_cot_song.html',
-            "/PHCN/Điện trị liệu/nen_ep.html",
-            "/PHCN/Điện trị liệu/dien_truong_cao_ap.html",
-            "/PHCN/Điện trị liệu/xung_kich.html",
-            "/PHCN/Điện trị liệu/tu_truong.html",
-            "/PHCN/Điện trị liệu/oxy_cao_ap.html"
 
+    <!-- MAIN CONTENT WORKSPACE -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 pb-16 flex-grow w-full space-y-6">
+
+        <!-- CATEGORY TABS NAVIGATION -->
+        <div class="relative group">
+            <button id="slide-left-btn" onclick="scrollTabs('left')" aria-label="Cuộn trái"
+                    class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-20 w-9 h-9 rounded-full glass-panel text-slate-300 hover:text-amber-400 items-center justify-center shadow-xl transition-all opacity-0 pointer-events-none">
+                <i class="fa-solid fa-chevron-left text-xs"></i>
+            </button>
+
+            <div id="category-tabs" onscroll="updateScrollState()"
+                 class="flex items-center gap-2.5 overflow-x-auto py-2 no-scrollbar scroll-smooth snap-x">
+                <!-- Dynamic Category Pills -->
+            </div>
+
+            <button id="slide-right-btn" onclick="scrollTabs('right')" aria-label="Cuộn phải"
+                    class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-20 w-9 h-9 rounded-full glass-panel text-slate-300 hover:text-amber-400 items-center justify-center shadow-xl transition-all opacity-0 pointer-events-none">
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+            </button>
+        </div>
+
+        <!-- ACTIVE CATEGORY BANNER + SORT & FILTER CONTROLS -->
+        <div class="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div class="flex items-start sm:items-center gap-4">
+                <div id="cat-icon-badge" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-amber-400 to-orange-500 text-slate-950 flex items-center justify-center text-xl sm:text-2xl shadow-lg shrink-0">
+                    <i class="fa-solid fa-bolt-lightning"></i>
+                </div>
+                <div class="space-y-1">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <h2 id="cat-headline" class="text-lg sm:text-xl font-extrabold">Tất cả kỹ thuật Điện trị liệu</h2>
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-amber-500/15 text-amber-400 border border-amber-500/25">
+                            <span id="filtered-count">0</span> kỹ thuật
+                        </span>
+                    </div>
+                    <p id="cat-subline" class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        Tổng hợp toàn bộ các kỹ thuật vật lý trị liệu - điện trị liệu từ nhiệt trị liệu, điện xung đến sóng cao tần và ánh sáng trị liệu.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Filter & Sort Controls -->
+            <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+                <select id="media-filter" onchange="renderArticles()" class="glass-panel rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-300 focus:outline-none focus:border-amber-400 cursor-pointer">
+                    <option value="all" class="bg-slate-900">Tất cả định dạng</option>
+                    <option value="video" class="bg-slate-900">Có Video hướng dẫn</option>
+                    <option value="pdf" class="bg-slate-900">Có Tài liệu PDF</option>
+                    <option value="image" class="bg-slate-900">Có Hình ảnh</option>
+                </select>
+
+                <select id="sort-selector" onchange="handleSortChange(this.value)" class="glass-panel rounded-xl px-3.5 py-2.5 text-xs font-bold text-amber-400 focus:outline-none focus:border-amber-400 cursor-pointer">
+                    <option value="index" class="bg-slate-900 text-slate-200">Thứ tự chuẩn</option>
+                    <option value="az" class="bg-slate-900 text-slate-200">Tên (A → Z)</option>
+                    <option value="za" class="bg-slate-900 text-slate-200">Tên (Z → A)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- CARDS GRID CONTAINER -->
+        <div id="articles-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+            <!-- Skeleton Loading Cards -->
+            <div class="glass-panel rounded-3xl overflow-hidden animate-pulse">
+                <div class="aspect-[16/10] bg-slate-800/70"></div>
+                <div class="p-5 space-y-3">
+                    <div class="h-4 bg-slate-800 rounded w-1/3"></div>
+                    <div class="h-6 bg-slate-800 rounded w-4/5"></div>
+                    <div class="h-10 bg-slate-800 rounded-xl w-full mt-4"></div>
+                </div>
+            </div>
+            <div class="glass-panel rounded-3xl overflow-hidden animate-pulse">
+                <div class="aspect-[16/10] bg-slate-800/70"></div>
+                <div class="p-5 space-y-3">
+                    <div class="h-4 bg-slate-800 rounded w-1/3"></div>
+                    <div class="h-6 bg-slate-800 rounded w-4/5"></div>
+                    <div class="h-10 bg-slate-800 rounded-xl w-full mt-4"></div>
+                </div>
+            </div>
+            <div class="glass-panel rounded-3xl overflow-hidden animate-pulse hidden lg:block">
+                <div class="aspect-[16/10] bg-slate-800/70"></div>
+                <div class="p-5 space-y-3">
+                    <div class="h-4 bg-slate-800 rounded w-1/3"></div>
+                    <div class="h-6 bg-slate-800 rounded w-4/5"></div>
+                    <div class="h-10 bg-slate-800 rounded-xl w-full mt-4"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div id="empty-state" class="hidden glass-panel rounded-3xl py-16 px-6 text-center space-y-4">
+            <div class="w-16 h-16 rounded-2xl bg-slate-800/70 border border-slate-700/50 flex items-center justify-center mx-auto text-slate-400 text-2xl">
+                <i class="fa-solid fa-folder-open"></i>
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-lg font-extrabold">Không tìm thấy kỹ thuật phù hợp</h3>
+                <p class="text-xs sm:text-sm text-slate-400 max-w-md mx-auto">Thử thay đổi từ khóa tìm kiếm hoặc chọn sang chuyên đề khác.</p>
+            </div>
+            <button onclick="resetAllFilters()" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold transition-all shadow-lg shadow-amber-500/20">
+                Xem tất cả kỹ thuật
+            </button>
+        </div>
+    </main>
+
+    <!-- =====================================================================
+         DETAIL MODAL (CHUYÊN KHOA, CHUYÊN ĐỀ, TÊN KỸ THUẬT GIỮA, NỘI DUNG, VIDEO/PDF, NÚT ĐÓNG)
+         ===================================================================== -->
+    <div id="article-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-6" role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-slate-950/85 backdrop-blur-md transition-opacity" onclick="closeArticleModal()"></div>
+
+        <!-- Modal Box -->
+        <div class="relative z-10 w-full max-w-4xl max-h-[92vh] flex flex-col rounded-3xl glass-panel border border-slate-500/25 shadow-2xl overflow-hidden animate-fade-up">
+            
+            <!-- Modal Header: Chuyên khoa, Chuyên đề + Nút đóng -->
+            <div class="px-5 sm:px-7 py-4 border-b border-slate-500/15 flex items-center justify-between gap-3 bg-slate-900/50 shrink-0">
+                <div class="flex flex-wrap items-center gap-2 min-w-0">
+                    <span class="px-3 py-1 rounded-lg text-[11px] font-extrabold uppercase tracking-wider bg-orange-500/15 text-orange-400 border border-orange-500/25 flex items-center gap-1.5">
+                        <i class="fa-solid fa-bolt-lightning"></i>
+                        <span id="modal-discipline-name">Điện Trị Liệu</span>
+                    </span>
+                    <i class="fa-solid fa-chevron-right text-[10px] text-slate-500"></i>
+                    <span id="modal-category-badge" class="px-3 py-1 rounded-lg text-[11px] font-extrabold uppercase tracking-wider bg-amber-500/15 text-amber-400 border border-amber-500/25 truncate">
+                        Chuyên đề
+                    </span>
+                </div>
+
+                <button onclick="closeArticleModal()" class="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-rose-500 text-slate-300 hover:text-white flex items-center justify-center transition-all shrink-0" title="Đóng cửa sổ">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Scrollable Content -->
+            <div class="p-5 sm:p-8 overflow-y-auto custom-scrollbar space-y-7 flex-grow">
+                
+                <!-- TÊN KỸ THUẬT HIỂN THỊ NỔI BẬT Ở GIỮA -->
+                <div class="text-center space-y-3 max-w-3xl mx-auto pt-1">
+                    <h2 id="modal-title" class="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight leading-snug bg-gradient-to-r from-amber-300 via-white to-orange-300 bg-clip-text text-transparent">
+                        Tên Kỹ Thuật
+                    </h2>
+                    <div class="w-20 h-1 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 mx-auto"></div>
+                </div>
+
+                <!-- THƯ VIỆN HÌNH ẢNH MINH HỌA (NẾU CÓ) -->
+                <div id="modal-images-section" class="hidden space-y-3">
+                    <div class="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-amber-400">
+                        <i class="fa-solid fa-images"></i> Hình ảnh minh họa kỹ thuật
+                    </div>
+                    <div id="modal-images-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+                </div>
+
+                <!-- VIDEO HƯỚNG DẪN & TÀI LIỆU PDF -->
+                <div id="modal-media-container" class="hidden space-y-6"></div>
+
+                <!-- NỘI DUNG HƯỚNG DẪN CHI TIẾT (7 MỤC PHCN HOẶC HTML TỰ DO) -->
+                <div id="modal-body-wrapper" class="space-y-3">
+                    <div class="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-amber-400">
+                        <i class="fa-solid fa-book-medical"></i> Nội dung hướng dẫn chi tiết
+                    </div>
+                    <div id="modal-body-content" class="p-5 sm:p-6 rounded-2xl bg-slate-950/45 border border-slate-500/15 text-slate-200 space-y-5 leading-relaxed text-sm sm:text-base formatted-prose">
+                    </div>
+                </div>
+
+                <!-- EXTERNAL LINK BUTTON (NẾU CÓ TRANG HTML RIÊNG) -->
+                <div id="modal-external-link-box" class="hidden pt-2 text-center"></div>
+            </div>
+
+            <!-- Modal Footer với Nút Đóng rõ ràng -->
+            <div class="px-5 sm:px-7 py-4 border-t border-slate-500/15 bg-slate-900/60 flex items-center justify-between gap-4 shrink-0">
+                <span class="text-[11px] text-slate-400 hidden sm:inline">
+                    <i class="fa-solid fa-circle-info text-amber-400 mr-1"></i> Nhấn ESC hoặc nút Đóng để quay lại danh sách
+                </span>
+                <button onclick="closeArticleModal()" class="w-full sm:w-auto ml-auto px-7 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold text-xs sm:text-sm tracking-wide shadow-lg shadow-amber-500/20 transition-all active:scale-95 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-xmark"></i> Đóng cửa sổ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APPLICATION LOGIC -->
+    <script>
+        // =========================================================
+        // 1. FIREBASE CONFIGURATION (ĐỒNG BỘ VỚI quantri_PHCN.html)
+        // =========================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyDyXmxsZAg6JxgcsujSIwMfbZTHscfJSCg",
+            authDomain: "dulieuweb-6541e.firebaseapp.com",
+            projectId: "dulieuweb-6541e",
+            storageBucket: "dulieuweb-6541e.firebasestorage.app",
+            messagingSenderId: "215480268517",
+            appId: "1:215480268517:web:16600eafd6839fee5dc60c"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'dulieuweb-6541e';
+
+        const TARGET_DISCIPLINE = 'dien_tri_lieu';
+        const CACHE_ARTICLES_KEY = `cache_phcn_${appId}_articles_v2`;
+        const CACHE_CATS_KEY = `cache_phcn_${appId}_cats_v2`;
+
+        const getArticlesCollection = () => db.collection('artifacts/' + appId + '/public/data/articles');
+        const getCategoriesCollection = () => db.collection('artifacts/' + appId + '/public/data/categories');
+
+        const SECTION_DEFS = [
+            { key: 'dai_cuong', label: '1. Đại cương', colorClass: 'text-cyan-400', icon: 'fas fa-book-medical' },
+            { key: 'tac_dung', label: '2. Tác dụng', colorClass: 'text-emerald-400', icon: 'fas fa-sparkles' },
+            { key: 'chi_dinh', label: '3. Chỉ định', colorClass: 'text-sky-400', icon: 'fas fa-check-circle' },
+            { key: 'chong_chi_dinh', label: '4. Chống chỉ định', colorClass: 'text-rose-400', icon: 'fas fa-ban' },
+            { key: 'tai_bien', label: '5. Tai biến', colorClass: 'text-amber-400', icon: 'fas fa-exclamation-triangle' },
+            { key: 'luu_y', label: '6. Lưu ý', colorClass: 'text-indigo-400', icon: 'fas fa-shield-alt' },
+            { key: 'ghi_chu', label: '7. Ghi chú', colorClass: 'text-slate-400', icon: 'fas fa-sticky-note' }
         ];
 
-    async function fetchData() {
-        const grid = document.getElementById('content-grid');
-        const loader = document.getElementById('loader');
+        const CATEGORY_ICON_MAP = {
+            dtl_1: 'fa-temperature-half',
+            dtl_2: 'fa-fire-flame-curved',
+            dtl_3: 'fa-wave-square',
+            dtl_4: 'fa-broadcast-tower',
+            dtl_5: 'fa-sun'
+        };
 
-        try {
-            const fetchPromises = pageUrls.map(async (url) => {
-                try {
-                    const response = await fetch(url);
-                    if (!response.ok) return null;
-                    
-                    const htmlText = await response.text();
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(htmlText, 'text/html');
-                    
-                    // Lấy thẻ ảnh bên trong container của file HTML con
-                    const imgElement = doc.querySelector('#image-container img');
-                    let imageSrc = imgElement ? imgElement.getAttribute('src') : null;
+        let dynamicCategories = {};
+        let localArticles = [];
+        let currentCategory = 'all';
+        let searchQuery = '';
+        let currentSort = 'index';
+        let activeModalVideoIndex = 0;
+        let currentModalVideos = [];
 
-                    // KIỂM TRA: Nếu không có src hoặc src trống, dùng ảnh mặc định
-                    if (!imageSrc || imageSrc.trim() === "" || imageSrc.includes('undefined')) {
-                        imageSrc = DEFAULT_IMAGE;
-                    } else {
-                        // Xử lý trường hợp đường dẫn tương đối trong file con
-                        // (Ví dụ file con ghi src="anh.jpg", ta cần chuyển thành "/path/to/anh.jpg")
-                        if (!imageSrc.startsWith('http') && !imageSrc.startsWith('/')) {
-                            const baseUrl = url.substring(0, url.lastIndexOf('/') + 1);
-                            imageSrc = baseUrl + imageSrc;
-                        }
-                    }
+        // =========================================================
+        // 2. HELPERS & STRUCTURED CONTENT RENDERER
+        // =========================================================
+        const escapeHtml = (str) => !str ? '' : String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
 
-                    const titleText = doc.querySelector('h1')?.innerText || 'Tiêu đề chưa xác định';
-                    
-                    return {
-                        url: url,
-                        image: imageSrc,
-                        title: titleText
-                    };
-                } catch (e) {
-                    console.error(`Lỗi khi tải ${url}:`, e);
-                    return null;
-                }
-            });
+        function normalizeUrl(rawUrl) {
+            if (!rawUrl) return '';
+            let url = String(rawUrl).trim();
+            if (!url) return '';
 
-            const results = await Promise.all(fetchPromises);
-            loader.style.display = 'none';
-
-            results.filter(item => item !== null).forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'card';
-
-                card.innerHTML = `
-                    <div id="image-container">
-                        <img src="${item.image}" 
-                             alt="${item.title}" 
-                             onerror="this.onerror=null; this.src='${DEFAULT_IMAGE}';">
-                    </div>
-                    <div class="card-body">
-                        <h1>${item.title}</h1>
-                        <a href="${item.url}" class="btn-view">Xem ngay</a>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-
-            if (grid.children.length === 0) {
-                grid.innerHTML = '<p class="error-msg">Không tìm thấy dữ liệu. Vui lòng kiểm tra lại đường dẫn file.</p>';
+            const gdriveFileMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+            if (gdriveFileMatch && gdriveFileMatch[1]) {
+                return `https://lh3.googleusercontent.com/d/${gdriveFileMatch[1]}`;
+            }
+            const gdriveOpenMatch = url.match(/drive\.google\.com\/(?:open|uc)\?.*id=([a-zA-Z0-9_-]+)/);
+            if (gdriveOpenMatch && gdriveOpenMatch[1]) {
+                return `https://lh3.googleusercontent.com/d/${gdriveOpenMatch[1]}`;
             }
 
-        } catch (error) {
-            if (loader) loader.style.display = 'none';
-            grid.innerHTML = `<p class="error-msg">Lỗi hệ thống: ${error.message}</p>`;
+            if (/^(https?:\/\/|data:image\/)/i.test(url)) return url;
+
+            url = url.replace(/\\/g, '/');
+            if (!url.startsWith('/')) url = '/' + url;
+            return url;
         }
-    }
 
-    window.onload = fetchData;
+        function isHtmlEmpty(html) {
+            if (!html) return true;
+            const tmp = document.createElement('div');
+            tmp.innerHTML = html;
+            return !tmp.textContent.trim() && !tmp.querySelector('img');
+        }
+
+        function buildStructuredContentHtml(sectionsObj) {
+            if (!sectionsObj || typeof sectionsObj !== 'object') return '';
+            const blocks = [];
+            SECTION_DEFS.forEach(sec => {
+                const rawHtml = sectionsObj[sec.key] || '';
+                if (!isHtmlEmpty(rawHtml)) {
+                    blocks.push(`
+                        <div class="phcn-sec-block space-y-1.5 pb-3 border-b border-slate-500/10 last:border-b-0 last:pb-0">
+                            <p class="font-extrabold ${sec.colorClass} text-xs sm:text-sm uppercase tracking-wide flex items-center gap-2">
+                                <i class="${sec.icon}"></i> <span>${sec.label}</span>
+                            </p>
+                            <div class="pl-1 space-y-1.5 formatted-prose text-slate-200">${rawHtml}</div>
+                        </div>
+                    `);
+                }
+            });
+            return blocks.join('\n');
+        }
+
+        function getArticleImages(art) {
+            if (Array.isArray(art.imageUrls) && art.imageUrls.length > 0) {
+                return art.imageUrls
+                    .map(img => ({
+                        url: normalizeUrl(typeof img === 'string' ? img : img.url),
+                        label: (typeof img === 'object' && img.label) ? img.label : ''
+                    }))
+                    .filter(item => item.url);
+            }
+            if (art.imageUrl) {
+                const norm = normalizeUrl(art.imageUrl);
+                return norm ? [{ url: norm, label: 'Hình minh họa' }] : [];
+            }
+            return [];
+        }
+
+        function getArticleVideos(art) {
+            const list = [];
+            if (Array.isArray(art.videoUrls) && art.videoUrls.length > 0) {
+                art.videoUrls.forEach((v, i) => {
+                    const raw = typeof v === 'string' ? v : v.url;
+                    if (raw && raw.trim()) {
+                        list.push({
+                            rawUrl: raw.trim(),
+                            label: (typeof v === 'object' && v.label) ? v.label : `Video hướng dẫn ${i + 1}`
+                        });
+                    }
+                });
+            } else if (art.videoUrl && art.videoUrl.trim()) {
+                list.push({ rawUrl: art.videoUrl.trim(), label: 'Video hướng dẫn thực hành' });
+            }
+            return list;
+        }
+
+        function getArticlePdfs(art) {
+            const list = [];
+            if (Array.isArray(art.pdfUrls) && art.pdfUrls.length > 0) {
+                art.pdfUrls.forEach((p, i) => {
+                    const raw = typeof p === 'string' ? p : p.url;
+                    if (raw && raw.trim()) {
+                        list.push({
+                            url: normalizeUrl(raw),
+                            label: (typeof p === 'object' && p.label) ? p.label : `Tài liệu PDF ${i + 1}`
+                        });
+                    }
+                });
+            } else if (art.pdfUrl && art.pdfUrl.trim()) {
+                list.push({ url: normalizeUrl(art.pdfUrl), label: 'Tài liệu hướng dẫn PDF' });
+            }
+            return list;
+        }
+
+        // =========================================================
+        // 3. XỬ LÝ VIDEO (YOUTUBE, DRIVE, MP4 TRỰC TIẾP)
+        // =========================================================
+        function parseVideoSource(rawUrl) {
+            if (!rawUrl) return { type: 'none', src: '' };
+            const url = rawUrl.trim();
+
+            const ytRegex = /(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+            const ytMatch = url.match(ytRegex);
+            if (ytMatch && ytMatch[1]) {
+                return {
+                    type: 'iframe',
+                    src: `https://www.youtube-nocookie.com/embed/${ytMatch[1]}?rel=0&modestbranding=1&playsinline=1`
+                };
+            }
+
+            const gdFileMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+            if (gdFileMatch && gdFileMatch[1]) {
+                return {
+                    type: 'iframe',
+                    src: `https://drive.google.com/file/d/${gdFileMatch[1]}/preview`
+                };
+            }
+            const gdOpenMatch = url.match(/drive\.google\.com\/(?:open|uc)\?.*id=([a-zA-Z0-9_-]+)/);
+            if (gdOpenMatch && gdOpenMatch[1]) {
+                return {
+                    type: 'iframe',
+                    src: `https://drive.google.com/file/d/${gdOpenMatch[1]}/preview`
+                };
+            }
+
+            if (/\.(mp4|webm|ogg)(\?.*)?$/i.test(url) || (!/^https?:\/\//i.test(url))) {
+                return {
+                    type: 'video',
+                    src: normalizeUrl(url)
+                };
+            }
+
+            return {
+                type: 'iframe',
+                src: url
+            };
+        }
+
+        function inferDiscipline(art) {
+            if (art.disciplineKey) return art.disciplineKey;
+            const ck = art.categoryKey || '';
+            if (ck.startsWith('dtl_')) return 'dien_tri_lieu';
+            if (ck.startsWith('tc_')) return 'thu_co';
+            if (ck.startsWith('dt_')) return 'đo_tam_van_dong';
+            if (ck.startsWith('ot_')) return 'hoat_dong_tl';
+            if (ck.startsWith('st_')) return 'ngon_ngu_tl';
+            if (ck.startsWith('vltl_benh_ly_')) return 'vltl_benh_ly';
+            return 'vdtl';
+        }
+
+        function getCategoryDisplayName(catKey) {
+            if (dynamicCategories[catKey] && dynamicCategories[catKey].name) {
+                return dynamicCategories[catKey].name;
+            }
+            return 'Điện trị liệu';
+        }
+
+        function createFallbackSvgThumb(title) {
+            const safeText = escapeHtml((title || 'Kỹ thuật Điện trị liệu').slice(0, 28));
+            return `
+                <div class="w-full h-full bg-gradient-to-br from-slate-900 via-amber-950/50 to-orange-950/70 flex flex-col items-center justify-center p-4 text-center relative overflow-hidden">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-400/25 text-amber-400 flex items-center justify-center text-xl mb-2">
+                        <i class="fa-solid fa-bolt-lightning"></i>
+                    </div>
+                    <span class="text-[11px] font-bold text-slate-300/80 line-clamp-1">${safeText}</span>
+                </div>
+            `;
+        }
+
+        // =========================================================
+        // 4. INSTANT CACHE + FIRESTORE REALTIME SYNC
+        // =========================================================
+        function loadCacheInstant() {
+            try {
+                const cachedCats = localStorage.getItem(CACHE_CATS_KEY);
+                const cachedArts = localStorage.getItem(CACHE_ARTICLES_KEY);
+
+                if (cachedCats) {
+                    const parsedCats = JSON.parse(cachedCats);
+                    const dtlCats = parsedCats[TARGET_DISCIPLINE] || {};
+                    const restored = {};
+                    Object.keys(dtlCats).forEach(k => {
+                        restored[k] = {
+                            name: dtlCats[k],
+                            icon: CATEGORY_ICON_MAP[k] || 'fa-bolt-lightning',
+                            desc: `Chuyên đề ${dtlCats[k]} thuộc chuyên khoa Điện trị liệu.`
+                        };
+                    });
+                    dynamicCategories = restored;
+                }
+
+                if (cachedArts) {
+                    const parsedArts = JSON.parse(cachedArts);
+                    localArticles = parsedArts.filter(a => inferDiscipline(a) === TARGET_DISCIPLINE);
+                }
+
+                if (cachedCats || cachedArts) {
+                    renderCategoryTabs();
+                    renderArticles();
+                }
+            } catch (e) {
+                console.warn("Cache read skipped:", e);
+            }
+        }
+
+        function setupRealtimeSync() {
+            if (!auth.currentUser) return;
+
+            // Đồng bộ danh mục chuyên đề từ Firestore
+            getCategoriesCollection().onSnapshot((snap) => {
+                const updatedCats = {};
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    if (d.disciplineKey === TARGET_DISCIPLINE && d.name) {
+                        const k = d.key || doc.id;
+                        updatedCats[k] = {
+                            name: d.name,
+                            icon: d.icon || CATEGORY_ICON_MAP[k] || 'fa-bolt-lightning',
+                            desc: d.desc || `Chuyên đề ${d.name} thuộc chuyên khoa Điện trị liệu.`
+                        };
+                    }
+                });
+                dynamicCategories = updatedCats;
+                if (currentCategory !== 'all' && !dynamicCategories[currentCategory]) {
+                    currentCategory = 'all';
+                }
+                renderCategoryTabs();
+                renderArticles();
+            });
+
+            // Đồng bộ danh sách bài viết thuộc Điện trị liệu
+            getArticlesCollection().onSnapshot((snap) => {
+                const items = [];
+                snap.forEach(doc => {
+                    const data = { id: doc.id, ...doc.data() };
+                    if (inferDiscipline(data) === TARGET_DISCIPLINE) {
+                        items.push(data);
+                    }
+                });
+                localArticles = items;
+                renderCategoryTabs();
+                renderArticles();
+                setTimeout(updateScrollState, 120);
+            }, (err) => {
+                console.error("Firestore sync error:", err);
+            });
+        }
+
+        // =========================================================
+        // 5. RENDER CATEGORY TABS
+        // =========================================================
+        function renderCategoryTabs() {
+            const container = document.getElementById('category-tabs');
+            if (!container) return;
+            container.innerHTML = '';
+
+            // Tab "Tất cả"
+            const allBtn = document.createElement('button');
+            const isAll = currentCategory === 'all';
+            allBtn.className = `snap-start shrink-0 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-extrabold flex items-center gap-2 transition-all ${
+                isAll
+                    ? 'bg-gradient-to-r from-amber-500 to-orange-400 text-slate-950 shadow-lg shadow-amber-500/25'
+                    : 'glass-panel text-slate-400 hover:text-amber-400'
+            }`;
+            allBtn.innerHTML = `
+                <i class="fa-solid fa-border-all"></i>
+                <span>Tất cả</span>
+                <span class="px-2 py-0.5 rounded-lg text-[10px] font-mono ${isAll ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-500/15 text-slate-400'}">${localArticles.length}</span>
+            `;
+            allBtn.onclick = () => selectCategory('all', allBtn);
+            container.appendChild(allBtn);
+
+            // Sắp xếp chuyên đề (đưa "Khác" xuống cuối nếu có)
+            const sortedKeys = Object.keys(dynamicCategories).sort((a, b) => {
+                const nameA = (dynamicCategories[a].name || '').trim().toLowerCase();
+                const nameB = (dynamicCategories[b].name || '').trim().toLowerCase();
+                const isKhacA = nameA === 'khác' || nameA.includes('khác');
+                const isKhacB = nameB === 'khác' || nameB.includes('khác');
+                if (isKhacA && !isKhacB) return 1;
+                if (!isKhacA && isKhacB) return -1;
+                return 0;
+            });
+
+            sortedKeys.forEach(key => {
+                const item = dynamicCategories[key];
+                const isActive = key === currentCategory;
+                const count = localArticles.filter(a => a.categoryKey === key).length;
+
+                const btn = document.createElement('button');
+                btn.className = `snap-start shrink-0 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all ${
+                    isActive
+                        ? 'bg-gradient-to-r from-amber-500 to-orange-400 text-slate-950 font-extrabold shadow-lg shadow-amber-500/25'
+                        : 'glass-panel text-slate-400 hover:text-amber-400'
+                }`;
+                btn.innerHTML = `
+                    <i class="fa-solid ${item.icon || 'fa-bolt-lightning'}"></i>
+                    <span>${escapeHtml(item.name)}</span>
+                    <span class="px-2 py-0.5 rounded-lg text-[10px] font-mono ${isActive ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-500/15 text-slate-400'}">${count}</span>
+                `;
+                btn.onclick = () => selectCategory(key, btn);
+                container.appendChild(btn);
+            });
+
+            // Cập nhật banner chuyên đề đang chọn
+            const headline = document.getElementById('cat-headline');
+            const subline = document.getElementById('cat-subline');
+            const iconBadge = document.getElementById('cat-icon-badge');
+
+            if (currentCategory === 'all') {
+                headline.textContent = 'Tất cả kỹ thuật Điện trị liệu';
+                subline.textContent = 'Tổng hợp toàn bộ các kỹ thuật vật lý trị liệu - điện trị liệu từ nhiệt trị liệu, điện xung đến sóng cao tần và ánh sáng trị liệu.';
+                iconBadge.innerHTML = '<i class="fa-solid fa-bolt-lightning"></i>';
+            } else {
+                const catObj = dynamicCategories[currentCategory] || { name: 'Chuyên đề', icon: 'fa-bolt-lightning', desc: '' };
+                headline.textContent = catObj.name;
+                subline.textContent = catObj.desc;
+                iconBadge.innerHTML = `<i class="fa-solid ${catObj.icon || 'fa-bolt-lightning'}"></i>`;
+            }
+        }
+
+        function selectCategory(key, element) {
+            currentCategory = key;
+            renderCategoryTabs();
+            renderArticles();
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+        }
+
+        function scrollTabs(direction) {
+            const container = document.getElementById('category-tabs');
+            if (!container) return;
+            container.scrollBy({ left: direction === 'left' ? -280 : 280, behavior: 'smooth' });
+        }
+
+        function updateScrollState() {
+            const container = document.getElementById('category-tabs');
+            const leftBtn = document.getElementById('slide-left-btn');
+            const rightBtn = document.getElementById('slide-right-btn');
+            if (!container || !leftBtn || !rightBtn) return;
+
+            const isAtStart = container.scrollLeft <= 5;
+            const isAtEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 5;
+            const hasOverflow = container.scrollWidth > container.clientWidth + 4;
+
+            leftBtn.classList.toggle('opacity-0', isAtStart || !hasOverflow);
+            leftBtn.classList.toggle('pointer-events-none', isAtStart || !hasOverflow);
+
+            rightBtn.classList.toggle('opacity-0', isAtEnd || !hasOverflow);
+            rightBtn.classList.toggle('pointer-events-none', isAtEnd || !hasOverflow);
+        }
+
+        window.addEventListener('resize', updateScrollState);
+
+        // =========================================================
+        // 6. FILTER, SORT & RENDER TECH CARDS
+        // =========================================================
+        function handleSearch(val) {
+            searchQuery = val;
+            document.getElementById('clear-search-btn').classList.toggle('hidden', val.trim() === '');
+            renderArticles();
+        }
+
+        function clearSearch(focus = false) {
+            const input = document.getElementById('article-search');
+            if (input) {
+                input.value = '';
+                searchQuery = '';
+                document.getElementById('clear-search-btn').classList.add('hidden');
+                renderArticles();
+                if (focus) input.focus();
+            }
+        }
+
+        function resetAllFilters() {
+            currentCategory = 'all';
+            document.getElementById('media-filter').value = 'all';
+            clearSearch(false);
+            renderCategoryTabs();
+            renderArticles();
+        }
+
+        function handleSortChange(val) {
+            currentSort = val;
+            renderArticles();
+        }
+
+        function renderArticles() {
+            const container = document.getElementById('articles-container');
+            const emptyState = document.getElementById('empty-state');
+            const countEl = document.getElementById('filtered-count');
+            if (!container || !emptyState) return;
+
+            const mediaFilter = document.getElementById('media-filter').value;
+            const q = searchQuery.toLowerCase().trim();
+
+            let list = localArticles.filter(art => {
+                if (currentCategory !== 'all' && art.categoryKey !== currentCategory) return false;
+                if (q && !(art.title || '').toLowerCase().includes(q)) return false;
+
+                const imgs = getArticleImages(art);
+                const vids = getArticleVideos(art);
+                const pdfs = getArticlePdfs(art);
+
+                if (mediaFilter === 'video' && vids.length === 0) return false;
+                if (mediaFilter === 'pdf' && pdfs.length === 0) return false;
+                if (mediaFilter === 'image' && imgs.length === 0) return false;
+
+                return true;
+            });
+
+            // Sắp xếp theo thứ tự trong quantri_PHCN.html hoặc A-Z / Z-A
+            list.sort((a, b) => {
+                if (currentSort === 'az') return (a.title || '').localeCompare(b.title || '', 'vi');
+                if (currentSort === 'za') return (b.title || '').localeCompare(a.title || '', 'vi');
+                return (Number(a.order ?? 999999)) - (Number(b.order ?? 999999));
+            });
+
+            countEl.textContent = list.length;
+            container.innerHTML = '';
+
+            if (list.length === 0) {
+                container.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            container.classList.remove('hidden');
+
+            list.forEach((article, idx) => {
+                const images = getArticleImages(article);
+                const videos = getArticleVideos(article);
+                const pdfs = getArticlePdfs(article);
+                const catName = getCategoryDisplayName(article.categoryKey);
+
+                const card = document.createElement('article');
+                card.className = 'tech-card rounded-3xl overflow-hidden flex flex-col justify-between cursor-pointer group animate-fade-up';
+                card.style.animationDelay = `${Math.min(idx * 35, 350)}ms`;
+                card.onclick = () => openArticleModal(article);
+
+                let thumbHtml = '';
+                if (images.length > 0) {
+                    thumbHtml = `
+                        <img src="${escapeHtml(images[0].url)}" alt="${escapeHtml(article.title)}" loading="lazy"
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                             onerror="this.parentElement.innerHTML = decodeURIComponent('${encodeURIComponent(createFallbackSvgThumb(article.title))}')">
+                    `;
+                } else {
+                    thumbHtml = createFallbackSvgThumb(article.title);
+                }
+
+                let mediaBadges = [];
+                if (images.length > 1) {
+                    mediaBadges.push(`<span class="px-2 py-0.5 rounded-md bg-slate-950/80 backdrop-blur text-amber-400 text-[10px] font-bold border border-amber-400/30"><i class="fa-solid fa-images mr-1"></i>+${images.length - 1}</span>`);
+                }
+                if (videos.length > 0) {
+                    mediaBadges.push(`<span class="px-2 py-0.5 rounded-md bg-rose-600/90 backdrop-blur text-white text-[10px] font-bold shadow"><i class="fa-solid fa-play mr-1"></i>Video</span>`);
+                }
+                if (pdfs.length > 0) {
+                    mediaBadges.push(`<span class="px-2 py-0.5 rounded-md bg-emerald-600/90 backdrop-blur text-white text-[10px] font-bold shadow"><i class="fa-solid fa-file-pdf mr-1"></i>PDF</span>`);
+                }
+
+                card.innerHTML = `
+                    <div>
+                        <div class="relative aspect-[16/10] w-full overflow-hidden bg-slate-950 border-b border-slate-500/10">
+                            ${thumbHtml}
+                            <div class="absolute top-3 left-3 right-3 flex items-center justify-between gap-2 pointer-events-none">
+                                <span class="px-2.5 py-1 rounded-lg bg-slate-950/75 backdrop-blur-md text-amber-300 text-[10px] font-extrabold uppercase tracking-wider border border-white/10 truncate max-w-[65%]">
+                                    ${escapeHtml(catName)}
+                                </span>
+                                <div class="flex items-center gap-1 shrink-0">
+                                    ${mediaBadges.join('')}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-5 pb-3">
+                            <h3 class="text-base sm:text-lg font-extrabold leading-snug line-clamp-2 group-hover:text-amber-400 transition-colors">
+                                ${escapeHtml(article.title || 'Kỹ thuật điện trị liệu')}
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="px-5 pb-5 pt-2">
+                        <div class="w-full py-2.5 px-4 rounded-xl bg-amber-500/10 group-hover:bg-gradient-to-r group-hover:from-amber-500 group-hover:to-orange-400 text-amber-400 group-hover:text-slate-950 border border-amber-500/20 group-hover:border-transparent text-xs font-extrabold flex items-center justify-between transition-all">
+                            <span>Xem chi tiết</span>
+                            <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // =========================================================
+        // 7. DETAIL MODAL (HỖ TRỢ ĐẦY ĐỦ 7 MỤC PHCN TỪ quantri_PHCN.html)
+        // =========================================================
+        function openArticleModal(article) {
+            const modal = document.getElementById('article-modal');
+            const discEl = document.getElementById('modal-discipline-name');
+            const catEl = document.getElementById('modal-category-badge');
+            const titleEl = document.getElementById('modal-title');
+            const imagesSec = document.getElementById('modal-images-section');
+            const imagesGrid = document.getElementById('modal-images-grid');
+            const mediaContainer = document.getElementById('modal-media-container');
+            const bodyWrapper = document.getElementById('modal-body-wrapper');
+            const bodyContent = document.getElementById('modal-body-content');
+            const extLinkBox = document.getElementById('modal-external-link-box');
+
+            discEl.textContent = 'Điện Trị Liệu';
+            catEl.textContent = getCategoryDisplayName(article.categoryKey);
+            titleEl.textContent = article.title || 'Chi tiết kỹ thuật';
+
+            const images = getArticleImages(article);
+            if (images.length > 0) {
+                imagesSec.classList.remove('hidden');
+                imagesGrid.innerHTML = images.map((img, i) => `
+                    <a href="${escapeHtml(img.url)}" target="_blank" class="group block rounded-2xl overflow-hidden border border-slate-500/20 bg-slate-950/70 hover:border-amber-400 transition-all shadow-lg">
+                        <div class="aspect-video w-full overflow-hidden bg-slate-950">
+                            <img src="${escapeHtml(img.url)}" alt="${escapeHtml(img.label || `Hình ${i + 1}`)}"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                 onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full flex items-center justify-center text-slate-500 text-xs\\'><i class=\\'fa-solid fa-image-slash mr-1.5\\'></i>Không tải được ảnh</div>'">
+                        </div>
+                        <div class="px-3.5 py-2 text-xs font-semibold text-slate-300 flex items-center justify-between gap-2">
+                            <span class="truncate">${escapeHtml(img.label || `Hình minh họa ${i + 1}`)}</span>
+                            <i class="fa-solid fa-up-right-from-square text-[10px] text-amber-400 shrink-0"></i>
+                        </div>
+                    </a>
+                `).join('');
+            } else {
+                imagesSec.classList.add('hidden');
+                imagesGrid.innerHTML = '';
+            }
+
+            const videos = getArticleVideos(article);
+            const pdfs = getArticlePdfs(article);
+            currentModalVideos = videos;
+            activeModalVideoIndex = 0;
+
+            mediaContainer.innerHTML = '';
+            let hasMedia = false;
+
+            if (videos.length > 0) {
+                hasMedia = true;
+                const firstParsed = parseVideoSource(videos[0].rawUrl);
+                const playerInner = renderVideoPlayerHtml(firstParsed);
+
+                const playlistHtml = videos.length > 1 ? `
+                    <div class="flex flex-wrap gap-2 pt-2">
+                        ${videos.map((v, idx) => `
+                            <button type="button" onclick="switchModalVideo(${idx}, this)"
+                                    class="modal-vid-btn px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${
+                                        idx === 0
+                                            ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/25'
+                                            : 'glass-panel text-slate-300 hover:border-rose-400/50'
+                                    }">
+                                <i class="fa-solid fa-play text-[10px]"></i>
+                                <span>${escapeHtml(v.label)}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                ` : '';
+
+                mediaContainer.innerHTML += `
+                    <div class="p-4 sm:p-5 rounded-2xl bg-slate-950/55 border border-rose-500/20 space-y-3">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-xs font-extrabold uppercase tracking-wider text-rose-400 flex items-center gap-2">
+                                <i class="fa-solid fa-circle-play"></i>
+                                <span id="modal-active-video-label">${escapeHtml(videos[0].label)}</span>
+                            </span>
+                            <a id="modal-video-direct-link" href="${escapeHtml(videos[0].rawUrl)}" target="_blank"
+                               class="text-[11px] font-bold text-slate-400 hover:text-amber-400 flex items-center gap-1">
+                                <span>Mở nguồn gốc</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                            </a>
+                        </div>
+                        <div id="modal-video-stage" class="relative w-full aspect-video rounded-2xl overflow-hidden bg-black border border-slate-800 shadow-2xl">
+                            ${playerInner}
+                        </div>
+                        ${playlistHtml}
+                    </div>
+                `;
+            }
+
+            if (pdfs.length > 0) {
+                hasMedia = true;
+                mediaContainer.innerHTML += `
+                    <div class="p-4 sm:p-5 rounded-2xl bg-slate-950/55 border border-emerald-500/20 space-y-3">
+                        <div class="text-xs font-extrabold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
+                            <i class="fa-solid fa-file-pdf"></i> Tài liệu PDF đính kèm
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            ${pdfs.map(pdf => `
+                                <a href="${escapeHtml(pdf.url)}" target="_blank"
+                                   class="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-slate-900/90 hover:bg-emerald-500/15 border border-slate-700/60 hover:border-emerald-400/50 transition-all group">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <div class="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center text-lg shrink-0">
+                                            <i class="fa-solid fa-file-pdf"></i>
+                                        </div>
+                                        <span class="text-xs sm:text-sm font-bold truncate group-hover:text-emerald-300">${escapeHtml(pdf.label)}</span>
+                                    </div>
+                                    <span class="px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 text-[11px] font-extrabold shrink-0">
+                                        Mở PDF
+                                    </span>
+                                </a>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            mediaContainer.classList.toggle('hidden', !hasMedia);
+
+            // Ưu tiên render từ cấu trúc 7 mục chuẩn của quantri_PHCN.html, fallback về content HTML
+            const structuredHtml = article.sections ? buildStructuredContentHtml(article.sections) : '';
+            const finalBodyHtml = structuredHtml && structuredHtml.trim() !== '' ? structuredHtml : (article.content || '');
+
+            if (finalBodyHtml && finalBodyHtml.trim() !== '') {
+                bodyWrapper.classList.remove('hidden');
+                bodyContent.innerHTML = finalBodyHtml;
+            } else {
+                bodyWrapper.classList.add('hidden');
+                bodyContent.innerHTML = '';
+            }
+
+            if (article.articleUrl && article.articleUrl.trim() !== '') {
+                const normArticleUrl = normalizeUrl(article.articleUrl);
+                extLinkBox.classList.remove('hidden');
+                extLinkBox.innerHTML = `
+                    <a href="${escapeHtml(normArticleUrl)}" target="_blank"
+                       class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500 text-amber-400 hover:text-slate-950 border border-amber-500/30 text-xs font-extrabold transition-all">
+                        <i class="fa-solid fa-globe"></i> Mở trang tài liệu chi tiết đầy đủ
+                    </a>
+                `;
+            } else {
+                extLinkBox.classList.add('hidden');
+                extLinkBox.innerHTML = '';
+            }
+
+            document.body.classList.add('overflow-hidden');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function renderVideoPlayerHtml(parsed) {
+            if (!parsed || parsed.type === 'none' || !parsed.src) {
+                return `<div class="w-full h-full flex items-center justify-center text-slate-400 text-xs">Không tìm thấy nguồn phát video hợp lệ.</div>`;
+            }
+            if (parsed.type === 'video') {
+                return `
+                    <video src="${escapeHtml(parsed.src)}" controls playsinline preload="metadata" class="w-full h-full object-contain bg-black">
+                        Trình duyệt của bạn không hỗ trợ phát video trực tiếp.
+                    </video>
+                `;
+            }
+            return `
+                <iframe src="${escapeHtml(parsed.src)}"
+                        class="w-full h-full border-0"
+                        title="Video hướng dẫn kỹ thuật"
+                        loading="lazy"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                </iframe>
+            `;
+        }
+
+        window.switchModalVideo = function(index, btnEl) {
+            const vid = currentModalVideos[index];
+            if (!vid) return;
+            activeModalVideoIndex = index;
+
+            const stage = document.getElementById('modal-video-stage');
+            const labelEl = document.getElementById('modal-active-video-label');
+            const directLinkEl = document.getElementById('modal-video-direct-link');
+
+            if (stage) stage.innerHTML = renderVideoPlayerHtml(parseVideoSource(vid.rawUrl));
+            if (labelEl) labelEl.textContent = vid.label;
+            if (directLinkEl) directLinkEl.href = vid.rawUrl;
+
+            document.querySelectorAll('.modal-vid-btn').forEach(btn => {
+                btn.className = 'modal-vid-btn px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all glass-panel text-slate-300 hover:border-rose-400/50';
+            });
+            if (btnEl) {
+                btnEl.className = 'modal-vid-btn px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all bg-rose-500 text-white shadow-lg shadow-rose-500/25';
+            }
+        };
+
+        function closeArticleModal() {
+            const modal = document.getElementById('article-modal');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.classList.remove('overflow-hidden');
+
+            const mediaContainer = document.getElementById('modal-media-container');
+            if (mediaContainer) mediaContainer.innerHTML = '';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeArticleModal();
+        });
+
+        // =========================================================
+        // 8. KHỞI TẠO KẾT NỐI FIREBASE
+        // =========================================================
+        document.addEventListener('DOMContentLoaded', async () => {
+            loadCacheInstant();
+            renderCategoryTabs();
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await auth.signInWithCustomToken(__initial_auth_token);
+                } else {
+                    await auth.signInAnonymously();
+                }
+            } catch (e) {
+                await auth.signInAnonymously();
+            }
+        });
+
+        auth.onAuthStateChanged((user) => {
+            if (user) setupRealtimeSync();
+        });
     </script>
-
-    
-        <div id="footer-placeholder"></div>
-
-        <script src="/script.js"></script>
-        <script src="/banner_trang_con.js"></script>
 </body>
 </html>
