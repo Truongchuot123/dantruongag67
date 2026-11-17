@@ -86,12 +86,12 @@
             background: var(--input-bg);
             border: 1px solid var(--card-border);
             color: var(--text-main);
-            min-height: 110px;
-            max-height: 280px;
+            min-height: 85px;
+            max-height: 240px;
             overflow-y: auto;
             white-space: pre-wrap;
             word-break: break-word;
-            line-height: 1.65;
+            line-height: 1.6;
             transition: all 0.2s ease;
         }
         .rich-editor-area:focus {
@@ -339,11 +339,22 @@
                                     <!-- Dynamic Title -->
                                 </h2>
                                 <p class="text-xs text-slate-400 mt-1">
-                                    Hiển thị <span id="stat-counter" class="text-cyan-400 font-extrabold">0</span> kỹ thuật • Kéo thả dòng hoặc chạm 2 dòng để đổi thứ tự
+                                    Hiển thị <span id="stat-counter" class="text-cyan-400 font-extrabold">0</span> kỹ thuật • Tự động sắp xếp theo thứ tự từng vùng: Chi trên → Chi dưới → Lưng → Ngực - Bụng → Cổ
                                 </p>
                             </div>
 
                             <div class="flex flex-wrap items-center gap-2">
+                                <!-- Region Filter -->
+                                <select id="region-filter-select" onchange="applyFilters()" class="form-input px-3 py-2.5 rounded-xl text-xs font-semibold cursor-pointer text-teal-400">
+                                    <option value="all">Tất cả vùng</option>
+                                    <option value="Chi trên">Chi trên</option>
+                                    <option value="Chi dưới">Chi dưới</option>
+                                    <option value="Lưng">Lưng</option>
+                                    <option value="Ngực - Bụng">Ngực - Bụng</option>
+                                    <option value="Cổ">Cổ</option>
+                                    <option value="__none__">Chưa phân vùng</option>
+                                </select>
+
                                 <!-- Quick Media Filter -->
                                 <select id="media-filter-select" onchange="applyFilters()" class="form-input px-3 py-2.5 rounded-xl text-xs font-semibold cursor-pointer">
                                     <option value="all">Tất cả định dạng</option>
@@ -356,7 +367,7 @@
                                 <!-- Search Box -->
                                 <div class="relative flex-1 sm:w-56">
                                     <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                                    <input type="text" id="admin-search-input" oninput="debouncedApplyFilters()" placeholder="Tìm tên kỹ thuật..." 
+                                    <input type="text" id="admin-search-input" oninput="debouncedApplyFilters()" placeholder="Tìm tên kỹ thuật, vùng..." 
                                            class="form-input w-full pl-9 pr-4 py-2.5 rounded-xl text-xs font-medium">
                                 </div>
 
@@ -379,13 +390,14 @@
                             <table class="w-full text-left border-collapse text-xs">
                                 <thead>
                                     <tr class="bg-slate-500/5 text-slate-400 border-b border-slate-500/15 text-[11px] font-extrabold uppercase tracking-wider">
-                                        <th class="p-4 w-[18%]">Hình Ảnh</th>
-                                        <th class="p-4 w-[58%]">Tên Kỹ Thuật</th>
-                                        <th class="p-4 text-right w-[24%]">Tác Vụ</th>
+                                        <th class="p-4 w-[16%]">Hình Ảnh</th>
+                                        <th class="p-4 w-[16%]">Vùng</th>
+                                        <th class="p-4 w-[46%]">Tên Kỹ Thuật</th>
+                                        <th class="p-4 text-right w-[22%]">Tác Vụ</th>
                                     </tr>
                                 </thead>
                                 <tbody id="articles-table-body" class="divide-y divide-slate-500/10">
-                                    <tr><td colspan="3" class="p-8 text-center text-slate-400">Đang tải dữ liệu...</td></tr>
+                                    <tr><td colspan="4" class="p-8 text-center text-slate-400">Đang tải dữ liệu...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -405,7 +417,7 @@
                             </button>
                             <div>
                                 <h2 id="editor-heading" class="text-base sm:text-lg font-extrabold">Soạn Thảo Bài Viết Mới</h2>
-                                <p class="text-[11px] text-slate-400">Soạn thảo chi tiết theo từng mục PHCN • Hỗ trợ định dạng chữ & nhiều hình ảnh</p>
+                                <p class="text-[11px] text-slate-400">Soạn thảo chi tiết theo bài viết hoặc riêng cho từng video • Hỗ trợ định dạng chữ</p>
                             </div>
                         </div>
 
@@ -452,14 +464,89 @@
                                 </div>
                             </div>
 
-                            <!-- 2. TÊN KỸ THUẬT -->
-                            <div>
-                                <label class="block text-[11px] font-extrabold text-cyan-400 uppercase tracking-wider mb-1.5">Tên kỹ thuật *</label>
-                                <input type="text" id="form-title" oninput="updateLivePreview()" placeholder="Ví dụ: Điện xung giảm đau TENS tần số cao" 
-                                       class="form-input w-full px-3.5 py-2.5 rounded-xl text-xs font-semibold">
+                            <!-- 2. VÙNG CƠ THỂ & TÊN KỸ THUẬT -->
+                            <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
+                                <div class="sm:col-span-5">
+                                    <label class="block text-[11px] font-extrabold text-teal-400 uppercase tracking-wider mb-1.5">
+                                        <i class="fas fa-person mr-1"></i> Vùng cơ thể
+                                    </label>
+                                    <input type="text" id="form-region" list="region-suggestions-list" oninput="updateLivePreview()"
+                                           placeholder="Chi trên, Chi dưới, Lưng..."
+                                           class="form-input w-full px-3.5 py-2.5 rounded-xl text-xs font-semibold text-teal-300">
+                                    <datalist id="region-suggestions-list">
+                                        <option value="Chi trên">
+                                        <option value="Chi dưới">
+                                        <option value="Lưng">
+                                        <option value="Ngực - Bụng">
+                                        <option value="Cổ">
+                                    </datalist>
+                                    <div class="flex flex-wrap gap-1 mt-1.5">
+                                        <button type="button" onclick="setFormRegion('Chi trên')" class="px-2 py-0.5 rounded-md bg-teal-500/15 hover:bg-teal-500/25 text-teal-300 text-[10px] font-bold transition-colors">Chi trên</button>
+                                        <button type="button" onclick="setFormRegion('Chi dưới')" class="px-2 py-0.5 rounded-md bg-teal-500/15 hover:bg-teal-500/25 text-teal-300 text-[10px] font-bold transition-colors">Chi dưới</button>
+                                        <button type="button" onclick="setFormRegion('Lưng')" class="px-2 py-0.5 rounded-md bg-teal-500/15 hover:bg-teal-500/25 text-teal-300 text-[10px] font-bold transition-colors">Lưng</button>
+                                        <button type="button" onclick="setFormRegion('Ngực - Bụng')" class="px-2 py-0.5 rounded-md bg-teal-500/15 hover:bg-teal-500/25 text-teal-300 text-[10px] font-bold transition-colors">Ngực - Bụng</button>
+                                        <button type="button" onclick="setFormRegion('Cổ')" class="px-2 py-0.5 rounded-md bg-teal-500/15 hover:bg-teal-500/25 text-teal-300 text-[10px] font-bold transition-colors">Cổ</button>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-7">
+                                    <label class="block text-[11px] font-extrabold text-cyan-400 uppercase tracking-wider mb-1.5">Tên kỹ thuật *</label>
+                                    <input type="text" id="form-title" oninput="updateLivePreview()" placeholder="Ví dụ: Xoa bóp vùng vai gáy, Kéo giãn cơ thang..." 
+                                           class="form-input w-full px-3.5 py-2.5 rounded-xl text-xs font-semibold">
+                                </div>
                             </div>
 
-                            <!-- 3. HÌNH ẢNH MINH HỌA -->
+                            <!-- Sticky Rich Text Formatting Toolbar -->
+                            <div class="sticky top-16 z-20 glass-panel rounded-xl p-2 border border-cyan-500/25 flex flex-wrap items-center gap-1.5 shadow-lg">
+                                <span class="text-[10px] font-extrabold text-cyan-400 uppercase px-1.5">Định dạng:</span>
+                                <button type="button" onmousedown="event.preventDefault(); execRichCmd('bold')" class="w-8 h-8 rounded-lg hover:bg-cyan-500/20 text-slate-200 hover:text-cyan-300 flex items-center justify-center font-black text-xs transition-colors" title="In đậm">
+                                    <i class="fas fa-bold"></i>
+                                </button>
+                                <button type="button" onmousedown="event.preventDefault(); execRichCmd('italic')" class="w-8 h-8 rounded-lg hover:bg-cyan-500/20 text-slate-200 hover:text-cyan-300 flex items-center justify-center text-xs transition-colors" title="In nghiêng">
+                                    <i class="fas fa-italic"></i>
+                                </button>
+                                <button type="button" onmousedown="event.preventDefault(); execRichCmd('underline')" class="w-8 h-8 rounded-lg hover:bg-cyan-500/20 text-slate-200 hover:text-cyan-300 flex items-center justify-center text-xs transition-colors" title="Gạch chân">
+                                    <i class="fas fa-underline"></i>
+                                </button>
+
+                                <div class="h-5 w-[1px] bg-slate-500/25 mx-0.5"></div>
+
+                                <!-- Text Color Swatches -->
+                                <div class="flex items-center gap-1 px-1">
+                                    <button type="button" onmousedown="event.preventDefault(); execRichCmd('foreColor', '#22d3ee')" class="w-5 h-5 rounded-full bg-cyan-400 border border-white/30 hover:scale-110 transition-transform" title="Xanh ngọc"></button>
+                                    <button type="button" onmousedown="event.preventDefault(); execRichCmd('foreColor', '#facc15')" class="w-5 h-5 rounded-full bg-yellow-400 border border-white/30 hover:scale-110 transition-transform" title="Vàng"></button>
+                                    <button type="button" onmousedown="event.preventDefault(); execRichCmd('foreColor', '#34d399')" class="w-5 h-5 rounded-full bg-emerald-400 border border-white/30 hover:scale-110 transition-transform" title="Xanh lá"></button>
+                                    <button type="button" onmousedown="event.preventDefault(); execRichCmd('foreColor', '#fb7185')" class="w-5 h-5 rounded-full bg-rose-400 border border-white/30 hover:scale-110 transition-transform" title="Đỏ hồng"></button>
+                                    <button type="button" onmousedown="event.preventDefault(); execRichCmd('foreColor', '#a78bfa')" class="w-5 h-5 rounded-full bg-violet-400 border border-white/30 hover:scale-110 transition-transform" title="Tím"></button>
+                                </div>
+
+                                <div class="h-5 w-[1px] bg-slate-500/25 mx-0.5"></div>
+
+                                <button type="button" onmousedown="event.preventDefault(); execRichCmd('insertUnorderedList')" class="w-8 h-8 rounded-lg hover:bg-cyan-500/20 text-slate-200 hover:text-cyan-300 flex items-center justify-center text-xs transition-colors" title="Danh sách">
+                                    <i class="fas fa-list-ul"></i>
+                                </button>
+                                <button type="button" onmousedown="event.preventDefault(); execRichCmd('removeFormat')" class="px-2.5 h-8 rounded-lg hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 flex items-center gap-1 text-[11px] font-bold transition-colors" title="Xóa định dạng">
+                                    <i class="fas fa-eraser text-[10px]"></i> Xóa ĐF
+                                </button>
+                            </div>
+
+                            <!-- 3. VIDEO HƯỚNG DẪN YOUTUBE & NỘI DUNG CHI TIẾT TỪNG VIDEO -->
+                            <div class="p-3.5 rounded-xl bg-rose-500/5 border border-rose-500/20 space-y-3">
+                                <div class="flex items-center justify-between flex-wrap gap-2">
+                                    <div>
+                                        <label class="text-[11px] font-extrabold text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
+                                            <i class="fas fa-circle-play"></i> Video hướng dẫn YouTube (Kèm 7 mục chi tiết mỗi video)
+                                        </label>
+                                        <p class="text-[10px] text-slate-400 mt-0.5">Mỗi video bao gồm đầy đủ: Đại cương, Tác dụng, Chỉ định, Chống chỉ định, Tai biến, Lưu ý, Ghi chú</p>
+                                    </div>
+                                    <button type="button" onclick="addVideoInputRow()" class="px-3 py-1.5 rounded-lg bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-bold flex items-center gap-1.5 shadow-sm transition-colors">
+                                        <i class="fas fa-plus"></i> Thêm video
+                                    </button>
+                                </div>
+                                <div id="video-inputs-container" class="space-y-3"></div>
+                            </div>
+
+                            <!-- 4. HÌNH ẢNH MINH HỌA -->
                             <div class="p-3.5 rounded-xl bg-slate-500/5 border border-slate-500/15 space-y-2.5">
                                 <div class="flex items-center justify-between flex-wrap gap-2">
                                     <div>
@@ -475,51 +562,14 @@
                                 <div id="image-inputs-container" class="space-y-2"></div>
                             </div>
 
-                            <!-- 4. NỘI DUNG HƯỚNG DẪN CHI TIẾT CÓ THANH CÔNG CỤ ĐỊNH DẠNG -->
-                            <div class="space-y-3 pt-1">
-                                <div class="flex flex-wrap items-center justify-between gap-2">
-                                    <label class="text-[11px] font-extrabold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
-                                        <i class="fas fa-align-left"></i> Nội dung hướng dẫn chi tiết
-                                    </label>
-                                    <span class="text-[10px] text-slate-400">Bôi đen chữ rồi chọn định dạng bên dưới</span>
-                                </div>
+                            <!-- 5. NỘI DUNG HƯỚNG DẪN CHUNG CỦA BÀI VIẾT (TÙY CHỌN MỞ RỘNG) -->
+                            <details class="p-3.5 rounded-xl bg-slate-500/5 border border-slate-500/15 space-y-3 group">
+                                <summary class="text-[11px] font-extrabold text-cyan-400 uppercase tracking-wider cursor-pointer flex items-center justify-between select-none">
+                                    <span class="flex items-center gap-1.5"><i class="fas fa-align-left"></i> Nội dung chung toàn bài viết (Nếu không nhập riêng trong Video)</span>
+                                    <i class="fas fa-chevron-down text-[10px] group-open:rotate-180 transition-transform"></i>
+                                </summary>
 
-                                <!-- Sticky Formatting Toolbar -->
-                                <div class="sticky top-16 z-20 glass-panel rounded-xl p-2 border border-cyan-500/25 flex flex-wrap items-center gap-1.5 shadow-lg">
-                                    <button type="button" onmousedown="event.preventDefault(); execRichCmd('bold')" class="w-8 h-8 rounded-lg hover:bg-cyan-500/20 text-slate-200 hover:text-cyan-300 flex items-center justify-center font-black text-xs transition-colors" title="In đậm">
-                                        <i class="fas fa-bold"></i>
-                                    </button>
-                                    <button type="button" onmousedown="event.preventDefault(); execRichCmd('italic')" class="w-8 h-8 rounded-lg hover:bg-cyan-500/20 text-slate-200 hover:text-cyan-300 flex items-center justify-center text-xs transition-colors" title="In nghiêng">
-                                        <i class="fas fa-italic"></i>
-                                    </button>
-                                    <button type="button" onmousedown="event.preventDefault(); execRichCmd('underline')" class="w-8 h-8 rounded-lg hover:bg-cyan-500/20 text-slate-200 hover:text-cyan-300 flex items-center justify-center text-xs transition-colors" title="Gạch chân">
-                                        <i class="fas fa-underline"></i>
-                                    </button>
-
-                                    <div class="h-5 w-[1px] bg-slate-500/25 mx-0.5"></div>
-
-                                    <!-- Text Color Swatches -->
-                                    <div class="flex items-center gap-1 px-1">
-                                        <span class="text-[10px] font-bold text-slate-400 mr-0.5">Màu:</span>
-                                        <button type="button" onmousedown="event.preventDefault(); execRichCmd('foreColor', '#22d3ee')" class="w-5 h-5 rounded-full bg-cyan-400 border border-white/30 hover:scale-110 transition-transform" title="Xanh ngọc"></button>
-                                        <button type="button" onmousedown="event.preventDefault(); execRichCmd('foreColor', '#facc15')" class="w-5 h-5 rounded-full bg-yellow-400 border border-white/30 hover:scale-110 transition-transform" title="Vàng"></button>
-                                        <button type="button" onmousedown="event.preventDefault(); execRichCmd('foreColor', '#34d399')" class="w-5 h-5 rounded-full bg-emerald-400 border border-white/30 hover:scale-110 transition-transform" title="Xanh lá"></button>
-                                        <button type="button" onmousedown="event.preventDefault(); execRichCmd('foreColor', '#fb7185')" class="w-5 h-5 rounded-full bg-rose-400 border border-white/30 hover:scale-110 transition-transform" title="Đỏ hồng"></button>
-                                        <button type="button" onmousedown="event.preventDefault(); execRichCmd('foreColor', '#a78bfa')" class="w-5 h-5 rounded-full bg-violet-400 border border-white/30 hover:scale-110 transition-transform" title="Tím"></button>
-                                    </div>
-
-                                    <div class="h-5 w-[1px] bg-slate-500/25 mx-0.5"></div>
-
-                                    <button type="button" onmousedown="event.preventDefault(); execRichCmd('insertUnorderedList')" class="w-8 h-8 rounded-lg hover:bg-cyan-500/20 text-slate-200 hover:text-cyan-300 flex items-center justify-center text-xs transition-colors" title="Danh sách">
-                                        <i class="fas fa-list-ul"></i>
-                                    </button>
-                                    <button type="button" onmousedown="event.preventDefault(); execRichCmd('removeFormat')" class="px-2.5 h-8 rounded-lg hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 flex items-center gap-1 text-[11px] font-bold transition-colors" title="Xóa định dạng">
-                                        <i class="fas fa-eraser text-[10px]"></i> Xóa ĐF
-                                    </button>
-                                </div>
-
-                                <!-- 7 STRUCTURED CLINICAL SECTIONS -->
-                                <div class="space-y-3" id="structured-sections-wrapper">
+                                <div class="space-y-3 pt-3 border-t border-slate-500/15" id="structured-sections-wrapper">
                                     <!-- 1. Đại cương -->
                                     <div class="p-3 rounded-xl bg-slate-500/5 border border-slate-500/15 space-y-1.5">
                                         <label class="text-[11px] font-extrabold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -590,12 +640,12 @@
                                              class="rich-editor-area w-full p-3 rounded-xl text-xs"></div>
                                     </div>
                                 </div>
-                            </div>
+                            </details>
 
-                            <!-- 5. TÀI LIỆU MỞ RỘNG (VIDEO / PDF / HTML) -->
+                            <!-- 6. TÀI LIỆU MỞ RỘNG (PDF / HTML) -->
                             <details class="p-3.5 rounded-xl bg-slate-500/5 border border-slate-500/15 space-y-3 group" open>
                                 <summary class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider cursor-pointer flex items-center justify-between select-none">
-                                    <span class="flex items-center gap-1.5"><i class="fas fa-paperclip text-cyan-400"></i> Tùy chọn đính kèm (Video YouTube, File PDF, Link HTML)</span>
+                                    <span class="flex items-center gap-1.5"><i class="fas fa-paperclip text-emerald-400"></i> Tùy chọn đính kèm (File PDF, Link HTML)</span>
                                     <i class="fas fa-chevron-down text-[10px] group-open:rotate-180 transition-transform"></i>
                                 </summary>
 
@@ -604,18 +654,6 @@
                                         <label class="block text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Đường dẫn bài viết HTML (Nếu có)</label>
                                         <input type="text" id="form-article-url" placeholder="https://... hoặc /baiviet/post.html" 
                                                class="form-input w-full px-3.5 py-2 rounded-xl text-xs font-mono text-cyan-400">
-                                    </div>
-
-                                    <div class="space-y-2">
-                                        <div class="flex items-center justify-between">
-                                            <label class="text-[11px] font-extrabold text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
-                                                <i class="fas fa-circle-play"></i> Video hướng dẫn YouTube
-                                            </label>
-                                            <button type="button" onclick="addVideoInputRow()" class="px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 text-[11px] font-bold flex items-center gap-1">
-                                                <i class="fas fa-plus"></i> Thêm video
-                                            </button>
-                                        </div>
-                                        <div id="video-inputs-container" class="space-y-2"></div>
                                     </div>
 
                                     <div class="space-y-2">
@@ -669,8 +707,11 @@
 
                                     <!-- Live Content Preview -->
                                     <div id="live-text-preview-box" class="space-y-2.5">
-                                        <div class="text-[10px] font-bold uppercase tracking-wider text-cyan-400" id="live-preview-meta">
-                                            Chuyên khoa • Chuyên đề
+                                        <div class="flex flex-wrap items-center gap-1.5">
+                                            <span class="text-[10px] font-bold uppercase tracking-wider text-cyan-400" id="live-preview-meta">
+                                                Chuyên khoa • Chuyên đề
+                                            </span>
+                                            <span id="live-preview-region-badge" class="hidden text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-teal-500/15 text-teal-300 border border-teal-500/30"></span>
                                         </div>
                                         <h3 id="live-preview-title" class="text-sm sm:text-base font-extrabold leading-snug">
                                             Xem trước tiêu đề kỹ thuật
@@ -695,7 +736,10 @@
             <!-- Modal Header -->
             <div class="px-5 py-4 border-b border-slate-500/15 flex items-center justify-between gap-3">
                 <div class="min-w-0">
-                    <span id="previewModalBadge" class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-400">Chuyên đề</span>
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        <span id="previewModalBadge" class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-400">Chuyên đề</span>
+                        <span id="previewModalRegionBadge" class="hidden text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-teal-500/15 text-teal-300"></span>
+                    </div>
                     <h3 id="previewModalTitle" class="font-extrabold text-sm sm:text-base truncate mt-1">Tiêu đề kỹ thuật</h3>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
@@ -845,6 +889,35 @@
         const getArticlesCollection = () => db.collection('artifacts/' + appId + '/public/data/articles');
         const getCategoriesCollection = () => db.collection('artifacts/' + appId + '/public/data/categories');
 
+        const REGION_ORDER = ['chi trên', 'chi dưới', 'lưng', 'ngực - bụng', 'cổ'];
+
+        function getRegionSortIndex(regionStr) {
+            const norm = (regionStr || '').trim().toLowerCase();
+            if (!norm) return 999;
+            const exactIdx = REGION_ORDER.indexOf(norm);
+            if (exactIdx !== -1) return exactIdx;
+            const partialIdx = REGION_ORDER.findIndex(r => norm.includes(r) || r.includes(norm));
+            return partialIdx !== -1 ? partialIdx : 500;
+        }
+
+        function getRegionBadgeClass(regionStr) {
+            const idx = getRegionSortIndex(regionStr);
+            if (idx === 0) return 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30';
+            if (idx === 1) return 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30';
+            if (idx === 2) return 'bg-amber-500/15 text-amber-300 border-amber-500/30';
+            if (idx === 3) return 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30';
+            if (idx === 4) return 'bg-rose-500/15 text-rose-300 border-rose-500/30';
+            return 'bg-teal-500/15 text-teal-300 border-teal-500/30';
+        }
+
+        window.setFormRegion = function(val) {
+            const input = document.getElementById('form-region');
+            if (input) {
+                input.value = val;
+                updateLivePreview();
+            }
+        };
+
         const disciplinesMeta = {
             vdtl: { title: 'Vận Động Trị Liệu', icon: 'fa-solid fa-dumbbell', color: 'cyan', colorHex: '#22d3ee', categories: {} },
             dien_tri_lieu: { title: 'Điện Trị Liệu', icon: 'fa-solid fa-bolt-lightning', color: 'amber', colorHex: '#f59e0b', categories: {} },
@@ -893,13 +966,13 @@
         };
 
         const SECTION_DEFS = [
-            { key: 'dai_cuong', label: '1. Đại cương', colorClass: 'text-cyan-400', icon: 'fas fa-book-medical' },
-            { key: 'tac_dung', label: '2. Tác dụng', colorClass: 'text-emerald-400', icon: 'fas fa-sparkles' },
-            { key: 'chi_dinh', label: '3. Chỉ định', colorClass: 'text-sky-400', icon: 'fas fa-check-circle' },
-            { key: 'chong_chi_dinh', label: '4. Chống chỉ định', colorClass: 'text-rose-400', icon: 'fas fa-ban' },
-            { key: 'tai_bien', label: '5. Tai biến', colorClass: 'text-amber-400', icon: 'fas fa-exclamation-triangle' },
-            { key: 'luu_y', label: '6. Lưu ý', colorClass: 'text-indigo-400', icon: 'fas fa-shield-alt' },
-            { key: 'ghi_chu', label: '7. Ghi chú', colorClass: 'text-slate-400', icon: 'fas fa-sticky-note' }
+            { key: 'dai_cuong', label: '1. Đại cương', placeholder: 'Nhập khái niệm, nguyên lý hoạt động...', colorClass: 'text-cyan-400', icon: 'fas fa-book-medical' },
+            { key: 'tac_dung', label: '2. Tác dụng', placeholder: 'Nhập tác dụng sinh lý, tác dụng điều trị lâm sàng...', colorClass: 'text-emerald-400', icon: 'fas fa-sparkles' },
+            { key: 'chi_dinh', label: '3. Chỉ định', placeholder: 'Nhập các mặt bệnh, tình trạng được chỉ định...', colorClass: 'text-sky-400', icon: 'fas fa-check-circle' },
+            { key: 'chong_chi_dinh', label: '4. Chống chỉ định', placeholder: 'Nhập chống chỉ định tuyệt đối và tương đối...', colorClass: 'text-rose-400', icon: 'fas fa-ban' },
+            { key: 'tai_bien', label: '5. Tai biến', placeholder: 'Nhập tai biến có thể xảy ra và cách xử trí...', colorClass: 'text-amber-400', icon: 'fas fa-exclamation-triangle' },
+            { key: 'luu_y', label: '6. Lưu ý', placeholder: 'Nhập các lưu ý quan trọng về an toàn...', colorClass: 'text-indigo-400', icon: 'fas fa-shield-alt' },
+            { key: 'ghi_chu', label: '7. Ghi chú', placeholder: 'Nhập ghi chú bổ sung (nếu có)...', colorClass: 'text-slate-400', icon: 'fas fa-sticky-note' }
         ];
 
         const allCategoriesFlat = {};
@@ -914,6 +987,8 @@
         let selectedRowForMoveId = null;
         let activeLiveVideoIndex = 0;
         let activeRichEditor = null;
+        let currentPreviewModalVideos = [];
+        let currentPreviewModalArt = null;
 
         async function ensureAuthenticated() {
             if (auth.currentUser) return auth.currentUser;
@@ -934,8 +1009,8 @@
         // 2. RICH TEXT FORMATTING ENGINE
         // =========================================================
         window.execRichCmd = function(command, value = null) {
-            if (!activeRichEditor) {
-                activeRichEditor = document.getElementById('sec-input-dai_cuong');
+            if (!activeRichEditor || !document.body.contains(activeRichEditor)) {
+                activeRichEditor = document.querySelector('#video-inputs-container .rich-editor-area') || document.getElementById('sec-input-dai_cuong');
                 if (activeRichEditor) activeRichEditor.focus();
             }
             if (activeRichEditor && document.activeElement !== activeRichEditor) {
@@ -946,14 +1021,18 @@
             updateLivePreview();
         };
 
-        document.querySelectorAll('.rich-editor-area').forEach(editor => {
-            editor.addEventListener('paste', (e) => {
+        function attachRichPasteHandler(editorEl) {
+            if (!editorEl || editorEl.dataset.pasteBound) return;
+            editorEl.dataset.pasteBound = 'true';
+            editorEl.addEventListener('paste', (e) => {
                 e.preventDefault();
                 const text = (e.originalEvent || e).clipboardData.getData('text/plain');
                 document.execCommand('insertText', false, text);
                 updateLivePreview();
             });
-        });
+        }
+
+        document.querySelectorAll('.rich-editor-area').forEach(attachRichPasteHandler);
 
         function isHtmlEmpty(html) {
             if (!html) return true;
@@ -962,7 +1041,13 @@
             return !tmp.textContent.trim() && !tmp.querySelector('img');
         }
 
+        function hasAnySectionContent(sectionsObj) {
+            if (!sectionsObj || typeof sectionsObj !== 'object') return false;
+            return SECTION_DEFS.some(sec => !isHtmlEmpty(sectionsObj[sec.key]));
+        }
+
         function buildStructuredContentHtml(sectionsObj) {
+            if (!sectionsObj || typeof sectionsObj !== 'object') return '';
             const blocks = [];
             SECTION_DEFS.forEach(sec => {
                 const rawHtml = sectionsObj[sec.key] || '';
@@ -1090,8 +1175,6 @@
             let url = String(rawUrl).trim();
             if (!url) return '';
 
-            // Xử lý các liên kết Google Drive (bao gồm link file/d/, open?id=, uc?id= hoặc googleusercontent)
-            // Luôn chuyển về định dạng chuẩn drive.google.com/file/d/{ID}/view, KHÔNG dùng googleusercontent
             const gdriveFileMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
             if (gdriveFileMatch && gdriveFileMatch[1]) {
                 return `https://drive.google.com/file/d/${gdriveFileMatch[1]}/view`;
@@ -1109,7 +1192,6 @@
                 return url;
             }
 
-            // Chuẩn hóa đường dẫn nội bộ và ghép với tên miền gốc của website
             url = url.replace(/\\/g, '/');
             if (!url.startsWith('/')) {
                 url = '/' + url;
@@ -1277,14 +1359,35 @@
             getSortedCategoryKeys(activeDiscipline).forEach(k => makePill(k, meta.categories[k]));
         }
 
+        function sortArticlesByRegionAndOrder(list) {
+            return [...list].sort((a, b) => {
+                const regIdxA = getRegionSortIndex(a.region);
+                const regIdxB = getRegionSortIndex(b.region);
+                if (regIdxA !== regIdxB) return regIdxA - regIdxB;
+
+                const regNameA = (a.region || '').trim();
+                const regNameB = (b.region || '').trim();
+                if (regNameA.toLowerCase() !== regNameB.toLowerCase()) {
+                    return regNameA.localeCompare(regNameB, 'vi');
+                }
+
+                return (Number(a.order ?? 999999)) - (Number(b.order ?? 999999));
+            });
+        }
+
         function applyFilters() {
             const q = document.getElementById('admin-search-input').value.toLowerCase().trim();
             const mediaFilter = document.getElementById('media-filter-select').value;
+            const regionFilter = document.getElementById('region-filter-select').value;
 
-            displayedArticles = localArticles.filter(art => {
+            const filtered = localArticles.filter(art => {
                 if (inferDiscipline(art) !== activeDiscipline) return false;
                 if (activeCategoryFilter !== 'all' && art.categoryKey !== activeCategoryFilter) return false;
-                if (q && !(art.title || '').toLowerCase().includes(q)) return false;
+                if (q && !(art.title || '').toLowerCase().includes(q) && !(art.region || '').toLowerCase().includes(q)) return false;
+
+                const regVal = (art.region || '').trim();
+                if (regionFilter === '__none__' && regVal !== '') return false;
+                if (regionFilter !== 'all' && regionFilter !== '__none__' && regVal.toLowerCase() !== regionFilter.toLowerCase()) return false;
 
                 const imgs = getArticleImages(art);
                 const vCount = Array.isArray(art.videoUrls) ? art.videoUrls.length : (art.videoUrl ? 1 : 0);
@@ -1296,6 +1399,8 @@
 
                 return true;
             });
+
+            displayedArticles = sortArticlesByRegionAndOrder(filtered);
 
             const counts = { vdtl: 0, dien_tri_lieu: 0, thu_co: 0, đo_tam_van_dong: 0, hoat_dong_tl: 0, ngon_ngu_tl: 0, vltl_benh_ly: 0 };
             localArticles.forEach(a => { const d = inferDiscipline(a); if (counts[d] !== undefined) counts[d]++; });
@@ -1309,7 +1414,7 @@
         }
 
         // =========================================================
-        // 6. RENDER TABLE & MOBILE CARDS
+        // 6. RENDER TABLE & MOBILE CARDS (CÓ CỘT VÙNG SAU HÌNH ẢNH)
         // =========================================================
         function renderAdminList(list) {
             const tbody = document.getElementById('articles-table-body');
@@ -1319,7 +1424,7 @@
 
             if (list.length === 0) {
                 const emptyHtml = `<div class="p-12 text-center text-slate-400 text-xs">Không tìm thấy kỹ thuật nào trong mục này. Nhấn <strong>"Viết bài mới"</strong> để thêm.</div>`;
-                tbody.innerHTML = `<tr><td colspan="3">${emptyHtml}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4">${emptyHtml}</td></tr>`;
                 mobList.innerHTML = emptyHtml;
                 return;
             }
@@ -1329,7 +1434,9 @@
             list.forEach((art, idx) => {
                 const catName = allCategoriesFlat[art.categoryKey] || 'Chưa phân loại';
                 const images = getArticleImages(art);
+                const vCount = Array.isArray(art.videoUrls) ? art.videoUrls.length : (art.videoUrl ? 1 : 0);
                 const isSelected = selectedRowForMoveId === art.id;
+                const regionText = (art.region || '').trim();
 
                 let imgCellHtml = '';
                 if (images.length > 0) {
@@ -1351,6 +1458,14 @@
                     `;
                 }
 
+                const regionBadgeHtml = regionText
+                    ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-extrabold border ${getRegionBadgeClass(regionText)}">${escapeHtml(regionText)}</span>`
+                    : `<span class="text-[11px] text-slate-500 italic">—</span>`;
+
+                const videoBadgeHtml = vCount > 0
+                    ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-500/15 text-rose-400 flex items-center gap-1"><i class="fas fa-play-circle"></i> ${vCount} Video</span>`
+                    : '';
+
                 const tr = document.createElement('tr');
                 tr.dataset.index = idx;
                 tr.draggable = true;
@@ -1364,10 +1479,14 @@
                             ${imgCellHtml}
                         </div>
                     </td>
+                    <td class="p-3.5">
+                        ${regionBadgeHtml}
+                    </td>
                     <td class="p-4">
                         <div class="font-bold text-xs sm:text-sm line-clamp-2 leading-snug" title="${escapeHtml(art.title)}">${escapeHtml(art.title)}</div>
-                        <div class="mt-1 flex items-center gap-2">
+                        <div class="mt-1 flex flex-wrap items-center gap-1.5">
                             <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-500/10 text-slate-400">${escapeHtml(catName)}</span>
+                            ${videoBadgeHtml}
                         </div>
                     </td>
                     <td class="p-4 text-right whitespace-nowrap">
@@ -1407,7 +1526,11 @@
                     <div class="flex items-center gap-3">
                         ${imgCellHtml}
                         <div class="min-w-0 flex-1">
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-cyan-500/15 text-cyan-400">${escapeHtml(catName)}</span>
+                            <div class="flex flex-wrap items-center gap-1.5">
+                                ${regionText ? `<span class="text-[10px] font-extrabold px-2 py-0.5 rounded-md border ${getRegionBadgeClass(regionText)}">${escapeHtml(regionText)}</span>` : ''}
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-cyan-500/15 text-cyan-400">${escapeHtml(catName)}</span>
+                                ${videoBadgeHtml}
+                            </div>
                             <h4 class="font-bold text-sm leading-snug mt-1 line-clamp-2">${escapeHtml(art.title)}</h4>
                         </div>
                     </div>
@@ -1424,12 +1547,61 @@
         // =========================================================
         // 7. MEDIA & CONTENT PREVIEW MODAL
         // =========================================================
+        function renderModalContentForVideo(art, videoObj = null) {
+            const contentSec = document.getElementById('modalContentSection');
+            let htmlParts = [];
+
+            if (videoObj && videoObj.sections && hasAnySectionContent(videoObj.sections)) {
+                const vidLabel = videoObj.label || 'Video hướng dẫn';
+                htmlParts.push(`
+                    <div class="pb-2 mb-3 border-b border-rose-500/20 flex items-center gap-2 text-rose-400 font-extrabold text-xs uppercase tracking-wider">
+                        <i class="fas fa-circle-play"></i> Nội dung chi tiết: ${escapeHtml(vidLabel)}
+                    </div>
+                `);
+                htmlParts.push(buildStructuredContentHtml(videoObj.sections));
+            }
+
+            const generalHtml = (art.sections && hasAnySectionContent(art.sections))
+                ? buildStructuredContentHtml(art.sections)
+                : (art.content || '');
+
+            if (generalHtml && generalHtml.trim()) {
+                if (htmlParts.length > 0) {
+                    htmlParts.push(`
+                        <div class="pt-4 mt-4 border-t border-slate-500/20">
+                            <div class="pb-2 mb-2 text-cyan-400 font-extrabold text-xs uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fas fa-file-medical-alt"></i> Nội dung chung của bài viết
+                            </div>
+                            ${generalHtml}
+                        </div>
+                    `);
+                } else {
+                    htmlParts.push(generalHtml);
+                }
+            }
+
+            contentSec.innerHTML = htmlParts.length > 0
+                ? htmlParts.join('\n')
+                : `<p class="text-slate-400 italic">Bài viết hoặc video này chưa có nội dung mô tả chi tiết.</p>`;
+        }
+
         window.openMediaPreviewModal = function(id) {
             const art = localArticles.find(a => a.id === id);
             if (!art) return;
+            currentPreviewModalArt = art;
 
             const catName = allCategoriesFlat[art.categoryKey] || 'Chưa phân loại';
             document.getElementById('previewModalBadge').textContent = `${disciplinesMeta[inferDiscipline(art)]?.title || ''} • ${catName}`;
+
+            const regionBadge = document.getElementById('previewModalRegionBadge');
+            const regionText = (art.region || '').trim();
+            if (regionText) {
+                regionBadge.textContent = `Vùng: ${regionText}`;
+                regionBadge.classList.remove('hidden');
+            } else {
+                regionBadge.classList.add('hidden');
+            }
+
             document.getElementById('previewModalTitle').textContent = art.title;
             document.getElementById('previewModalEditBtn').onclick = () => { closeMediaPreviewModal(); editArticle(id); };
 
@@ -1456,7 +1628,8 @@
 
             const videos = Array.isArray(art.videoUrls) && art.videoUrls.length > 0
                 ? art.videoUrls
-                : (art.videoUrl ? [{ url: art.videoUrl, label: 'Video hướng dẫn' }] : []);
+                : (art.videoUrl ? [{ url: art.videoUrl, label: 'Video hướng dẫn', sections: null }] : []);
+            currentPreviewModalVideos = videos;
 
             const vidSec = document.getElementById('modalVideoSection');
             const iframe = document.getElementById('modalVideoIframe');
@@ -1466,14 +1639,16 @@
                 vidSec.classList.remove('hidden');
                 iframe.src = getYouTubeEmbedUrl(videos[0].url);
                 playlist.innerHTML = videos.map((v, idx) => `
-                    <button onclick="switchModalVideo('${escapeHtml(getYouTubeEmbedUrl(v.url))}', this)" 
+                    <button onclick="switchModalVideo(${idx}, this)" 
                             class="modal-vid-pill px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${idx === 0 ? 'bg-rose-500 text-white' : 'glass-panel text-slate-300 hover:border-rose-500/40'}">
                         <i class="fas fa-play text-[10px]"></i> ${escapeHtml(v.label || `Video ${idx + 1}`)}
                     </button>
                 `).join('');
+                renderModalContentForVideo(art, videos[0]);
             } else {
                 vidSec.classList.add('hidden');
                 iframe.src = '';
+                renderModalContentForVideo(art, null);
             }
 
             const pdfs = Array.isArray(art.pdfUrls) && art.pdfUrls.length > 0
@@ -1502,22 +1677,21 @@
                 docsSec.classList.add('hidden');
             }
 
-            const contentSec = document.getElementById('modalContentSection');
-            const renderedHtml = art.sections ? buildStructuredContentHtml(art.sections) : (art.content || '');
-            contentSec.innerHTML = renderedHtml && renderedHtml.trim()
-                ? renderedHtml
-                : `<p class="text-slate-400 italic">Bài viết này chưa có nội dung mô tả chi tiết.</p>`;
-
             document.getElementById('mediaPreviewModal').classList.remove('hidden');
             document.getElementById('mediaPreviewModal').classList.add('flex');
         };
 
-        window.switchModalVideo = function(embedUrl, btnEl) {
-            document.getElementById('modalVideoIframe').src = embedUrl;
+        window.switchModalVideo = function(videoIdx, btnEl) {
+            const vidObj = currentPreviewModalVideos[videoIdx];
+            if (!vidObj) return;
+            document.getElementById('modalVideoIframe').src = getYouTubeEmbedUrl(vidObj.url);
             document.querySelectorAll('.modal-vid-pill').forEach(b => {
                 b.className = 'modal-vid-pill px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 glass-panel text-slate-300 hover:border-rose-500/40';
             });
             btnEl.className = 'modal-vid-pill px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-rose-500 text-white';
+            if (currentPreviewModalArt) {
+                renderModalContentForVideo(currentPreviewModalArt, vidObj);
+            }
         };
 
         window.closeMediaPreviewModal = function() {
@@ -1527,7 +1701,7 @@
         };
 
         // =========================================================
-        // 8. EDITOR & REALTIME PREVIEW
+        // 8. EDITOR & REALTIME PREVIEW (WITH 7 SECTIONS PER VIDEO)
         // =========================================================
         function addImageInputRow(url = '', label = '') {
             const container = document.getElementById('image-inputs-container');
@@ -1586,22 +1760,107 @@
             thumbBox.innerHTML = `<img src="${escapeHtml(normUrl)}" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'fas fa-exclamation-triangle text-rose-400 text-xs\\'></i>';">`;
         };
 
-        function addVideoInputRow(url = '', label = '') {
+        function refreshVideoNumbers() {
+            document.querySelectorAll('#video-inputs-container .video-row').forEach((row, idx) => {
+                const badge = row.querySelector('.video-index-badge');
+                if (badge) badge.textContent = `Video #${idx + 1}`;
+            });
+        }
+
+        function addVideoInputRow(url = '', label = '', sectionsData = null) {
             const container = document.getElementById('video-inputs-container');
+            const vidIdx = container.querySelectorAll('.video-row').length;
             const row = document.createElement('div');
-            row.className = 'flex gap-2 items-center video-row glass-panel p-2 rounded-xl cursor-grab active:cursor-grabbing';
-            row.draggable = true;
+            row.className = 'video-row glass-panel p-3.5 rounded-2xl border border-rose-500/25 space-y-3 transition-all';
+
+            const sectionsHtml = SECTION_DEFS.map(sec => `
+                <div class="p-2.5 rounded-xl bg-slate-500/5 border border-slate-500/15 space-y-1">
+                    <label class="text-[11px] font-extrabold ${sec.colorClass} uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="${sec.icon}"></i> ${sec.label}
+                    </label>
+                    <div contenteditable="true"
+                         data-sec-key="${sec.key}"
+                         data-placeholder="${sec.placeholder}"
+                         class="vid-sec-editor rich-editor-area w-full p-2.5 rounded-xl text-xs"></div>
+                </div>
+            `).join('');
+
             row.innerHTML = `
-                <i class="fas fa-grip-vertical text-slate-500 px-1 text-xs"></i>
-                <input type="text" placeholder="Tiêu đề video" value="${escapeHtml(label)}" oninput="updateLivePreview()"
-                       class="video-label-input flex-1 min-w-0 form-input rounded-lg px-2.5 py-1.5 text-xs">
-                <input type="text" placeholder="Dán link YouTube..." value="${escapeHtml(url)}" oninput="updateLivePreview()"
-                       class="video-url-input flex-[1.5] min-w-0 form-input rounded-lg px-2.5 py-1.5 text-xs font-mono text-rose-400">
-                <button type="button" onclick="this.parentElement.remove(); updateLivePreview();" class="text-rose-400 hover:bg-rose-500/20 w-7 h-7 rounded-lg flex items-center justify-center shrink-0">
-                    <i class="fas fa-trash-alt text-xs"></i>
-                </button>
+                <div class="flex flex-wrap sm:flex-nowrap gap-2 items-center">
+                    <span class="video-index-badge px-2 py-1 rounded-lg bg-rose-500/20 text-rose-400 text-[10px] font-extrabold shrink-0">Video #${vidIdx + 1}</span>
+                    <input type="text" placeholder="Tiêu đề video (VD: Kỹ thuật thực hiện...)" value="${escapeHtml(label)}"
+                           class="video-label-input flex-1 min-w-[140px] form-input rounded-lg px-2.5 py-1.5 text-xs font-semibold">
+                    <input type="text" placeholder="Dán link YouTube..." value="${escapeHtml(url)}"
+                           class="video-url-input flex-[1.5] min-w-[160px] form-input rounded-lg px-2.5 py-1.5 text-xs font-mono text-rose-400">
+                    <button type="button" class="toggle-vid-sections-btn px-2.5 py-1.5 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-400 text-[11px] font-bold flex items-center gap-1 shrink-0" title="Thu gọn / Mở rộng 7 mục nội dung">
+                        <i class="fas fa-chevron-up text-[10px]"></i> <span>Nội dung</span>
+                    </button>
+                    <button type="button" class="remove-vid-row-btn text-rose-400 hover:bg-rose-500/20 w-7 h-7 rounded-lg flex items-center justify-center shrink-0" title="Xóa video này">
+                        <i class="fas fa-trash-alt text-xs"></i>
+                    </button>
+                </div>
+
+                <div class="vid-sections-body space-y-2.5 pt-2.5 border-t border-slate-500/15">
+                    <div class="text-[10px] font-bold text-slate-400 flex items-center justify-between">
+                        <span><i class="fas fa-notes-medical text-cyan-400 mr-1"></i> Nội dung chi tiết của video (7 mục lâm sàng):</span>
+                    </div>
+                    <div class="grid grid-cols-1 gap-2.5">
+                        ${sectionsHtml}
+                    </div>
+                </div>
             `;
+
+            const labelInput = row.querySelector('.video-label-input');
+            const urlInput = row.querySelector('.video-url-input');
+            const toggleBtn = row.querySelector('.toggle-vid-sections-btn');
+            const removeBtn = row.querySelector('.remove-vid-row-btn');
+            const bodyPanel = row.querySelector('.vid-sections-body');
+
+            const focusThisVideoInPreview = () => {
+                const allRows = [...container.querySelectorAll('.video-row')];
+                const myIndex = allRows.indexOf(row);
+                if (myIndex >= 0) activeLiveVideoIndex = myIndex;
+                updateLivePreview();
+            };
+
+            labelInput.addEventListener('focus', focusThisVideoInPreview);
+            labelInput.addEventListener('input', updateLivePreview);
+            urlInput.addEventListener('focus', focusThisVideoInPreview);
+            urlInput.addEventListener('input', updateLivePreview);
+
+            toggleBtn.addEventListener('click', () => {
+                const isHidden = bodyPanel.classList.toggle('hidden');
+                const icon = toggleBtn.querySelector('i');
+                if (icon) icon.className = isHidden ? 'fas fa-chevron-down text-[10px]' : 'fas fa-chevron-up text-[10px]';
+            });
+
+            removeBtn.addEventListener('click', () => {
+                row.remove();
+                refreshVideoNumbers();
+                updateLivePreview();
+            });
+
+            row.querySelectorAll('.vid-sec-editor').forEach(editor => {
+                const key = editor.dataset.secKey;
+                if (sectionsData && typeof sectionsData === 'object' && sectionsData[key]) {
+                    editor.innerHTML = sectionsData[key];
+                }
+                attachRichPasteHandler(editor);
+                editor.addEventListener('focus', () => {
+                    activeRichEditor = editor;
+                    const allRows = [...container.querySelectorAll('.video-row')];
+                    const myIndex = allRows.indexOf(row);
+                    if (myIndex >= 0 && activeLiveVideoIndex !== myIndex) {
+                        activeLiveVideoIndex = myIndex;
+                        updateLivePreview();
+                    }
+                });
+                editor.addEventListener('input', updateLivePreview);
+            });
+
             container.appendChild(row);
+            refreshVideoNumbers();
+            activeLiveVideoIndex = vidIdx;
             updateLivePreview();
         }
 
@@ -1656,6 +1915,28 @@
             return sections;
         }
 
+        function collectVideosFromEditor() {
+            const videos = [];
+            document.querySelectorAll('#video-inputs-container .video-row').forEach((row, idx) => {
+                const rawUrl = row.querySelector('.video-url-input').value.trim();
+                const lbl = row.querySelector('.video-label-input').value.trim();
+                const vidSections = {};
+                row.querySelectorAll('.vid-sec-editor').forEach(ed => {
+                    vidSections[ed.dataset.secKey] = ed.innerHTML.trim();
+                });
+
+                if (rawUrl || lbl || hasAnySectionContent(vidSections)) {
+                    videos.push({
+                        url: rawUrl ? getYouTubeEmbedUrl(rawUrl) : '',
+                        label: lbl || `Video hướng dẫn ${idx + 1}`,
+                        sections: vidSections,
+                        content: buildStructuredContentHtml(vidSections)
+                    });
+                }
+            });
+            return videos;
+        }
+
         function updateLivePreview() {
             const discKey = document.getElementById('form-discipline').value;
             const catKey = document.getElementById('form-category').value;
@@ -1664,15 +1945,19 @@
 
             document.getElementById('live-preview-meta').textContent = `${discTitle} • ${catTitle}`;
 
+            const regionVal = (document.getElementById('form-region')?.value || '').trim();
+            const regionBadge = document.getElementById('live-preview-region-badge');
+            if (regionBadge) {
+                if (regionVal) {
+                    regionBadge.textContent = `Vùng: ${regionVal}`;
+                    regionBadge.classList.remove('hidden');
+                } else {
+                    regionBadge.classList.add('hidden');
+                }
+            }
+
             const titleVal = document.getElementById('form-title').value.trim();
             document.getElementById('live-preview-title').textContent = titleVal || "Xem trước tiêu đề kỹ thuật";
-
-            const sections = collectSectionsFromEditor();
-            const combinedHtml = buildStructuredContentHtml(sections);
-
-            document.getElementById('live-preview-body').innerHTML = combinedHtml.trim()
-                ? combinedHtml
-                : `<p class="text-slate-500 italic">Nhập nội dung vào các mục để xem trước tại đây...</p>`;
 
             const images = [];
             document.querySelectorAll('.image-row').forEach((row, i) => {
@@ -1697,43 +1982,76 @@
                     </div>
                 `).join('');
             } else {
+                imgPreviewBox.classList.add('hidden');
                 imgGrid.innerHTML = '';
             }
 
-            const videos = [];
-            document.querySelectorAll('.video-row').forEach((row, i) => {
-                const raw = row.querySelector('.video-url-input').value.trim();
-                const lbl = row.querySelector('.video-label-input').value.trim() || `Video ${i + 1}`;
-                if (raw) videos.push({ url: getYouTubeEmbedUrl(raw), label: lbl });
-            });
-
+            const videos = collectVideosFromEditor();
             const vidBox = document.getElementById('live-video-preview-box');
             const playerBox = document.getElementById('live-video-player');
             const pillsBox = document.getElementById('live-video-pills');
 
             if (videos.length === 0) {
                 vidBox.classList.add('hidden');
-                playerBox.innerHTML = `<i class="fas fa-play-circle text-3xl mb-1.5 opacity-40"></i><span class="text-[11px]">Dán link YouTube để xem trước video</span>`;
+                playerBox.innerHTML = `<i class="fas fa-play-circle text-3xl mb-1.5 opacity-40"></i><span class="text-[11px]">Nhấn "+ Thêm video" để nhập video và 7 mục nội dung</span>`;
                 pillsBox.innerHTML = '';
-                return;
+            } else {
+                vidBox.classList.remove('hidden');
+                if (activeLiveVideoIndex >= videos.length) activeLiveVideoIndex = 0;
+                const currentVid = videos[activeLiveVideoIndex];
+
+                if (currentVid.url) {
+                    const existingIframe = playerBox.querySelector('iframe');
+                    if (!existingIframe || existingIframe.getAttribute('data-url') !== currentVid.url) {
+                        playerBox.innerHTML = `<iframe data-url="${escapeHtml(currentVid.url)}" class="w-full h-full" src="${escapeHtml(currentVid.url)}" frameborder="0" allowfullscreen></iframe>`;
+                    }
+                } else {
+                    playerBox.innerHTML = `<i class="fas fa-play-circle text-3xl mb-1.5 opacity-40"></i><span class="text-[11px]">Dán link YouTube cho "${escapeHtml(currentVid.label)}"</span>`;
+                }
+
+                pillsBox.innerHTML = videos.length > 1
+                    ? videos.map((v, i) => `
+                        <button type="button" onclick="selectLivePreviewVideo(${i})" class="px-2.5 py-1 rounded-lg text-[11px] font-bold ${i === activeLiveVideoIndex ? 'bg-rose-500 text-white' : 'glass-panel text-slate-400'}">
+                            ${escapeHtml(v.label)}
+                        </button>
+                    `).join('')
+                    : '';
             }
 
-            vidBox.classList.remove('hidden');
-            if (activeLiveVideoIndex >= videos.length) activeLiveVideoIndex = 0;
-            const currentVid = videos[activeLiveVideoIndex];
-
-            const existingIframe = playerBox.querySelector('iframe');
-            if (!existingIframe || existingIframe.getAttribute('data-url') !== currentVid.url) {
-                playerBox.innerHTML = `<iframe data-url="${escapeHtml(currentVid.url)}" class="w-full h-full" src="${escapeHtml(currentVid.url)}" frameborder="0" allowfullscreen></iframe>`;
+            // Render Live Preview Body (Active Video Sections + General Sections)
+            const previewParts = [];
+            if (videos.length > 0) {
+                const currentVid = videos[activeLiveVideoIndex] || videos[0];
+                if (currentVid && hasAnySectionContent(currentVid.sections)) {
+                    previewParts.push(`
+                        <div class="pb-1.5 mb-2 border-b border-rose-500/20 text-[10px] font-extrabold uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
+                            <i class="fas fa-circle-play"></i> Nội dung của: ${escapeHtml(currentVid.label)}
+                        </div>
+                    `);
+                    previewParts.push(buildStructuredContentHtml(currentVid.sections));
+                }
             }
 
-            pillsBox.innerHTML = videos.length > 1
-                ? videos.map((v, i) => `
-                    <button type="button" onclick="selectLivePreviewVideo(${i})" class="px-2.5 py-1 rounded-lg text-[11px] font-bold ${i === activeLiveVideoIndex ? 'bg-rose-500 text-white' : 'glass-panel text-slate-400'}">
-                        ${escapeHtml(v.label)}
-                    </button>
-                `).join('')
-                : '';
+            const generalSections = collectSectionsFromEditor();
+            const generalHtml = buildStructuredContentHtml(generalSections);
+            if (generalHtml.trim()) {
+                if (previewParts.length > 0) {
+                    previewParts.push(`
+                        <div class="pt-3 mt-3 border-t border-slate-500/20">
+                            <div class="pb-1.5 mb-2 text-[10px] font-extrabold uppercase tracking-wider text-cyan-400">
+                                Nội dung chung bài viết
+                            </div>
+                            ${generalHtml}
+                        </div>
+                    `);
+                } else {
+                    previewParts.push(generalHtml);
+                }
+            }
+
+            document.getElementById('live-preview-body').innerHTML = previewParts.length > 0
+                ? previewParts.join('\n')
+                : `<p class="text-slate-500 italic">Nhập nội dung vào các mục (Đại cương, Tác dụng, Chỉ định...) để xem trước tại đây...</p>`;
         }
 
         function updateFormCategorySelect() {
@@ -1754,6 +2072,7 @@
             document.getElementById('form-id').value = '';
             document.getElementById('form-discipline').value = activeDiscipline;
             updateFormCategorySelect();
+            document.getElementById('form-region').value = '';
             document.getElementById('form-title').value = '';
             document.getElementById('form-article-url').value = '';
 
@@ -1767,7 +2086,9 @@
             document.getElementById('pdf-inputs-container').innerHTML = '';
             document.getElementById('editor-heading').textContent = 'Soạn Thảo Bài Viết Mới';
             activeLiveVideoIndex = 0;
-            activeRichEditor = document.getElementById('sec-input-dai_cuong');
+
+            addVideoInputRow('', '');
+            activeRichEditor = document.querySelector('#video-inputs-container .vid-sec-editor');
             updateLivePreview();
         }
 
@@ -1779,6 +2100,7 @@
             document.getElementById('form-discipline').value = inferDiscipline(art);
             updateFormCategorySelect();
             document.getElementById('form-category').value = art.categoryKey || '';
+            document.getElementById('form-region').value = art.region || '';
             document.getElementById('form-title').value = art.title || '';
             document.getElementById('form-article-url').value = art.articleUrl || '';
 
@@ -1792,7 +2114,7 @@
                     const el = document.getElementById(`sec-input-${sec.key}`);
                     if (el && art.sections[sec.key]) el.innerHTML = art.sections[sec.key];
                 });
-            } else if (art.content) {
+            } else if (art.content && (!Array.isArray(art.videoUrls) || art.videoUrls.length === 0)) {
                 const firstSec = document.getElementById('sec-input-dai_cuong');
                 if (firstSec) firstSec.innerHTML = art.content;
             }
@@ -1801,8 +2123,13 @@
             getArticleImages(art).forEach(img => addImageInputRow(img.url, img.label));
 
             document.getElementById('video-inputs-container').innerHTML = '';
-            if (Array.isArray(art.videoUrls)) art.videoUrls.forEach(v => addVideoInputRow(v.url, v.label));
-            else if (art.videoUrl) addVideoInputRow(art.videoUrl, 'Video hướng dẫn');
+            if (Array.isArray(art.videoUrls) && art.videoUrls.length > 0) {
+                art.videoUrls.forEach(v => addVideoInputRow(v.url || '', v.label || '', v.sections || null));
+            } else if (art.videoUrl) {
+                addVideoInputRow(art.videoUrl, 'Video hướng dẫn', null);
+            } else {
+                addVideoInputRow('', '');
+            }
 
             document.getElementById('pdf-inputs-container').innerHTML = '';
             if (Array.isArray(art.pdfUrls)) art.pdfUrls.forEach(p => addPdfInputRow(p.url, p.label));
@@ -1810,7 +2137,7 @@
 
             document.getElementById('editor-heading').textContent = 'Chỉnh Sửa Kỹ Thuật PHCN';
             activeLiveVideoIndex = 0;
-            activeRichEditor = document.getElementById('sec-input-dai_cuong');
+            activeRichEditor = document.querySelector('#video-inputs-container .vid-sec-editor') || document.getElementById('sec-input-dai_cuong');
             switchView('editor');
         }
 
@@ -1818,6 +2145,8 @@
             await ensureAuthenticated();
             const id = document.getElementById('form-id').value;
             const title = document.getElementById('form-title').value.trim();
+            const region = document.getElementById('form-region').value.trim();
+
             if (!title) {
                 showToast("Thiếu thông tin", "Vui lòng nhập tên kỹ thuật.", "error");
                 return;
@@ -1833,12 +2162,7 @@
                 }
             });
 
-            const videoUrls = [];
-            document.querySelectorAll('.video-row').forEach(r => {
-                const raw = r.querySelector('.video-url-input').value.trim();
-                const lbl = r.querySelector('.video-label-input').value.trim();
-                if (raw) videoUrls.push({ url: getYouTubeEmbedUrl(raw), label: lbl || 'Video hướng dẫn' });
-            });
+            const videoUrls = collectVideosFromEditor();
 
             const pdfUrls = [];
             document.querySelectorAll('.pdf-row').forEach(r => {
@@ -1854,11 +2178,22 @@
             const normalizedArticleUrl = rawArticleUrl ? normalizeImageUrl(rawArticleUrl) : '';
 
             const sections = collectSectionsFromEditor();
-            const generatedContentHtml = buildStructuredContentHtml(sections);
+            let generatedContentHtml = buildStructuredContentHtml(sections);
+
+            if (!generatedContentHtml.trim() && videoUrls.length > 0) {
+                const videoContents = videoUrls
+                    .filter(v => v.content && v.content.trim())
+                    .map(v => videoUrls.length > 1
+                        ? `<div class="mb-4"><h4 class="font-extrabold text-rose-400 text-sm mb-2">${escapeHtml(v.label)}</h4>${v.content}</div>`
+                        : v.content
+                    );
+                generatedContentHtml = videoContents.join('\n');
+            }
 
             const payload = {
                 disciplineKey: document.getElementById('form-discipline').value,
                 categoryKey: document.getElementById('form-category').value,
+                region,
                 title,
                 articleUrl: normalizedArticleUrl,
                 sections,
@@ -1867,7 +2202,7 @@
                 imageUrl: imageUrls[0]?.url || '',
                 videoUrls,
                 pdfUrls,
-                videoUrl: videoUrls[0]?.url || '',
+                videoUrl: videoUrls.find(v => v.url)?.url || '',
                 pdfUrl: pdfUrls[0]?.url || '',
                 lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
             };
@@ -2192,8 +2527,7 @@
             getArticlesCollection().onSnapshot((snap) => {
                 const items = [];
                 snap.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
-                items.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-                localArticles = items;
+                localArticles = sortArticlesByRegionAndOrder(items);
                 saveCacheInstant();
                 updateKpiDashboard();
                 applyFilters();
