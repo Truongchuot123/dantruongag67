@@ -1,0 +1,2656 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aptis ESOL</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js cho trang thống kê -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #1e293b;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.85); opacity: 0.85; }
+            100% { transform: scale(1.9); opacity: 0; }
+        }
+        .recording-pulse::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 9999px;
+            background-color: #ef4444;
+            animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+            z-index: -1;
+        }
+        .aptis-gradient {
+            background: linear-gradient(135deg, #002b49 0%, #005587 100%);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-16 md:pb-0">
+
+    <!-- HỆ THỐNG THÔNG BÁO TOAST -->
+    <div id="toast-container" class="fixed top-4 right-4 left-4 sm:left-auto z-50 flex flex-col gap-2 max-w-sm w-auto sm:w-full pointer-events-none"></div>
+
+    <!-- MODAL XÁC NHẬN TÙY CHỈNH -->
+    <div id="confirm-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-5 sm:p-6">
+            <div class="flex items-center gap-3 text-amber-600 mb-3">
+                <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                <h3 class="text-lg font-bold text-slate-800" id="confirm-title">Xác nhận thao tác</h3>
+            </div>
+            <p class="text-slate-600 text-sm mb-6" id="confirm-message">Bạn có chắc chắn muốn thực hiện hành động này?</p>
+            <div class="flex justify-end gap-3">
+                <button id="confirm-cancel-btn" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition">Hủy bỏ</button>
+                <button id="confirm-ok-btn" class="px-4 py-2.5 rounded-xl text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition shadow-sm">Đồng ý</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER CHÍNH -->
+    <header class="aptis-gradient text-white shadow-lg sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between py-2.5 sm:py-3 gap-2">
+                <!-- Logo Aptis -->
+                <div class="flex items-center gap-2.5">
+                    <div class="bg-white text-[#002b49] font-extrabold text-base sm:text-xl px-2.5 py-1 rounded-lg tracking-tight shadow-sm flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-[#0077c8]"></span>
+                        Aptis <span class="font-normal text-[10px] sm:text-xs uppercase bg-sky-100 text-sky-800 px-1.5 py-0.5 rounded">ESOL</span>
+                    </div>
+                </div>
+
+                <!-- Chuyển đổi chế độ trang -->
+                <nav class="flex items-center bg-slate-900/40 p-1 rounded-xl border border-white/10">
+                    <button onclick="switchMainPortal('student')" id="nav-student-btn" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 bg-white text-[#002b49] shadow">
+                        <i class="fa-solid fa-laptop-file"></i>
+                        <span>Người dùng</span>
+                    </button>
+                    <button onclick="switchMainPortal('admin')" id="nav-admin-btn" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 text-sky-100 hover:text-white">
+                        <i class="fa-solid fa-database"></i>
+                        <span>Quản trị</span>
+                    </button>
+                </nav>
+
+                <!-- Trạng thái kết nối -->
+                <div class="flex items-center gap-1.5 text-[11px] sm:text-xs bg-white/10 px-2.5 py-1.5 rounded-full border border-white/15">
+                    <span id="fb-status-dot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0"></span>
+                    <span id="fb-status-text" class="text-sky-100 hidden sm:inline">Đang kết nối...</span>
+                    <span class="text-sky-100 sm:hidden">Online</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===================================================================== -->
+    <!-- PHÂN HỆ 1: TRANG THI THỬ & LUYỆN TẬP                                  -->
+    <!-- ===================================================================== -->
+    <main id="portal-student" class="flex-1 flex flex-col">
+        <!-- Sub-navigation -->
+        <div class="bg-white border-b border-slate-200 shadow-xs sticky top-[52px] sm:top-[60px] z-30">
+            <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between py-2">
+                <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                    <button onclick="switchStudentTab('mode-select')" id="stab-mode-select" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-sky-50 text-[#0077c8] border border-sky-200 transition whitespace-nowrap">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Thi thử
+                    </button>
+                    <button onclick="switchStudentTab('practice-bank')" id="stab-practice-bank" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 hover:bg-slate-100 transition whitespace-nowrap">
+                        <i class="fa-solid fa-layer-group mr-1.5"></i> Luyện tập
+                    </button>
+                    <button onclick="switchStudentTab('history')" id="stab-history" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 hover:bg-slate-100 transition whitespace-nowrap">
+                        <i class="fa-solid fa-clock-rotate-left mr-1.5"></i> Lịch Sử
+                    </button>
+                    <button onclick="switchStudentTab('stats')" id="stab-stats" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 hover:bg-slate-100 transition whitespace-nowrap">
+                        <i class="fa-solid fa-chart-pie mr-1.5"></i> Thống Kê
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 1.1: TỰ ĐỘNG TẠO ĐỀ THI THỬ TỪ NGÂN HÀNG CÂU HỎI -->
+        <section id="student-view-mode-select" class="max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-6 sm:py-8">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-8 mb-6">
+                <div class="max-w-3xl">
+                    <h1 class="text-xl sm:text-3xl font-extrabold text-slate-800 leading-tight">HỆ THỐNG THI THỬ</h1>
+                    <p class="text-slate-500 text-xs sm:text-sm mt-2 leading-relaxed">
+                        Hệ thống tự động tạo đề thi thử ngẫu nhiên từ ngân hàng câu hỏi
+                    </p>
+                </div>
+
+                <!-- Thống kê nhanh kho câu hỏi hiện có -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t border-slate-100">
+                    <div class="bg-indigo-50/70 p-3.5 rounded-xl border border-indigo-100">
+                        <p class="text-[11px] font-bold uppercase text-indigo-700">Speaking</p>
+                        <p class="text-xl sm:text-2xl font-extrabold text-indigo-950 mt-0.5" id="bank-count-speaking">0 câu</p>
+                    </div>
+                    <div class="bg-emerald-50/70 p-3.5 rounded-xl border border-emerald-100">
+                        <p class="text-[11px] font-bold uppercase text-emerald-700">Writing</p>
+                        <p class="text-xl sm:text-2xl font-extrabold text-emerald-950 mt-0.5" id="bank-count-writing">0 câu</p>
+                    </div>
+                    <div class="bg-sky-50/70 p-3.5 rounded-xl border border-sky-100">
+                        <p class="text-[11px] font-bold uppercase text-sky-700">Chủ đề (Topics)</p>
+                        <p class="text-xl sm:text-2xl font-extrabold text-sky-950 mt-0.5" id="bank-count-topics">0 topic</p>
+                    </div>
+                    <div class="bg-amber-50/70 p-3.5 rounded-xl border border-amber-100">
+                        <p class="text-[11px] font-bold uppercase text-amber-700">Chuẩn cấu trúc</p>
+                        <p class="text-xl sm:text-2xl font-extrabold text-amber-950 mt-0.5">2 Parts</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2 Lựa chọn chính -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+                <!-- Card 1: Thi thử Speaking tự động -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 hover:shadow-md hover:border-indigo-300 transition flex flex-col justify-between overflow-hidden">
+                    <div>
+                        <div class="bg-indigo-900 text-white px-5 py-4 flex items-center justify-between">
+                            <span class="font-bold text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-microphone-lines text-indigo-300"></i> APTIS SPEAKING
+                            </span>
+                            <span class="text-xs bg-white/15 px-2.5 py-0.5 rounded-full">12 Phút • Auto</span>
+                        </div>
+                        <div class="p-5 sm:p-6">
+                            <h3 class="font-bold text-lg text-slate-800 mb-2">Tạo đề thi Thử Speaking</h3>
+                            <p class="text-xs sm:text-sm text-slate-500 mb-4 leading-relaxed">
+                                Hệ thống tự động tạo đề thi nói gồm 4 phần: Part 1 (3 câu 30s), Part 2 (1 ảnh + 3 câu 45s), Part 3 (2 ảnh + 3 câu 45s) và Part 4 (60s chuẩn bị + 120s nói).
+                            </p>
+                            <div class="space-y-1.5 text-xs text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                <div class="flex justify-between"><span>Part 1 (Personal):</span><span class="font-bold" id="avail-sp-1">0</span></div>
+                                <div class="flex justify-between"><span>Part 2 (1 Picture):</span><span class="font-bold" id="avail-sp-2">0</span></div>
+                                <div class="flex justify-between"><span>Part 3 (2 Pictures):</span><span class="font-bold" id="avail-sp-3">0</span></div>
+                                <div class="flex justify-between"><span>Part 4 (Long Turn):</span><span class="font-bold" id="avail-sp-4">0</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-5 pb-5 sm:px-6 sm:pb-6">
+                        <button onclick="generateAndStartExam('speaking')" class="w-full py-3 rounded-xl font-bold text-sm text-white bg-indigo-600 hover:bg-indigo-700 transition shadow flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-shuffle"></i> Tạo đề thi
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 2: Thi thử Writing tự động -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 hover:shadow-md hover:border-sky-300 transition flex flex-col justify-between overflow-hidden">
+                    <div>
+                        <div class="bg-[#002b49] text-white px-5 py-4 flex items-center justify-between">
+                            <span class="font-bold text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-pen-to-square text-sky-300"></i> APTIS WRITING
+                            </span>
+                            <span class="text-xs bg-white/15 px-2.5 py-0.5 rounded-full">50 Phút • Auto</span>
+                        </div>
+                        <div class="p-5 sm:p-6">
+                            <h3 class="font-bold text-lg text-slate-800 mb-2">Tạo đề thi Thử Writing</h3>
+                            <p class="text-xs sm:text-sm text-slate-500 mb-4 leading-relaxed">
+                                Hệ thống tự động tạo đề thi viết gồm 4 phần: Part 1 (5 câu 1–5 từ), Part 2 (20–30 từ), Part 3 (Chat room 30–40 từ) và Part 4 (2 Emails 50 & 120–150 từ).
+                            </p>
+                            <div class="space-y-1.5 text-xs text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                <div class="flex justify-between"><span>Part 1 (Word-level):</span><span class="font-bold" id="avail-wr-1">0</span></div>
+                                <div class="flex justify-between"><span>Part 2 (Short text):</span><span class="font-bold" id="avail-wr-2">0</span></div>
+                                <div class="flex justify-between"><span>Part 3 (Chat room):</span><span class="font-bold" id="avail-wr-3">0</span></div>
+                                <div class="flex justify-between"><span>Part 4 (2 Emails):</span><span class="font-bold" id="avail-wr-4">0</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-5 pb-5 sm:px-6 sm:pb-6">
+                        <button onclick="generateAndStartExam('writing')" class="w-full py-3 rounded-xl font-bold text-sm text-white bg-[#0077c8] hover:bg-[#005fa3] transition shadow flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-shuffle"></i> Tạo đề thi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 1.2: LUYỆN TẬP PHÂN CẤP THEO TOPIC -> KỸ NĂNG -> PART -> CÂU HỎI -->
+        <section id="student-view-practice-bank" class="hidden max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-6 sm:py-8">
+            <div class="mb-5">
+                <h1 class="text-xl sm:text-2xl font-bold text-slate-800">Luyện Tập Theo Chủ Đề (Topic)</h1>
+                <p class="text-slate-500 text-xs sm:text-sm mt-1">Chọn lần lượt theo lộ trình: <strong>Topic</strong> <i class="fa-solid fa-chevron-right text-[10px] mx-1"></i> <strong>Kỹ năng</strong> <i class="fa-solid fa-chevron-right text-[10px] mx-1"></i> <strong>Part</strong> <i class="fa-solid fa-chevron-right text-[10px] mx-1"></i> <strong>Câu hỏi</strong>.</p>
+            </div>
+
+            <!-- Thanh Breadcrumb điều hướng 4 bước -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-3.5 sm:p-4 mb-6 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-sm" id="practice-breadcrumb">
+                    <!-- Render tự động bằng JS -->
+                </div>
+                <button id="practice-back-btn" onclick="goBackPracticeStep()" class="hidden px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-left"></i> Quay lại bước trước
+                </button>
+            </div>
+
+            <!-- Khu vực hiển thị nội dung theo từng bước chọn -->
+            <div id="practice-drilldown-container"></div>
+        </section>
+
+        <!-- TAB 1.3: PHÒNG THI THỬ MÔ PHỎNG CHUẨN APTIS -->
+        <section id="student-view-exam-room" class="hidden flex-1 flex flex-col bg-[#e9eef2]">
+            <!-- Header Phòng Thi -->
+            <div class="bg-[#002b49] text-white px-3 sm:px-8 py-2.5 sm:py-3 flex flex-wrap items-center justify-between gap-2 shadow-md">
+                <div class="flex items-center gap-2.5 sm:gap-4">
+                    <span class="bg-sky-500 text-white text-[10px] sm:text-xs font-bold px-2 py-1 rounded uppercase tracking-wider" id="exam-room-badge">SPEAKING</span>
+                    <div>
+                        <h2 class="font-bold text-xs sm:text-base leading-tight line-clamp-1" id="exam-room-title">Aptis Auto-Generated Test</h2>
+                        <p class="text-[11px] sm:text-xs text-sky-300" id="exam-room-part-indicator">Part 1 of 4</p>
+                    </div>
+                </div>
+
+                <!-- Đồng hồ & Nút thoát -->
+                <div class="flex items-center gap-2 sm:gap-4 ml-auto">
+                    <div class="bg-slate-900/70 border border-sky-400/30 px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-xl flex items-center gap-2">
+                        <i class="fa-regular fa-clock text-sky-400 text-sm sm:text-lg"></i>
+                        <div>
+                            <div class="text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-300 hidden sm:block" id="timer-label">Thời gian</div>
+                            <div class="font-mono text-sm sm:text-lg font-bold text-white tracking-wider" id="exam-timer-display">00:30</div>
+                        </div>
+                    </div>
+                    <button onclick="confirmExitExam()" class="bg-red-600/90 hover:bg-red-600 text-white text-xs font-semibold px-3 py-2 rounded-xl transition">
+                        <i class="fa-solid fa-right-from-bracket sm:mr-1"></i> <span class="hidden sm:inline">Thoát</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Thanh tiến trình các Part -->
+            <div class="bg-white border-b border-slate-300 px-3 sm:px-8 py-2 flex items-center justify-between text-xs font-semibold text-slate-600 overflow-x-auto no-scrollbar">
+                <div class="flex items-center gap-1.5 sm:gap-2" id="exam-parts-stepper"></div>
+                <div class="text-slate-400 hidden md:block">
+                    Chế độ thi thử chuẩn cấu trúc Aptis ESOL
+                </div>
+            </div>
+
+            <!-- Khu vực nội dung câu hỏi chính -->
+            <div class="flex-1 max-w-5xl w-full mx-auto p-3 sm:p-6 flex flex-col justify-between">
+                <div id="exam-stage-content" class="bg-white rounded-2xl shadow-md border border-slate-200 p-4 sm:p-8 flex-1 flex flex-col"></div>
+
+                <!-- Thanh điều hướng dưới cùng của Phòng thi -->
+                <div class="mt-3 sm:mt-4 bg-white rounded-2xl shadow-sm border border-slate-200 p-3 sm:p-4 flex items-center justify-between gap-2">
+                    <button onclick="prevExamStep()" id="btn-exam-prev" class="px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition disabled:opacity-40">
+                        <i class="fa-solid fa-arrow-left mr-1.5"></i> Trước
+                    </button>
+                    <div class="text-xs text-slate-500 text-center hidden sm:block">
+                        Tự động lưu câu trả lời khi chuyển câu.
+                    </div>
+                    <button onclick="nextExamStep()" id="btn-exam-next" class="px-5 sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-white bg-[#0077c8] hover:bg-[#005fa3] transition shadow">
+                        Tiếp theo <i class="fa-solid fa-arrow-right ml-1.5"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 1.4: LỊCH SỬ LÀM BÀI -->
+        <section id="student-view-history" class="hidden max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-6 sm:py-8">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold text-slate-800">Lịch Sử Thi Thử & Luyện Tập</h1>
+                    <p class="text-slate-500 text-xs sm:text-sm mt-1">Theo dõi toàn bộ bài thi thử trọn bộ và các lần luyện tập từng câu hỏi đã lưu.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <select id="history-filter-type" onchange="renderHistoryTable()" class="bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs sm:text-sm font-medium text-slate-700">
+                        <option value="all">Tất cả lịch sử</option>
+                        <option value="mock_exam">Chỉ bài Thi Thử (Full Test)</option>
+                        <option value="single_practice">Chỉ Luyện Tập Theo Câu</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[640px]">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-200 text-[11px] uppercase tracking-wider text-slate-500 font-bold">
+                                <th class="py-3.5 px-4">Thời gian</th>
+                                <th class="py-3.5 px-4">Hình thức</th>
+                                <th class="py-3.5 px-4">Nội dung / Đề thi</th>
+                                <th class="py-3.5 px-4">Kỹ năng</th>
+                                <th class="py-3.5 px-4">Kết quả</th>
+                                <th class="py-3.5 px-4 text-right">Chi tiết</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body" class="divide-y divide-slate-100 text-xs sm:text-sm"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 1.5: THỐNG KÊ NĂNG LỰC -->
+        <section id="student-view-stats" class="hidden max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-6 sm:py-8">
+            <div class="mb-6">
+                <h1 class="text-xl sm:text-2xl font-bold text-slate-800">Thống Kê & Phân Tích Năng Lực</h1>
+                <p class="text-slate-500 text-xs sm:text-sm mt-1">Tổng hợp dữ liệu thi thử và luyện tập theo khung CEFR (A1 - C).</p>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 mb-6 sm:mb-8">
+                <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-3 sm:gap-4">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-sky-100 text-[#0077c8] flex items-center justify-center text-lg sm:text-xl shrink-0">
+                        <i class="fa-solid fa-file-circle-check"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase">Lượt làm bài</p>
+                        <p class="text-xl sm:text-2xl font-extrabold text-slate-800" id="stat-total-submissions">0</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-3 sm:gap-4">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg sm:text-xl shrink-0">
+                        <i class="fa-solid fa-microphone-lines"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase">Speaking</p>
+                        <p class="text-xl sm:text-2xl font-extrabold text-slate-800" id="stat-speaking-count">0</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-3 sm:gap-4">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg sm:text-xl shrink-0">
+                        <i class="fa-solid fa-pen-nib"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase">Writing</p>
+                        <p class="text-xl sm:text-2xl font-extrabold text-slate-800" id="stat-writing-count">0</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-3 sm:gap-4">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg sm:text-xl shrink-0">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase">Trình độ CEFR</p>
+                        <p class="text-base sm:text-xl font-extrabold text-slate-800" id="stat-cefr-level">Chưa có</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+                <div class="bg-white p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-sm sm:text-base mb-4">Tỷ Lệ Kỹ Năng Luyện Tập</h3>
+                    <div class="h-60 sm:h-64 flex items-center justify-center">
+                        <canvas id="chart-skills-ratio"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-sm sm:text-base mb-4">Điểm Số Các Bài Thi Thử Gần Nhất</h3>
+                    <div class="h-60 sm:h-64 flex items-center justify-center">
+                        <canvas id="chart-performance"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===================================================================== -->
+    <!-- PHÂN HỆ 2: TRANG QUẢN TRỊ NGÂN HÀNG CÂU HỎI                           -->
+    <!-- ===================================================================== -->
+    <main id="portal-admin" class="hidden flex-1 max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold mb-2">
+                    <i class="fa-solid fa-shield-halved"></i> QUẢN TRỊ NGÂN HÀNG CÂU HỎI
+                </div>
+                <h1 class="text-xl sm:text-2xl font-bold text-slate-800">FORM NHẬP DỮ LIỆU CÂU HỎI</h1>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <button onclick="clearAllQuestionBank()" class="px-4 py-2.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-xl text-xs sm:text-sm font-semibold transition shadow-xs">
+                    <i class="fa-solid fa-trash-can mr-1.5"></i> Xóa Tất Cả Câu Hỏi
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
+            <!-- CỘT TRÁI (6 CỘT): FORM NHẬP TỪNG CÂU HỎI -->
+            <div class="lg:col-span-6 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6">
+                <h2 class="text-base sm:text-lg font-bold text-slate-800 border-b border-slate-100 pb-3 mb-5 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-plus text-[#0077c8]"></i> Thêm Câu Hỏi Mới
+                </h2>
+
+                <form id="admin-question-form" onsubmit="handleSaveSingleQuestion(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1.5">Kỹ Năng *</label>
+                            <select id="q-skill" onchange="handleSkillOrPartChange()" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-700 focus:outline-none focus:border-[#0077c8]">
+                                <option value="speaking">Speaking (Nói)</option>
+                                <option value="writing">Writing (Viết)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1.5">Part *</label>
+                            <select id="q-part" onchange="handleSkillOrPartChange()" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-700 focus:outline-none focus:border-[#0077c8]">
+                                <option value="1">Part 1</option>
+                                <option value="2">Part 2</option>
+                                <option value="3">Part 3</option>
+                                <option value="4">Part 4</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- CHỌN TOPIC TỰ ĐỘNG TỪ NGÂN HÀNG HOẶC THÊM MỚI -->
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="q-topic-select" class="block text-xs font-bold uppercase text-slate-600">Topic *</label>
+                            <span id="q-topic-count-badge" class="text-[11px] text-slate-400 font-medium">0 topic có sẵn</span>
+                        </div>
+                        <div class="space-y-2">
+                            <select id="q-topic-select" onchange="handleTopicSelectChange()" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-700 bg-white focus:outline-none focus:border-[#0077c8]">
+                                <option value="__new__">+ Thêm Topic mới...</option>
+                            </select>
+                            <div id="q-topic-new-wrapper" class="relative">
+                                <input type="text" id="q-topic-new" placeholder="Nhập tên Topic mới (VD: Family & Friends, Travel Club...)" class="w-full border border-sky-300 bg-sky-50/40 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-[#0077c8] focus:bg-white transition">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Khung hướng dẫn cấu trúc động theo Skill + Part -->
+                    <div id="q-structure-hint" class="p-3 rounded-xl bg-sky-50 border border-sky-200 text-xs text-sky-900"></div>
+
+                    <!-- Khu vực nhập nội dung câu hỏi động -->
+                    <div id="q-dynamic-inputs" class="space-y-3"></div>
+
+                    <!-- Gợi ý / Đáp án mẫu cho chế độ Luyện Tập -->
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1.5">Bài Mẫu Tham Khảo</label>
+                        <textarea id="q-sample-answer" rows="3" placeholder="Nhập dàn ý gợi ý hoặc bài mẫu chuẩn B2/C để người dùng tham khảo khi luyện tập..." class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:border-[#0077c8]"></textarea>
+                    </div>
+
+                    <div class="pt-2 flex justify-end gap-2.5">
+                        <button type="button" onclick="resetAdminFormCompletely()" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition">Làm mới</button>
+                        <button type="submit" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-white bg-[#0077c8] hover:bg-[#005fa3] transition shadow-md flex items-center gap-2">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Lưu Câu Hỏi
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- CỘT PHẢI (6 CỘT): DANH SÁCH NGÂN HÀNG CÂU HỎI ĐÃ LƯU -->
+            <div class="lg:col-span-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3 mb-4">
+                        <h2 class="text-base sm:text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-server text-emerald-600"></i> Ngân Hàng Câu Hỏi
+                        </h2>
+                        <span id="admin-question-count" class="bg-slate-100 text-slate-700 text-xs font-bold px-2.5 py-1 rounded-full">0 câu</span>
+                    </div>
+
+                    <!-- Bộ lọc danh sách câu hỏi trong trang quản trị -->
+                    <div class="grid grid-cols-2 gap-2 mb-4">
+                        <select id="admin-filter-skill" onchange="renderAdminQuestionList()" class="border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700">
+                            <option value="all">Tất cả kỹ năng</option>
+                            <option value="speaking">Speaking</option>
+                            <option value="writing">Writing</option>
+                        </select>
+                        <select id="admin-filter-part" onchange="renderAdminQuestionList()" class="border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700">
+                            <option value="all">Tất cả Part</option>
+                            <option value="1">Part 1</option>
+                            <option value="2">Part 2</option>
+                            <option value="3">Part 3</option>
+                            <option value="4">Part 4</option>
+                        </select>
+                    </div>
+
+                    <div id="admin-questions-list" class="space-y-3 max-h-[650px] overflow-y-auto pr-1"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL LUYỆN TẬP TỪNG CÂU HỎI & XEM LỊCH SỬ NHẬP LIỆU CỦA CÂU ĐÓ       -->
+    <!-- ===================================================================== -->
+    <div id="single-practice-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden items-center justify-center p-2 sm:p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[94vh] flex flex-col overflow-hidden">
+            <!-- Header Modal -->
+            <div class="aptis-gradient text-white px-4 sm:px-6 py-3.5 flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                    <span id="sp-modal-badge" class="bg-sky-500 text-white text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded uppercase">SPEAKING • PART 1</span>
+                    <h3 class="font-bold text-sm sm:text-base line-clamp-1" id="sp-modal-topic">Chủ đề: Family</h3>
+                </div>
+                <button onclick="closeSinglePracticeModal()" class="text-white/80 hover:text-white text-xl p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Tabs bên trong Modal: Làm bài vs Lịch sử nhập liệu của câu hỏi này -->
+            <div class="bg-slate-100 px-4 sm:px-6 py-2 border-b border-slate-200 flex items-center gap-2">
+                <button onclick="switchPracticeModalTab('do')" id="pm-tab-do" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-white text-[#0077c8] shadow-xs">
+                    <i class="fa-solid fa-pen-to-square mr-1"></i> Thực Hành Nhập Liệu
+                </button>
+                <button onclick="switchPracticeModalTab('history')" id="pm-tab-history" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:bg-white/60">
+                    <i class="fa-solid fa-clock-rotate-left mr-1"></i> Lịch Sử Câu Hỏi Này (<span id="pm-history-count">0</span>)
+                </button>
+            </div>
+
+            <!-- Body Modal -->
+            <div class="p-4 sm:p-6 overflow-y-auto flex-1 space-y-5">
+                <!-- View 1: Thực hành câu hỏi -->
+                <div id="pm-view-do" class="space-y-4">
+                    <div id="pm-question-content"></div>
+
+                    <!-- Nút bật/tắt gợi ý đáp án mẫu -->
+                    <div id="pm-sample-box" class="hidden">
+                        <button type="button" onclick="document.getElementById('pm-sample-text').classList.toggle('hidden')" class="text-xs font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-lg transition">
+                            <i class="fa-solid fa-lightbulb mr-1"></i> Xem / Ẩn Gợi Ý & Bài Mẫu
+                        </button>
+                        <div id="pm-sample-text" class="hidden mt-2 p-3.5 rounded-xl bg-amber-50/70 border border-amber-200 text-xs sm:text-sm text-slate-700 whitespace-pre-line"></div>
+                    </div>
+
+                    <!-- Khu vực nhập liệu / ghi âm -->
+                    <div id="pm-answer-area" class="pt-2"></div>
+                </div>
+
+                <!-- View 2: Lịch sử nhập liệu của riêng câu hỏi này -->
+                <div id="pm-view-history" class="hidden space-y-3">
+                    <div id="pm-history-list" class="space-y-3"></div>
+                </div>
+            </div>
+
+            <!-- Footer Modal -->
+            <div class="bg-slate-50 px-4 sm:px-6 py-3 border-t border-slate-200 flex items-center justify-between gap-2">
+                <button onclick="closeSinglePracticeModal()" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:bg-slate-200 transition">Đóng</button>
+                <button id="pm-save-btn" onclick="saveSinglePracticeAnswer()" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition shadow flex items-center gap-2">
+                    <i class="fa-solid fa-floppy-disk"></i> Lưu Bài Luyện Tập
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL XEM CHI TIẾT BÀI LÀM TRONG LỊCH SỬ CHUNG -->
+    <div id="submission-detail-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-3 sm:p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[88vh] flex flex-col overflow-hidden">
+            <div class="aptis-gradient text-white px-5 py-4 flex items-center justify-between">
+                <div>
+                    <h3 class="font-bold text-base sm:text-lg" id="modal-sub-title">Chi Tiết Bài Làm Aptis</h3>
+                    <p class="text-xs text-sky-200" id="modal-sub-meta">Thời gian: ...</p>
+                </div>
+                <button onclick="closeSubmissionModal()" class="text-white/80 hover:text-white text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="modal-sub-body" class="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs sm:text-sm text-slate-700"></div>
+            <div class="bg-slate-50 px-5 py-3 border-t border-slate-200 flex justify-end">
+                <button onclick="closeSubmissionModal()" class="px-5 py-2 rounded-xl bg-slate-800 text-white text-xs sm:text-sm font-semibold hover:bg-slate-900 transition">Đóng lại</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- FIREBASE SDK & LOGIC ỨNG DỤNG                                         -->
+    <!-- ===================================================================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const userProvidedConfig = {
+            apiKey: "AIzaSyDSU-0sQqaFGHQcMyjJLs_wt0GLVPAXKig",
+            authDomain: "vstep-c02b6.firebaseapp.com",
+            databaseURL: "https://vstep-c02b6-default-rtdb.firebaseio.com",
+            projectId: "vstep-c02b6",
+            storageBucket: "vstep-c02b6.firebasestorage.app",
+            messagingSenderId: "5134797464",
+            appId: "1:5134797464:web:b4b5b13a58be4922fbdeed",
+            measurementId: "G-BKGVFT9Q1Q"
+        };
+
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : userProvidedConfig;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'aptis-esol-vstep-c02b6';
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const questionsCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'aptis_questions_bank');
+        const submissionsCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'aptis_submissions');
+
+        let currentUser = null;
+        let questionBank = [];
+        let allSubmissions = [];
+        let charts = { ratio: null, perf: null };
+
+        // Trạng thái Phòng thi thử tự động
+        let activeExam = null;
+        let examSteps = [];
+        let currentStepIndex = 0;
+        let userAnswers = {};
+        let timerInterval = null;
+        let remainingSeconds = 0;
+        let isPrepPhase = false;
+
+        // Trạng thái điều hướng Luyện tập phân cấp: Topic -> Kỹ năng -> Part -> Câu hỏi
+        let practiceSelection = {
+            topic: null,  // string | null
+            skill: null,  // 'speaking' | 'writing' | null
+            part: null    // 1 | 2 | 3 | 4 | null
+        };
+
+        // Trạng thái Luyện tập từng câu
+        let currentPracticeQuestion = null;
+        let singlePracticeAnswer = {};
+
+        // Trạng thái Ghi âm
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecording = false;
+        let activeAudioTarget = 'exam';
+
+        // =====================================================================
+        // 1. KHỞI TẠO KẾT NỐI & ĐỒNG BỘ DỮ LIỆU
+        // =====================================================================
+        async function initFirebase() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.warn("Auth fallback:", err);
+            }
+
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                const dot = document.getElementById('fb-status-dot');
+                const txt = document.getElementById('fb-status-text');
+                if (user) {
+                    dot.className = "w-2 h-2 rounded-full bg-emerald-400 shrink-0";
+                    txt.textContent = "Đã đồng bộ dữ liệu";
+                    subscribeRealtimeData();
+                } else {
+                    dot.className = "w-2 h-2 rounded-full bg-amber-400 shrink-0";
+                    txt.textContent = "Chế độ Offline";
+                    questionBank = [];
+                    refreshAllQuestionViews();
+                }
+            });
+        }
+
+        function subscribeRealtimeData() {
+            if (!currentUser) return;
+
+            onSnapshot(questionsCollectionRef, (snapshot) => {
+                questionBank = [];
+                snapshot.forEach((docSnap) => {
+                    questionBank.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                questionBank.sort((a, b) => (b.createdAtMs || 0) - (a.createdAtMs || 0));
+                refreshAllQuestionViews();
+            }, (error) => {
+                console.error("Lỗi đọc ngân hàng câu hỏi:", error);
+                questionBank = [];
+                refreshAllQuestionViews();
+            });
+
+            onSnapshot(submissionsCollectionRef, (snapshot) => {
+                allSubmissions = [];
+                snapshot.forEach((docSnap) => {
+                    allSubmissions.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                allSubmissions.sort((a, b) => (b.submittedAtMs || 0) - (a.submittedAtMs || 0));
+                renderHistoryTable();
+                renderStatsCharts();
+                renderPracticeDrilldown();
+                if (currentPracticeQuestion) {
+                    renderSingleQuestionHistory(currentPracticeQuestion.id);
+                }
+            }, (error) => {
+                console.error("Lỗi đọc lịch sử:", error);
+            });
+        }
+
+        function refreshAllQuestionViews() {
+            updateQuestionBankCounters();
+            renderPracticeDrilldown();
+            renderAdminQuestionList();
+            populateTopicDropdown();
+        }
+
+        window.clearAllQuestionBank = function() {
+            if (questionBank.length === 0) {
+                showToast("Ngân hàng câu hỏi hiện đang trống.", "info");
+                return;
+            }
+            showConfirm("Xóa toàn bộ câu hỏi", `Bạn có chắc chắn muốn xóa toàn bộ ${questionBank.length} câu hỏi khỏi Ngân hàng câu hỏi? Hành động này không thể hoàn tác.`, async () => {
+                try {
+                    if (currentUser) {
+                        const deletePromises = questionBank
+                            .filter(q => !q.id.startsWith('qlocal-'))
+                            .map(q => deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'aptis_questions_bank', q.id)));
+                        await Promise.all(deletePromises);
+                    }
+                    questionBank = [];
+                    practiceSelection = { topic: null, skill: null, part: null };
+                    refreshAllQuestionViews();
+                    showToast("Đã xóa sạch toàn bộ Ngân hàng câu hỏi!", "success");
+                } catch (err) {
+                    showToast("Lỗi khi xóa dữ liệu: " + err.message, "error");
+                }
+            });
+        };
+
+        // =====================================================================
+        // 2. QUẢN TRỊ NHẬP TỪNG CÂU HỎI & QUẢN LÝ TOPIC TỰ ĐỘNG
+        // =====================================================================
+        window.populateTopicDropdown = function(preferredTopic = null) {
+            const selectEl = document.getElementById('q-topic-select');
+            const newWrapper = document.getElementById('q-topic-new-wrapper');
+            const newInput = document.getElementById('q-topic-new');
+            const badge = document.getElementById('q-topic-count-badge');
+            if (!selectEl) return;
+
+            const currentSkill = document.getElementById('q-skill').value;
+            const currentPart = parseInt(document.getElementById('q-part').value, 10);
+            const prevValue = preferredTopic !== null ? preferredTopic : selectEl.value;
+
+            const matchingTopicsSet = new Set();
+            const otherTopicsSet = new Set();
+
+            questionBank.forEach(q => {
+                const t = (q.topic || '').trim();
+                if (!t) return;
+                if (q.skill === currentSkill && q.part === currentPart) {
+                    matchingTopicsSet.add(t);
+                } else {
+                    otherTopicsSet.add(t);
+                }
+            });
+
+            matchingTopicsSet.forEach(t => otherTopicsSet.delete(t));
+
+            const matchingTopics = Array.from(matchingTopicsSet).sort((a, b) => a.localeCompare(b, 'vi'));
+            const otherTopics = Array.from(otherTopicsSet).sort((a, b) => a.localeCompare(b, 'vi'));
+            const totalUniqueTopics = matchingTopics.length + otherTopics.length;
+
+            if (badge) {
+                badge.textContent = `${totalUniqueTopics} topic có sẵn`;
+            }
+
+            let html = `<option value="__new__">+ Thêm Topic mới...</option>`;
+
+            if (matchingTopics.length > 0) {
+                html += `<optgroup label="Topic của ${currentSkill.toUpperCase()} - Part ${currentPart}">`;
+                matchingTopics.forEach(t => {
+                    html += `<option value="${escapeHTML(t)}">${escapeHTML(t)}</option>`;
+                });
+                html += `</optgroup>`;
+            }
+
+            if (otherTopics.length > 0) {
+                html += `<optgroup label="Topic khác trong Ngân hàng câu hỏi">`;
+                otherTopics.forEach(t => {
+                    html += `<option value="${escapeHTML(t)}">${escapeHTML(t)}</option>`;
+                });
+                html += `</optgroup>`;
+            }
+
+            selectEl.innerHTML = html;
+
+            const allAvailableValues = ['__new__', ...matchingTopics, ...otherTopics];
+            if (prevValue && allAvailableValues.includes(prevValue)) {
+                selectEl.value = prevValue;
+            } else if (matchingTopics.length > 0 && prevValue !== '__new__' && !prevValue) {
+                selectEl.value = matchingTopics[0];
+            } else {
+                selectEl.value = '__new__';
+            }
+
+            if (selectEl.value === '__new__') {
+                newWrapper.classList.remove('hidden');
+                newInput.required = true;
+            } else {
+                newWrapper.classList.add('hidden');
+                newInput.required = false;
+            }
+        };
+
+        window.handleTopicSelectChange = function() {
+            const selectEl = document.getElementById('q-topic-select');
+            const newWrapper = document.getElementById('q-topic-new-wrapper');
+            const newInput = document.getElementById('q-topic-new');
+
+            if (selectEl.value === '__new__') {
+                newWrapper.classList.remove('hidden');
+                newInput.required = true;
+                newInput.focus();
+            } else {
+                newWrapper.classList.add('hidden');
+                newInput.required = false;
+            }
+        };
+
+        window.handleSkillOrPartChange = function() {
+            updateAdminQuestionFormUI();
+            populateTopicDropdown();
+        };
+
+        window.updateAdminQuestionFormUI = function() {
+            const skill = document.getElementById('q-skill').value;
+            const part = document.getElementById('q-part').value;
+            const hintBox = document.getElementById('q-structure-hint');
+            const dynamicBox = document.getElementById('q-dynamic-inputs');
+
+            if (skill === 'speaking') {
+                if (part === '1') {
+                    hintBox.innerHTML = `<strong>Speaking Part 1:</strong> Nhập 1 câu hỏi thông tin cá nhân (Trả lời trong 30 giây). Khi tạo đề tự động, hệ thống sẽ bốc ngẫu nhiên 3 câu Part 1.`;
+                    dynamicBox.innerHTML = `
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1.5">Nội Dung Câu Hỏi Speaking Part 1 *</label>
+                            <textarea id="inp-sp-p1" required rows="2" placeholder="VD: Describe your daily routine on weekdays." class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:border-[#0077c8]"></textarea>
+                        </div>
+                    `;
+                } else if (part === '2') {
+                    hintBox.innerHTML = `<strong>Speaking Part 2:</strong> Gồm 1 bức ảnh và 3 câu hỏi liên quan (Mô tả ảnh, trải nghiệm cá nhân, quan điểm - 45 giây/câu).`;
+                    dynamicBox.innerHTML = `
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1.5">URL Hình Ảnh Minh Họa</label>
+                            <input type="url" id="inp-sp-p2-img" placeholder="https://images.unsplash.com/..." class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+                        </div>
+                        <input type="text" id="inp-sp-p2-q1" required placeholder="Câu 1 (Mô tả ảnh): Describe this picture." class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+                        <input type="text" id="inp-sp-p2-q2" required placeholder="Câu 2 (Trải nghiệm): Tell me about a time you..." class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+                        <input type="text" id="inp-sp-p2-q3" required placeholder="Câu 3 (Quan điểm): Do you think..." class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+                    `;
+                } else if (part === '3') {
+                    hintBox.innerHTML = `<strong>Speaking Part 3:</strong> Gồm 2 bức ảnh tương phản và 3 câu hỏi so sánh (45 giây/câu).`;
+                    dynamicBox.innerHTML = `
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            <input type="url" id="inp-sp-p3-img1" placeholder="URL Ảnh A" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm">
+                            <input type="url" id="inp-sp-p3-img2" placeholder="URL Ảnh B" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm">
+                        </div>
+                        <input type="text" id="inp-sp-p3-q1" required placeholder="Câu 1: Tell me what you see in these two pictures." class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+                        <input type="text" id="inp-sp-p3-q2" required placeholder="Câu 2: What are the advantages of both?" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+                        <input type="text" id="inp-sp-p3-q3" required placeholder="Câu 3: Which one would you prefer, and why?" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+                    `;
+                } else {
+                    hintBox.innerHTML = `<strong>Speaking Part 4:</strong> Gồm 3 câu hỏi cùng chủ đề trừu tượng (60 giây chuẩn bị + 120 giây nói liên tục).`;
+                    dynamicBox.innerHTML = `
+                        <input type="text" id="inp-sp-p4-q1" required placeholder="Câu 1 (Kể trải nghiệm): Tell me about a time when..." class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+                        <input type="text" id="inp-sp-p4-q2" required placeholder="Câu 2 (Cảm xúc): How did you feel about..." class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+                        <input type="text" id="inp-sp-p4-q3" required placeholder="Câu 3 (Mở rộng xã hội): Why do people..." class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+                    `;
+                }
+            } else {
+                if (part === '1') {
+                    hintBox.innerHTML = `<strong>Writing Part 1:</strong> Nhập 1 câu hỏi điền form ngắn (Trả lời 1–5 từ). Hệ thống sẽ tự ghép 5 câu Part 1 khi thi thử.`;
+                    dynamicBox.innerHTML = `
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1.5">Câu Hỏi Ngắn Part 1 (1–5 từ) *</label>
+                            <input type="text" id="inp-wr-p1" required placeholder="VD: What is your favorite sport?" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm">
+                        </div>
+                    `;
+                } else if (part === '2') {
+                    hintBox.innerHTML = `<strong>Writing Part 2:</strong> Câu hỏi viết đoạn văn ngắn điền form CLB (20–30 từ).`;
+                    dynamicBox.innerHTML = `
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1.5">Đề Bài Viết Ngắn Part 2 (20–30 từ) *</label>
+                            <textarea id="inp-wr-p2" required rows="3" placeholder="VD: You are a new member of the Music Club. Write in sentences (20-30 words). What kind of music do you like and why?" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm"></textarea>
+                        </div>
+                    `;
+                } else if (part === '3') {
+                    hintBox.innerHTML = `<strong>Writing Part 3:</strong> Bộ 3 tin nhắn trong phòng chat CLB (Trả lời 30–40 từ mỗi tin nhắn).`;
+                    dynamicBox.innerHTML = `
+                        <input type="text" id="inp-wr-p3-m1" required placeholder="Tin nhắn thành viên 1..." class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+                        <input type="text" id="inp-wr-p3-m2" required placeholder="Tin nhắn thành viên 2..." class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+                        <input type="text" id="inp-wr-p3-m3" required placeholder="Tin nhắn thành viên 3..." class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+                    `;
+                } else {
+                    hintBox.innerHTML = `<strong>Writing Part 4:</strong> Thông báo của CLB kèm 2 yêu cầu viết Email: Thân mật (40–50 từ) & Trang trọng (120–150 từ).`;
+                    dynamicBox.innerHTML = `
+                        <textarea id="inp-wr-p4-ctx" required rows="2" placeholder="Nội dung thông báo từ CLB..." class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm"></textarea>
+                        <input type="text" id="inp-wr-p4-inf" required placeholder="Yêu cầu Email 1 - Thân mật (40-50 từ)..." class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+                        <input type="text" id="inp-wr-p4-for" required placeholder="Yêu cầu Email 2 - Trang trọng (120-150 từ)..." class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+                    `;
+                }
+            }
+        };
+
+        function clearQuestionFieldsOnly() {
+            const dynamicBox = document.getElementById('q-dynamic-inputs');
+            if (dynamicBox) {
+                dynamicBox.querySelectorAll('input, textarea').forEach(el => {
+                    el.value = '';
+                });
+            }
+            const sampleEl = document.getElementById('q-sample-answer');
+            if (sampleEl) sampleEl.value = '';
+        }
+
+        window.resetAdminFormCompletely = function() {
+            document.getElementById('q-skill').value = 'speaking';
+            document.getElementById('q-part').value = '1';
+            document.getElementById('q-topic-new').value = '';
+            updateAdminQuestionFormUI();
+            populateTopicDropdown('__new__');
+            clearQuestionFieldsOnly();
+        };
+
+        window.handleSaveSingleQuestion = async function(e) {
+            e.preventDefault();
+            const skill = document.getElementById('q-skill').value;
+            const part = parseInt(document.getElementById('q-part').value, 10);
+
+            const topicSelectVal = document.getElementById('q-topic-select').value;
+            const topicNewVal = document.getElementById('q-topic-new').value.trim();
+            const topic = topicSelectVal === '__new__' ? topicNewVal : topicSelectVal;
+
+            if (!topic) {
+                showToast("Vui lòng chọn Topic có sẵn hoặc nhập tên Topic mới!", "warning");
+                document.getElementById('q-topic-new').focus();
+                return;
+            }
+
+            const sampleAnswer = document.getElementById('q-sample-answer').value.trim();
+
+            let data = {};
+            if (skill === 'speaking') {
+                if (part === 1) {
+                    data = { prompt: document.getElementById('inp-sp-p1').value.trim() };
+                } else if (part === 2) {
+                    data = {
+                        image: document.getElementById('inp-sp-p2-img').value.trim() || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80',
+                        questions: [
+                            document.getElementById('inp-sp-p2-q1').value.trim(),
+                            document.getElementById('inp-sp-p2-q2').value.trim(),
+                            document.getElementById('inp-sp-p2-q3').value.trim()
+                        ]
+                    };
+                } else if (part === 3) {
+                    data = {
+                        image1: document.getElementById('inp-sp-p3-img1').value.trim() || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80',
+                        image2: document.getElementById('inp-sp-p3-img2').value.trim() || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80',
+                        questions: [
+                            document.getElementById('inp-sp-p3-q1').value.trim(),
+                            document.getElementById('inp-sp-p3-q2').value.trim(),
+                            document.getElementById('inp-sp-p3-q3').value.trim()
+                        ]
+                    };
+                } else {
+                    data = {
+                        questions: [
+                            document.getElementById('inp-sp-p4-q1').value.trim(),
+                            document.getElementById('inp-sp-p4-q2').value.trim(),
+                            document.getElementById('inp-sp-p4-q3').value.trim()
+                        ]
+                    };
+                }
+            } else {
+                if (part === 1) {
+                    data = { prompt: document.getElementById('inp-wr-p1').value.trim() };
+                } else if (part === 2) {
+                    data = { prompt: document.getElementById('inp-wr-p2').value.trim() };
+                } else if (part === 3) {
+                    data = {
+                        messages: [
+                            document.getElementById('inp-wr-p3-m1').value.trim(),
+                            document.getElementById('inp-wr-p3-m2').value.trim(),
+                            document.getElementById('inp-wr-p3-m3').value.trim()
+                        ]
+                    };
+                } else {
+                    data = {
+                        context: document.getElementById('inp-wr-p4-ctx').value.trim(),
+                        informalPrompt: document.getElementById('inp-wr-p4-inf').value.trim(),
+                        formalPrompt: document.getElementById('inp-wr-p4-for').value.trim()
+                    };
+                }
+            }
+
+            const newQuestion = {
+                skill,
+                part,
+                topic,
+                data,
+                sampleAnswer,
+                createdAtMs: Date.now()
+            };
+
+            try {
+                if (currentUser) {
+                    await addDoc(questionsCollectionRef, { ...newQuestion, createdAt: serverTimestamp() });
+                    showToast("Đã thêm câu hỏi vào Ngân hàng!", "success");
+                } else {
+                    questionBank.unshift({ id: 'qlocal-' + Date.now(), ...newQuestion });
+                    refreshAllQuestionViews();
+                    showToast("Đã thêm câu hỏi (Chế độ cục bộ)!", "success");
+                }
+
+                document.getElementById('q-topic-new').value = '';
+                populateTopicDropdown(topic);
+                clearQuestionFieldsOnly();
+            } catch (err) {
+                showToast("Lỗi khi lưu câu hỏi: " + err.message, "error");
+            }
+        };
+
+        window.renderAdminQuestionList = function() {
+            const container = document.getElementById('admin-questions-list');
+            const fSkill = document.getElementById('admin-filter-skill').value;
+            const fPart = document.getElementById('admin-filter-part').value;
+
+            const filtered = questionBank.filter(q => {
+                const matchSkill = fSkill === 'all' || q.skill === fSkill;
+                const matchPart = fPart === 'all' || String(q.part) === fPart;
+                return matchSkill && matchPart;
+            });
+
+            document.getElementById('admin-question-count').textContent = `${filtered.length} / ${questionBank.length} câu`;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="text-center py-10 text-slate-400 text-xs sm:text-sm bg-slate-50 rounded-xl border border-dashed border-slate-200">Ngân hàng câu hỏi hiện đang trống. Hãy nhập câu hỏi mới ở biểu mẫu bên cạnh!</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(q => {
+                const isSp = q.skill === 'speaking';
+                const previewText = getQuestionPreviewText(q);
+                return `
+                    <div class="p-3.5 sm:p-4 rounded-xl border border-slate-200 hover:border-sky-300 transition bg-slate-50/60 flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1">
+                            <div class="flex flex-wrap items-center gap-1.5 mb-1.5">
+                                <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded ${isSp ? 'bg-indigo-100 text-indigo-700' : 'bg-emerald-100 text-emerald-700'}">
+                                    ${q.skill}
+                                </span>
+                                <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-slate-200 text-slate-700">
+                                    Part ${q.part}
+                                </span>
+                                <span class="text-xs font-semibold text-[#0077c8] truncate">${escapeHTML(q.topic)}</span>
+                            </div>
+                            <p class="text-xs sm:text-sm font-medium text-slate-800 line-clamp-2">${escapeHTML(previewText)}</p>
+                        </div>
+                        <button onclick="deleteSingleQuestion('${q.id}')" title="Xóa câu hỏi" class="text-slate-400 hover:text-red-600 p-2 rounded-lg hover:bg-red-50 transition shrink-0">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        };
+
+        window.deleteSingleQuestion = function(qId) {
+            showConfirm("Xóa câu hỏi", "Bạn có chắc muốn xóa câu hỏi này khỏi Ngân hàng câu hỏi?", async () => {
+                try {
+                    if (currentUser && !qId.startsWith('qlocal-')) {
+                        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'aptis_questions_bank', qId));
+                    } else {
+                        questionBank = questionBank.filter(q => q.id !== qId);
+                        refreshAllQuestionViews();
+                    }
+                    showToast("Đã xóa câu hỏi.", "success");
+                } catch (err) {
+                    showToast("Lỗi xóa: " + err.message, "error");
+                }
+            });
+        };
+
+        function getQuestionPreviewText(q) {
+            if (!q || !q.data) return '';
+            if (q.data.prompt) return q.data.prompt;
+            if (q.data.questions && q.data.questions.length > 0) return q.data.questions[0];
+            if (q.data.messages && q.data.messages.length > 0) return q.data.messages[0];
+            if (q.data.context) return q.data.context;
+            return q.topic;
+        }
+
+        function updateQuestionBankCounters() {
+            const sp = questionBank.filter(q => q.skill === 'speaking');
+            const wr = questionBank.filter(q => q.skill === 'writing');
+            const uniqueTopics = new Set(questionBank.map(q => (q.topic || '').trim()).filter(Boolean));
+
+            document.getElementById('bank-count-speaking').textContent = `${sp.length} câu`;
+            document.getElementById('bank-count-writing').textContent = `${wr.length} câu`;
+            const topicCounterEl = document.getElementById('bank-count-topics');
+            if (topicCounterEl) topicCounterEl.textContent = `${uniqueTopics.size} topic`;
+
+            [1, 2, 3, 4].forEach(p => {
+                const spCount = sp.filter(q => q.part === p).length;
+                const wrCount = wr.filter(q => q.part === p).length;
+                const elSp = document.getElementById(`avail-sp-${p}`);
+                const elWr = document.getElementById(`avail-wr-${p}`);
+                if (elSp) elSp.textContent = `${spCount} câu`;
+                if (elWr) elWr.textContent = `${wrCount} câu`;
+            });
+        }
+
+        // =====================================================================
+        // 3. LUYỆN TẬP PHÂN CẤP: CHỌN TOPIC -> CHỌN KỸ NĂNG -> CHỌN PART -> CHỌN CÂU HỎI
+        // =====================================================================
+        window.selectPracticeTopic = function(topic) {
+            practiceSelection = { topic, skill: null, part: null };
+            renderPracticeDrilldown();
+        };
+
+        window.selectPracticeSkill = function(skill) {
+            practiceSelection.skill = skill;
+            practiceSelection.part = null;
+            renderPracticeDrilldown();
+        };
+
+        window.selectPracticePart = function(part) {
+            practiceSelection.part = Number(part);
+            renderPracticeDrilldown();
+        };
+
+        window.resetPracticeToRoot = function() {
+            practiceSelection = { topic: null, skill: null, part: null };
+            renderPracticeDrilldown();
+        };
+
+        window.goBackPracticeStep = function() {
+            if (practiceSelection.part !== null) {
+                practiceSelection.part = null;
+            } else if (practiceSelection.skill !== null) {
+                practiceSelection.skill = null;
+            } else if (practiceSelection.topic !== null) {
+                practiceSelection.topic = null;
+            }
+            renderPracticeDrilldown();
+        };
+
+        window.renderPracticeDrilldown = function() {
+            const container = document.getElementById('practice-drilldown-container');
+            const breadcrumb = document.getElementById('practice-breadcrumb');
+            const backBtn = document.getElementById('practice-back-btn');
+            if (!container || !breadcrumb) return;
+
+            // Kiểm tra tính hợp lệ của state nếu dữ liệu vừa thay đổi
+            if (practiceSelection.topic) {
+                const topicExists = questionBank.some(q => (q.topic || '').trim() === practiceSelection.topic);
+                if (!topicExists) {
+                    practiceSelection = { topic: null, skill: null, part: null };
+                }
+            }
+
+            // Hiển thị nút quay lại khi đang ở bước 2, 3, 4
+            if (practiceSelection.topic !== null) {
+                backBtn.classList.remove('hidden');
+            } else {
+                backBtn.classList.add('hidden');
+            }
+
+            // 1. Render Breadcrumb
+            let bcHtml = `
+                <button onclick="resetPracticeToRoot()" class="font-bold flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition ${!practiceSelection.topic ? 'bg-sky-100 text-[#0077c8]' : 'text-slate-600 hover:bg-slate-100'}">
+                    <i class="fa-solid fa-folder-tree"></i> Tất cả Topic
+                </button>
+            `;
+
+            if (practiceSelection.topic) {
+                bcHtml += `
+                    <i class="fa-solid fa-chevron-right text-slate-300 text-[10px]"></i>
+                    <button onclick="selectPracticeTopic('${escapeAttr(practiceSelection.topic)}')" class="font-bold px-2.5 py-1 rounded-lg transition ${!practiceSelection.skill ? 'bg-sky-100 text-[#0077c8]' : 'text-slate-700 hover:bg-slate-100'}">
+                        ${escapeHTML(practiceSelection.topic)}
+                    </button>
+                `;
+            }
+
+            if (practiceSelection.skill) {
+                const skillLabel = practiceSelection.skill === 'speaking' ? 'Speaking' : 'Writing';
+                bcHtml += `
+                    <i class="fa-solid fa-chevron-right text-slate-300 text-[10px]"></i>
+                    <button onclick="selectPracticeSkill('${practiceSelection.skill}')" class="font-bold px-2.5 py-1 rounded-lg transition ${!practiceSelection.part ? 'bg-sky-100 text-[#0077c8]' : 'text-slate-700 hover:bg-slate-100'}">
+                        ${skillLabel}
+                    </button>
+                `;
+            }
+
+            if (practiceSelection.part) {
+                bcHtml += `
+                    <i class="fa-solid fa-chevron-right text-slate-300 text-[10px]"></i>
+                    <span class="font-bold px-2.5 py-1 rounded-lg bg-sky-100 text-[#0077c8]">
+                        Part ${practiceSelection.part}
+                    </span>
+                `;
+            }
+            breadcrumb.innerHTML = bcHtml;
+
+            // 2. Render Nội dung từng bước
+            if (questionBank.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 bg-white rounded-2xl border border-slate-200 text-slate-500 text-sm">
+                        Ngân hàng câu hỏi hiện đang trống. Vui lòng thêm câu hỏi ở mục <strong>Quản trị</strong>!
+                    </div>
+                `;
+                return;
+            }
+
+            // BƯỚC 1: CHỌN TOPIC (Gộp các câu hỏi theo Topic)
+            if (!practiceSelection.topic) {
+                const topicMap = new Map();
+                questionBank.forEach(q => {
+                    const t = (q.topic || 'Chủ đề chung').trim();
+                    if (!topicMap.has(t)) {
+                        topicMap.set(t, { topic: t, total: 0, speaking: 0, writing: 0 });
+                    }
+                    const entry = topicMap.get(t);
+                    entry.total++;
+                    if (q.skill === 'speaking') entry.speaking++;
+                    if (q.skill === 'writing') entry.writing++;
+                });
+
+                const topicsList = Array.from(topicMap.values()).sort((a, b) => a.topic.localeCompare(b.topic, 'vi'));
+
+                container.innerHTML = `
+                    <div class="mb-3 flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Bước 1/4: Chọn Chủ Đề (Topic) • ${topicsList.length} chủ đề</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+                        ${topicsList.map(item => `
+                            <div onclick="selectPracticeTopic('${escapeAttr(item.topic)}')" class="cursor-pointer group bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-[#0077c8] hover:shadow-md transition p-5 flex flex-col justify-between gap-4">
+                                <div>
+                                    <div class="flex items-start justify-between gap-2 mb-3">
+                                        <div class="w-11 h-11 rounded-xl bg-sky-50 text-[#0077c8] group-hover:bg-[#0077c8] group-hover:text-white transition flex items-center justify-center text-lg shrink-0">
+                                            <i class="fa-solid fa-folder-open"></i>
+                                        </div>
+                                        <span class="text-xs font-bold bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full">
+                                            ${item.total} câu hỏi
+                                        </span>
+                                    </div>
+                                    <h3 class="font-extrabold text-base sm:text-lg text-slate-800 group-hover:text-[#0077c8] transition line-clamp-2">
+                                        ${escapeHTML(item.topic)}
+                                    </h3>
+                                </div>
+                                <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs">
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 font-semibold">
+                                            <i class="fa-solid fa-microphone mr-1"></i>${item.speaking}
+                                        </span>
+                                        <span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-semibold">
+                                            <i class="fa-solid fa-pen mr-1"></i>${item.writing}
+                                        </span>
+                                    </div>
+                                    <span class="font-bold text-[#0077c8] group-hover:translate-x-1 transition-transform">
+                                        Chọn <i class="fa-solid fa-arrow-right ml-1"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                return;
+            }
+
+            // BƯỚC 2: CHỌN KỸ NĂNG TRONG TOPIC ĐÃ CHỌN
+            if (!practiceSelection.skill) {
+                const topicQuestions = questionBank.filter(q => (q.topic || '').trim() === practiceSelection.topic);
+                const spQuestions = topicQuestions.filter(q => q.skill === 'speaking');
+                const wrQuestions = topicQuestions.filter(q => q.skill === 'writing');
+
+                container.innerHTML = `
+                    <div class="mb-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Bước 2/4: Chọn Kỹ Năng cho Topic "${escapeHTML(practiceSelection.topic)}"</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Card Kỹ năng Speaking -->
+                        <div onclick="${spQuestions.length > 0 ? `selectPracticeSkill('speaking')` : ''}" class="${spQuestions.length > 0 ? 'cursor-pointer hover:border-indigo-400 hover:shadow-md' : 'opacity-50 cursor-not-allowed'} bg-white rounded-2xl shadow-sm border border-slate-200 transition p-6 flex flex-col justify-between gap-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3.5">
+                                    <div class="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl">
+                                        <i class="fa-solid fa-microphone-lines"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-extrabold text-lg text-slate-800">Kỹ Năng Speaking</h3>
+                                        <p class="text-xs text-slate-500">Luyện nói & ghi âm theo từng Part</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-extrabold px-3 py-1 rounded-full ${spQuestions.length > 0 ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-500'}">
+                                    ${spQuestions.length} câu
+                                </span>
+                            </div>
+                            <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold ${spQuestions.length > 0 ? 'text-indigo-600' : 'text-slate-400'}">
+                                <span>${spQuestions.length > 0 ? 'Nhấn để chọn Part luyện tập' : 'Chưa có câu hỏi Speaking trong Topic này'}</span>
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </div>
+                        </div>
+
+                        <!-- Card Kỹ năng Writing -->
+                        <div onclick="${wrQuestions.length > 0 ? `selectPracticeSkill('writing')` : ''}" class="${wrQuestions.length > 0 ? 'cursor-pointer hover:border-emerald-400 hover:shadow-md' : 'opacity-50 cursor-not-allowed'} bg-white rounded-2xl shadow-sm border border-slate-200 transition p-6 flex flex-col justify-between gap-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3.5">
+                                    <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-extrabold text-lg text-slate-800">Kỹ Năng Writing</h3>
+                                        <p class="text-xs text-slate-500">Luyện viết & đếm từ chuẩn cấu trúc Aptis</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-extrabold px-3 py-1 rounded-full ${wrQuestions.length > 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}">
+                                    ${wrQuestions.length} câu
+                                </span>
+                            </div>
+                            <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold ${wrQuestions.length > 0 ? 'text-emerald-600' : 'text-slate-400'}">
+                                <span>${wrQuestions.length > 0 ? 'Nhấn để chọn Part luyện tập' : 'Chưa có câu hỏi Writing trong Topic này'}</span>
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // BƯỚC 3: CHỌN PART TRONG TOPIC + KỸ NĂNG ĐÃ CHỌN
+            if (!practiceSelection.part) {
+                const skillQuestions = questionBank.filter(q =>
+                    (q.topic || '').trim() === practiceSelection.topic &&
+                    q.skill === practiceSelection.skill
+                );
+
+                const partDescriptions = practiceSelection.skill === 'speaking'
+                    ? {
+                        1: "Part 1: Personal Information (30s/câu)",
+                        2: "Part 2: Describe 1 Picture & Opinion (45s/câu)",
+                        3: "Part 3: Compare & Contrast 2 Pictures (45s/câu)",
+                        4: "Part 4: Long Turn - Abstract Topic (60s prep + 120s)"
+                    }
+                    : {
+                        1: "Part 1: Word-level Form Filling (1–5 từ)",
+                        2: "Part 2: Short Text Writing (20–30 từ)",
+                        3: "Part 3: Club Chat Room Replies (30–40 từ/câu)",
+                        4: "Part 4: Informal (50 từ) & Formal Email (120–150 từ)"
+                    };
+
+                container.innerHTML = `
+                    <div class="mb-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Bước 3/4: Chọn Part (${practiceSelection.skill.toUpperCase()})</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        ${[1, 2, 3, 4].map(p => {
+                            const count = skillQuestions.filter(q => q.part === p).length;
+                            const hasItems = count > 0;
+                            return `
+                                <div onclick="${hasItems ? `selectPracticePart(${p})` : ''}" class="${hasItems ? 'cursor-pointer hover:border-[#0077c8] hover:shadow-md' : 'opacity-50 cursor-not-allowed'} bg-white rounded-2xl shadow-sm border border-slate-200 transition p-5 flex flex-col justify-between gap-4">
+                                    <div>
+                                        <div class="flex items-center justify-between mb-2.5">
+                                            <span class="text-xs font-extrabold uppercase px-2.5 py-1 rounded-lg ${hasItems ? 'bg-sky-100 text-[#0077c8]' : 'bg-slate-100 text-slate-500'}">
+                                                Part ${p}
+                                            </span>
+                                            <span class="text-xs font-bold text-slate-600">${count} câu</span>
+                                        </div>
+                                        <p class="text-xs sm:text-sm font-semibold text-slate-700 leading-snug">
+                                            ${partDescriptions[p]}
+                                        </p>
+                                    </div>
+                                    <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs font-bold ${hasItems ? 'text-[#0077c8]' : 'text-slate-400'}">
+                                        <span>${hasItems ? 'Xem danh sách câu hỏi' : 'Trống'}</span>
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                return;
+            }
+
+            // BƯỚC 4: CHỌN CÂU HỎI CỤ THỂ TRONG TOPIC -> KỸ NĂNG -> PART
+            const finalQuestions = questionBank.filter(q =>
+                (q.topic || '').trim() === practiceSelection.topic &&
+                q.skill === practiceSelection.skill &&
+                q.part === practiceSelection.part
+            );
+
+            container.innerHTML = `
+                <div class="mb-3 flex items-center justify-between">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                        Bước 4/4: Chọn Câu Hỏi • ${escapeHTML(practiceSelection.topic)} (${practiceSelection.skill.toUpperCase()} - Part ${practiceSelection.part})
+                    </span>
+                    <span class="text-xs font-bold text-[#0077c8]">${finalQuestions.length} câu hỏi</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                    ${finalQuestions.map((q, index) => {
+                        const isSp = q.skill === 'speaking';
+                        const preview = getQuestionPreviewText(q);
+                        const attemptCount = allSubmissions.filter(s => s.mode === 'single_practice' && s.questionId === q.id).length;
+
+                        return `
+                            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-sky-300 transition p-4 sm:p-5 flex flex-col justify-between gap-4">
+                                <div>
+                                    <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="text-[11px] font-extrabold uppercase px-2.5 py-0.5 rounded-md bg-slate-800 text-white">
+                                                Câu #${index + 1}
+                                            </span>
+                                            <span class="text-[11px] font-bold uppercase px-2.5 py-0.5 rounded-md ${isSp ? 'bg-indigo-100 text-indigo-700' : 'bg-emerald-100 text-emerald-700'}">
+                                                ${q.skill} • Part ${q.part}
+                                            </span>
+                                        </div>
+                                        <span class="text-xs font-semibold ${attemptCount > 0 ? 'text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200' : 'text-slate-400'}">
+                                            <i class="fa-solid fa-clock-rotate-left mr-1"></i> ${attemptCount} lần đã luyện
+                                        </span>
+                                    </div>
+                                    <p class="text-xs sm:text-sm font-medium text-slate-800 line-clamp-3 leading-relaxed">${escapeHTML(preview)}</p>
+                                </div>
+
+                                <div class="flex items-center gap-2 pt-2 border-t border-slate-100">
+                                    <button onclick="openSinglePracticeModal('${q.id}', 'do')" class="flex-1 py-2.5 px-3 rounded-xl bg-[#0077c8] hover:bg-[#005fa3] text-white text-xs sm:text-sm font-bold transition shadow-xs flex items-center justify-center gap-1.5">
+                                        <i class="fa-solid fa-pen"></i> Luyện Câu Này
+                                    </button>
+                                    <button onclick="openSinglePracticeModal('${q.id}', 'history')" class="py-2.5 px-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-1.5" title="Xem lịch sử câu hỏi này">
+                                        <i class="fa-solid fa-history"></i> <span>Lịch sử (${attemptCount})</span>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        };
+
+        // =====================================================================
+        // 4. HỆ THỐNG TỰ ĐỘNG TỔ HỢP ĐỀ THI TỪ NGÂN HÀNG CÂU HỎI
+        // =====================================================================
+        function pickRandomItems(arr, count) {
+            const shuffled = [...arr].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        window.generateAndStartExam = function(skill) {
+            const pool = questionBank.filter(q => q.skill === skill);
+            const p1Pool = pool.filter(q => q.part === 1);
+            const p2Pool = pool.filter(q => q.part === 2);
+            const p3Pool = pool.filter(q => q.part === 3);
+            const p4Pool = pool.filter(q => q.part === 4);
+
+            if (p1Pool.length === 0 || p2Pool.length === 0 || p3Pool.length === 0 || p4Pool.length === 0) {
+                showToast(`Ngân hàng câu hỏi ${skill.toUpperCase()} chưa đủ cả 4 Parts. Hãy thêm câu hỏi ở trang Quản trị!`, "warning");
+                return;
+            }
+
+            activeExam = {
+                id: 'auto-' + Date.now(),
+                title: `Aptis ${skill.toUpperCase()} Auto-Test #${Math.floor(100 + Math.random() * 900)}`,
+                skill
+            };
+            userAnswers = {};
+            currentStepIndex = 0;
+            examSteps = [];
+
+            document.getElementById('exam-room-title').textContent = activeExam.title;
+            document.getElementById('exam-room-badge').textContent = `${skill.toUpperCase()} AUTO`;
+
+            if (skill === 'speaking') {
+                const selectedP1 = pickRandomItems(p1Pool, Math.min(3, p1Pool.length));
+                selectedP1.forEach((item, idx) => {
+                    examSteps.push({
+                        part: 1,
+                        partTitle: "Part 1: Personal Information",
+                        qIndex: idx + 1,
+                        totalInPart: selectedP1.length,
+                        duration: 30,
+                        prepTime: 0,
+                        prompt: item.data.prompt,
+                        type: 'speaking-single'
+                    });
+                });
+
+                const selectedP2 = pickRandomItems(p2Pool, 1)[0];
+                (selectedP2.data.questions || []).forEach((q, idx) => {
+                    examSteps.push({
+                        part: 2,
+                        partTitle: "Part 2: Describe, Express Opinion",
+                        qIndex: idx + 1,
+                        totalInPart: 3,
+                        duration: 45,
+                        prepTime: 0,
+                        image: selectedP2.data.image,
+                        prompt: q,
+                        type: 'speaking-image'
+                    });
+                });
+
+                const selectedP3 = pickRandomItems(p3Pool, 1)[0];
+                (selectedP3.data.questions || []).forEach((q, idx) => {
+                    examSteps.push({
+                        part: 3,
+                        partTitle: "Part 3: Describe, Compare & Contrast",
+                        qIndex: idx + 1,
+                        totalInPart: 3,
+                        duration: 45,
+                        prepTime: 0,
+                        image1: selectedP3.data.image1,
+                        image2: selectedP3.data.image2,
+                        prompt: q,
+                        type: 'speaking-compare'
+                    });
+                });
+
+                const selectedP4 = pickRandomItems(p4Pool, 1)[0];
+                examSteps.push({
+                    part: 4,
+                    partTitle: "Part 4: Long Turn (Abstract Topic)",
+                    qIndex: 1,
+                    totalInPart: 1,
+                    duration: 120,
+                    prepTime: 60,
+                    questions: selectedP4.data.questions || [],
+                    type: 'speaking-long'
+                });
+            } else {
+                const selectedP1 = pickRandomItems(p1Pool, Math.min(5, p1Pool.length));
+                const selectedP2 = pickRandomItems(p2Pool, 1)[0];
+                const selectedP3 = pickRandomItems(p3Pool, 1)[0];
+                const selectedP4 = pickRandomItems(p4Pool, 1)[0];
+
+                examSteps = [
+                    {
+                        part: 1,
+                        partTitle: "Part 1: Word-level Writing (1–5 words)",
+                        qIndex: 1,
+                        totalInPart: 1,
+                        clubName: selectedP2.topic || "Aptis International Club",
+                        questions: selectedP1.map(item => item.data.prompt),
+                        type: 'writing-part1'
+                    },
+                    {
+                        part: 2,
+                        partTitle: "Part 2: Short Text Writing (20–30 words)",
+                        qIndex: 1,
+                        totalInPart: 1,
+                        prompt: selectedP2.data.prompt,
+                        type: 'writing-part2'
+                    },
+                    {
+                        part: 3,
+                        partTitle: "Part 3: Three Written Responses (30–40 words each)",
+                        qIndex: 1,
+                        totalInPart: 1,
+                        messages: selectedP3.data.messages || [],
+                        type: 'writing-part3'
+                    },
+                    {
+                        part: 4,
+                        partTitle: "Part 4: Formal and Informal Writing (50 & 120–150 words)",
+                        qIndex: 1,
+                        totalInPart: 1,
+                        context: selectedP4.data.context || "",
+                        informalPrompt: selectedP4.data.informalPrompt || "",
+                        formalPrompt: selectedP4.data.formalPrompt || "",
+                        type: 'writing-part4'
+                    }
+                ];
+            }
+
+            ['mode-select', 'practice-bank', 'history', 'stats'].forEach(t => {
+                document.getElementById(`student-view-${t}`).classList.add('hidden');
+            });
+            document.getElementById('student-view-exam-room').classList.remove('hidden');
+
+            if (skill === 'writing') {
+                startGlobalTimer(50 * 60);
+            }
+            showToast("Hệ thống đã tự động tổ hợp đề thi mới từ Ngân hàng câu hỏi!", "success");
+            renderExamStep();
+        };
+
+        // =====================================================================
+        // 5. MODAL LUYỆN TẬP TỪNG CÂU HỎI & LỊCH SỬ NHẬP LIỆU CỦA TỪNG CÂU
+        // =====================================================================
+        window.openSinglePracticeModal = function(qId, initialTab = 'do') {
+            const q = questionBank.find(item => item.id === qId);
+            if (!q) return;
+
+            currentPracticeQuestion = q;
+            singlePracticeAnswer = { text: '', list: ['', '', ''], informal: '', formal: '', audioUrl: null };
+            stopRecordingIfActive();
+
+            document.getElementById('sp-modal-badge').textContent = `${q.skill.toUpperCase()} • PART ${q.part}`;
+            document.getElementById('sp-modal-topic').textContent = `Topic: ${q.topic}`;
+
+            const qContent = document.getElementById('pm-question-content');
+            const ansArea = document.getElementById('pm-answer-area');
+
+            if (q.skill === 'speaking') {
+                let visual = '';
+                if (q.part === 2 && q.data.image) {
+                    visual = `<img src="${q.data.image}" onerror="this.src='https://placehold.co/600x340/e2e8f0/475569?text=Aptis+Picture'" class="max-h-52 mx-auto rounded-xl border border-slate-200 mb-3 object-cover">`;
+                } else if (q.part === 3) {
+                    visual = `
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                            <img src="${q.data.image1}" onerror="this.src='https://placehold.co/400x240/e2e8f0/475569?text=Pic+A'" class="w-full h-40 rounded-xl border border-slate-200 object-cover">
+                            <img src="${q.data.image2}" onerror="this.src='https://placehold.co/400x240/e2e8f0/475569?text=Pic+B'" class="w-full h-40 rounded-xl border border-slate-200 object-cover">
+                        </div>
+                    `;
+                }
+
+                const prompts = q.data.prompt
+                    ? `<p class="font-bold text-slate-800 text-sm sm:text-base">${escapeHTML(q.data.prompt)}</p>`
+                    : `<ul class="list-disc list-inside space-y-1 font-semibold text-slate-800 text-xs sm:text-sm">${(q.data.questions || []).map(x => `<li>${escapeHTML(x)}</li>`).join('')}</ul>`;
+
+                qContent.innerHTML = `
+                    <div class="bg-sky-50 border-l-4 border-[#0077c8] p-4 rounded-r-xl">
+                        ${visual}
+                        ${prompts}
+                    </div>
+                `;
+
+                ansArea.innerHTML = `
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
+                        <div class="flex items-center gap-3">
+                            <button id="pm-record-btn" onclick="togglePracticeRecording()" class="relative w-12 h-12 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center text-lg shadow transition shrink-0">
+                                <i class="fa-solid fa-microphone" id="pm-record-icon"></i>
+                            </button>
+                            <div>
+                                <p class="font-bold text-slate-800 text-xs sm:text-sm" id="pm-record-status">Nhấn Micro để thu âm luyện nói</p>
+                                <p class="text-[11px] text-slate-500">Có thể nhập dàn ý hoặc nội dung câu trả lời bên dưới để lưu lịch sử</p>
+                            </div>
+                        </div>
+                        <div id="pm-audio-box" class="hidden bg-white p-2.5 rounded-lg border border-slate-200 flex items-center gap-2">
+                            <span class="text-xs font-bold text-emerald-700">Bản ghi:</span>
+                            <audio id="pm-audio-player" controls class="h-8 flex-1"></audio>
+                        </div>
+                        <textarea oninput="singlePracticeAnswer.text = this.value" rows="4" placeholder="Nhập dàn ý hoặc nội dung câu trả lời Speaking của bạn..." class="w-full bg-white border border-slate-300 rounded-xl p-3 text-sm focus:outline-none focus:border-[#0077c8]"></textarea>
+                    </div>
+                `;
+            } else {
+                if (q.part === 1 || q.part === 2) {
+                    const maxHint = q.part === 1 ? '1–5 từ' : '20–30 từ';
+                    qContent.innerHTML = `
+                        <div class="bg-emerald-50 border-l-4 border-emerald-600 p-4 rounded-r-xl">
+                            <p class="text-xs font-bold uppercase text-emerald-800 mb-1">Yêu cầu độ dài: ${maxHint}</p>
+                            <p class="font-bold text-slate-800 text-sm sm:text-base">${escapeHTML(q.data.prompt)}</p>
+                        </div>
+                    `;
+                    ansArea.innerHTML = `
+                        <div>
+                            <textarea oninput="singlePracticeAnswer.text = this.value; document.getElementById('pm-wc').textContent = countWords(this.value) + ' từ'" rows="${q.part === 1 ? 2 : 5}" placeholder="Nhập câu trả lời (${maxHint})..." class="w-full border border-slate-300 rounded-xl p-3.5 text-sm focus:outline-none focus:border-[#0077c8]"></textarea>
+                            <div class="text-right mt-1"><span id="pm-wc" class="text-xs font-bold bg-sky-100 text-[#0077c8] px-2.5 py-0.5 rounded">0 từ</span></div>
+                        </div>
+                    `;
+                } else if (q.part === 3) {
+                    qContent.innerHTML = `
+                        <div class="bg-sky-50 border-l-4 border-[#0077c8] p-4 rounded-r-xl">
+                            <p class="text-xs font-bold uppercase text-[#0077c8]">Trả lời 3 tin nhắn phòng chat (30–40 từ/câu)</p>
+                        </div>
+                    `;
+                    ansArea.innerHTML = `
+                        <div class="space-y-3">
+                            ${(q.data.messages || []).map((m, i) => `
+                                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                    <p class="text-xs sm:text-sm font-semibold text-slate-800 mb-2">${escapeHTML(m)}</p>
+                                    <textarea oninput="singlePracticeAnswer.list[${i}] = this.value; document.getElementById('pm-wc-${i}').textContent = countWords(this.value) + ' / 30–40 từ'" rows="2" placeholder="Nhập câu trả lời ${i + 1}..." class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm"></textarea>
+                                    <div class="text-right mt-1"><span id="pm-wc-${i}" class="text-[11px] font-bold text-[#0077c8]">0 / 30–40 từ</span></div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    qContent.innerHTML = `
+                        <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-xl text-xs sm:text-sm text-slate-800">
+                            <strong>Thông báo:</strong> "${escapeHTML(q.data.context)}"
+                        </div>
+                    `;
+                    ansArea.innerHTML = `
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                <p class="text-xs font-bold text-sky-700 mb-1">1. Informal Email (40–50 từ)</p>
+                                <p class="text-[11px] text-slate-600 mb-2">${escapeHTML(q.data.informalPrompt)}</p>
+                                <textarea oninput="singlePracticeAnswer.informal = this.value; document.getElementById('pm-wc-inf').textContent = countWords(this.value) + ' từ'" rows="5" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm"></textarea>
+                                <div class="text-right mt-1"><span id="pm-wc-inf" class="text-[11px] font-bold text-sky-700">0 từ</span></div>
+                            </div>
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                <p class="text-xs font-bold text-indigo-700 mb-1">2. Formal Email (120–150 từ)</p>
+                                <p class="text-[11px] text-slate-600 mb-2">${escapeHTML(q.data.formalPrompt)}</p>
+                                <textarea oninput="singlePracticeAnswer.formal = this.value; document.getElementById('pm-wc-for').textContent = countWords(this.value) + ' từ'" rows="5" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm"></textarea>
+                                <div class="text-right mt-1"><span id="pm-wc-for" class="text-[11px] font-bold text-indigo-700">0 từ</span></div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            const sampleBox = document.getElementById('pm-sample-box');
+            const sampleText = document.getElementById('pm-sample-text');
+            sampleText.classList.add('hidden');
+            if (q.sampleAnswer) {
+                sampleBox.classList.remove('hidden');
+                sampleText.textContent = q.sampleAnswer;
+            } else {
+                sampleBox.classList.add('hidden');
+            }
+
+            renderSingleQuestionHistory(q.id);
+            switchPracticeModalTab(initialTab);
+
+            const modal = document.getElementById('single-practice-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+
+        window.switchPracticeModalTab = function(tab) {
+            const viewDo = document.getElementById('pm-view-do');
+            const viewHist = document.getElementById('pm-view-history');
+            const btnDo = document.getElementById('pm-tab-do');
+            const btnHist = document.getElementById('pm-tab-history');
+            const saveBtn = document.getElementById('pm-save-btn');
+
+            if (tab === 'do') {
+                viewDo.classList.remove('hidden');
+                viewHist.classList.add('hidden');
+                btnDo.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-white text-[#0077c8] shadow-xs";
+                btnHist.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:bg-white/60";
+                saveBtn.classList.remove('hidden');
+            } else {
+                viewDo.classList.add('hidden');
+                viewHist.classList.remove('hidden');
+                btnHist.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-white text-[#0077c8] shadow-xs";
+                btnDo.className = "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:bg-white/60";
+                saveBtn.classList.add('hidden');
+            }
+        };
+
+        window.saveSinglePracticeAnswer = async function() {
+            if (!currentPracticeQuestion) return;
+            stopRecordingIfActive();
+
+            const q = currentPracticeQuestion;
+
+            let formattedContent = '';
+            let wordCount = 0;
+
+            if (q.skill === 'writing' && q.part === 3) {
+                formattedContent = singlePracticeAnswer.list.map((t, i) => `Reply ${i + 1}: ${t || '(Trống)'}`).join('\n');
+                wordCount = singlePracticeAnswer.list.reduce((acc, s) => acc + countWords(s), 0);
+            } else if (q.skill === 'writing' && q.part === 4) {
+                formattedContent = `[Informal Email]:\n${singlePracticeAnswer.informal || '(Trống)'}\n\n[Formal Email]:\n${singlePracticeAnswer.formal || '(Trống)'}`;
+                wordCount = countWords(singlePracticeAnswer.informal) + countWords(singlePracticeAnswer.formal);
+            } else {
+                formattedContent = singlePracticeAnswer.text || (singlePracticeAnswer.audioUrl ? '(Đã thu âm trực tiếp)' : '');
+                wordCount = countWords(singlePracticeAnswer.text);
+            }
+
+            if (!formattedContent.trim() && !singlePracticeAnswer.audioUrl) {
+                showToast("Vui lòng nhập nội dung câu trả lời hoặc thu âm trước khi lưu!", "warning");
+                return;
+            }
+
+            const record = {
+                mode: 'single_practice',
+                questionId: q.id,
+                examTitle: `[Part ${q.part}] ${q.topic}`,
+                questionPrompt: getQuestionPreviewText(q),
+                skill: q.skill,
+                part: q.part,
+                content: formattedContent,
+                wordCount,
+                hasAudio: !!singlePracticeAnswer.audioUrl,
+                score: Math.min(50, Math.max(20, 25 + Math.floor(wordCount / 4))),
+                cefrLevel: wordCount >= 40 ? 'B2' : 'B1',
+                submittedAtMs: Date.now(),
+                dateStr: new Date().toLocaleString('vi-VN')
+            };
+
+            try {
+                if (currentUser) {
+                    await addDoc(submissionsCollectionRef, { ...record, submittedAt: serverTimestamp() });
+                } else {
+                    allSubmissions.unshift({ id: 'prac-' + Date.now(), ...record });
+                    renderHistoryTable();
+                    renderStatsCharts();
+                }
+                renderPracticeDrilldown();
+                renderSingleQuestionHistory(q.id);
+                showToast("Đã lưu bài luyện tập vào lịch sử câu hỏi!", "success");
+                switchPracticeModalTab('history');
+            } catch (err) {
+                showToast("Lỗi khi lưu: " + err.message, "error");
+            }
+        };
+
+        function renderSingleQuestionHistory(qId) {
+            const list = allSubmissions.filter(s => s.mode === 'single_practice' && s.questionId === qId);
+            document.getElementById('pm-history-count').textContent = list.length;
+            const container = document.getElementById('pm-history-list');
+
+            if (list.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-slate-400 text-xs sm:text-sm bg-slate-50 rounded-xl border border-slate-200">Bạn chưa có lịch sử nhập liệu nào cho câu hỏi này. Hãy chuyển sang tab "Thực Hành Nhập Liệu" để làm bài!</div>`;
+                return;
+            }
+
+            container.innerHTML = list.map((item, idx) => `
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                    <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
+                        <span class="font-bold text-[#002b49]">Lần #${list.length - idx}</span>
+                        <div class="flex items-center gap-2">
+                            ${item.wordCount > 0 ? `<span class="bg-sky-100 text-[#0077c8] font-bold px-2 py-0.5 rounded">${item.wordCount} từ</span>` : ''}
+                            ${item.hasAudio ? `<span class="bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded"><i class="fa-solid fa-microphone mr-1"></i>Có ghi âm</span>` : ''}
+                            <span class="text-slate-400">${escapeHTML(item.dateStr)}</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-xs sm:text-sm text-slate-700 whitespace-pre-line leading-relaxed">${escapeHTML(item.content)}</div>
+                </div>
+            `).join('');
+        }
+
+        window.closeSinglePracticeModal = function() {
+            stopRecordingIfActive();
+            currentPracticeQuestion = null;
+            const modal = document.getElementById('single-practice-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        };
+
+        window.togglePracticeRecording = async function() {
+            activeAudioTarget = 'practice';
+            if (isRecording) {
+                stopRecordingIfActive();
+            } else {
+                await startRecording();
+            }
+        };
+
+        // =====================================================================
+        // 6. PHÒNG THI THỬ FULL TEST (SPEAKING & WRITING)
+        // =====================================================================
+        function renderExamStep() {
+            stopRecordingIfActive();
+            const step = examSteps[currentStepIndex];
+            const stage = document.getElementById('exam-stage-content');
+            const indicator = document.getElementById('exam-room-part-indicator');
+            const stepper = document.getElementById('exam-parts-stepper');
+
+            indicator.textContent = `${step.partTitle} • Câu ${step.qIndex}/${step.totalInPart}`;
+
+            stepper.innerHTML = [1, 2, 3, 4].map(p => {
+                const isActive = step.part === p;
+                const isDone = step.part > p;
+                return `
+                    <div class="flex items-center gap-1 px-2.5 py-1 rounded-lg whitespace-nowrap ${isActive ? 'bg-[#0077c8] text-white' : (isDone ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-500')}">
+                        <span>Part ${p}</span>
+                        ${isDone ? '<i class="fa-solid fa-check text-[10px]"></i>' : ''}
+                    </div>
+                `;
+            }).join('<i class="fa-solid fa-chevron-right text-slate-300 text-[10px]"></i>');
+
+            document.getElementById('btn-exam-prev').disabled = currentStepIndex === 0;
+            const nextBtn = document.getElementById('btn-exam-next');
+            if (currentStepIndex === examSteps.length - 1) {
+                nextBtn.innerHTML = `<i class="fa-solid fa-paper-plane mr-1.5"></i> Nộp Bài`;
+                nextBtn.className = "px-5 sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition shadow";
+            } else {
+                nextBtn.innerHTML = `Tiếp theo <i class="fa-solid fa-arrow-right ml-1.5"></i>`;
+                nextBtn.className = "px-5 sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-white bg-[#0077c8] hover:bg-[#005fa3] transition shadow";
+            }
+
+            if (activeExam.skill === 'speaking') {
+                setupSpeakingTimer(step);
+                renderSpeakingStage(step, stage);
+            } else {
+                renderWritingStage(step, stage);
+            }
+        }
+
+        function setupSpeakingTimer(step) {
+            clearInterval(timerInterval);
+            const label = document.getElementById('timer-label');
+            const display = document.getElementById('exam-timer-display');
+
+            if (step.prepTime > 0) {
+                isPrepPhase = true;
+                remainingSeconds = step.prepTime;
+                label.textContent = "Chuẩn bị";
+                display.classList.add('text-amber-300');
+            } else {
+                isPrepPhase = false;
+                remainingSeconds = step.duration;
+                label.textContent = "Trả lời";
+                display.classList.remove('text-amber-300');
+            }
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                remainingSeconds--;
+                updateTimerDisplay();
+                if (remainingSeconds <= 0) {
+                    if (isPrepPhase) {
+                        isPrepPhase = false;
+                        remainingSeconds = step.duration;
+                        label.textContent = "Trả lời";
+                        display.classList.remove('text-amber-300');
+                        showToast("Hết thời gian chuẩn bị! Bắt đầu nói.", "info");
+                        activeAudioTarget = 'exam';
+                        startRecording();
+                    } else {
+                        clearInterval(timerInterval);
+                        stopRecordingIfActive();
+                        showToast("Hết thời gian câu hỏi này!", "warning");
+                    }
+                }
+            }, 1000);
+        }
+
+        function renderSpeakingStage(step, container) {
+            const ansKey = `step_${currentStepIndex}`;
+            const savedAns = userAnswers[ansKey] || { note: '', audioUrl: null };
+
+            let visualHTML = '';
+            if (step.type === 'speaking-image') {
+                visualHTML = `<div class="mb-4 flex justify-center"><img src="${step.image}" onerror="this.src='https://placehold.co/600x340/e2e8f0/475569?text=Aptis+Picture'" class="max-h-56 sm:max-h-64 rounded-xl shadow-sm border border-slate-200 object-cover"></div>`;
+            } else if (step.type === 'speaking-compare') {
+                visualHTML = `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
+                        <img src="${step.image1}" onerror="this.src='https://placehold.co/400x260/e2e8f0/475569?text=Picture+A'" class="w-full h-44 sm:h-52 rounded-xl shadow-sm border border-slate-200 object-cover">
+                        <img src="${step.image2}" onerror="this.src='https://placehold.co/400x260/e2e8f0/475569?text=Picture+B'" class="w-full h-44 sm:h-52 rounded-xl shadow-sm border border-slate-200 object-cover">
+                    </div>
+                `;
+            }
+
+            let promptHTML = '';
+            if (step.type === 'speaking-long') {
+                promptHTML = `
+                    <div class="bg-sky-50 border-l-4 border-[#0077c8] p-3.5 sm:p-4 rounded-r-xl mb-4 space-y-2">
+                        <p class="text-[11px] font-bold uppercase text-[#0077c8]">Trả lời cả 3 câu hỏi sau trong 2 phút (1 phút chuẩn bị):</p>
+                        <ul class="list-disc list-inside space-y-1.5 font-semibold text-slate-800 text-xs sm:text-base">
+                            ${step.questions.map(q => `<li>${escapeHTML(q)}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            } else {
+                promptHTML = `
+                    <div class="bg-sky-50 border-l-4 border-[#0077c8] p-4 sm:p-5 rounded-r-xl mb-5">
+                        <p class="text-[11px] font-bold uppercase text-[#0077c8] mb-1">Question ${step.qIndex}</p>
+                        <p class="text-base sm:text-xl font-bold text-slate-800">${escapeHTML(step.prompt)}</p>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="flex-1 flex flex-col justify-between">
+                    <div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">${step.partTitle}</span>
+                            <span class="text-xs font-semibold text-sky-700 bg-sky-100 px-2.5 py-1 rounded-full">
+                                ${step.prepTime > 0 ? '60s prep + 120s nói' : `${step.duration} giây`}
+                            </span>
+                        </div>
+                        ${visualHTML}
+                        ${promptHTML}
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 flex flex-col items-center gap-3.5">
+                        <div class="flex items-center gap-3.5 w-full sm:w-auto">
+                            <button id="btn-record-toggle" onclick="toggleExamRecording()" class="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center text-lg sm:text-xl shadow-lg transition shrink-0">
+                                <i class="fa-solid fa-microphone" id="record-icon"></i>
+                            </button>
+                            <div>
+                                <p class="font-bold text-slate-800 text-xs sm:text-sm" id="record-status-text">Nhấn Micro để ghi âm câu trả lời</p>
+                                <p class="text-[11px] text-slate-500">Thu âm trực tiếp & nghe lại ngay trên trình duyệt</p>
+                            </div>
+                        </div>
+
+                        <div id="audio-playback-box" class="${savedAns.audioUrl ? '' : 'hidden'} w-full max-w-md bg-white p-2.5 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
+                            <span class="text-xs font-semibold text-emerald-700 shrink-0"><i class="fa-solid fa-circle-check mr-1"></i> Đã ghi</span>
+                            <audio id="recorded-audio-player" controls src="${savedAns.audioUrl || ''}" class="h-8 flex-1"></audio>
+                        </div>
+
+                        <div class="w-full">
+                            <textarea oninput="saveSpeakingNote(this.value)" rows="2" placeholder="Ghi chú nhanh dàn ý / nội dung nói..." class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#0077c8]">${escapeHTML(savedAns.note)}</textarea>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.toggleExamRecording = async function() {
+            activeAudioTarget = 'exam';
+            if (isRecording) {
+                stopRecordingIfActive();
+            } else {
+                await startRecording();
+            }
+        };
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) audioChunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+
+                    if (activeAudioTarget === 'practice') {
+                        singlePracticeAnswer.audioUrl = audioUrl;
+                        const box = document.getElementById('pm-audio-box');
+                        const player = document.getElementById('pm-audio-player');
+                        if (box && player) {
+                            box.classList.remove('hidden');
+                            player.src = audioUrl;
+                        }
+                    } else {
+                        const ansKey = `step_${currentStepIndex}`;
+                        if (!userAnswers[ansKey]) userAnswers[ansKey] = { note: '', audioUrl: null };
+                        userAnswers[ansKey].audioUrl = audioUrl;
+                        const box = document.getElementById('audio-playback-box');
+                        const player = document.getElementById('recorded-audio-player');
+                        if (box && player) {
+                            box.classList.remove('hidden');
+                            player.src = audioUrl;
+                        }
+                    }
+                    stream.getTracks().forEach(t => t.stop());
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+
+                if (activeAudioTarget === 'practice') {
+                    const btn = document.getElementById('pm-record-btn');
+                    const icon = document.getElementById('pm-record-icon');
+                    const txt = document.getElementById('pm-record-status');
+                    if (btn) btn.classList.add('recording-pulse');
+                    if (icon) icon.className = "fa-solid fa-stop";
+                    if (txt) txt.textContent = "Đang ghi âm... Nhấn lần nữa để dừng";
+                } else {
+                    const btn = document.getElementById('btn-record-toggle');
+                    const icon = document.getElementById('record-icon');
+                    const txt = document.getElementById('record-status-text');
+                    if (btn) btn.classList.add('recording-pulse');
+                    if (icon) icon.className = "fa-solid fa-stop";
+                    if (txt) txt.textContent = "Đang ghi âm... Nhấn lần nữa để dừng";
+                }
+            } catch (err) {
+                showToast("Không tìm thấy Micro hoặc chưa cấp quyền. Bạn vẫn có thể nhập ghi chú bên dưới.", "warning");
+            }
+        }
+
+        function stopRecordingIfActive() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                const btn1 = document.getElementById('btn-record-toggle');
+                const icon1 = document.getElementById('record-icon');
+                const txt1 = document.getElementById('record-status-text');
+                if (btn1) btn1.classList.remove('recording-pulse');
+                if (icon1) icon1.className = "fa-solid fa-microphone";
+                if (txt1) txt1.textContent = "Đã dừng ghi âm. Nhấn Micro để ghi lại.";
+
+                const btn2 = document.getElementById('pm-record-btn');
+                const icon2 = document.getElementById('pm-record-icon');
+                const txt2 = document.getElementById('pm-record-status');
+                if (btn2) btn2.classList.remove('recording-pulse');
+                if (icon2) icon2.className = "fa-solid fa-microphone";
+                if (txt2) txt2.textContent = "Đã dừng ghi âm. Nhấn Micro để ghi lại.";
+            }
+        }
+
+        window.saveSpeakingNote = function(val) {
+            const ansKey = `step_${currentStepIndex}`;
+            if (!userAnswers[ansKey]) userAnswers[ansKey] = { note: '', audioUrl: null };
+            userAnswers[ansKey].note = val;
+        };
+
+        function startGlobalTimer(seconds) {
+            clearInterval(timerInterval);
+            remainingSeconds = seconds;
+            document.getElementById('timer-label').textContent = "Còn lại";
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                remainingSeconds--;
+                updateTimerDisplay();
+                if (remainingSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    showToast("Hết thời gian làm bài Writing! Hệ thống đang nộp bài.", "warning");
+                    submitAptisExam();
+                }
+            }, 1000);
+        }
+
+        function renderWritingStage(step, container) {
+            if (step.type === 'writing-part1') {
+                const ans = userAnswers.part1 || ['', '', '', '', ''];
+                container.innerHTML = `
+                    <div>
+                        <div class="bg-sky-50 border-l-4 border-[#0077c8] p-3.5 sm:p-4 rounded-r-xl mb-5">
+                            <h3 class="font-bold text-slate-800 text-sm sm:text-base">Part 1: Membership Form</h3>
+                            <p class="text-xs sm:text-sm text-slate-600 mt-1">Fill in the form using <strong>1–5 words</strong> for each answer.</p>
+                        </div>
+                        <div class="space-y-3.5 max-w-2xl">
+                            ${step.questions.map((q, idx) => `
+                                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                                    <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1.5">${idx + 1}. ${escapeHTML(q)}</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="text" value="${escapeHTML(ans[idx] || '')}" oninput="saveWritingPart1(${idx}, this.value)" placeholder="1 - 5 từ..." class="flex-1 bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-[#0077c8]">
+                                        <span id="wp1-wc-${idx}" class="text-[11px] font-bold px-2 py-1 rounded bg-slate-200 text-slate-700 shrink-0">${countWords(ans[idx])}/5 từ</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (step.type === 'writing-part2') {
+                const ans = userAnswers.part2 || '';
+                container.innerHTML = `
+                    <div class="flex-1 flex flex-col">
+                        <div class="bg-sky-50 border-l-4 border-[#0077c8] p-3.5 sm:p-4 rounded-r-xl mb-4">
+                            <h3 class="font-bold text-slate-800 text-sm sm:text-base">Part 2: Short Text Writing (20–30 words)</h3>
+                            <p class="text-xs sm:text-sm text-slate-700 mt-1">${escapeHTML(step.prompt)}</p>
+                        </div>
+                        <textarea oninput="saveWritingPart2(this.value)" rows="6" placeholder="Write your response here (20–30 words)..." class="w-full flex-1 border border-slate-300 rounded-xl p-3.5 sm:p-4 text-sm sm:text-base focus:outline-none focus:border-[#0077c8] leading-relaxed">${escapeHTML(ans)}</textarea>
+                        <div class="mt-2.5 flex items-center justify-between text-xs font-bold">
+                            <span class="text-slate-500">Chuẩn: 20 – 30 từ</span>
+                            <span id="wp2-wc" class="px-3 py-1 rounded-full bg-sky-100 text-[#0077c8]">Số từ: ${countWords(ans)} words</span>
+                        </div>
+                    </div>
+                `;
+            } else if (step.type === 'writing-part3') {
+                const ans = userAnswers.part3 || ['', '', ''];
+                container.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="bg-sky-50 border-l-4 border-[#0077c8] p-3.5 sm:p-4 rounded-r-xl">
+                            <h3 class="font-bold text-slate-800 text-sm sm:text-base">Part 3: Club Chat Room (30–40 words each)</h3>
+                        </div>
+                        ${step.messages.map((msg, idx) => `
+                            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
+                                <p class="text-xs sm:text-sm font-semibold text-slate-800 bg-white px-3 py-2 rounded-xl border border-slate-200">${escapeHTML(msg)}</p>
+                                <textarea oninput="saveWritingPart3(${idx}, this.value)" rows="3" placeholder="Reply (30–40 words)..." class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#0077c8]">${escapeHTML(ans[idx] || '')}</textarea>
+                                <div class="text-right">
+                                    <span id="wp3-wc-${idx}" class="text-[11px] font-bold px-2 py-0.5 rounded bg-sky-100 text-[#0077c8]">${countWords(ans[idx])} / 30–40 words</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (step.type === 'writing-part4') {
+                const ans = userAnswers.part4 || { informal: '', formal: '' };
+                container.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-xl">
+                            <p class="text-[11px] font-bold uppercase text-amber-800 mb-1">Notice from the Club</p>
+                            <p class="text-xs sm:text-sm text-slate-800 italic">"${escapeHTML(step.context)}"</p>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex flex-col">
+                                <span class="text-xs font-bold uppercase text-sky-700 mb-1">1. Informal Email (40–50 words)</span>
+                                <p class="text-xs text-slate-600 mb-2.5">${escapeHTML(step.informalPrompt)}</p>
+                                <textarea oninput="saveWritingPart4('informal', this.value)" rows="6" placeholder="Hi..." class="w-full flex-1 bg-white border border-slate-300 rounded-xl p-3 text-xs sm:text-sm focus:outline-none focus:border-[#0077c8]">${escapeHTML(ans.informal || '')}</textarea>
+                                <div class="mt-2 text-right">
+                                    <span id="wp4-inf-wc" class="text-[11px] font-bold px-2 py-0.5 rounded bg-sky-100 text-[#0077c8]">${countWords(ans.informal)} / 40–50 words</span>
+                                </div>
+                            </div>
+                            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex flex-col">
+                                <span class="text-xs font-bold uppercase text-indigo-700 mb-1">2. Formal Email (120–150 words)</span>
+                                <p class="text-xs text-slate-600 mb-2.5">${escapeHTML(step.formalPrompt)}</p>
+                                <textarea oninput="saveWritingPart4('formal', this.value)" rows="6" placeholder="Dear Sir/Madam,..." class="w-full flex-1 bg-white border border-slate-300 rounded-xl p-3 text-xs sm:text-sm focus:outline-none focus:border-[#0077c8]">${escapeHTML(ans.formal || '')}</textarea>
+                                <div class="mt-2 text-right">
+                                    <span id="wp4-for-wc" class="text-[11px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700">${countWords(ans.formal)} / 120–150 words</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        window.saveWritingPart1 = function(idx, val) {
+            if (!userAnswers.part1) userAnswers.part1 = ['', '', '', '', ''];
+            userAnswers.part1[idx] = val;
+            const badge = document.getElementById(`wp1-wc-${idx}`);
+            if (badge) badge.textContent = `${countWords(val)}/5 từ`;
+        };
+        window.saveWritingPart2 = function(val) {
+            userAnswers.part2 = val;
+            const badge = document.getElementById('wp2-wc');
+            if (badge) badge.textContent = `Số từ: ${countWords(val)} words`;
+        };
+        window.saveWritingPart3 = function(idx, val) {
+            if (!userAnswers.part3) userAnswers.part3 = ['', '', ''];
+            userAnswers.part3[idx] = val;
+            const badge = document.getElementById(`wp3-wc-${idx}`);
+            if (badge) badge.textContent = `${countWords(val)} / 30–40 words`;
+        };
+        window.saveWritingPart4 = function(type, val) {
+            if (!userAnswers.part4) userAnswers.part4 = { informal: '', formal: '' };
+            userAnswers.part4[type] = val;
+            const badge = document.getElementById(type === 'informal' ? 'wp4-inf-wc' : 'wp4-for-wc');
+            if (badge) badge.textContent = `${countWords(val)} / ${type === 'informal' ? '40–50' : '120–150'} words`;
+        };
+
+        window.prevExamStep = function() {
+            if (currentStepIndex > 0) {
+                currentStepIndex--;
+                renderExamStep();
+            }
+        };
+
+        window.nextExamStep = function() {
+            if (currentStepIndex < examSteps.length - 1) {
+                currentStepIndex++;
+                renderExamStep();
+            } else {
+                showConfirm("Nộp bài thi Aptis", "Xác nhận nộp bài và lưu kết quả lên hệ thống?", () => {
+                    submitAptisExam();
+                });
+            }
+        };
+
+        window.confirmExitExam = function() {
+            showConfirm("Thoát phòng thi", "Tiến trình bài thi thử hiện tại sẽ không được lưu. Bạn chắc chắn muốn thoát?", () => {
+                exitExamRoom();
+            });
+        };
+
+        function exitExamRoom() {
+            clearInterval(timerInterval);
+            stopRecordingIfActive();
+            activeExam = null;
+            document.getElementById('student-view-exam-room').classList.add('hidden');
+            switchStudentTab('mode-select');
+        }
+
+        async function submitAptisExam() {
+            clearInterval(timerInterval);
+            stopRecordingIfActive();
+
+            let estimatedScore = 0;
+            let totalWords = 0;
+            let cleanAnswers = {};
+
+            if (activeExam.skill === 'writing') {
+                const p1Words = (userAnswers.part1 || []).reduce((acc, s) => acc + countWords(s), 0);
+                const p2Words = countWords(userAnswers.part2 || '');
+                const p3Words = (userAnswers.part3 || []).reduce((acc, s) => acc + countWords(s), 0);
+                const p4Words = countWords(userAnswers.part4?.informal || '') + countWords(userAnswers.part4?.formal || '');
+                totalWords = p1Words + p2Words + p3Words + p4Words;
+
+                let score = 10;
+                if (p1Words >= 5) score += 8;
+                if (p2Words >= 18) score += 10;
+                if (p3Words >= 75) score += 10;
+                if (p4Words >= 140) score += 12;
+                estimatedScore = Math.min(50, score);
+
+                cleanAnswers = {
+                    part1: userAnswers.part1 || [],
+                    part2: userAnswers.part2 || '',
+                    part3: userAnswers.part3 || [],
+                    part4: userAnswers.part4 || { informal: '', formal: '' }
+                };
+            } else {
+                let completedSteps = 0;
+                examSteps.forEach((st, idx) => {
+                    const item = userAnswers[`step_${idx}`] || {};
+                    if (item.audioUrl || (item.note && item.note.trim().length > 3)) {
+                        completedSteps++;
+                    }
+                    cleanAnswers[`step_${idx}`] = {
+                        part: st.part,
+                        prompt: st.prompt || (st.questions ? st.questions.join(' | ') : ''),
+                        note: item.note || '(Đã ghi âm trực tiếp)',
+                        hasAudio: !!item.audioUrl
+                    };
+                });
+                estimatedScore = Math.min(50, Math.round(15 + (completedSteps / examSteps.length) * 35));
+            }
+
+            const cefr = estimatedScore >= 42 ? 'C' : (estimatedScore >= 32 ? 'B2' : (estimatedScore >= 20 ? 'B1' : 'A2'));
+
+            const submissionRecord = {
+                mode: 'mock_exam',
+                examTitle: activeExam.title,
+                skill: activeExam.skill,
+                score: estimatedScore,
+                cefrLevel: cefr,
+                totalWords,
+                answers: cleanAnswers,
+                submittedAtMs: Date.now(),
+                dateStr: new Date().toLocaleString('vi-VN')
+            };
+
+            try {
+                if (currentUser) {
+                    await addDoc(submissionsCollectionRef, { ...submissionRecord, submittedAt: serverTimestamp() });
+                } else {
+                    allSubmissions.unshift({ id: 'sub-' + Date.now(), ...submissionRecord });
+                    renderHistoryTable();
+                    renderStatsCharts();
+                }
+                showToast(`Nộp bài thành công! Điểm ước tính: ${estimatedScore}/50 (CEFR ${cefr})`, "success");
+                exitExamRoom();
+                switchStudentTab('history');
+            } catch (err) {
+                showToast("Lỗi lưu bài: " + err.message, "error");
+            }
+        }
+
+        // =====================================================================
+        // 7. LỊCH SỬ TỔNG HỢP & THỐNG KÊ BIỂU ĐỒ
+        // =====================================================================
+        window.renderHistoryTable = function() {
+            const tbody = document.getElementById('history-table-body');
+            const filterType = document.getElementById('history-filter-type').value;
+
+            const filtered = allSubmissions.filter(s => {
+                if (filterType === 'all') return true;
+                return (s.mode || 'mock_exam') === filterType;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="py-10 text-center text-slate-400">Chưa có dữ liệu lịch sử phù hợp.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(sub => {
+                const isSp = sub.skill === 'speaking';
+                const isPractice = sub.mode === 'single_practice';
+                return `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="py-3 px-4 text-slate-500 text-xs">${escapeHTML(sub.dateStr || '')}</td>
+                        <td class="py-3 px-4">
+                            <span class="text-[11px] font-bold px-2 py-0.5 rounded ${isPractice ? 'bg-amber-100 text-amber-800' : 'bg-sky-100 text-[#0077c8]'}">
+                                ${isPractice ? 'Luyện theo câu' : 'Thi thử Full'}
+                            </span>
+                        </td>
+                        <td class="py-3 px-4 font-semibold text-slate-800">${escapeHTML(sub.examTitle)}</td>
+                        <td class="py-3 px-4">
+                            <span class="text-[11px] font-bold uppercase px-2 py-0.5 rounded-full ${isSp ? 'bg-indigo-100 text-indigo-700' : 'bg-emerald-100 text-emerald-700'}">
+                                ${sub.skill}
+                            </span>
+                        </td>
+                        <td class="py-3 px-4">
+                            <span class="font-extrabold text-[#0077c8]">${sub.score}/50</span>
+                            <span class="ml-1 text-[11px] font-bold bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded">${sub.cefrLevel}</span>
+                        </td>
+                        <td class="py-3 px-4 text-right">
+                            <button onclick="viewSubmissionDetail('${sub.id}')" class="px-3 py-1.5 rounded-lg bg-sky-50 text-[#0077c8] hover:bg-sky-100 text-xs font-bold transition">
+                                <i class="fa-solid fa-eye mr-1"></i> Xem
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        };
+
+        window.viewSubmissionDetail = function(subId) {
+            const sub = allSubmissions.find(s => s.id === subId);
+            if (!sub) return;
+
+            document.getElementById('modal-sub-title').textContent = sub.examTitle;
+            document.getElementById('modal-sub-meta').textContent = `${sub.dateStr} • Điểm: ${sub.score}/50 (${sub.cefrLevel})`;
+
+            const body = document.getElementById('modal-sub-body');
+            if (sub.mode === 'single_practice') {
+                body.innerHTML = `
+                    <div class="space-y-3">
+                        <div class="p-3.5 rounded-xl bg-sky-50 border border-sky-200">
+                            <p class="text-xs font-bold uppercase text-[#0077c8] mb-1">Câu hỏi luyện tập:</p>
+                            <p class="font-semibold text-slate-800">${escapeHTML(sub.questionPrompt || sub.examTitle)}</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <p class="text-xs font-bold uppercase text-slate-500 mb-1.5">Nội dung bài làm đã lưu:</p>
+                            <p class="whitespace-pre-line text-slate-800 leading-relaxed">${escapeHTML(sub.content || '')}</p>
+                        </div>
+                    </div>
+                `;
+            } else if (sub.skill === 'writing') {
+                const ans = sub.answers || {};
+                body.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                            <h4 class="font-bold text-[#002b49] mb-1.5">Part 1: Word-level</h4>
+                            <ul class="list-disc list-inside space-y-1">
+                                ${(ans.part1 || []).map((a, i) => `<li>Câu ${i + 1}: <strong>${escapeHTML(a || '(Trống)')}</strong></li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                            <h4 class="font-bold text-[#002b49] mb-1">Part 2: Short Text (${countWords(ans.part2)} từ)</h4>
+                            <p class="whitespace-pre-line">${escapeHTML(ans.part2 || '(Trống)')}</p>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                            <h4 class="font-bold text-[#002b49] mb-1.5">Part 3: Chat Room</h4>
+                            ${(ans.part3 || []).map((a, i) => `<p class="mb-1.5"><strong>Reply ${i + 1}:</strong> ${escapeHTML(a || '(Trống)')}</p>`).join('')}
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+                            <h4 class="font-bold text-[#002b49]">Part 4: Emails</h4>
+                            <div>
+                                <p class="text-xs font-bold text-sky-700 uppercase">Informal (${countWords(ans.part4?.informal)} từ):</p>
+                                <p class="whitespace-pre-line mt-1">${escapeHTML(ans.part4?.informal || '(Trống)')}</p>
+                            </div>
+                            <hr>
+                            <div>
+                                <p class="text-xs font-bold text-indigo-700 uppercase">Formal (${countWords(ans.part4?.formal)} từ):</p>
+                                <p class="whitespace-pre-line mt-1">${escapeHTML(ans.part4?.formal || '(Trống)')}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                const entries = Object.values(sub.answers || {});
+                body.innerHTML = `
+                    <div class="space-y-3">
+                        ${entries.map((item, idx) => `
+                            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-xs font-bold uppercase text-indigo-700">Part ${item.part} • Câu ${idx + 1}</span>
+                                    <span class="text-xs ${item.hasAudio ? 'text-emerald-600 font-bold' : 'text-slate-400'}">
+                                        ${item.hasAudio ? '<i class="fa-solid fa-microphone mr-1"></i>Có ghi âm' : 'Ghi chú'}
+                                    </span>
+                                </div>
+                                <p class="font-semibold text-slate-800 mb-1.5">${escapeHTML(item.prompt)}</p>
+                                <p class="text-slate-600 bg-white p-2.5 rounded-lg border border-slate-200 text-xs">${escapeHTML(item.note)}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            const modal = document.getElementById('submission-detail-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+
+        window.closeSubmissionModal = function() {
+            const modal = document.getElementById('submission-detail-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        };
+
+        function renderStatsCharts() {
+            const total = allSubmissions.length;
+            const spCount = allSubmissions.filter(s => s.skill === 'speaking').length;
+            const wrCount = allSubmissions.filter(s => s.skill === 'writing').length;
+
+            document.getElementById('stat-total-submissions').textContent = total;
+            document.getElementById('stat-speaking-count').textContent = spCount;
+            document.getElementById('stat-writing-count').textContent = wrCount;
+
+            if (total > 0) {
+                const avgScore = Math.round(allSubmissions.reduce((a, b) => a + (b.score || 0), 0) / total);
+                const cefr = avgScore >= 42 ? 'C' : (avgScore >= 32 ? 'B2' : (avgScore >= 20 ? 'B1' : 'A2'));
+                document.getElementById('stat-cefr-level').textContent = `${cefr} (${avgScore}/50)`;
+            } else {
+                document.getElementById('stat-cefr-level').textContent = "Chưa có";
+            }
+
+            const ctxRatio = document.getElementById('chart-skills-ratio');
+            if (ctxRatio) {
+                if (charts.ratio) charts.ratio.destroy();
+                charts.ratio = new Chart(ctxRatio, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Speaking', 'Writing'],
+                        datasets: [{
+                            data: total > 0 ? [spCount, wrCount] : [1, 1],
+                            backgroundColor: ['#4f46e5', '#0077c8'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                });
+            }
+
+            const ctxPerf = document.getElementById('chart-performance');
+            if (ctxPerf) {
+                if (charts.perf) charts.perf.destroy();
+                const recent = allSubmissions.filter(s => (s.mode || 'mock_exam') === 'mock_exam').slice(0, 6).reverse();
+                charts.perf = new Chart(ctxPerf, {
+                    type: 'bar',
+                    data: {
+                        labels: recent.length > 0 ? recent.map((r, i) => `Đề ${i + 1} (${r.skill.toUpperCase()})`) : ['Chưa có bài thi'],
+                        datasets: [{
+                            label: 'Điểm (Thang 50)',
+                            data: recent.length > 0 ? recent.map(r => r.score) : [0],
+                            backgroundColor: '#0077c8',
+                            borderRadius: 8
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 50 } } }
+                });
+            }
+        }
+
+        // =====================================================================
+        // 8. ĐIỀU HƯỚNG & TIỆN ÍCH CHUNG
+        // =====================================================================
+        window.switchMainPortal = function(portal) {
+            const pStudent = document.getElementById('portal-student');
+            const pAdmin = document.getElementById('portal-admin');
+            const btnStudent = document.getElementById('nav-student-btn');
+            const btnAdmin = document.getElementById('nav-admin-btn');
+            const subtitle = document.getElementById('header-subtitle');
+
+            if (portal === 'student') {
+                pStudent.classList.remove('hidden');
+                pAdmin.classList.add('hidden');
+                btnStudent.className = "px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 bg-white text-[#002b49] shadow";
+                btnAdmin.className = "px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 text-sky-100 hover:text-white";
+                subtitle.textContent = "Cổng Luyện Thi Trực Tuyến";
+                renderPracticeDrilldown();
+            } else {
+                pStudent.classList.add('hidden');
+                pAdmin.classList.remove('hidden');
+                btnAdmin.className = "px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 bg-white text-[#002b49] shadow";
+                btnStudent.className = "px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 text-sky-100 hover:text-white";
+                subtitle.textContent = "Quản Trị Ngân Hàng Câu Hỏi";
+                populateTopicDropdown();
+            }
+        };
+
+        window.switchStudentTab = function(tabName) {
+            if (activeExam) {
+                showToast("Vui lòng hoàn thành hoặc thoát phòng thi trước khi chuyển tab!", "warning");
+                return;
+            }
+            ['mode-select', 'practice-bank', 'history', 'stats'].forEach(t => {
+                document.getElementById(`student-view-${t}`).classList.add('hidden');
+                const btn = document.getElementById(`stab-${t}`);
+                btn.className = "px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 hover:bg-slate-100 transition whitespace-nowrap";
+            });
+
+            document.getElementById(`student-view-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`stab-${tabName}`);
+            activeBtn.className = "px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-sky-50 text-[#0077c8] border border-sky-200 transition whitespace-nowrap";
+
+            if (tabName === 'practice-bank') {
+                renderPracticeDrilldown();
+            } else if (tabName === 'stats') {
+                renderStatsCharts();
+            }
+        };
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(Math.max(0, remainingSeconds) / 60);
+            const secs = Math.max(0, remainingSeconds) % 60;
+            document.getElementById('exam-timer-display').textContent =
+                `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        window.countWords = function(str) {
+            if (!str || !str.trim()) return 0;
+            return str.trim().split(/\s+/).length;
+        };
+
+        function escapeHTML(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function escapeAttr(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/\\/g, "\\\\")
+                .replace(/'/g, "\\'")
+                .replace(/"/g, "&quot;");
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const colors = {
+                success: 'bg-emerald-600 text-white',
+                error: 'bg-red-600 text-white',
+                warning: 'bg-amber-500 text-white',
+                info: 'bg-[#002b49] text-white'
+            };
+            const icons = {
+                success: 'fa-circle-check',
+                error: 'fa-circle-xmark',
+                warning: 'fa-triangle-exclamation',
+                info: 'fa-circle-info'
+            };
+
+            const toast = document.createElement('div');
+            toast.className = `${colors[type] || colors.info} px-4 py-3 rounded-xl shadow-lg flex items-center gap-2.5 text-xs sm:text-sm font-medium pointer-events-auto transition-all duration-300`;
+            toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.info}"></i><span>${escapeHTML(message)}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function showConfirm(title, message, onConfirm) {
+            const modal = document.getElementById('confirm-modal');
+            document.getElementById('confirm-title').textContent = title;
+            document.getElementById('confirm-message').textContent = message;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            const cleanup = () => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            };
+
+            document.getElementById('confirm-cancel-btn').onclick = cleanup;
+            document.getElementById('confirm-ok-btn').onclick = () => {
+                cleanup();
+                onConfirm();
+            };
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateAdminQuestionFormUI();
+            populateTopicDropdown();
+            refreshAllQuestionViews();
+            initFirebase();
+        });
+    </script>
+</body>
+</html>
