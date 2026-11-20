@@ -13,10 +13,7 @@
             "/PHCN/HĐTL/dung_cu_vltl.html",
             "/yhoccotruyen/tra_cuu_huyet.html",
             "/phong_luyen_thi_trac_nghiem.html",
-            "/APITIS.html",
-            "/WrittingAPTIS.html",
-            "/Writing APTIS PART 4.html",
-            "/nhi_dong.html",
+            "/LearmAptis.html"
         ];
 
         let articlesDb = [];
