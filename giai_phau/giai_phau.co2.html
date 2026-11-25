@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEST HỆ THỐNG Giải Phẫu Hệ Cơ - Atlas Trực Tuyến</title>
+    <title>Tra Cứu Giải Phẫu Hệ Cơ - Atlas Trực Tuyến</title>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts: Inter -->
@@ -114,13 +114,13 @@
 
             <!-- Breadcrumb & Virtual URL Indicator -->
             <div class="flex items-center gap-2 sm:gap-3">
-                <div id="virtualUrlBadge" class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900/90 border border-slate-700/80 text-xs font-mono text-slate-400" title="Đường dẫn trang hiện tại">
+                <div id="virtualUrlBadge" class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900/90 border border-slate-700/80 text-xs font-mono text-slate-400" title="Đường dẫn trang hiện tại (Có thể copy mở trực tiếp)">
                     <i class="fa-solid fa-link text-indigo-400"></i>
-                    <span id="virtualUrlText" class="truncate max-w-[260px]">.../giai_phau_co.html</span>
+                    <span id="virtualUrlText" class="truncate max-w-[300px]">.../giai_phau_co.html</span>
                 </div>
-                <button id="btnCopyRoute" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium flex items-center gap-1.5 transition" title="Sao chép liên kết trang này">
+                <button id="btnCopyRoute" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium flex items-center gap-1.5 transition" title="Sao chép liên kết mở trực tiếp trang này">
                     <i class="fa-regular fa-copy text-sky-400"></i>
-                    <span class="hidden sm:inline">Chia sẻ</span>
+                    <span class="hidden sm:inline">Sao chép link</span>
                 </button>
             </div>
         </div>
@@ -536,7 +536,7 @@
 
                     <!-- Phần dưới: Nút Xem thêm -->
                     <div class="px-4 pb-4 pt-1">
-                        <a href="#${escapeAttr(slugHtml)}" 
+                        <a href="#/${escapeAttr(slugHtml)}" 
                            data-slug="${escapeAttr(slugHtml)}"
                            class="view-detail-trigger w-full py-2.5 px-4 rounded-xl bg-slate-800/90 hover:bg-gradient-to-r hover:from-indigo-600 hover:to-sky-600 text-slate-200 hover:text-white border border-slate-700/80 hover:border-transparent text-xs font-semibold flex items-center justify-center gap-2 transition-all duration-200 shadow-sm">
                             <span>Xem thêm</span>
@@ -635,7 +635,7 @@
                                         <i class="fa-solid fa-layer-group mr-1.5"></i>Vùng: ${escapeHTML(item.vung || 'Chưa phân loại')}
                                     </span>
                                     <span class="px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs font-mono">
-                                        /${escapeHTML(slugHtml)}
+                                        #/${escapeHTML(slugHtml)}
                                     </span>
                                 </div>
 
@@ -804,17 +804,18 @@
         }
 
         // =========================================================================
-        // 5. SỰ KIỆN TƯƠNG TÁC NGƯỜI DÙNG
+        // 5. XỬ LÝ SỰ KIỆN TƯƠNG TÁC (EVENT DELEGATION)
         // =========================================================================
-        // Click vào thẻ hoặc nút "Xem thêm"
         document.addEventListener('click', (e) => {
-            const trigger = e.target.closest('.view-detail-trigger');
-            if (trigger) {
+            // Mở trang chi tiết khi nhấp vào thẻ cơ hoặc nút Xem thêm
+            const detailTrigger = e.target.closest('.view-detail-trigger');
+            if (detailTrigger) {
                 e.preventDefault();
-                const slug = trigger.getAttribute('data-slug');
+                const slug = detailTrigger.getAttribute('data-slug');
                 if (slug) {
                     navigateToMuscle(slug, true);
                 }
+                return;
             }
 
             // Chuyển đổi ảnh trong trang chi tiết
@@ -869,14 +870,16 @@
 
         // Sao chép đường dẫn hiện tại (dùng document.execCommand('copy') an toàn trong iframe)
         document.getElementById('btnCopyRoute').addEventListener('click', () => {
-            const urlToCopy = window.location.href;
+            const urlToCopy = buildShareableUrl(currentMuscleSlug);
             const tempInput = document.createElement('input');
             tempInput.value = urlToCopy;
             document.body.appendChild(tempInput);
             tempInput.select();
             try {
                 document.execCommand('copy');
-                showToast(`Đã sao chép đường dẫn: ${currentMuscleSlug || 'giai_phau_co.html'}`);
+                showToast(currentMuscleSlug 
+                    ? `Đã sao chép link mở trực tiếp: ...#/${currentMuscleSlug}` 
+                    : 'Đã sao chép đường dẫn trang danh sách!');
             } catch (err) {
                 showToast('Không thể sao chép tự động!');
             }
