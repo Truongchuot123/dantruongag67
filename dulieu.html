@@ -180,40 +180,40 @@
             <div class="flex items-center gap-2">
                 <!-- Portal Navigation -->
                 <div class="hidden sm:flex items-center bg-slate-500/10 p-1 rounded-xl border border-slate-500/15">
-                    <button onclick="switchMainTab('docs')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+                    <button type="button" onclick="switchMainTab('docs')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
                         <i class="fas fa-database mr-1.5"></i>Dữ liệu
                     </button>
-                    <a href="/quantri_PHCN.html" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-indigo-400 transition-colors">
-                        <i class="fas fa-sliders-h mr-1.5"></i>Quản trị PHCN
+                    <a href="/benhhoc.html" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-sky-400 transition-colors">
+                        <i class="fas fa-stethoscope mr-1.5"></i>Cổng Bệnh học
                     </a>
                 </div>
 
                 <!-- Quick Tools Menu -->
                 <div class="relative">
-                    <button onclick="toggleToolsDropdown()" class="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-slate-400 hover:text-indigo-400 transition-colors" title="Công cụ dữ liệu">
+                    <button type="button" onclick="toggleToolsDropdown()" class="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-slate-400 hover:text-indigo-400 transition-colors" title="Công cụ dữ liệu">
                         <i class="fas fa-ellipsis-v"></i>
                     </button>
                     <div id="toolsDropdown" class="hidden absolute right-0 mt-2 w-56 rounded-2xl glass-panel border border-slate-500/20 shadow-2xl py-2 z-50 animate-enter">
                         <div class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Tiện ích hệ thống</div>
-                        <button onclick="exportDataJSON()" class="w-full px-4 py-2.5 text-left text-xs font-semibold hover:bg-indigo-500/10 flex items-center gap-2.5 transition-colors">
+                        <button type="button" onclick="exportDataJSON()" class="w-full px-4 py-2.5 text-left text-xs font-semibold hover:bg-indigo-500/10 flex items-center gap-2.5 transition-colors">
                             <i class="fas fa-download text-indigo-400 w-4"></i> Xuất sao lưu (JSON)
                         </button>
-                        <button onclick="triggerImportJSON()" class="w-full px-4 py-2.5 text-left text-xs font-semibold hover:bg-indigo-500/10 flex items-center gap-2.5 transition-colors">
+                        <button type="button" onclick="triggerImportJSON()" class="w-full px-4 py-2.5 text-left text-xs font-semibold hover:bg-indigo-500/10 flex items-center gap-2.5 transition-colors">
                             <i class="fas fa-upload text-emerald-400 w-4"></i> Nhập dữ liệu (JSON)
                         </button>
-                        <button onclick="clearLocalCache()" class="w-full px-4 py-2.5 text-left text-xs font-semibold hover:bg-amber-500/10 text-amber-400 flex items-center gap-2.5 transition-colors">
+                        <button type="button" onclick="clearLocalCache()" class="w-full px-4 py-2.5 text-left text-xs font-semibold hover:bg-amber-500/10 text-amber-400 flex items-center gap-2.5 transition-colors">
                             <i class="fas fa-sync-alt w-4"></i> Làm mới bộ nhớ đệm
                         </button>
                         <div class="border-t border-slate-500/15 my-1 sm:hidden"></div>
-                        <a href="/quantri_PHCN.html" class="sm:hidden w-full px-4 py-2.5 text-left text-xs font-semibold hover:bg-indigo-500/10 flex items-center gap-2.5 text-indigo-400">
-                            <i class="fas fa-sliders-h w-4"></i> Sang Quản trị PHCN
+                        <a href="/benhhoc.html" class="sm:hidden w-full px-4 py-2.5 text-left text-xs font-semibold hover:bg-sky-500/10 flex items-center gap-2.5 text-sky-400">
+                            <i class="fas fa-stethoscope w-4"></i> Sang Cổng Bệnh học
                         </a>
                     </div>
                     <input type="file" id="importJsonInput" accept=".json" class="hidden" onchange="handleImportJSON(event)">
                 </div>
 
                 <!-- Theme Toggle -->
-                <button onclick="toggleTheme()" id="themeToggleBtn" class="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-amber-400 hover:scale-105 transition-transform" title="Đổi giao diện Sáng / Tối">
+                <button type="button" onclick="toggleTheme()" id="themeToggleBtn" class="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-amber-400 hover:scale-105 transition-transform" title="Đổi giao diện Sáng / Tối">
                     <i class="fas fa-sun"></i>
                 </button>
             </div>
@@ -246,7 +246,7 @@
                 </div>
                 <div class="flex items-baseline gap-2">
                     <span class="text-2xl sm:text-3xl font-black text-rose-400" id="kpi-draft-docs">0</span>
-                    <span class="text-xs text-slate-400">bài chờ link</span>
+                    <span class="text-xs text-slate-400">bài chờ dữ liệu</span>
                 </div>
             </div>
 
@@ -280,22 +280,22 @@
         <!-- DESKTOP NAVIGATION TABS & QUICK ACTION -->
         <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
             <div class="hidden md:flex items-center gap-1.5 glass-panel p-1.5 rounded-2xl">
-                <button onclick="switchMainTab('docs')" id="tab-btn-docs" class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 bg-indigo-600 text-white shadow-md shadow-indigo-600/25">
+                <button type="button" onclick="switchMainTab('docs')" id="tab-btn-docs" class="px-5 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 bg-indigo-600 text-white shadow-md shadow-indigo-600/25">
                     <i class="fas fa-folder-open"></i> Tài liệu học tập
                 </button>
-                <button onclick="switchMainTab('questions')" id="tab-btn-questions" class="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-indigo-400 transition-all flex items-center gap-2">
+                <button type="button" onclick="switchMainTab('questions')" id="tab-btn-questions" class="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-indigo-400 transition-all flex items-center gap-2">
                     <i class="fas fa-question-circle"></i> Ngân hàng câu hỏi
                 </button>
-                <button onclick="switchMainTab('stats')" id="tab-btn-stats" class="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-indigo-400 transition-all flex items-center gap-2">
+                <button type="button" onclick="switchMainTab('stats')" id="tab-btn-stats" class="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-indigo-400 transition-all flex items-center gap-2">
                     <i class="fas fa-chart-bar"></i> Phân tích & Thống kê
                 </button>
             </div>
 
             <div class="flex items-center gap-2 justify-end">
-                <button onclick="openDocModal()" class="flex-1 sm:flex-none btn-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg">
+                <button type="button" onclick="openDocModal()" class="flex-1 sm:flex-none btn-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg">
                     <i class="fas fa-plus"></i> <span>Thêm Tài liệu</span>
                 </button>
-                <button onclick="switchMainTab('questions'); switchQuizSubTab('form')" class="flex-1 sm:flex-none glass-panel hover:border-purple-500/50 text-purple-400 px-5 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all">
+                <button type="button" onclick="switchMainTab('questions'); switchQuizSubTab('form')" class="flex-1 sm:flex-none glass-panel hover:border-purple-500/50 text-purple-400 px-5 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all">
                     <i class="fas fa-magic"></i> <span>Soạn Câu hỏi</span>
                 </button>
             </div>
@@ -308,10 +308,10 @@
                 <div class="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-3">
                     <!-- Sub-tabs -->
                     <div class="flex bg-slate-500/10 p-1 rounded-xl border border-slate-500/10">
-                        <button onclick="switchDocSubTab('all')" id="doc-sub-all" class="flex-1 lg:flex-none px-4 py-2 rounded-lg text-xs font-bold bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 transition-all">
+                        <button type="button" onclick="switchDocSubTab('all')" id="doc-sub-all" class="flex-1 lg:flex-none px-4 py-2 rounded-lg text-xs font-bold bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 transition-all">
                             <i class="fas fa-check-double mr-1.5"></i>Đã có tài liệu
                         </button>
-                        <button onclick="switchDocSubTab('draft')" id="doc-sub-draft" class="flex-1 lg:flex-none px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-slate-200 transition-all flex items-center justify-center gap-1.5">
+                        <button type="button" onclick="switchDocSubTab('draft')" id="doc-sub-draft" class="flex-1 lg:flex-none px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-slate-200 transition-all flex items-center justify-center gap-1.5">
                             <i class="fas fa-clock"></i>Chưa soạn
                             <span id="badge-draft-count" class="bg-rose-500 text-white text-[10px] px-1.5 py-0.2 rounded-full hidden">0</span>
                         </button>
@@ -323,7 +323,7 @@
                             <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                             <input type="text" id="docSearch" placeholder="Tìm tên bài, môn, chủ đề..." 
                                 class="form-input w-full pl-9 pr-8 py-2.5 rounded-xl text-xs font-medium" oninput="debouncedRenderDocs()">
-                            <button onclick="document.getElementById('docSearch').value=''; renderDocs();" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-rose-400 text-xs">
+                            <button type="button" onclick="document.getElementById('docSearch').value=''; renderDocs();" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-rose-400 text-xs">
                                 <i class="fas fa-times-circle"></i>
                             </button>
                         </div>
@@ -342,8 +342,8 @@
                         Đã chọn <span id="docSelectedCount" class="text-white bg-indigo-600 px-2 py-0.5 rounded-md mx-1">0</span> tài liệu
                     </span>
                     <div class="flex items-center gap-2">
-                        <button onclick="clearDocSelection()" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:bg-slate-700/50">Bỏ chọn</button>
-                        <button onclick="requestBulkDeleteDocs()" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-sm flex items-center gap-1.5">
+                        <button type="button" onclick="clearDocSelection()" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:bg-slate-700/50">Bỏ chọn</button>
+                        <button type="button" onclick="requestBulkDeleteDocs()" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-sm flex items-center gap-1.5">
                             <i class="fas fa-trash-alt"></i> Xóa đã chọn
                         </button>
                     </div>
@@ -362,14 +362,13 @@
                                 </th>
                                 <th class="px-4 py-3.5 w-36">Môn học</th>
                                 <th class="px-4 py-3.5 w-44">Chủ đề</th>
-                                <th class="px-4 py-3.5">Tên bài học / Tài liệu</th>
+                                <th class="px-4 py-3.5">Tên bài học / Tài liệu / Video / Nội dung</th>
                                 <th class="px-4 py-3.5 w-44">Hình ảnh</th>
                                 <th class="px-3 py-3.5 text-center w-24">Câu hỏi</th>
                                 <th class="px-5 py-3.5 text-right w-40">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody id="docTableBody" class="divide-y divide-slate-500/10 text-sm">
-                            <!-- Skeleton Rows -->
                             <tr><td colspan="7" class="p-6"><div class="skeleton h-10 w-full"></div></td></tr>
                             <tr><td colspan="7" class="p-6 pt-0"><div class="skeleton h-10 w-full"></div></td></tr>
                         </tbody>
@@ -400,10 +399,10 @@
             <!-- Sub-navigation & Quick Stats -->
             <div class="glass-panel rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
                 <div class="flex bg-slate-500/10 p-1 rounded-xl border border-slate-500/10">
-                    <button onclick="switchQuizSubTab('list')" id="quiz-sub-list" class="flex-1 sm:flex-none px-4 py-2 rounded-lg text-xs font-bold bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 transition-all">
+                    <button type="button" onclick="switchQuizSubTab('list')" id="quiz-sub-list" class="flex-1 sm:flex-none px-4 py-2 rounded-lg text-xs font-bold bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 transition-all">
                         <i class="fas fa-list-ul mr-1.5"></i>Danh sách (<span id="quiz-total-badge">0</span>)
                     </button>
-                    <button onclick="switchQuizSubTab('form')" id="quiz-sub-form" class="flex-1 sm:flex-none px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-slate-200 transition-all">
+                    <button type="button" onclick="switchQuizSubTab('form')" id="quiz-sub-form" class="flex-1 sm:flex-none px-4 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-slate-200 transition-all">
                         <i class="fas fa-plus-circle mr-1.5"></i>Soạn câu hỏi mới
                     </button>
                 </div>
@@ -437,7 +436,7 @@
                         </select>
                     </div>
                     <div class="lg:col-span-1 flex justify-end">
-                        <button onclick="toggleExpandAllAccordions()" id="expandAllBtn" class="w-full lg:w-10 h-9 rounded-xl glass-panel hover:border-indigo-500/40 text-slate-400 hover:text-indigo-400 flex items-center justify-center text-xs font-bold gap-1.5" title="Mở rộng / Thu gọn tất cả">
+                        <button type="button" onclick="toggleExpandAllAccordions()" id="expandAllBtn" class="w-full lg:w-10 h-9 rounded-xl glass-panel hover:border-indigo-500/40 text-slate-400 hover:text-indigo-400 flex items-center justify-center text-xs font-bold gap-1.5" title="Mở rộng / Thu gọn tất cả">
                             <i class="fas fa-expand-alt"></i> <span class="lg:hidden">Mở tất cả</span>
                         </button>
                     </div>
@@ -452,10 +451,10 @@
                         Nhóm bài <span id="quiz-page-info" class="text-indigo-400 font-bold">0-0</span> / <span id="quiz-total-info" class="font-bold">0</span>
                     </span>
                     <div class="flex gap-1.5">
-                        <button id="prevQuizPage" onclick="prevPage()" class="w-9 h-9 rounded-xl glass-panel hover:bg-indigo-600 hover:text-white disabled:opacity-30 flex items-center justify-center transition-colors">
+                        <button type="button" id="prevQuizPage" onclick="prevPage()" class="w-9 h-9 rounded-xl glass-panel hover:bg-indigo-600 hover:text-white disabled:opacity-30 flex items-center justify-center transition-colors">
                             <i class="fas fa-chevron-left text-xs"></i>
                         </button>
-                        <button id="nextQuizPage" onclick="nextPage()" class="w-9 h-9 rounded-xl glass-panel hover:bg-indigo-600 hover:text-white disabled:opacity-30 flex items-center justify-center transition-colors">
+                        <button type="button" id="nextQuizPage" onclick="nextPage()" class="w-9 h-9 rounded-xl glass-panel hover:bg-indigo-600 hover:text-white disabled:opacity-30 flex items-center justify-center transition-colors">
                             <i class="fas fa-chevron-right text-xs"></i>
                         </button>
                     </div>
@@ -588,7 +587,7 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
                     <div>
                         <h2 class="text-lg font-extrabold">Tiến Độ Biên Soạn Theo Môn Học</h2>
-                        <p class="text-xs text-slate-400">Tỷ lệ hoàn thành link tài liệu và số lượng câu hỏi trắc nghiệm từng môn</p>
+                        <p class="text-xs text-slate-400">Tỷ lệ hoàn thành tài liệu/video/nội dung và số lượng câu hỏi từng môn</p>
                     </div>
                 </div>
                 <div id="subjectStatsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
@@ -598,28 +597,28 @@
 
     <!-- MOBILE BOTTOM NAVIGATION BAR -->
     <nav class="md:hidden fixed bottom-0 inset-x-0 z-40 glass-panel border-t border-slate-500/15 px-2 py-1.5 flex justify-around items-center">
-        <button onclick="switchMainTab('docs')" id="mob-tab-docs" class="flex flex-col items-center py-1 px-4 rounded-xl text-indigo-400 font-bold text-[11px]">
+        <button type="button" onclick="switchMainTab('docs')" id="mob-tab-docs" class="flex flex-col items-center py-1 px-4 rounded-xl text-indigo-400 font-bold text-[11px]">
             <i class="fas fa-folder-open text-base mb-0.5"></i>
             <span>Tài liệu</span>
         </button>
-        <button onclick="switchMainTab('questions')" id="mob-tab-questions" class="flex flex-col items-center py-1 px-4 rounded-xl text-slate-400 font-semibold text-[11px]">
+        <button type="button" onclick="switchMainTab('questions')" id="mob-tab-questions" class="flex flex-col items-center py-1 px-4 rounded-xl text-slate-400 font-semibold text-[11px]">
             <i class="fas fa-question-circle text-base mb-0.5"></i>
             <span>Câu hỏi</span>
         </button>
-        <button onclick="switchMainTab('stats')" id="mob-tab-stats" class="flex flex-col items-center py-1 px-4 rounded-xl text-slate-400 font-semibold text-[11px]">
+        <button type="button" onclick="switchMainTab('stats')" id="mob-tab-stats" class="flex flex-col items-center py-1 px-4 rounded-xl text-slate-400 font-semibold text-[11px]">
             <i class="fas fa-chart-pie text-base mb-0.5"></i>
             <span>Thống kê</span>
         </button>
     </nav>
 
     <!-- MODAL THÊM / SỬA TÀI LIỆU -->
-    <div id="docModal" class="fixed inset-0 bg-slate-950/75 hidden items-center justify-center z-50 p-4 backdrop-blur-sm">
-        <div class="glass-panel w-full max-w-xl rounded-2xl border border-slate-500/20 shadow-2xl overflow-hidden animate-enter max-h-[92vh] flex flex-col">
+    <div id="docModal" class="fixed inset-0 bg-slate-950/75 hidden items-center justify-center z-50 p-3 sm:p-4 backdrop-blur-sm">
+        <div class="glass-panel w-full max-w-2xl rounded-2xl border border-slate-500/20 shadow-2xl overflow-hidden animate-enter max-h-[94vh] flex flex-col">
             <div class="px-5 py-4 border-b border-slate-500/15 flex justify-between items-center shrink-0">
                 <h3 id="docModalTitle" class="font-extrabold text-base flex items-center gap-2 text-indigo-400">
                     <i class="fas fa-folder-plus"></i> Thêm tài liệu mới
                 </h3>
-                <button onclick="closeDocModal()" class="w-8 h-8 rounded-lg hover:bg-rose-500/20 hover:text-rose-400 flex items-center justify-center transition-colors">
+                <button type="button" onclick="closeDocModal()" class="w-8 h-8 rounded-lg hover:bg-rose-500/20 hover:text-rose-400 flex items-center justify-center transition-colors">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -650,25 +649,72 @@
                 <!-- QUẢN LÝ NHIỀU HÌNH ẢNH -->
                 <div class="space-y-2.5 pt-1 border-t border-slate-500/15">
                     <div class="flex items-center justify-between">
-                        <label class="block text-[11px] font-extrabold text-indigo-400 uppercase">Hình ảnh</label>
+                        <label class="block text-[11px] font-extrabold text-indigo-400 uppercase">Hình ảnh minh họa</label>
                         <button type="button" onclick="addImageInputRow()" class="px-2.5 py-1 rounded-lg bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-400 text-[11px] font-bold flex items-center gap-1.5 transition-colors">
                             <i class="fas fa-plus"></i> Thêm ảnh
                         </button>
                     </div>
                     
-                    <div id="docImagesContainer" class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar pr-1">
-                        <!-- Các dòng nhập ảnh được render động tại đây -->
+                    <div id="docImagesContainer" class="space-y-2 max-h-44 overflow-y-auto custom-scrollbar pr-1"></div>
+                </div>
+
+                <!-- ĐƯỜNG DẪN TÀI LIỆU & VIDEO BÀI GIẢNG -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1 border-t border-slate-500/15">
+                    <div>
+                        <label class="block text-[11px] font-extrabold text-sky-400 uppercase mb-1.5">
+                            <i class="fas fa-file-alt mr-1"></i>Đường dẫn tài liệu (Drive / PDF / Web)
+                        </label>
+                        <input type="text" id="docUrl" placeholder="https://drive.google.com/... hoặc /tailieu/bai1.pdf"
+                            class="form-input w-full px-3.5 py-2.5 rounded-xl text-xs font-mono text-sky-400">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-extrabold text-rose-400 uppercase mb-1.5">
+                            <i class="fas fa-video mr-1"></i>Đường dẫn Video bài giảng
+                        </label>
+                        <input type="text" id="docVideoUrl" placeholder="https://youtube.com/... hoặc /video/bai1.mp4"
+                            class="form-input w-full px-3.5 py-2.5 rounded-xl text-xs font-mono text-rose-400">
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-[11px] font-extrabold text-indigo-400 uppercase mb-1.5">Đường dẫn tài liệu / Video</label>
-                    <input type="text" id="docUrl" placeholder="https://... hoặc /video/bài 1.mp4"
-                        class="form-input w-full px-3.5 py-2.5 rounded-xl text-xs font-mono text-blue-400">
-                    <p class="text-[11px] text-slate-400 mt-1">Hỗ trợ link web hoặc đường dẫn nội bộ (tự động chuẩn hóa <code class="text-indigo-400">/</code> đầu dòng & mã hóa tiếng Việt)</p>
-                </div>
+                <!-- TRÌNH SOẠN THẢO NỘI DUNG TÀI LIỆU ĐA ĐỊNH DẠNG -->
+                <div class="space-y-2 pt-1 border-t border-slate-500/15">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-[11px] font-extrabold text-emerald-400 uppercase">
+                            <i class="fas fa-paragraph mr-1"></i>Nội dung tài liệu (Định dạng chữ phong phú)
+                        </label>
+                        <span class="text-[10px] text-slate-400">Bôi đen chữ để áp dụng định dạng</span>
+                    </div>
 
-                
+                    <!-- Thanh công cụ định dạng chữ -->
+                    <div class="flex flex-wrap items-center gap-1 p-1.5 rounded-xl bg-slate-900/85 border border-slate-500/20">
+                        <button type="button" onclick="execDocCmd('bold')" class="w-7 h-7 rounded-lg hover:bg-indigo-500/20 text-slate-300 hover:text-white text-xs font-bold" title="In đậm"><i class="fas fa-bold"></i></button>
+                        <button type="button" onclick="execDocCmd('italic')" class="w-7 h-7 rounded-lg hover:bg-indigo-500/20 text-slate-300 hover:text-white text-xs" title="In nghiêng"><i class="fas fa-italic"></i></button>
+                        <button type="button" onclick="execDocCmd('underline')" class="w-7 h-7 rounded-lg hover:bg-indigo-500/20 text-slate-300 hover:text-white text-xs" title="Gạch chân"><i class="fas fa-underline"></i></button>
+                        <button type="button" onclick="execDocCmd('strikeThrough')" class="w-7 h-7 rounded-lg hover:bg-indigo-500/20 text-slate-300 hover:text-white text-xs" title="Gạch ngang"><i class="fas fa-strikethrough"></i></button>
+                        <span class="w-px h-4 bg-slate-500/25 mx-0.5"></span>
+                        <button type="button" onclick="execDocCmd('formatBlock', 'H3')" class="px-2 h-7 rounded-lg hover:bg-indigo-500/20 text-sky-400 text-[11px] font-black" title="Tiêu đề lớn">H1</button>
+                        <button type="button" onclick="execDocCmd('formatBlock', 'H4')" class="px-2 h-7 rounded-lg hover:bg-indigo-500/20 text-indigo-400 text-[11px] font-bold" title="Tiêu đề nhỏ">H2</button>
+                        <button type="button" onclick="execDocCmd('formatBlock', 'P')" class="px-2 h-7 rounded-lg hover:bg-indigo-500/20 text-slate-400 text-[11px] font-semibold" title="Đoạn văn thường">P</button>
+                        <span class="w-px h-4 bg-slate-500/25 mx-0.5"></span>
+                        <button type="button" onclick="execDocCmd('insertUnorderedList')" class="w-7 h-7 rounded-lg hover:bg-indigo-500/20 text-slate-300 text-xs" title="Danh sách dấu chấm"><i class="fas fa-list-ul"></i></button>
+                        <button type="button" onclick="execDocCmd('insertOrderedList')" class="w-7 h-7 rounded-lg hover:bg-indigo-500/20 text-slate-300 text-xs" title="Danh sách đánh số"><i class="fas fa-list-ol"></i></button>
+                        <span class="w-px h-4 bg-slate-500/25 mx-0.5"></span>
+                        <button type="button" onclick="execDocCmd('justifyLeft')" class="w-7 h-7 rounded-lg hover:bg-indigo-500/20 text-slate-300 text-xs" title="Căn trái"><i class="fas fa-align-left"></i></button>
+                        <button type="button" onclick="execDocCmd('justifyCenter')" class="w-7 h-7 rounded-lg hover:bg-indigo-500/20 text-slate-300 text-xs" title="Căn giữa"><i class="fas fa-align-center"></i></button>
+                        <span class="w-px h-4 bg-slate-500/25 mx-0.5"></span>
+                        <button type="button" onclick="execDocCmd('foreColor', '#38bdf8')" class="w-6 h-6 rounded-md bg-sky-400/20 border border-sky-400/50 flex items-center justify-center text-[10px] font-black text-sky-400" title="Chữ xanh dương">A</button>
+                        <button type="button" onclick="execDocCmd('foreColor', '#34d399')" class="w-6 h-6 rounded-md bg-emerald-400/20 border border-emerald-400/50 flex items-center justify-center text-[10px] font-black text-emerald-400" title="Chữ xanh ngọc">A</button>
+                        <button type="button" onclick="execDocCmd('foreColor', '#fbbf24')" class="w-6 h-6 rounded-md bg-amber-400/20 border border-amber-400/50 flex items-center justify-center text-[10px] font-black text-amber-400" title="Chữ vàng">A</button>
+                        <button type="button" onclick="execDocCmd('foreColor', '#fb7185')" class="w-6 h-6 rounded-md bg-rose-400/20 border border-rose-400/50 flex items-center justify-center text-[10px] font-black text-rose-400" title="Chữ đỏ hồng">A</button>
+                        <button type="button" onclick="execDocCmd('hiliteColor', 'rgba(250, 204, 21, 0.25)')" class="px-1.5 h-6 rounded-md bg-yellow-400/20 text-yellow-300 text-[10px] font-bold" title="Tô sáng nền chữ"><i class="fas fa-highlighter"></i></button>
+                        <button type="button" onclick="execDocCmd('removeFormat')" class="w-7 h-7 rounded-lg hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 text-xs ml-auto" title="Xóa định dạng"><i class="fas fa-eraser"></i></button>
+                    </div>
+
+                    <!-- Vùng soạn thảo nội dung đa định dạng -->
+                    <div id="docRichContent" contenteditable="true"
+                        data-placeholder="Nhập nội dung bài học, cơ chế bệnh sinh, triệu chứng lâm sàng, lưu ý điều trị..."
+                        class="form-input w-full min-h-[140px] max-h-60 overflow-y-auto custom-scrollbar px-4 py-3 rounded-xl text-xs sm:text-sm leading-relaxed space-y-1.5 [&_h3]:text-base [&_h3]:font-black [&_h3]:text-sky-400 [&_h4]:text-sm [&_h4]:font-bold [&_h4]:text-indigo-400 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 empty:before:content-[attr(data-placeholder)] empty:before:text-slate-500"></div>
+                </div>
 
                 <div class="pt-3 border-t border-slate-500/15 flex justify-end gap-2.5 shrink-0">
                     <button type="button" onclick="closeDocModal()" class="px-4 py-2.5 rounded-xl glass-panel text-xs font-bold hover:bg-slate-500/10">Hủy</button>
@@ -687,18 +733,18 @@
                     <a id="lightboxOpenRaw" href="#" target="_blank" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold text-white flex items-center gap-1.5">
                         <i class="fas fa-external-link-alt"></i> Mở gốc
                     </a>
-                    <button onclick="closeImageLightbox()" class="w-9 h-9 rounded-xl bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white flex items-center justify-center transition-colors">
+                    <button type="button" onclick="closeImageLightbox()" class="w-9 h-9 rounded-xl bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white flex items-center justify-center transition-colors">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
             </div>
 
             <div class="relative w-full flex items-center justify-center bg-black/40 rounded-2xl border border-white/10 overflow-hidden min-h-[300px] max-h-[75vh]">
-                <button id="lightboxPrevBtn" onclick="navigateLightbox(-1)" class="absolute left-3 z-10 w-10 h-10 rounded-full bg-black/60 hover:bg-indigo-600 text-white flex items-center justify-center transition-colors">
+                <button type="button" id="lightboxPrevBtn" onclick="navigateLightbox(-1)" class="absolute left-3 z-10 w-10 h-10 rounded-full bg-black/60 hover:bg-indigo-600 text-white flex items-center justify-center transition-colors">
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <img id="lightboxImg" src="" alt="Xem trước hình ảnh" class="max-h-[75vh] max-w-full object-contain select-none">
-                <button id="lightboxNextBtn" onclick="navigateLightbox(1)" class="absolute right-3 z-10 w-10 h-10 rounded-full bg-black/60 hover:bg-indigo-600 text-white flex items-center justify-center transition-colors">
+                <button type="button" id="lightboxNextBtn" onclick="navigateLightbox(1)" class="absolute right-3 z-10 w-10 h-10 rounded-full bg-black/60 hover:bg-indigo-600 text-white flex items-center justify-center transition-colors">
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
@@ -715,8 +761,8 @@
             <h3 class="text-lg font-extrabold mb-1.5">Xác nhận xóa dữ liệu?</h3>
             <p id="deleteModalDesc" class="text-slate-400 text-xs mb-6 leading-relaxed">Hành động này sẽ xóa vĩnh viễn dữ liệu khỏi hệ thống và không thể hoàn tác.</p>
             <div class="flex gap-2.5">
-                <button onclick="closeDeleteModal()" class="flex-1 py-2.5 rounded-xl glass-panel text-xs font-bold">Hủy bỏ</button>
-                <button id="confirmDeleteBtn" class="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-lg shadow-rose-600/25">Xóa ngay</button>
+                <button type="button" onclick="closeDeleteModal()" class="flex-1 py-2.5 rounded-xl glass-panel text-xs font-bold">Hủy bỏ</button>
+                <button type="button" id="confirmDeleteBtn" class="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-lg shadow-rose-600/25">Xóa ngay</button>
             </div>
         </div>
     </div>
@@ -731,46 +777,50 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { firebaseConfig } from "/dl.js";
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        
+        // Nạp cấu hình Firebase an toàn (hỗ trợ cả /dl.js trên máy chủ và môi trường Preview/Sandbox)
+        let firebaseConfig = null;
+        try {
+            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                firebaseConfig = typeof __firebase_config === 'string' ? JSON.parse(__firebase_config) : __firebase_config;
+            } else {
+                const mod = await import("/dl.js");
+                firebaseConfig = mod.firebaseConfig;
+            }
+        } catch (e) {
+            console.warn("Không thể tải /dl.js trực tiếp, sử dụng bộ nhớ đệm cục bộ:", e);
+        }
+
+        let app = null, auth = null, db = null;
+        if (firebaseConfig && firebaseConfig.apiKey) {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+        }
+
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'v2-database-school';
         document.getElementById('meta-app-id').textContent = appId;
 
         // =========================================================
         // 0. CHUẨN HÓA ĐƯỜNG DẪN & CHUYỂN ĐỔI LINK GOOGLE DRIVE
         // =========================================================
-        /**
-         * Chuẩn hóa đường dẫn nội bộ hoặc URL:
-         * - Tự động thêm dấu '/' ở đầu nếu là đường dẫn tương đối thiếu '/'
-         * - Chuyển đổi link chia sẻ Google Drive sang link hiển thị ảnh trực tiếp
-         * - Mã hóa khoảng trắng và ký tự tiếng Việt bằng encodeURI (tránh mã hóa kép)
-         */
         window.normalizeMediaPath = function(rawPath, isImage = false) {
             if (!rawPath) return '';
             let path = String(rawPath).trim();
             if (!path) return '';
 
-            // Nếu là đường dẫn tương đối (không bắt đầu bằng http://, https://, data:, blob:)
             if (!/^(https?:\/\/|data:|blob:)/i.test(path)) {
-                // Đổi dấu gạch chéo ngược '\' thành '/'
                 path = path.replace(/\\/g, '/');
-                // Tự động thêm dấu '/' ở đầu nếu thiếu
                 if (!path.startsWith('/')) {
                     path = '/' + path;
                 }
             } else if (isImage) {
-                // Hỗ trợ chuyển đổi link chia sẻ Google Drive sang link ảnh trực tiếp
                 const driveMatch = path.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([a-zA-Z0-9_-]+)/i);
                 if (driveMatch && driveMatch[1]) {
                     return `https://lh3.googleusercontent.com/d/${driveMatch[1]}`;
                 }
             }
 
-            // Giải mã trước nếu người dùng dán URL đã encode sẵn để tránh bị %2520, sau đó encodeURI
             try {
                 const decoded = decodeURI(path);
                 return encodeURI(decoded);
@@ -778,6 +828,13 @@
                 return encodeURI(path);
             }
         };
+
+        function hasMeaningfulContent(item) {
+            const hasDocUrl = item.url && String(item.url).trim() !== '';
+            const hasVideo = item.videoUrl && String(item.videoUrl).trim() !== '';
+            const plainText = item.content ? String(item.content).replace(/<[^>]*>/g, '').trim() : '';
+            return Boolean(hasDocUrl || hasVideo || plainText !== '');
+        }
 
         // =========================================================
         // 1. LOCAL CACHE ENGINE (TẢI TỨC THÌ 0ms)
@@ -802,7 +859,6 @@
         let deleteTargetType = '';
         let deleteTargetId = '';
 
-        // Lightbox State
         let lightboxImages = [];
         let lightboxIndex = 0;
 
@@ -860,50 +916,55 @@
         // =========================================================
         // 2. FIREBASE REALTIME SYNC
         // =========================================================
-        const initAuth = async () => {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
+        if (!auth || !db) {
+            document.getElementById('sync-status').innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> Bộ nhớ cục bộ`;
+            refreshAllViews();
+        } else {
+            const initAuth = async () => {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (err) {
+                    document.getElementById('sync-status').innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span> Lỗi kết nối`;
                 }
-            } catch (err) {
-                document.getElementById('sync-status').innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span> Lỗi kết nối`;
-            }
-        };
+            };
 
-        onAuthStateChanged(auth, (user) => {
-            if (!user) return;
-            document.getElementById('sync-status').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Trực tuyến`;
+            onAuthStateChanged(auth, (user) => {
+                if (!user) return;
+                document.getElementById('sync-status').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Trực tuyến`;
 
-            const docColRef = collection(db, 'artifacts', appId, 'public', 'data', 'links');
-            onSnapshot(docColRef, (snap) => {
-                allLinks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                allLinks.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-                saveToCache();
-                rebuildIndexes();
-                refreshAllViews();
-            });
-
-            const quizColRef = collection(db, 'artifacts', appId, 'public', 'data', 'questions');
-            onSnapshot(quizColRef, (snap) => {
-                allQuestions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                allQuestions.sort((a, b) => {
-                    const cmpSub = (a.subject || '').localeCompare(b.subject || '');
-                    if (cmpSub !== 0) return cmpSub;
-                    const cmpTop = (a.topic || '').localeCompare(b.topic || '');
-                    if (cmpTop !== 0) return cmpTop;
-                    const cmpLes = (a.lesson || '').localeCompare(b.lesson || '');
-                    if (cmpLes !== 0) return cmpLes;
-                    return (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0);
+                const docColRef = collection(db, 'artifacts', appId, 'public', 'data', 'links');
+                onSnapshot(docColRef, (snap) => {
+                    allLinks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                    allLinks.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+                    saveToCache();
+                    rebuildIndexes();
+                    refreshAllViews();
                 });
-                saveToCache();
-                rebuildIndexes();
-                refreshAllViews();
-            });
-        });
 
-        initAuth();
+                const quizColRef = collection(db, 'artifacts', appId, 'public', 'data', 'questions');
+                onSnapshot(quizColRef, (snap) => {
+                    allQuestions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                    allQuestions.sort((a, b) => {
+                        const cmpSub = (a.subject || '').localeCompare(b.subject || '');
+                        if (cmpSub !== 0) return cmpSub;
+                        const cmpTop = (a.topic || '').localeCompare(b.topic || '');
+                        if (cmpTop !== 0) return cmpTop;
+                        const cmpLes = (a.lesson || '').localeCompare(b.lesson || '');
+                        if (cmpLes !== 0) return cmpLes;
+                        return (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0);
+                    });
+                    saveToCache();
+                    rebuildIndexes();
+                    refreshAllViews();
+                });
+            });
+
+            initAuth();
+        }
 
         // =========================================================
         // 3. UTILITIES & UI CONTROLS
@@ -1016,8 +1077,8 @@
         // =========================================================
         function updateKPIs() {
             const totalDocs = allLinks.length;
-            const draftDocs = allLinks.filter(l => !l.url || l.url.trim() === '').length;
-            const readyDocs = totalDocs - draftDocs;
+            const readyDocs = allLinks.filter(l => hasMeaningfulContent(l)).length;
+            const draftDocs = totalDocs - readyDocs;
             const totalQuiz = allQuestions.length;
             const mcqCount = allQuestions.filter(q => q.type === 'multiple_choice').length;
 
@@ -1204,9 +1265,9 @@
             const top = document.getElementById('docFilterTopic').value;
 
             return allLinks.filter(item => {
-                const hasUrl = item.url && item.url.trim() !== '';
-                if (currentDocSubTab === 'all' && !hasUrl) return false;
-                if (currentDocSubTab === 'draft' && hasUrl) return false;
+                const isReady = hasMeaningfulContent(item);
+                if (currentDocSubTab === 'all' && !isReady) return false;
+                if (currentDocSubTab === 'draft' && isReady) return false;
                 if (sub && item.subject !== sub) return false;
                 if (top && item.topic !== top) return false;
                 if (q) {
@@ -1236,6 +1297,14 @@
                 const rawUrl = item.url ? item.url.trim() : '';
                 const normalizedUrl = rawUrl ? normalizeMediaPath(rawUrl, false) : '';
                 const hasUrl = normalizedUrl !== '';
+
+                const rawVideo = item.videoUrl ? item.videoUrl.trim() : '';
+                const normalizedVideo = rawVideo ? normalizeMediaPath(rawVideo, false) : '';
+                const hasVideo = normalizedVideo !== '';
+
+                const plainContent = item.content ? String(item.content).replace(/<[^>]*>/g, '').trim() : '';
+                const hasContent = plainContent !== '';
+
                 const qCount = quizCountMap.get(`${item.subject}||${item.topic}||${item.title}`) || 0;
                 const checked = selectedDocIds.has(item.id) ? 'checked' : '';
                 const imagesHtml = renderDocImagesCell(item);
@@ -1255,36 +1324,44 @@
                     </td>
                     <td class="px-4 py-3.5">
                         <div class="font-bold text-sm group-hover:text-indigo-400 transition-colors">${escapeHtml(item.title)}</div>
-                        ${hasUrl ? `
-                            <div class="flex items-center gap-2 mt-1">
-                                <a href="${escapeHtml(normalizedUrl)}" target="_blank" class="text-[11px] text-blue-400 hover:underline truncate max-w-xs inline-flex items-center gap-1">
-                                    <i class="fas fa-external-link-alt text-[10px]"></i> ${escapeHtml(normalizedUrl)}
+                        <div class="flex flex-wrap items-center gap-2 mt-1.5">
+                            ${hasUrl ? `
+                                <a href="${escapeHtml(normalizedUrl)}" target="_blank" class="text-[11px] text-sky-400 hover:underline inline-flex items-center gap-1 px-2 py-0.5 rounded bg-sky-500/10">
+                                    <i class="fas fa-file-alt text-[10px]"></i> Tài liệu
                                 </a>
-                                <button onclick="copyText('${escapeHtml(normalizedUrl)}')" class="text-slate-400 hover:text-indigo-400 text-[11px]" title="Sao chép link">
-                                    <i class="far fa-copy"></i>
-                                </button>
-                            </div>
-                        ` : `<span class="text-[11px] text-amber-400 italic">Chưa gắn đường dẫn tài liệu</span>`}
+                            ` : ''}
+                            ${hasVideo ? `
+                                <a href="${escapeHtml(normalizedVideo)}" target="_blank" class="text-[11px] text-rose-400 hover:underline inline-flex items-center gap-1 px-2 py-0.5 rounded bg-rose-500/10">
+                                    <i class="fas fa-video text-[10px]"></i> Video
+                                </a>
+                            ` : ''}
+                            ${hasContent ? `
+                                <span class="text-[11px] text-emerald-400 inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-500/10" title="${escapeHtml(plainContent.slice(0, 120))}">
+                                    <i class="fas fa-align-left text-[10px]"></i> Nội dung chữ
+                                </span>
+                            ` : ''}
+                            ${!hasUrl && !hasVideo && !hasContent ? `<span class="text-[11px] text-amber-400 italic">Chưa có tài liệu / video / nội dung</span>` : ''}
+                        </div>
                     </td>
                     <td class="px-4 py-3.5">
                         ${imagesHtml}
                     </td>
                     <td class="px-3 py-3.5 text-center">
-                        <button onclick="filterQuizByLesson('${escapeHtml(item.subject)}', '${escapeHtml(item.topic)}')" 
+                        <button type="button" onclick="filterQuizByLesson('${escapeHtml(item.subject)}', '${escapeHtml(item.topic)}')" 
                             class="px-2.5 py-1 rounded-lg text-xs font-bold ${qCount > 0 ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-slate-500/10 text-slate-400'}">
                             ${qCount} câu
                         </button>
                     </td>
                     <td class="px-5 py-3.5 text-right">
                         <div class="flex justify-end gap-1.5">
-                            <button onclick="quickAddQuiz('${escapeHtml(item.subject)}', '${escapeHtml(item.topic)}', '${escapeHtml(item.title)}')" 
+                            <button type="button" onclick="quickAddQuiz('${escapeHtml(item.subject)}', '${escapeHtml(item.topic)}', '${escapeHtml(item.title)}')" 
                                 class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500 hover:text-white transition-colors" title="Thêm câu hỏi">
                                 + TN
                             </button>
-                            <button onclick="editDocItem('${item.id}')" class="w-8 h-8 rounded-lg glass-panel text-blue-400 hover:bg-blue-500 hover:text-white flex items-center justify-center transition-colors" title="Sửa">
+                            <button type="button" onclick="editDocItem('${item.id}')" class="w-8 h-8 rounded-lg glass-panel text-blue-400 hover:bg-blue-500 hover:text-white flex items-center justify-center transition-colors" title="Sửa">
                                 <i class="fas fa-edit text-xs"></i>
                             </button>
-                            <button onclick="requestDelete('doc', '${item.id}')" class="w-8 h-8 rounded-lg glass-panel text-rose-400 hover:bg-rose-500 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
+                            <button type="button" onclick="requestDelete('doc', '${item.id}')" class="w-8 h-8 rounded-lg glass-panel text-rose-400 hover:bg-rose-500 hover:text-white flex items-center justify-center transition-colors" title="Xóa">
                                 <i class="fas fa-trash-alt text-xs"></i>
                             </button>
                         </div>
@@ -1297,6 +1374,14 @@
                 const rawUrl = item.url ? item.url.trim() : '';
                 const normalizedUrl = rawUrl ? normalizeMediaPath(rawUrl, false) : '';
                 const hasUrl = normalizedUrl !== '';
+
+                const rawVideo = item.videoUrl ? item.videoUrl.trim() : '';
+                const normalizedVideo = rawVideo ? normalizeMediaPath(rawVideo, false) : '';
+                const hasVideo = normalizedVideo !== '';
+
+                const plainContent = item.content ? String(item.content).replace(/<[^>]*>/g, '').trim() : '';
+                const hasContent = plainContent !== '';
+
                 const qCount = quizCountMap.get(`${item.subject}||${item.topic}||${item.title}`) || 0;
                 const imgs = getDocImagesList(item);
 
@@ -1312,26 +1397,18 @@
                         </span>
                     </div>
                     <h4 class="font-bold text-sm leading-snug">${escapeHtml(item.title)}</h4>
-                    ${imgs.length > 0 ? `
-                        <div class="pt-1">
-                            ${renderDocImagesCell(item)}
+                    ${imgs.length > 0 ? `<div class="pt-1">${renderDocImagesCell(item)}</div>` : ''}
+                    <div class="flex items-center justify-between pt-1 gap-2">
+                        <div class="flex flex-wrap items-center gap-2">
+                            ${hasUrl ? `<a href="${escapeHtml(normalizedUrl)}" target="_blank" class="text-xs font-bold text-sky-400 flex items-center gap-1"><i class="fas fa-file-alt"></i> Tài liệu</a>` : ''}
+                            ${hasVideo ? `<a href="${escapeHtml(normalizedVideo)}" target="_blank" class="text-xs font-bold text-rose-400 flex items-center gap-1"><i class="fas fa-video"></i> Video</a>` : ''}
+                            ${hasContent ? `<span class="text-[11px] font-bold text-emerald-400"><i class="fas fa-align-left"></i> Nội dung</span>` : ''}
+                            ${!hasUrl && !hasVideo && !hasContent ? `<span class="text-xs text-amber-400 italic">Chưa có dữ liệu</span>` : ''}
                         </div>
-                    ` : ''}
-                    <div class="flex items-center justify-between pt-1">
-                        ${hasUrl ? `
-                            <div class="flex items-center gap-2">
-                                <a href="${escapeHtml(normalizedUrl)}" target="_blank" class="text-xs font-bold text-blue-400 flex items-center gap-1">
-                                    <i class="fas fa-external-link-alt"></i> Mở link
-                                </a>
-                                <button onclick="copyText('${escapeHtml(normalizedUrl)}')" class="text-xs text-slate-400 px-2 py-1 rounded bg-slate-500/10">
-                                    <i class="far fa-copy"></i>
-                                </button>
-                            </div>
-                        ` : `<span class="text-xs text-amber-400 italic">Chưa có link</span>`}
-                        <div class="flex items-center gap-1.5">
-                            <button onclick="quickAddQuiz('${escapeHtml(item.subject)}', '${escapeHtml(item.topic)}', '${escapeHtml(item.title)}')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/15 text-emerald-400">+ TN</button>
-                            <button onclick="editDocItem('${item.id}')" class="w-8 h-8 rounded-lg glass-panel text-blue-400 flex items-center justify-center"><i class="fas fa-edit text-xs"></i></button>
-                            <button onclick="requestDelete('doc', '${item.id}')" class="w-8 h-8 rounded-lg glass-panel text-rose-400 flex items-center justify-center"><i class="fas fa-trash-alt text-xs"></i></button>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <button type="button" onclick="quickAddQuiz('${escapeHtml(item.subject)}', '${escapeHtml(item.topic)}', '${escapeHtml(item.title)}')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/15 text-emerald-400">+ TN</button>
+                            <button type="button" onclick="editDocItem('${item.id}')" class="w-8 h-8 rounded-lg glass-panel text-blue-400 flex items-center justify-center"><i class="fas fa-edit text-xs"></i></button>
+                            <button type="button" onclick="requestDelete('doc', '${item.id}')" class="w-8 h-8 rounded-lg glass-panel text-rose-400 flex items-center justify-center"><i class="fas fa-trash-alt text-xs"></i></button>
                         </div>
                     </div>
                 </div>`;
@@ -1380,8 +1457,14 @@
         };
 
         // =========================================================
-        // QUẢN LÝ Ô NHẬP NHIỀU HÌNH ẢNH TRONG MODAL TÀI LIỆU
+        // QUẢN LÝ Ô NHẬP NHIỀU HÌNH ẢNH & NỘI DUNG ĐA ĐỊNH DẠNG
         // =========================================================
+        window.execDocCmd = function(cmd, value = null) {
+            const editor = document.getElementById('docRichContent');
+            if (editor) editor.focus();
+            document.execCommand(cmd, false, value);
+        };
+
         window.addImageInputRow = function(initialValue = '') {
             const container = document.getElementById('docImagesContainer');
             const row = document.createElement('div');
@@ -1422,12 +1505,12 @@
             }
         };
 
-        // Doc Modal & Form
         window.openDocModal = function(isEdit = false) {
             const container = document.getElementById('docImagesContainer');
             if (!isEdit) {
                 container.innerHTML = '';
                 addImageInputRow('');
+                document.getElementById('docRichContent').innerHTML = '';
             }
             document.getElementById('docModal').classList.remove('hidden');
             document.getElementById('docModal').classList.add('flex');
@@ -1439,6 +1522,7 @@
             document.getElementById('docForm').reset();
             document.getElementById('editDocId').value = '';
             document.getElementById('docImagesContainer').innerHTML = '';
+            document.getElementById('docRichContent').innerHTML = '';
             document.getElementById('docModalTitle').innerHTML = `<i class="fas fa-folder-plus"></i> Thêm tài liệu mới`;
         };
 
@@ -1451,6 +1535,8 @@
             document.getElementById('docTopic').value = item.topic || '';
             document.getElementById('docTitle').value = item.title || '';
             document.getElementById('docUrl').value = item.url || '';
+            document.getElementById('docVideoUrl').value = item.videoUrl || '';
+            document.getElementById('docRichContent').innerHTML = item.content || '';
 
             const container = document.getElementById('docImagesContainer');
             container.innerHTML = '';
@@ -1473,6 +1559,13 @@
             const rawUrl = document.getElementById('docUrl').value.trim();
             const normalizedUrl = rawUrl ? normalizeMediaPath(rawUrl, false) : '';
 
+            const rawVideoUrl = document.getElementById('docVideoUrl').value.trim();
+            const normalizedVideoUrl = rawVideoUrl ? normalizeMediaPath(rawVideoUrl, false) : '';
+
+            const richEditor = document.getElementById('docRichContent');
+            const rawHtmlContent = richEditor ? richEditor.innerHTML.trim() : '';
+            const hasPlainText = richEditor && richEditor.textContent.trim() !== '';
+
             const imageInputs = [...document.querySelectorAll('#docImagesContainer .doc-image-input')];
             const normalizedImages = imageInputs
                 .map(inp => normalizeMediaPath(inp.value, true))
@@ -1483,6 +1576,8 @@
                 topic: document.getElementById('docTopic').value.trim(),
                 title: document.getElementById('docTitle').value.trim(),
                 url: normalizedUrl,
+                videoUrl: normalizedVideoUrl,
+                content: hasPlainText ? rawHtmlContent : '',
                 images: normalizedImages,
                 updatedAt: serverTimestamp()
             };
@@ -1491,7 +1586,17 @@
             btn.disabled = true;
             btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i>`;
             try {
-                if (id) {
+                if (!db) {
+                    const localItem = { ...payload, id: id || 'local_' + Date.now() };
+                    if (id) {
+                        allLinks = allLinks.map(item => item.id === id ? localItem : item);
+                    } else {
+                        allLinks.unshift(localItem);
+                    }
+                    saveToCache();
+                    refreshAllViews();
+                    showToast("Đã lưu vào bộ nhớ cục bộ!");
+                } else if (id) {
                     await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id), payload);
                     showToast("Đã cập nhật tài liệu!");
                 } else {
@@ -1638,7 +1743,7 @@
                 const sId = safeId(g.subject + g.topic + g.lesson);
                 return `
                 <div class="glass-panel rounded-2xl overflow-hidden">
-                    <button onclick="toggleAccordion('${sId}')" class="w-full px-4 py-3.5 flex items-center justify-between gap-3 hover:bg-indigo-500/5 transition-colors text-left">
+                    <button type="button" onclick="toggleAccordion('${sId}')" class="w-full px-4 py-3.5 flex items-center justify-between gap-3 hover:bg-indigo-500/5 transition-colors text-left">
                         <div class="flex items-center gap-3 min-w-0">
                             <div class="w-9 h-9 rounded-xl bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
                                 <i class="fas fa-book-open text-sm"></i>
@@ -1699,12 +1804,12 @@
                     </div>
                     <div class="flex items-center gap-1.5">
                         ${isMcq ? `
-                            <button onclick="toggleShufflePreview('${qOrig.id}')" class="px-2.5 py-1 rounded-lg glass-panel text-[11px] font-bold ${shuf ? 'text-amber-400' : 'text-slate-400 hover:text-indigo-400'}">
+                            <button type="button" onclick="toggleShufflePreview('${qOrig.id}')" class="px-2.5 py-1 rounded-lg glass-panel text-[11px] font-bold ${shuf ? 'text-amber-400' : 'text-slate-400 hover:text-indigo-400'}">
                                 <i class="fas fa-random mr-1"></i>${shuf ? 'Gốc' : 'Xáo thử'}
                             </button>
                         ` : ''}
-                        <button onclick="editQuizItem('${qOrig.id}')" class="w-7 h-7 rounded-lg glass-panel text-blue-400 hover:bg-blue-500 hover:text-white flex items-center justify-center"><i class="fas fa-edit text-[11px]"></i></button>
-                        <button onclick="requestDelete('quiz', '${qOrig.id}')" class="w-7 h-7 rounded-lg glass-panel text-rose-400 hover:bg-rose-500 hover:text-white flex items-center justify-center"><i class="fas fa-trash-alt text-[11px]"></i></button>
+                        <button type="button" onclick="editQuizItem('${qOrig.id}')" class="w-7 h-7 rounded-lg glass-panel text-blue-400 hover:bg-blue-500 hover:text-white flex items-center justify-center"><i class="fas fa-edit text-[11px]"></i></button>
+                        <button type="button" onclick="requestDelete('quiz', '${qOrig.id}')" class="w-7 h-7 rounded-lg glass-panel text-rose-400 hover:bg-rose-500 hover:text-white flex items-center justify-center"><i class="fas fa-trash-alt text-[11px]"></i></button>
                     </div>
                 </div>
                 <p class="text-sm font-medium leading-relaxed whitespace-pre-wrap">${escapeHtml(q.content)}</p>
@@ -1804,7 +1909,17 @@
             btn.disabled = true;
 
             try {
-                if (id) {
+                if (!db) {
+                    const localQ = { ...payload, id: id || 'q_' + Date.now() };
+                    if (id) allQuestions = allQuestions.map(item => item.id === id ? localQ : item);
+                    else allQuestions.unshift(localQ);
+                    saveToCache();
+                    rebuildIndexes();
+                    refreshAllViews();
+                    showToast("Đã lưu câu hỏi vào bộ nhớ cục bộ!");
+                    if (id) cancelEditMode();
+                    else clearQuizContentOnly();
+                } else if (id) {
                     await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'questions', id), payload);
                     showToast("Đã cập nhật câu hỏi!");
                     cancelEditMode();
@@ -1827,7 +1942,7 @@
             deleteMode = 'single';
             deleteTargetType = type;
             deleteTargetId = id;
-            document.getElementById('deleteModalDesc').textContent = "Dữ liệu này sẽ bị xóa vĩnh viễn khỏi đám mây và không thể khôi phục.";
+            document.getElementById('deleteModalDesc').textContent = "Dữ liệu này sẽ bị xóa vĩnh viễn và không thể khôi phục.";
             document.getElementById('deleteModal').classList.remove('hidden');
             document.getElementById('deleteModal').classList.add('flex');
         };
@@ -1851,7 +1966,20 @@
             btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i>`;
 
             try {
-                if (deleteMode === 'bulk') {
+                if (!db) {
+                    if (deleteMode === 'bulk') {
+                        allLinks = allLinks.filter(l => !selectedDocIds.has(l.id));
+                        clearDocSelection();
+                    } else if (deleteTargetType === 'doc') {
+                        allLinks = allLinks.filter(l => l.id !== deleteTargetId);
+                    } else {
+                        allQuestions = allQuestions.filter(q => q.id !== deleteTargetId);
+                    }
+                    saveToCache();
+                    rebuildIndexes();
+                    refreshAllViews();
+                    showToast("Đã xóa dữ liệu khỏi bộ nhớ cục bộ!");
+                } else if (deleteMode === 'bulk') {
                     const batch = writeBatch(db);
                     selectedDocIds.forEach(id => {
                         batch.delete(doc(db, 'artifacts', appId, 'public', 'data', 'links', id));
@@ -1887,7 +2015,7 @@
 
             container.innerHTML = subs.map(sub => {
                 const subDocs = allLinks.filter(l => l.subject === sub);
-                const readyDocs = subDocs.filter(l => l.url && l.url.trim() !== '').length;
+                const readyDocs = subDocs.filter(l => hasMeaningfulContent(l)).length;
                 const subQuiz = allQuestions.filter(q => q.subject === sub).length;
                 const pct = subDocs.length > 0 ? Math.round((readyDocs / subDocs.length) * 100) : 0;
 
@@ -1946,6 +2074,45 @@
                 }
 
                 showToast(`Đang nhập ${links.length} tài liệu & ${questions.length} câu hỏi...`);
+
+                if (!db) {
+                    links.slice(0, 200).forEach((l, idx) => {
+                        const rawImgs = Array.isArray(l.images) ? l.images : (l.image ? [l.image] : []);
+                        allLinks.unshift({
+                            id: l.id || `imp_l_${Date.now()}_${idx}`,
+                            subject: l.subject || 'Chưa phân loại',
+                            topic: l.topic || 'Chung',
+                            title: l.title || 'Không tiêu đề',
+                            url: l.url ? normalizeMediaPath(l.url, false) : '',
+                            videoUrl: l.videoUrl ? normalizeMediaPath(l.videoUrl, false) : '',
+                            content: l.content || '',
+                            images: rawImgs.map(img => normalizeMediaPath(img, true)).filter(Boolean)
+                        });
+                    });
+                    questions.slice(0, 250).forEach((q, idx) => {
+                        allQuestions.unshift({
+                            id: q.id || `imp_q_${Date.now()}_${idx}`,
+                            type: q.type || 'multiple_choice',
+                            subject: q.subject || 'Chưa phân loại',
+                            topic: q.topic || 'Chung',
+                            lesson: q.lesson || '',
+                            content: q.content || '',
+                            opt_A: q.opt_A || '',
+                            opt_B: q.opt_B || '',
+                            opt_C: q.opt_C || '',
+                            opt_D: q.opt_D || '',
+                            correctAnswer: q.correctAnswer || 'A',
+                            correctAnswerShort: q.correctAnswerShort || '',
+                            explanation: q.explanation || ''
+                        });
+                    });
+                    saveToCache();
+                    rebuildIndexes();
+                    refreshAllViews();
+                    showToast("Nhập dữ liệu JSON vào bộ nhớ cục bộ thành công!");
+                    return;
+                }
+
                 const batch = writeBatch(db);
                 let ops = 0;
 
@@ -1957,6 +2124,8 @@
                         topic: l.topic || 'Chung',
                         title: l.title || 'Không tiêu đề',
                         url: l.url ? normalizeMediaPath(l.url, false) : '',
+                        videoUrl: l.videoUrl ? normalizeMediaPath(l.videoUrl, false) : '',
+                        content: l.content || '',
                         images: rawImgs.map(img => normalizeMediaPath(img, true)).filter(Boolean),
                         createdAt: serverTimestamp()
                     });

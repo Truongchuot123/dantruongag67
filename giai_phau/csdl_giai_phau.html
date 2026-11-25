@@ -6,6 +6,8 @@
     <title>Quản Lý Nội Dung Giải Phẫu Cơ</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -13,10 +15,13 @@
             darkMode: 'class',
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    },
                     colors: {
-                        darkbg: '#0f172a',
-                        cardbg: '#1e293b',
-                        borderbg: '#334155',
+                        darkbg: '#0b1120',
+                        cardbg: '#151f32',
+                        borderbg: '#26334d',
                         accenten: '#38bdf8',
                         tablelabel: '#fef08a'
                     }
@@ -24,23 +29,24 @@
             }
         }
     </script>
-    <!-- Custom Scrollbar & Editable Area Style -->
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
+            background-color: #0b1120;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.10) 0px, transparent 50%);
             color: #f8fafc;
         }
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
         }
         ::-webkit-scrollbar-track {
-            background: #0f172a;
+            background: #0b1120;
         }
         ::-webkit-scrollbar-thumb {
             background: #334155;
-            border-radius: 4px;
+            border-radius: 9999px;
         }
         ::-webkit-scrollbar-thumb:hover {
             background: #475569;
@@ -49,100 +55,194 @@
             margin-bottom: 0.25rem;
         }
         .editor-btn {
-            padding: 4px 8px;
-            border-radius: 4px;
-            background-color: #334155;
+            padding: 5px 10px;
+            border-radius: 6px;
+            background-color: #1e293b;
+            border: 1px solid #334155;
             color: #e2e8f0;
-            font-size: 0.85rem;
-            transition: all 0.2s;
+            font-size: 0.78rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+            user-select: none;
         }
         .editor-btn:hover {
-            background-color: #475569;
+            background-color: #4f46e5;
+            border-color: #6366f1;
             color: #ffffff;
+            transform: translateY(-1px);
+        }
+        .editor-btn:active {
+            transform: translateY(0);
         }
         .editable-area {
-            min-height: 60px;
-            max-height: 150px;
+            min-height: 75px;
+            max-height: 180px;
             overflow-y: auto;
-            border: 1px solid #334155;
-            border-radius: 0.5rem;
-            padding: 0.5rem 0.75rem;
-            background-color: #0f172a;
+            border: 1px solid #26334d;
+            border-radius: 0.6rem;
+            padding: 0.65rem 0.85rem;
+            background-color: #0b1120;
             color: #f8fafc !important;
+            font-family: inherit !important;
+            font-size: 0.875rem !important;
+            line-height: 1.5 !important;
             outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
         .editable-area:focus {
             border-color: #6366f1;
-            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
         }
-        /* Cố định văn bản dán luôn giữ màu chữ trắng */
-        .editable-area,
         .editable-area *,
         .editable-area span,
         .editable-area p,
         .editable-area div,
-        .editable-area font {
+        .editable-area font,
+        .editable-area li {
             color: #f8fafc !important;
             background-color: transparent !important;
+            font-family: inherit !important;
+            font-size: inherit !important;
+            line-height: inherit !important;
+        }
+        .editable-area ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin: 0.25rem 0;
+        }
+        .editable-area ol {
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+            margin: 0.25rem 0;
+        }
+        /* Hide scrollbar for horizontal pill filters on mobile */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
-<body class="bg-darkbg text-slate-100 min-h-screen pt-4 md:pt-6 px-3 sm:px-6 md:px-8 pb-10">
+<body class="bg-darkbg text-slate-100 min-h-screen pt-[20px] px-3 sm:px-6 lg:px-8 pb-12">
 
-    <div class="max-w-[1700px] mx-auto space-y-6">
+    <div class="max-w-[1720px] mx-auto space-y-6">
 
-        <!-- Top Controls / Toolbar -->
-        <div class="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 bg-cardbg p-4 rounded-xl border border-borderbg shadow-lg">
-            <div class="flex items-center gap-3">
-                <div class="p-3 bg-indigo-600/20 rounded-lg text-indigo-400 shrink-0">
-                    <i class="fa-solid fa-bone text-2xl"></i>
+        <!-- REDESIGNED TOOLBAR: Cách lề trên đúng 20px nhờ pt-[20px] của body -->
+        <header class="relative overflow-hidden rounded-2xl bg-cardbg/85 backdrop-blur-xl border border-slate-700/70 shadow-2xl shadow-black/40 p-4 sm:p-5 lg:p-6">
+            <!-- Decorative subtle gradient bar on top -->
+            <div class="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-indigo-500 via-sky-400 to-emerald-400"></div>
+
+            <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4 lg:gap-6">
+                
+                <!-- Brand & Stats Title -->
+                <div class="flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-sky-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 shrink-0">
+                            <i class="fa-solid fa-bone text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h1 class="text-base sm:text-xl font-extrabold text-white tracking-tight">
+                                    QUẢN LÝ NỘI DUNG GIẢI PHẪU CƠ
+                                </h1>
+                                <span id="totalCountBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                                    0 cơ
+                                </span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-400 mt-0.5">
+                                Hệ thống lưu trữ, phân vùng & tra cứu thuật ngữ giải phẫu học
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Quick Add Button (visible only on small screens) -->
+                    <button id="btnOpenModalMobile" type="button" class="sm:hidden flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-lg shadow-indigo-600/30 active:scale-95 transition shrink-0" title="Thêm cơ mới">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
                 </div>
-                <div>
-                    <h1 class="text-lg sm:text-xl font-bold text-white tracking-wide">QUẢN LÝ NỘI DUNG GIẢI PHẪU CƠ</h1>
-                    <p class="text-xs text-slate-400">Hệ thống lưu trữ & tra cứu thuật ngữ giải phẫu học</p>
+
+                <!-- Search, Region Filter & Primary Action -->
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1 xl:max-w-3xl justify-end">
+                    
+                    <!-- Enhanced Search Input with Clear Button -->
+                    <div class="relative flex-1 min-w-[220px]">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="text" id="searchInput" placeholder="Tìm tên cơ (VN/EN), vùng, bệnh lý..." 
+                            class="w-full pl-10 pr-9 py-2.5 bg-darkbg/90 border border-slate-700 hover:border-slate-600 rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all">
+                        <button type="button" id="btnClearSearch" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1 rounded-md transition" title="Xóa tìm kiếm">
+                            <i class="fa-solid fa-circle-xmark text-sm"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Enhanced Region Select Dropdown -->
+                    <div class="relative sm:w-52 shrink-0">
+                        <i class="fa-solid fa-layer-group absolute left-3.5 top-1/2 -translate-y-1/2 text-sky-400 text-xs pointer-events-none"></i>
+                        <select id="filterRegion" class="w-full appearance-none pl-9 pr-9 py-2.5 bg-darkbg/90 border border-slate-700 hover:border-slate-600 rounded-xl text-sm font-medium text-slate-200 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all cursor-pointer">
+                            <option value="">Tất cả các vùng</option>
+                            <option value="Đầu - Mặt - Cổ">Đầu - Mặt - Cổ</option>
+                            <option value="Ngực - Lưng">Ngực - Lưng</option>
+                            <option value="Bụng - Chậu">Bụng - Chậu</option>
+                            <option value="Chi trên">Chi trên</option>
+                            <option value="Chi dưới">Chi dưới</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+                    </div>
+
+                    <!-- Desktop/Tablet Add Button -->
+                    <button id="btnOpenModal" type="button" class="hidden sm:inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-sky-600 hover:from-indigo-500 hover:to-sky-500 text-white font-semibold px-5 py-2.5 rounded-xl text-sm shadow-lg shadow-indigo-600/25 transition-all duration-200 active:scale-95 shrink-0 cursor-pointer">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Thêm Cơ Mới</span>
+                    </button>
                 </div>
             </div>
 
-            <div class="flex flex-wrap items-center gap-3">
-                <!-- Search Box -->
-                <div class="relative flex-1 sm:w-64">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                    <input type="text" id="searchInput" placeholder="Tìm tên cơ, vùng..." 
-                        class="w-full pl-9 pr-4 py-2 bg-darkbg border border-borderbg rounded-lg text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
-                </div>
-                
-                <!-- Filter by Region -->
-                <select id="filterRegion" class="bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500">
-                    <option value="">-- Tất cả vùng --</option>
-                    <option value="Đầu - Mặt - Cổ">Đầu - Mặt - Cổ</option>
-                    <option value="Ngực - Lưng">Ngực - Lưng</option>
-                    <option value="Bụng - Chậu">Bụng - Chậu</option>
-                    <option value="Chi trên">Chi trên</option>
-                    <option value="Chi dưới">Chi dưới</option>
-                </select>
-
-                <!-- Add Button -->
-                <button id="btnOpenModal" class="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-lg text-sm shadow-lg shadow-indigo-600/30 transition-all duration-200 active:scale-95 shrink-0">
-                    <i class="fa-solid fa-plus"></i> Thêm Cơ Mới
+            <!-- Quick Region Filter Pills (Adaptive Bar) -->
+            <div class="mt-4 pt-3.5 border-t border-slate-800/80 flex items-center gap-2 overflow-x-auto no-scrollbar">
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500 shrink-0 mr-1">
+                    <i class="fa-solid fa-filter mr-1"></i>Lọc nhanh:
+                </span>
+                <button type="button" data-region="" class="region-pill active px-3 py-1 rounded-lg text-xs font-medium bg-indigo-600 text-white shadow-sm transition shrink-0">
+                    Tất cả
+                </button>
+                <button type="button" data-region="Đầu - Mặt - Cổ" class="region-pill px-3 py-1 rounded-lg text-xs font-medium bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700/60 transition shrink-0">
+                    Đầu - Mặt - Cổ
+                </button>
+                <button type="button" data-region="Ngực - Lưng" class="region-pill px-3 py-1 rounded-lg text-xs font-medium bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700/60 transition shrink-0">
+                    Ngực - Lưng
+                </button>
+                <button type="button" data-region="Bụng - Chậu" class="region-pill px-3 py-1 rounded-lg text-xs font-medium bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700/60 transition shrink-0">
+                    Bụng - Chậu
+                </button>
+                <button type="button" data-region="Chi trên" class="region-pill px-3 py-1 rounded-lg text-xs font-medium bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700/60 transition shrink-0">
+                    Chi trên
+                </button>
+                <button type="button" data-region="Chi dưới" class="region-pill px-3 py-1 rounded-lg text-xs font-medium bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700/60 transition shrink-0">
+                    Chi dưới
                 </button>
             </div>
-        </div>
+        </header>
 
-        <!-- Table Container -->
-        <div class="bg-cardbg border border-borderbg rounded-xl shadow-xl overflow-hidden">
+        <!-- ADAPTIVE CONTENT AREA -->
+        <!-- 1. Desktop & Large Tablet View (Table) -->
+        <div class="hidden lg:block bg-cardbg/90 border border-borderbg rounded-2xl shadow-xl overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse min-w-[1350px]">
+                <table class="w-full text-left border-collapse min-w-[1250px]">
                     <thead>
-                        <tr class="bg-slate-800/80 text-slate-300 text-xs font-semibold uppercase tracking-wider border-b border-borderbg">
-                            <th class="p-3.5 w-28">Vùng</th>
-                            <th class="p-3.5 w-44">Tên cơ (VN)</th>
-                            <th class="p-3.5 w-44 text-accenten">Tên cơ (EN)</th>
-                            <th class="p-3.5 w-44 text-center">Hình ảnh & Ghi chú</th>
-                            <th class="p-3.5 w-48">Đại cương</th>
-                            <th class="p-3.5 w-44">Số nhóm/bảng giải phẫu</th>
-                            <th class="p-3.5 w-48">Bệnh lý liên quan</th>
-                            <th class="p-3.5 w-36">Ghi chú</th>
-                            <th class="p-3.5 w-24 text-center sticky right-0 bg-slate-800 shadow-lg">Thao tác</th>
+                        <tr class="bg-slate-800/90 text-slate-300 text-xs font-semibold uppercase tracking-wider border-b border-borderbg">
+                            <th class="p-4 w-32">Vùng</th>
+                            <th class="p-4 w-44">Tên cơ (VN)</th>
+                            <th class="p-4 w-44 text-accenten">Tên cơ (EN)</th>
+                            <th class="p-4 w-44 text-center">Hình ảnh & Ghi chú</th>
+                            <th class="p-4 w-52">Đại cương</th>
+                            <th class="p-4 w-44">Số nhóm/bảng</th>
+                            <th class="p-4 w-48">Bệnh lý liên quan</th>
+                            <th class="p-4 w-40">Ghi chú</th>
+                            <th class="p-4 w-24 text-center sticky right-0 bg-slate-800 shadow-lg">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody id="anatomyTableBody" class="divide-y divide-borderbg/60 text-sm">
@@ -157,113 +257,152 @@
             </div>
         </div>
 
+        <!-- 2. Mobile & Tablet Responsive View (Adaptive Cards) -->
+        <div id="anatomyMobileCards" class="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="col-span-full text-center py-12 bg-cardbg/80 rounded-2xl border border-borderbg text-slate-400">
+                <i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-indigo-400"></i>
+                <p>Đang tải dữ liệu...</p>
+            </div>
+        </div>
+
     </div>
 
     <!-- Modal Form (Create / Edit) -->
-    <div id="anatomyModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
-        <div class="bg-cardbg border border-borderbg w-full max-w-5xl rounded-xl shadow-2xl overflow-hidden my-4 sm:my-8 max-h-[95vh] flex flex-col transform transition-all">
+    <div id="anatomyModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 sm:p-4">
+        <div class="bg-cardbg border border-slate-700 w-full max-w-5xl rounded-2xl shadow-2xl overflow-hidden max-h-[95vh] flex flex-col transform transition-all">
+            
             <!-- Modal Header -->
-            <div class="flex justify-between items-center px-4 sm:px-6 py-3 sm:py-4 border-b border-borderbg bg-slate-800/50 shrink-0">
+            <div class="flex justify-between items-center px-4 sm:px-6 py-3.5 border-b border-borderbg bg-slate-800/90 shrink-0">
                 <h3 id="modalTitle" class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
                     <i class="fa-solid fa-pen-to-square text-indigo-400"></i> Thêm Dữ Liệu Cơ Mới
                 </h3>
-                <button id="btnCloseModal" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-700 transition">
+                <button id="btnCloseModal" type="button" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-700 transition">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
 
+            <!-- Sticky Formatting Toolbar -->
+            <div class="bg-slate-900/95 px-4 sm:px-6 py-2.5 border-b border-slate-700 flex flex-wrap gap-1.5 sm:gap-2 items-center text-xs shrink-0 shadow-md z-20">
+                <span class="text-indigo-400 font-bold uppercase tracking-wider mr-1 flex items-center gap-1.5">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Định dạng:
+                </span>
+                
+                <button type="button" onmousedown="event.preventDefault(); formatDoc('bold')" class="editor-btn" title="In đậm (Ctrl+B)">
+                    <i class="fa-solid fa-bold"></i> Đậm
+                </button>
+                <button type="button" onmousedown="event.preventDefault(); formatDoc('italic')" class="editor-btn" title="In nghiêng (Ctrl+I)">
+                    <i class="fa-solid fa-italic"></i> Nghiêng
+                </button>
+                <button type="button" onmousedown="event.preventDefault(); formatDoc('underline')" class="editor-btn" title="Gạch chân (Ctrl+U)">
+                    <i class="fa-solid fa-underline"></i> Gạch chân
+                </button>
+
+                <div class="h-4 w-[1px] bg-slate-700 mx-0.5 hidden sm:block"></div>
+
+                <button type="button" onmousedown="event.preventDefault(); formatDoc('insertUnorderedList')" class="editor-btn" title="Danh sách dấu chấm">
+                    <i class="fa-solid fa-list-ul"></i> Dấu chấm
+                </button>
+                <button type="button" onmousedown="event.preventDefault(); formatDoc('insertOrderedList')" class="editor-btn" title="Danh sách đánh số">
+                    <i class="fa-solid fa-list-ol"></i> Đánh số
+                </button>
+
+                <div class="h-4 w-[1px] bg-slate-700 mx-0.5 hidden sm:block"></div>
+
+                <button type="button" onmousedown="event.preventDefault(); cleanCurrentField()" class="editor-btn !bg-amber-900/50 hover:!bg-amber-700 !text-amber-200 border border-amber-700/50" title="Đưa toàn bộ ô đang chọn về chữ thuần chuẩn">
+                    <i class="fa-solid fa-broom"></i> Chuẩn hóa ô này
+                </button>
+                <button type="button" onmousedown="event.preventDefault(); formatDoc('removeFormat')" class="editor-btn ml-auto !bg-slate-800 hover:!bg-red-600/80 border border-slate-700" title="Xóa định dạng vùng bôi đen">
+                    <i class="fa-solid fa-eraser"></i> Xóa Đ.Dạng
+                </button>
+            </div>
+
             <!-- Form Body - Scrollable -->
-            <form id="anatomyForm" class="p-4 sm:p-6 space-y-5 overflow-y-auto flex-1">
-                <input type="hidden" id="docId" value="">
+            <form id="anatomyForm" class="flex flex-col flex-1 overflow-hidden">
+                <div class="p-4 sm:p-6 space-y-5 overflow-y-auto flex-1">
+                    <input type="hidden" id="docId" value="">
 
-                <!-- Row 1: Vùng, Tên VN, Tên EN -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+                    <!-- Row 1: Vùng, Tên VN, Tên EN -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Vùng <span class="text-red-400">*</span></label>
+                            <select id="inputVung" required class="w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-indigo-500">
+                                <option value="Đầu - Mặt - Cổ">Đầu - Mặt - Cổ</option>
+                                <option value="Ngực - Lưng">Ngực - Lưng</option>
+                                <option value="Bụng - Chậu">Bụng - Chậu</option>
+                                <option value="Chi trên">Chi trên</option>
+                                <option value="Chi dưới">Chi dưới</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Tên cơ (Tiếng Việt) <span class="text-red-400">*</span></label>
+                            <input type="text" id="inputTenVN" required placeholder="Ví dụ: Các cơ cánh tay" class="w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-indigo-500">
+                        </div>
+                        <div class="sm:col-span-2 md:col-span-1">
+                            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1 text-accenten">Tên cơ (Tiếng Anh) <span class="text-red-400">*</span></label>
+                            <input type="text" id="inputTenEN" required placeholder="Ví dụ: Brachial muscles" class="w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-accenten text-sm font-medium focus:outline-none focus:border-sky-400">
+                        </div>
+                    </div>
+
+                    <!-- SECTION: Danh Sách Hình Ảnh Chi Tiết (Hỗ trợ đường dẫn bất kỳ & Upload ảnh) -->
+                    <div class="p-4 bg-slate-900/90 border border-slate-700/80 rounded-xl space-y-3">
+                        <div class="flex flex-wrap justify-between items-center gap-2 pb-2 border-b border-slate-800">
+                            <div>
+                                <label class="text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-2">
+                                    <i class="fa-solid fa-images"></i> Danh Sách Hình Ảnh Giải Phẫu & Chú Thích
+                                </label>
+                                <p class="text-[11px] text-slate-400 mt-0.5">Hỗ trợ mọi đường dẫn URL (http/https, Google Drive, đường dẫn tương đối, Base64...) hoặc chọn tệp ảnh từ máy.</p>
+                            </div>
+                            <button type="button" id="btnAddImageRow" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow transition">
+                                <i class="fa-solid fa-plus"></i> Thêm Ảnh
+                            </button>
+                        </div>
+                        
+                        <div id="imageRowsContainer" class="space-y-3">
+                            <!-- Dynamic Image Inputs Will Be Added Here -->
+                        </div>
+                    </div>
+
+                    <!-- Đại cương -->
                     <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Vùng <span class="text-red-400">*</span></label>
-                        <select id="inputVung" required class="w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-indigo-500">
-                            <option value="Đầu - Mặt - Cổ">Đầu - Mặt - Cổ</option>
-                            <option value="Ngực - Lưng">Ngực - Lưng</option>
-                            <option value="Bụng - Chậu">Bụng - Chậu</option>
-                            <option value="Chi trên">Chi trên</option>
-                            <option value="Chi dưới">Chi dưới</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Tên cơ <span class="text-red-400">*</span></label>
-                        <input type="text" id="inputTenVN" required placeholder="Ví dụ: Các cơ cánh tay" class="w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-indigo-500">
-                    </div>
-                    <div class="sm:col-span-2 md:col-span-1">
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1 text-accenten">Tên cơ tiếng anh <span class="text-red-400">*</span></label>
-                        <input type="text" id="inputTenEN" required placeholder="Ví dụ: Brachial muscles" class="w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-accenten text-sm font-medium focus:outline-none focus:border-sky-400">
-                    </div>
-                </div>
-
-                <!-- SECTION: Danh Sách Hình Ảnh Chi Tiết -->
-                <div class="p-4 bg-slate-900 border border-slate-700 rounded-xl space-y-3">
-                    <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                        <label class="text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-images"></i> Danh Sách Hình Ảnh Giải Phẫu & Chú Thích
-                        </label>
-                        <button type="button" id="btnAddImageRow" class="px-3 py-1 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1 shadow transition">
-                            <i class="fa-solid fa-plus"></i> Thêm Ảnh
-                        </button>
-                    </div>
-                    
-                    <div id="imageRowsContainer" class="space-y-3">
-                        <!-- Dynamic Image Inputs Will Be Added Here -->
-                    </div>
-                </div>
-
-                <!-- Rich Text Tools -->
-                <div class="bg-slate-800/80 p-2 rounded-lg border border-borderbg flex flex-wrap gap-1.5 sm:gap-2 items-center text-xs">
-                    <span class="text-slate-400 font-semibold mr-1">Định dạng</span>
-                    <button type="button" onclick="formatDoc('bold')" class="editor-btn" title="In đậm"><i class="fa-solid fa-bold"></i> Đậm</button>
-                    <button type="button" onclick="formatDoc('italic')" class="editor-btn" title="In nghiêng"><i class="fa-solid fa-italic"></i> Nghiêng</button>
-                    <button type="button" onclick="formatDoc('underline')" class="editor-btn" title="Gạch chân"><i class="fa-solid fa-underline"></i> Gạch chân</button>
-                    
-                    <div class="h-4 w-[1px] bg-slate-600 mx-1 hidden sm:block"></div>
-                    
-                    <button type="button" onclick="formatDoc('removeFormat')" class="editor-btn ml-auto"><i class="fa-solid fa-eraser"></i> Xóa Đ.Dạng</button>
-                </div>
-
-                <!-- Đại cương -->
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Đại cương</label>
-                    <div id="editorDaiCuong" contenteditable="true" class="editable-area text-sm"></div>
-                </div>
-
-                <!-- SECTION: Danh sách các bảng chi tiết nhóm cơ -->
-                <div class="space-y-4 pt-3 border-t border-slate-700">
-                    <div class="flex justify-between items-center">
-                        <h4 class="text-sm font-bold text-yellow-400 uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-table-list"></i> Bảng Chi Tiết Giải Phẫu
-                        </h4>
-                        <button type="button" id="btnAddDetailTable" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow transition">
-                            <i class="fa-solid fa-plus"></i> Thêm Bảng
-                        </button>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="block text-xs font-semibold text-slate-300 uppercase">Đại cương</label>
+                            <span class="text-[11px] text-slate-500 italic">Tự động chuẩn hóa font & màu chữ khi dán</span>
+                        </div>
+                        <div id="editorDaiCuong" contenteditable="true" class="editable-area text-sm" placeholder="Nhập nội dung đại cương..."></div>
                     </div>
 
-                    <!-- Dynamic Tables Container -->
-                    <div id="detailTablesContainer" class="space-y-4">
-                        <!-- Dynamic sub-tables will be injected here -->
-                    </div>
-                </div>
+                    <!-- SECTION: Danh sách các bảng chi tiết nhóm cơ -->
+                    <div class="space-y-4 pt-3 border-t border-slate-700">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-sm font-bold text-yellow-400 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-table-list"></i> Bảng Chi Tiết Giải Phẫu
+                            </h4>
+                            <button type="button" id="btnAddDetailTable" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow transition">
+                                <i class="fa-solid fa-plus"></i> Thêm Bảng
+                            </button>
+                        </div>
 
-                <!-- Bệnh lý & Ghi chú chung -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-slate-700">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Các bệnh lý liên quan</label>
-                        <div id="editorBenhLy" contenteditable="true" class="editable-area text-sm"></div>
+                        <div id="detailTablesContainer" class="space-y-4">
+                            <!-- Dynamic sub-tables will be injected here -->
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Ghi chú tổng quan</label>
-                        <div id="editorGhiChu" contenteditable="true" class="editable-area text-sm"></div>
+
+                    <!-- Bệnh lý & Ghi chú chung -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-slate-700">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Các bệnh lý liên quan</label>
+                            <div id="editorBenhLy" contenteditable="true" class="editable-area text-sm"></div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Ghi chú tổng quan</label>
+                            <div id="editorGhiChu" contenteditable="true" class="editable-area text-sm"></div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Modal Actions -->
-                <div class="flex justify-end gap-3 pt-4 border-t border-borderbg shrink-0">
-                    <button type="button" id="btnCancel" class="px-4 py-2 rounded-lg border border-borderbg text-slate-300 hover:bg-slate-800 transition text-sm">Hủy bỏ</button>
+                <div class="flex justify-end gap-3 px-4 sm:px-6 py-3.5 border-t border-borderbg bg-slate-800/90 shrink-0">
+                    <button type="button" id="btnCancel" class="px-4 py-2 rounded-lg border border-borderbg text-slate-300 hover:bg-slate-700 transition text-sm">Hủy bỏ</button>
                     <button type="submit" id="btnSave" class="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium shadow-lg shadow-indigo-600/30 transition flex items-center gap-2 text-sm">
                         <i class="fa-solid fa-floppy-disk"></i> Lưu thông tin
                     </button>
@@ -273,27 +412,27 @@
     </div>
 
     <!-- Image Preview Modal -->
-    <div id="imgPreviewModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" onclick="closeImgPreview()">
-        <div class="relative max-w-3xl max-h-[85vh] bg-cardbg p-3 rounded-xl border border-borderbg overflow-hidden shadow-2xl flex flex-col items-center" onclick="event.stopPropagation()">
-            <button onclick="closeImgPreview()" class="absolute top-3 right-3 text-white bg-black/60 rounded-full w-8 h-8 flex items-center justify-center hover:bg-black/90 transition z-10">
+    <div id="imgPreviewModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" onclick="closeImgPreview()">
+        <div class="relative max-w-3xl w-full max-h-[88vh] bg-cardbg p-3 sm:p-4 rounded-2xl border border-slate-700 overflow-hidden shadow-2xl flex flex-col items-center" onclick="event.stopPropagation()">
+            <button onclick="closeImgPreview()" class="absolute top-3 right-3 text-white bg-black/60 rounded-full w-9 h-9 flex items-center justify-center hover:bg-black/90 transition z-10">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-            <img id="previewImgSrc" src="" alt="Hình phóng to" class="max-w-full max-h-[70vh] object-contain rounded-lg shadow-md">
-            <div id="previewImgCaption" class="mt-3 text-slate-200 text-sm italic text-center font-medium bg-slate-900/80 px-4 py-2 rounded-lg border border-slate-700 w-full max-w-xl"></div>
+            <img id="previewImgSrc" src="" alt="Hình phóng to" onerror="this.onerror=null; this.src='https://placehold.co/600x400/1e293b/38bdf8?text=Khong+The+Tai+Anh';" class="max-w-full max-h-[70vh] object-contain rounded-xl shadow-md">
+            <div id="previewImgCaption" class="mt-3 text-slate-200 text-sm italic text-center font-medium bg-slate-900/90 px-4 py-2.5 rounded-xl border border-slate-700 w-full max-w-xl"></div>
         </div>
     </div>
 
     <!-- Delete Modal -->
     <div id="confirmDeleteModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-cardbg border border-borderbg w-full max-w-md rounded-xl p-6 shadow-2xl space-y-4">
+        <div class="bg-cardbg border border-borderbg w-full max-w-md rounded-2xl p-6 shadow-2xl space-y-4">
             <div class="flex items-center gap-3 text-red-400">
                 <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
                 <h3 class="text-lg font-bold text-white">Xác nhận xóa dữ liệu</h3>
             </div>
-            <p class="text-slate-300 text-sm">Bạn có chắc chắn muốn xóa dữ liệu cơ này không?</p>
+            <p class="text-slate-300 text-sm">Bạn có chắc chắn muốn xóa dữ liệu cơ này không? Hành động này không thể hoàn tác.</p>
             <div class="flex justify-end gap-3 pt-2">
                 <button type="button" id="btnCancelDelete" class="px-4 py-2 rounded-lg border border-borderbg text-slate-300 hover:bg-slate-800 transition text-sm">Hủy bỏ</button>
-                <button type="button" id="btnConfirmDelete" class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white font-medium shadow-lg shadow-red-600/30 transition text-sm">Xóa</button>
+                <button type="button" id="btnConfirmDelete" class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white font-medium shadow-lg shadow-red-600/30 transition text-sm">Xóa dữ liệu</button>
             </div>
         </div>
     </div>
@@ -345,36 +484,113 @@
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'giai-phau-app';
         const collectionPath = collection(db, 'artifacts', appId, 'public', 'data', 'co_giai_phau');
 
+        // Chuẩn hóa đường dẫn hình ảnh (hỗ trợ mọi loại URL kể cả Google Drive share link hoặc đường dẫn tự do)
+        function normalizeImageUrl(rawUrl) {
+            if (!rawUrl) return '';
+            const trimmed = rawUrl.trim();
+            // Tự động chuyển đổi link chia sẻ Google Drive sang link hiển thị trực tiếp nếu người dùng dán link drive
+            const driveMatch = trimmed.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+            if (driveMatch && driveMatch[1]) {
+                return `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`;
+            }
+            return trimmed;
+        }
+
+        // Escape an toàn cho thuộc tính HTML (dùng trong src, value, data-*)
+        function escapeAttr(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        function escapeHTML(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        // Hàm định dạng văn bản trong ô đang focus
         window.formatDoc = function(cmd, value = null) {
+            const activeEl = document.activeElement;
+            if (!activeEl || !activeEl.isContentEditable) {
+                showToast("Hãy nhấp chuột vào một ô nhập liệu trước khi định dạng!", "error");
+                return;
+            }
             document.execCommand(cmd, false, value);
+            activeEl.focus();
         };
 
-        // Hàm xử lý loại bỏ hoàn toàn các style/màu chữ rác khi copy dán vào
+        window.cleanCurrentField = function() {
+            const activeEl = document.activeElement;
+            if (!activeEl || !activeEl.isContentEditable) {
+                showToast("Hãy nhấp chuột vào ô cần chuẩn hóa!", "error");
+                return;
+            }
+            const cleanHTML = sanitizeHtmlToTypedFormat(activeEl.innerHTML);
+            activeEl.innerHTML = cleanHTML;
+            showToast("Đã chuẩn hóa định dạng ô nhập liệu!");
+        };
+
+        function sanitizeHtmlToTypedFormat(rawHtml) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = rawHtml;
+
+            const junkTags = tempDiv.querySelectorAll('script, style, meta, link, xml, o\\:p');
+            junkTags.forEach(tag => tag.remove());
+
+            const allElements = tempDiv.querySelectorAll('*');
+            allElements.forEach(el => {
+                const tagName = el.tagName.toLowerCase();
+
+                if (/^h[1-6]$/.test(tagName)) {
+                    const p = document.createElement('div');
+                    const b = document.createElement('b');
+                    b.innerHTML = el.innerHTML;
+                    p.appendChild(b);
+                    el.replaceWith(p);
+                    return;
+                }
+
+                const isBold = el.style && (el.style.fontWeight === 'bold' || parseInt(el.style.fontWeight) >= 600);
+                const isItalic = el.style && el.style.fontStyle === 'italic';
+                const isUnderline = el.style && el.style.textDecoration && el.style.textDecoration.includes('underline');
+
+                while (el.attributes.length > 0) {
+                    el.removeAttribute(el.attributes[0].name);
+                }
+
+                if (tagName === 'span' || tagName === 'font') {
+                    let content = el.innerHTML;
+                    if (isUnderline) content = `<u>${content}</u>`;
+                    if (isItalic) content = `<i>${content}</i>`;
+                    if (isBold) content = `<b>${content}</b>`;
+                    el.outerHTML = content;
+                } else {
+                    if (isBold && tagName !== 'b' && tagName !== 'strong') {
+                        el.innerHTML = `<b>${el.innerHTML}</b>`;
+                    }
+                    if (isItalic && tagName !== 'i' && tagName !== 'em') {
+                        el.innerHTML = `<i>${el.innerHTML}</i>`;
+                    }
+                }
+            });
+
+            return tempDiv.innerHTML;
+        }
+
         function handleCleanPaste(e) {
             e.preventDefault();
-            let htmlData = e.clipboardData.getData('text/html');
-            let textData = e.clipboardData.getData('text/plain');
+            const clipboardData = e.clipboardData || window.clipboardData;
+            const htmlData = clipboardData.getData('text/html');
+            const textData = clipboardData.getData('text/plain');
 
             if (htmlData) {
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = htmlData;
-
-                const allElements = tempDiv.querySelectorAll('*');
-                allElements.forEach(el => {
-                    el.style.color = '';
-                    el.style.backgroundColor = '';
-                    el.style.background = '';
-                    if (!el.getAttribute('style')) {
-                        el.removeAttribute('style');
-                    }
-                    if (el.tagName.toLowerCase() === 'font') {
-                        el.removeAttribute('color');
-                        el.removeAttribute('face');
-                        el.removeAttribute('size');
-                    }
-                });
-
-                const cleanHTML = tempDiv.innerHTML;
+                const cleanHTML = sanitizeHtmlToTypedFormat(htmlData);
                 document.execCommand('insertHTML', false, cleanHTML);
             } else if (textData) {
                 document.execCommand('insertText', false, textData);
@@ -418,44 +634,68 @@
                         ...docSnap.data()
                     });
                 });
-                renderTable();
+                renderDataViews();
             }, (error) => {
                 console.error("Lỗi lấy dữ liệu:", error);
                 showToast("Lỗi khi tải dữ liệu từ server!", "error");
             });
         }
 
-        // Render Bảng Quản Lý
-        function renderTable() {
+        // Render cả Bảng (Desktop) và Thẻ (Mobile/Tablet)
+        function renderDataViews() {
             const tbody = document.getElementById('anatomyTableBody');
-            const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+            const mobileContainer = document.getElementById('anatomyMobileCards');
+            const searchInputEl = document.getElementById('searchInput');
+            const searchVal = searchInputEl.value.toLowerCase().trim();
             const filterRegion = document.getElementById('filterRegion').value;
+
+            // Toggle nút xóa tìm kiếm
+            const btnClearSearch = document.getElementById('btnClearSearch');
+            if (searchVal.length > 0) {
+                btnClearSearch.classList.remove('hidden');
+            } else {
+                btnClearSearch.classList.add('hidden');
+            }
+
+            // Đồng bộ trạng thái active cho các nút Pill lọc vùng
+            document.querySelectorAll('.region-pill').forEach(pill => {
+                const pillRegion = pill.getAttribute('data-region');
+                if (pillRegion === filterRegion) {
+                    pill.className = 'region-pill active px-3 py-1 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow-sm transition shrink-0';
+                } else {
+                    pill.className = 'region-pill px-3 py-1 rounded-lg text-xs font-medium bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700/60 transition shrink-0';
+                }
+            });
 
             const filtered = allMuscles.filter(item => {
                 const matchRegion = !filterRegion || item.vung === filterRegion;
                 const matchSearch = !searchVal || 
                     (item.tenVN && item.tenVN.toLowerCase().includes(searchVal)) ||
                     (item.tenEN && item.tenEN.toLowerCase().includes(searchVal)) ||
-                    (item.vung && item.vung.toLowerCase().includes(searchVal));
+                    (item.vung && item.vung.toLowerCase().includes(searchVal)) ||
+                    (item.benhLy && item.benhLy.toLowerCase().includes(searchVal));
                 return matchRegion && matchSearch;
             });
 
+            // Cập nhật số lượng hiển thị trên Toolbar
+            document.getElementById('totalCountBadge').textContent = `${filtered.length} cơ`;
+
             if (filtered.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="9" class="text-center py-10 text-slate-400">
-                            <i class="fa-regular fa-folder-open text-3xl mb-2"></i>
-                            <p>Không tìm thấy dữ liệu phù hợp.</p>
-                        </td>
-                    </tr>
+                const emptyHtml = `
+                    <div class="text-center py-12 text-slate-400">
+                        <i class="fa-regular fa-folder-open text-3xl mb-2 text-slate-500"></i>
+                        <p class="font-medium">Không tìm thấy dữ liệu phù hợp.</p>
+                        <p class="text-xs text-slate-500 mt-1">Thử thay đổi từ khóa tìm kiếm hoặc chọn vùng khác.</p>
+                    </div>
                 `;
+                tbody.innerHTML = `<tr><td colspan="9">${emptyHtml}</td></tr>`;
+                mobileContainer.innerHTML = `<div class="col-span-full bg-cardbg/80 rounded-2xl border border-borderbg">${emptyHtml}</div>`;
                 return;
             }
 
+            // 1. Render Desktop Table Rows
             tbody.innerHTML = filtered.map(item => {
                 const tablesCount = Array.isArray(item.bangChiTiet) ? item.bangChiTiet.length : 1;
-                
-                // Xử lý danh sách hình ảnh (Tương thích cả dữ liệu đơn cũ và mảng danh sách mới)
                 let imagesList = [];
                 if (Array.isArray(item.danhSachHinhAnh) && item.danhSachHinhAnh.length > 0) {
                     imagesList = item.danhSachHinhAnh;
@@ -465,76 +705,214 @@
 
                 return `
                 <tr class="hover:bg-slate-800/50 transition-colors group">
-                    <td class="p-3.5 align-top font-medium text-indigo-300">
-                        <span class="inline-block px-2.5 py-1 rounded-md bg-indigo-950/60 border border-indigo-800/50 text-xs">
+                    <td class="p-4 align-top font-medium text-indigo-300">
+                        <span class="inline-block px-2.5 py-1 rounded-md bg-indigo-950/70 border border-indigo-800/60 text-xs whitespace-nowrap">
                             ${escapeHTML(item.vung || '')}
                         </span>
                     </td>
-                    <td class="p-3.5 align-top font-bold text-white">${escapeHTML(item.tenVN || '')}</td>
-                    <td class="p-3.5 align-top font-bold text-accenten">${escapeHTML(item.tenEN || '')}</td>
-                    <td class="p-3.5 align-top text-center">
+                    <td class="p-4 align-top font-bold text-white">${escapeHTML(item.tenVN || '')}</td>
+                    <td class="p-4 align-top font-bold text-accenten">${escapeHTML(item.tenEN || '')}</td>
+                    <td class="p-4 align-top text-center">
                         ${imagesList.length > 0 ? `
                             <div class="flex flex-col gap-2 items-center">
-                                <div class="flex flex-wrap justify-center gap-1.5 max-w-[160px]">
-                                    ${imagesList.map((img, idx) => `
-                                        <div class="relative group/img cursor-pointer" onclick="openImgPreview('${escapeHTML(img.url)}', '${escapeHTML(img.caption || '')}')">
-                                            <img src="${escapeHTML(img.url)}" 
+                                <div class="flex flex-wrap justify-center gap-1.5 max-w-[165px]">
+                                    ${imagesList.map((img) => {
+                                        const resolvedUrl = normalizeImageUrl(img.url);
+                                        return `
+                                        <div class="relative group/img cursor-pointer preview-img-trigger" 
+                                             data-url="${escapeAttr(resolvedUrl)}" 
+                                             data-caption="${escapeAttr(img.caption || '')}">
+                                            <img src="${escapeAttr(resolvedUrl)}" 
                                                  alt="Hình giải phẫu"
-                                                 onerror="this.onerror=null; this.src='https://placehold.co/100x100/1e293b/38bdf8?text=Anh+Loi';"
-                                                 class="w-12 h-12 object-cover rounded-lg border border-borderbg hover:scale-105 transition shadow-sm">
-                                            ${img.caption ? `<span class="absolute bottom-0 right-0 bg-black/70 text-[9px] px-1 text-yellow-300 rounded-tl"><i class="fa-solid fa-comment"></i></span>` : ''}
+                                                 onerror="this.onerror=null; this.src='https://placehold.co/100x100/1e293b/38bdf8?text=Anh';"
+                                                 class="w-12 h-12 object-cover rounded-lg border border-borderbg hover:scale-105 hover:border-sky-400 transition shadow-sm">
+                                            ${img.caption ? `<span class="absolute bottom-0 right-0 bg-black/75 text-[9px] px-1 text-yellow-300 rounded-tl"><i class="fa-solid fa-comment"></i></span>` : ''}
                                         </div>
-                                    `).join('')}
+                                    `}).join('')}
                                 </div>
                                 <span class="text-[11px] text-slate-400 font-medium">(${imagesList.length} ảnh)</span>
                             </div>
                         ` : '<span class="text-slate-600 italic text-xs">Không có</span>'}
                     </td>
-                    <td class="p-3.5 align-top text-slate-300 rich-editor-content">${truncateWords(item.daiCuong, 20)}</td>
-                    <td class="p-3.5 align-top text-slate-300">
-                        <span class="px-2.5 py-1 rounded-full bg-amber-950/60 text-amber-300 border border-amber-700/50 text-xs font-semibold">
+                    <td class="p-4 align-top text-slate-300 rich-editor-content">${truncateWords(item.daiCuong, 20)}</td>
+                    <td class="p-4 align-top text-slate-300">
+                        <span class="px-2.5 py-1 rounded-full bg-amber-950/60 text-amber-300 border border-amber-700/50 text-xs font-semibold whitespace-nowrap">
                             <i class="fa-solid fa-layer-group text-xs mr-1"></i> ${tablesCount} Bảng chi tiết
                         </span>
                     </td>
-                    <td class="p-3.5 align-top text-slate-300 rich-editor-content">${truncateWords(item.benhLy, 20)}</td>
-                    <td class="p-3.5 align-top text-slate-400 rich-editor-content text-xs">${truncateWords(item.ghiChu, 20)}</td>
-                    <td class="p-3.5 align-top text-center sticky right-0 bg-cardbg group-hover:bg-slate-800/90 transition-colors">
+                    <td class="p-4 align-top text-slate-300 rich-editor-content">${truncateWords(item.benhLy, 20)}</td>
+                    <td class="p-4 align-top text-slate-400 rich-editor-content text-xs">${truncateWords(item.ghiChu, 20)}</td>
+                    <td class="p-4 align-top text-center sticky right-0 bg-cardbg group-hover:bg-slate-800/95 transition-colors">
                         <div class="flex items-center justify-center gap-2">
-                            <button onclick="editMuscle('${item.id}')" class="p-1.5 bg-slate-700 hover:bg-indigo-600 text-slate-200 hover:text-white rounded-lg transition" title="Chỉnh sửa">
+                            <button onclick="editMuscle('${item.id}')" class="p-2 bg-slate-700/80 hover:bg-indigo-600 text-slate-200 hover:text-white rounded-lg transition" title="Chỉnh sửa">
                                 <i class="fa-solid fa-pen text-xs"></i>
                             </button>
-                            <button onclick="promptDeleteMuscle('${item.id}')" class="p-1.5 bg-slate-700 hover:bg-red-600 text-slate-200 hover:text-white rounded-lg transition" title="Xóa">
+                            <button onclick="promptDeleteMuscle('${item.id}')" class="p-2 bg-slate-700/80 hover:bg-red-600 text-slate-200 hover:text-white rounded-lg transition" title="Xóa">
                                 <i class="fa-solid fa-trash text-xs"></i>
                             </button>
                         </div>
                     </td>
                 </tr>
             `}).join('');
+
+            // 2. Render Mobile & Tablet Cards
+            mobileContainer.innerHTML = filtered.map(item => {
+                const tablesCount = Array.isArray(item.bangChiTiet) ? item.bangChiTiet.length : 1;
+                let imagesList = [];
+                if (Array.isArray(item.danhSachHinhAnh) && item.danhSachHinhAnh.length > 0) {
+                    imagesList = item.danhSachHinhAnh;
+                } else if (item.hinhAnh) {
+                    imagesList = [{ url: item.hinhAnh, caption: '' }];
+                }
+
+                return `
+                <article class="bg-cardbg/95 border border-slate-700/80 rounded-2xl p-4 shadow-lg flex flex-col justify-between gap-3.5 hover:border-indigo-500/50 transition">
+                    <div class="space-y-2.5">
+                        <!-- Card Top Badge & Actions -->
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-950/80 border border-indigo-800/60 text-indigo-300 text-xs font-semibold">
+                                <i class="fa-solid fa-location-dot text-[10px]"></i> ${escapeHTML(item.vung || '')}
+                            </span>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="editMuscle('${item.id}')" class="px-2.5 py-1.5 bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white rounded-lg text-xs font-medium transition flex items-center gap-1">
+                                    <i class="fa-solid fa-pen"></i> Sửa
+                                </button>
+                                <button onclick="promptDeleteMuscle('${item.id}')" class="p-1.5 bg-slate-800 hover:bg-red-600 text-slate-300 hover:text-white rounded-lg text-xs transition" title="Xóa">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Titles -->
+                        <div>
+                            <h3 class="text-base font-bold text-white leading-snug">${escapeHTML(item.tenVN || '')}</h3>
+                            <p class="text-xs font-semibold text-accenten mt-0.5">${escapeHTML(item.tenEN || '')}</p>
+                        </div>
+
+                        <!-- Thumbnails Strip -->
+                        ${imagesList.length > 0 ? `
+                            <div class="flex items-center gap-2 overflow-x-auto py-1 no-scrollbar">
+                                ${imagesList.map(img => {
+                                    const resolvedUrl = normalizeImageUrl(img.url);
+                                    return `
+                                    <div class="relative shrink-0 cursor-pointer preview-img-trigger"
+                                         data-url="${escapeAttr(resolvedUrl)}"
+                                         data-caption="${escapeAttr(img.caption || '')}">
+                                        <img src="${escapeAttr(resolvedUrl)}"
+                                             alt="Hình giải phẫu"
+                                             onerror="this.onerror=null; this.src='https://placehold.co/100x100/1e293b/38bdf8?text=Anh';"
+                                             class="w-14 h-14 object-cover rounded-xl border border-slate-700">
+                                    </div>
+                                `}).join('')}
+                            </div>
+                        ` : ''}
+
+                        <!-- Summary Info -->
+                        <div class="text-xs text-slate-300 bg-darkbg/60 p-2.5 rounded-xl border border-slate-800/80 space-y-1.5">
+                            <div><span class="text-slate-400 font-semibold">Đại cương:</span> ${truncateWords(item.daiCuong, 18)}</div>
+                            ${item.benhLy ? `<div><span class="text-slate-400 font-semibold">Bệnh lý:</span> ${truncateWords(item.benhLy, 14)}</div>` : ''}
+                        </div>
+                    </div>
+
+                    <!-- Card Footer -->
+                    <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
+                        <span class="px-2.5 py-1 rounded-full bg-amber-950/60 text-amber-300 border border-amber-700/50 font-semibold">
+                            <i class="fa-solid fa-layer-group mr-1"></i> ${tablesCount} Bảng chi tiết
+                        </span>
+                        <span class="text-slate-500">${imagesList.length} hình ảnh</span>
+                    </div>
+                </article>
+                `;
+            }).join('');
         }
 
-        // Tạo dòng nhập Hình Ảnh & Ghi Chú mới
+        // Delegation click cho xem trước ảnh để hỗ trợ mọi ký tự đặc biệt trong URL
+        document.addEventListener('click', (e) => {
+            const trigger = e.target.closest('.preview-img-trigger');
+            if (trigger) {
+                const url = trigger.getAttribute('data-url');
+                const caption = trigger.getAttribute('data-caption') || '';
+                openImgPreview(url, caption);
+            }
+        });
+
+        // Tạo dòng nhập Hình Ảnh & Ghi Chú mới (Hỗ trợ URL bất kỳ + Preview trực tiếp + Upload file)
         function addImageRowBlock(data = {}) {
             imageCounter++;
             const rowId = `img_row_${imageCounter}`;
             const container = document.getElementById('imageRowsContainer');
 
             const row = document.createElement('div');
-            row.className = 'img-input-row bg-slate-800/60 p-2.5 rounded-lg border border-slate-700/60 flex flex-col sm:flex-row gap-2 items-center';
+            row.className = 'img-input-row bg-slate-800/70 p-3 rounded-xl border border-slate-700/80 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center';
             row.id = rowId;
 
+            const initialUrl = normalizeImageUrl(data.url || '');
+
             row.innerHTML = `
-                <div class="flex-1 w-full">
-                    <input type="text" class="input-img-url w-full bg-darkbg border border-borderbg rounded-md px-3 py-1.5 text-slate-200 text-xs focus:outline-none focus:border-sky-400" 
-                           placeholder="Link hình ảnh (URL)..." value="${escapeHTML(data.url || '')}">
+                <!-- Thumbnail Live Preview -->
+                <div class="w-12 h-12 rounded-lg bg-darkbg border border-slate-700 flex items-center justify-center overflow-hidden shrink-0 self-start sm:self-center">
+                    <img class="img-live-preview w-full h-full object-cover ${initialUrl ? '' : 'hidden'}" 
+                         src="${escapeAttr(initialUrl)}" 
+                         alt="Preview"
+                         onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+                    <i class="fa-regular fa-image text-slate-500 text-base ${initialUrl ? 'hidden' : ''}"></i>
                 </div>
-                <div class="flex-1 w-full">
-                    <input type="text" class="input-img-caption w-full bg-darkbg border border-borderbg rounded-md px-3 py-1.5 text-yellow-300 text-xs focus:outline-none focus:border-amber-400" 
-                           placeholder="Ghi chú hình ảnh" value="${escapeHTML(data.caption || '')}">
+
+                <!-- URL Input + Upload File Button -->
+                <div class="flex-1 flex items-center gap-1.5 w-full">
+                    <input type="text" class="input-img-url flex-1 w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-slate-200 text-xs focus:outline-none focus:border-sky-400" 
+                           placeholder="Dán đường dẫn ảnh bất kỳ (https://..., đường dẫn nội bộ, Base64...)" value="${escapeAttr(data.url || '')}">
+                    <label class="cursor-pointer px-2.5 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg text-xs transition shrink-0" title="Chọn ảnh từ máy tính">
+                        <i class="fa-solid fa-upload"></i>
+                        <input type="file" accept="image/*" class="input-img-file hidden">
+                    </label>
                 </div>
-                <button type="button" onclick="removeImageRow('${rowId}')" class="text-red-400 hover:text-red-300 p-1.5 hover:bg-red-950/40 rounded transition shrink-0">
+
+                <!-- Caption Input -->
+                <div class="flex-1 w-full">
+                    <input type="text" class="input-img-caption w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-yellow-300 text-xs focus:outline-none focus:border-amber-400" 
+                           placeholder="Chú thích hình ảnh (nếu có)" value="${escapeAttr(data.caption || '')}">
+                </div>
+
+                <!-- Remove Row -->
+                <button type="button" onclick="removeImageRow('${rowId}')" class="text-red-400 hover:text-red-300 p-2 hover:bg-red-950/50 rounded-lg transition shrink-0 self-end sm:self-center" title="Xóa ảnh này">
                     <i class="fa-solid fa-trash text-xs"></i>
                 </button>
             `;
+
+            // Lắng nghe thay đổi URL để cập nhật hình xem trước ngay lập tức
+            const urlInput = row.querySelector('.input-img-url');
+            const previewImg = row.querySelector('.img-live-preview');
+            const placeholderIcon = previewImg.nextElementSibling;
+            const fileInput = row.querySelector('.input-img-file');
+
+            urlInput.addEventListener('input', () => {
+                const val = normalizeImageUrl(urlInput.value);
+                if (val) {
+                    previewImg.src = val;
+                    previewImg.classList.remove('hidden');
+                    placeholderIcon.classList.add('hidden');
+                } else {
+                    previewImg.classList.add('hidden');
+                    placeholderIcon.classList.remove('hidden');
+                }
+            });
+
+            // Cho phép chọn ảnh từ máy và chuyển thành đường dẫn Base64
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                if (file.size > 900 * 1024) {
+                    showToast("Ảnh lớn hơn 900KB có thể vượt giới hạn lưu trữ, nên dùng link URL!", "error");
+                }
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    urlInput.value = ev.target.result;
+                    urlInput.dispatchEvent(new Event('input'));
+                };
+                reader.readAsDataURL(file);
+            });
+
             container.appendChild(row);
         }
 
@@ -570,29 +948,29 @@
                 <div>
                     <label class="block text-xs font-semibold text-amber-300 uppercase mb-1">Tên các cơ thuộc nhóm / tiêu đề bảng <span class="text-red-400">*</span></label>
                     <input type="text" class="input-sub-ten-co w-full bg-darkbg border border-borderbg rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-amber-400 font-medium" 
-                           placeholder="Ví dụ: Nhóm Cơ Nhị Đầu & Cơ Cánh Tay" value="${escapeHTML(data.tenCơNhom || '')}" required>
+                           placeholder="Ví dụ: Nhóm Cơ Nhị Đầu & Cơ Cánh Tay" value="${escapeAttr(data.tenCơNhom || '')}" required>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Nguyên ủy</label>
-                        <div class="editor-sub-nguyen-uy editable-area text-sm" contenteditable="true">${data.nguyenUy || ''}</div>
+                        <div class="editor-sub-nguyen-uy editable-area text-sm" contenteditable="true">${sanitizeHtmlToTypedFormat(data.nguyenUy || '')}</div>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Bám tận</label>
-                        <div class="editor-sub-bam-tan editable-area text-sm" contenteditable="true">${data.bamTan || ''}</div>
+                        <div class="editor-sub-bam-tan editable-area text-sm" contenteditable="true">${sanitizeHtmlToTypedFormat(data.bamTan || '')}</div>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Chức năng</label>
-                        <div class="editor-sub-chuc-nang editable-area text-sm" contenteditable="true">${data.chucNang || ''}</div>
+                        <div class="editor-sub-chuc-nang editable-area text-sm" contenteditable="true">${sanitizeHtmlToTypedFormat(data.chucNang || '')}</div>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Thần kinh chi phối</label>
-                        <div class="editor-sub-than-kinh editable-area text-sm" contenteditable="true">${data.thanKinh || ''}</div>
+                        <div class="editor-sub-than-kinh editable-area text-sm" contenteditable="true">${sanitizeHtmlToTypedFormat(data.thanKinh || '')}</div>
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Ghi chú (nếu có)</label>
-                        <div class="editor-sub-ghi-chu editable-area text-sm" contenteditable="true">${data.ghiChu || ''}</div>
+                        <div class="editor-sub-ghi-chu editable-area text-sm" contenteditable="true">${sanitizeHtmlToTypedFormat(data.ghiChu || '')}</div>
                     </div>
                 </div>
             `;
@@ -615,19 +993,12 @@
             const plainText = (tempDiv.textContent || tempDiv.innerText || '').trim();
             if (!plainText) return '-';
             const words = plainText.split(/\s+/);
-            if (words.length <= maxWords) return htmlContent;
+            if (words.length <= maxWords) return sanitizeHtmlToTypedFormat(htmlContent);
             return `${escapeHTML(words.slice(0, maxWords).join(' '))} ...`;
         }
 
-        function escapeHTML(str) {
-            if (!str) return '';
-            return str.replace(/[&<>'"]/g, 
-                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-            );
-        }
-
-        // Mở Modal Thêm Mới
-        document.getElementById('btnOpenModal').addEventListener('click', () => {
+        // Hàm mở Modal Thêm Mới dùng chung cho cả nút Desktop và Mobile
+        function openCreateModal() {
             document.getElementById('anatomyForm').reset();
             document.getElementById('docId').value = '';
             document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-plus text-indigo-400"></i> Thêm Dữ Liệu Cơ Mới';
@@ -636,13 +1007,16 @@
             document.getElementById('editorGhiChu').innerHTML = '';
             
             document.getElementById('imageRowsContainer').innerHTML = '';
-            addImageRowBlock(); // Tạo sẵn 1 dòng nhập ảnh
+            addImageRowBlock();
 
             document.getElementById('detailTablesContainer').innerHTML = '';
             addDetailTableBlock();
 
             document.getElementById('anatomyModal').classList.remove('hidden');
-        });
+        }
+
+        document.getElementById('btnOpenModal').addEventListener('click', openCreateModal);
+        document.getElementById('btnOpenModalMobile').addEventListener('click', openCreateModal);
 
         const closeModal = () => document.getElementById('anatomyModal').classList.add('hidden');
         document.getElementById('btnCloseModal').addEventListener('click', closeModal);
@@ -655,7 +1029,7 @@
 
             const docId = document.getElementById('docId').value;
             
-            // Lấy danh sách ảnh & ghi chú
+            // Lấy danh sách ảnh & ghi chú (lưu nguyên đường dẫn người dùng nhập)
             const imgRows = document.querySelectorAll('#imageRowsContainer .img-input-row');
             const danhSachHinhAnh = [];
             imgRows.forEach(row => {
@@ -666,18 +1040,17 @@
                 }
             });
 
-            // Lấy danh sách sub-tables
             const tableCards = document.querySelectorAll('#detailTablesContainer .sub-table-card');
             const bangChiTiet = [];
 
             tableCards.forEach(card => {
                 bangChiTiet.push({
                     tenCơNhom: card.querySelector('.input-sub-ten-co').value.trim(),
-                    nguyenUy: card.querySelector('.editor-sub-nguyen-uy').innerHTML,
-                    bamTan: card.querySelector('.editor-sub-bam-tan').innerHTML,
-                    chucNang: card.querySelector('.editor-sub-chuc-nang').innerHTML,
-                    thanKinh: card.querySelector('.editor-sub-than-kinh').innerHTML,
-                    ghiChu: card.querySelector('.editor-sub-ghi-chu').innerHTML
+                    nguyenUy: sanitizeHtmlToTypedFormat(card.querySelector('.editor-sub-nguyen-uy').innerHTML),
+                    bamTan: sanitizeHtmlToTypedFormat(card.querySelector('.editor-sub-bam-tan').innerHTML),
+                    chucNang: sanitizeHtmlToTypedFormat(card.querySelector('.editor-sub-chuc-nang').innerHTML),
+                    thanKinh: sanitizeHtmlToTypedFormat(card.querySelector('.editor-sub-than-kinh').innerHTML),
+                    ghiChu: sanitizeHtmlToTypedFormat(card.querySelector('.editor-sub-ghi-chu').innerHTML)
                 });
             });
 
@@ -691,15 +1064,15 @@
                 tenVN: document.getElementById('inputTenVN').value.trim(),
                 tenEN: document.getElementById('inputTenEN').value.trim(),
                 danhSachHinhAnh: danhSachHinhAnh,
-                hinhAnh: danhSachHinhAnh[0]?.url || '', // Giữ trường cũ để tương thích
-                daiCuong: document.getElementById('editorDaiCuong').innerHTML,
+                hinhAnh: danhSachHinhAnh[0]?.url || '',
+                daiCuong: sanitizeHtmlToTypedFormat(document.getElementById('editorDaiCuong').innerHTML),
                 bangChiTiet: bangChiTiet,
                 nguyenUy: bangChiTiet[0]?.nguyenUy || '',
                 bamTan: bangChiTiet[0]?.bamTan || '',
                 chucNang: bangChiTiet[0]?.chucNang || '',
                 thanKinh: bangChiTiet[0]?.thanKinh || '',
-                benhLy: document.getElementById('editorBenhLy').innerHTML,
-                ghiChu: document.getElementById('editorGhiChu').innerHTML,
+                benhLy: sanitizeHtmlToTypedFormat(document.getElementById('editorBenhLy').innerHTML),
+                ghiChu: sanitizeHtmlToTypedFormat(document.getElementById('editorGhiChu').innerHTML),
                 updatedAt: new Date().toISOString()
             };
 
@@ -715,7 +1088,7 @@
                 closeModal();
             } catch (error) {
                 console.error("Lỗi khi lưu:", error);
-                showToast("Lỗi khi lưu dữ liệu!", "error");
+                showToast("Lỗi khi lưu dữ liệu (kiểm tra kích thước ảnh)!", "error");
             }
         });
 
@@ -729,7 +1102,6 @@
             document.getElementById('inputTenVN').value = item.tenVN || '';
             document.getElementById('inputTenEN').value = item.tenEN || '';
 
-            // Load danh sách hình ảnh
             const imgContainer = document.getElementById('imageRowsContainer');
             imgContainer.innerHTML = '';
             
@@ -741,11 +1113,10 @@
                 addImageRowBlock();
             }
 
-            document.getElementById('editorDaiCuong').innerHTML = item.daiCuong || '';
-            document.getElementById('editorBenhLy').innerHTML = item.benhLy || '';
-            document.getElementById('editorGhiChu').innerHTML = item.ghiChu || '';
+            document.getElementById('editorDaiCuong').innerHTML = sanitizeHtmlToTypedFormat(item.daiCuong || '');
+            document.getElementById('editorBenhLy').innerHTML = sanitizeHtmlToTypedFormat(item.benhLy || '');
+            document.getElementById('editorGhiChu').innerHTML = sanitizeHtmlToTypedFormat(item.ghiChu || '');
 
-            // Đưa danh sách các sub-table vào container
             const container = document.getElementById('detailTablesContainer');
             container.innerHTML = '';
 
@@ -808,8 +1179,25 @@
             document.getElementById('imgPreviewModal').classList.add('hidden');
         };
 
-        document.getElementById('searchInput').addEventListener('input', renderTable);
-        document.getElementById('filterRegion').addEventListener('change', renderTable);
+        // Search & Filter Event Listeners
+        document.getElementById('searchInput').addEventListener('input', renderDataViews);
+        document.getElementById('filterRegion').addEventListener('change', renderDataViews);
+
+        document.getElementById('btnClearSearch').addEventListener('click', () => {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.value = '';
+            searchInput.focus();
+            renderDataViews();
+        });
+
+        // Quick Pill Filter Click Events
+        document.querySelectorAll('.region-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                const region = pill.getAttribute('data-region');
+                document.getElementById('filterRegion').value = region;
+                renderDataViews();
+            });
+        });
 
         function showToast(msg, type = "success") {
             const toast = document.getElementById('toast');

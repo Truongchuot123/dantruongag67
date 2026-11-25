@@ -1,55 +1,1727 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bệnh học-Nguyễn Mai Đan Trường</title>
-        
-     <meta name="description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:description" content="Chào bạn! Đây là không gian cá nhân của Đan Trường. Khám phá thôi nào!.">
-    <meta property="og:image" content="/hinhanh/logo_web.png">
-    <meta property="og:url" content="https://dantruongag.id.vn">
-    
+    <title>Bệnh Học — Tài Liệu, Video & Luyện Tập Trực Tuyến</title>
+    <link rel="icon" href="/hinhanh/logo_web.png" onerror="this.href='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🩺</text></svg>'">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" href="/hinhanh/logo_web.png" type="">
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/banner_trang_con.css">
-    <link rel="stylesheet" href="/benhhoc/benhhoc.css">
- 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        :root {
+            --bg-gradient: radial-gradient(circle at 12% 10%, rgba(14, 165, 233, 0.16) 0%, transparent 45%),
+                           radial-gradient(circle at 88% 85%, rgba(99, 102, 241, 0.18) 0%, transparent 45%),
+                           radial-gradient(circle at 50% 45%, rgba(16, 185, 129, 0.06) 0%, transparent 60%),
+                           #060a12;
+            --card-bg: rgba(15, 23, 42, 0.78);
+            --card-border: rgba(255, 255, 255, 0.09);
+            --input-bg: rgba(9, 13, 22, 0.88);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            min-height: 100dvh;
+            color: var(--text-main);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .glass-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 14px 36px -10px rgba(0, 0, 0, 0.45);
+        }
+
+        .lesson-card {
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @media (hover: hover) {
+            .lesson-card:hover {
+                transform: translateY(-6px);
+                border-color: rgba(56, 189, 248, 0.5);
+                box-shadow: 0 22px 44px -12px rgba(14, 165, 233, 0.28);
+            }
+        }
+        .lesson-card:active {
+            transform: scale(0.985);
+        }
+
+        .btn-glow {
+            background: linear-gradient(135deg, #0284c7 0%, #4f46e5 50%, #7c3aed 100%);
+            background-size: 200% auto;
+            transition: all 0.3s ease;
+        }
+        .btn-glow:hover:not(:disabled) {
+            background-position: right center;
+            box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.55);
+            transform: translateY(-1px);
+        }
+
+        .form-input {
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            transition: all 0.2s ease;
+        }
+        .form-input:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+            outline: none;
+        }
+
+        @media (max-width: 768px) {
+            .form-input {
+                font-size: 16px !important;
+            }
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 99px; }
+
+        .skeleton {
+            background: linear-gradient(90deg, rgba(148,163,184,0.08) 25%, rgba(148,163,184,0.18) 50%, rgba(148,163,184,0.08) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+            border-radius: 1rem;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .animate-enter {
+            animation: slideUpFade 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Định dạng nội dung bài học rich-text */
+        .rich-article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #38bdf8;
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .rich-article-body h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #818cf8;
+            margin-top: 1rem;
+            margin-bottom: 0.4rem;
+        }
+        .rich-article-body p {
+            margin-bottom: 0.75rem;
+            line-height: 1.75;
+        }
+        .rich-article-body ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-bottom: 0.85rem;
+        }
+        .rich-article-body ol {
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+            margin-bottom: 0.85rem;
+        }
+        .rich-article-body li {
+            margin-bottom: 0.35rem;
+            line-height: 1.7;
+        }
+    </style>
 </head>
-<body class="bg-gray-900">
+<body class="antialiased selection:bg-sky-500 selection:text-white pb-14">
 
-    <div id="header-placeholder"></div>
-    <div id="search-placeholder"></div>
+    <!-- ================= CHẾ ĐỘ 1: DANH SÁCH CHỦ ĐỀ & THẺ BÀI HỌC ================= -->
+    <main id="catalogView" class="w-full max-w-7xl mx-auto px-3 sm:px-6 pt-5 sm:pt-10 space-y-6 sm:space-y-8">
+        
+        <!-- HERO BANNER & THANH CÔNG CỤ HIỆN ĐẠI -->
+        <section class="glass-panel rounded-3xl p-5 sm:p-8 relative overflow-hidden">
+            <div class="absolute -right-16 -top-16 w-64 h-64 rounded-full bg-sky-500/15 blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-16 -bottom-16 w-64 h-64 rounded-full bg-indigo-500/15 blur-3xl pointer-events-none"></div>
 
-    <header class="main-banner_trang_con">
-            <div class="banner_trang_con-overlay"></div>
-            <div class="hbanner_trang_con-image-bg"></div>
+            <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-5 sm:gap-6">
+                <div class="space-y-2.5">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/15 border border-sky-500/30 text-sky-400 text-xs font-bold">
+                            <span id="syncDot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                            <span id="syncText">Đang đồng bộ dữ liệu Bệnh học...</span>
+                        </div>
+                        <span id="viewportBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-[11px] font-bold">
+                            <i class="fas fa-desktop text-[10px]"></i> <span>Tự thích nghi màn hình</span>
+                        </span>
+                    </div>
+                    <h1 class="text-2xl sm:text-4xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-indigo-300 to-purple-400">
+                        MÔN HỌC: BỆNH HỌC
+                    </h1>
+                    <p class="text-xs sm:text-sm text-slate-400 max-w-2xl leading-relaxed">
+                        Hệ thống bài giảng Video, tài liệu trực tuyến, tóm tắt lý thuyết và luyện tập trắc nghiệm chuyên sâu theo từng chủ đề.
+                    </p>
+                </div>
 
-            <div class="hbanner_trang_con-content">
-                <h1 class="main-title">BỆNH HỌC <span class="icon-span"></span></h1>
-                <p class="sub-text">Bệnh học (trong tiếng Anh là Pathology) là danh từ chỉ lĩnh vực khoa học y sinh nghiên cứu về bản chất, nguyên nhân, cơ chế sinh bệnh, những thay đổi về cấu trúc tế bào, mô, cơ quan và những rối loạn chức năng do bệnh gây ra. Bệnh học tập trung vào việc mô tả, giải thích và phân loại các tổn thương bệnh lý, đồng thời xác định mối quan hệ giữa tổn thương cấu trúc và biểu hiện chức năng của cơ thể. Mục tiêu của bệnh học là cung cấp nền tảng khoa học để chẩn đoán chính xác, tiên lượng và phát triển các phương pháp điều trị hiệu quả.
-    </p>
-                <div class="hbanner_trang_con-tabs-wrap">
-                    <div id="category-tabs" class="category-scroll" aria-label="Danh mục bài viết"></div>
+                <!-- Thống kê nhanh -->
+                <div class="grid grid-cols-3 sm:flex items-center gap-2.5 sm:gap-3">
+                    <div class="glass-panel px-3 sm:px-4 py-2.5 rounded-2xl text-center sm:min-w-[92px]">
+                        <div class="text-lg sm:text-xl font-black text-sky-400" id="statTopics">0</div>
+                        <div class="text-[11px] font-semibold text-slate-400">Chủ đề</div>
+                    </div>
+                    <div class="glass-panel px-3 sm:px-4 py-2.5 rounded-2xl text-center sm:min-w-[92px]">
+                        <div class="text-lg sm:text-xl font-black text-indigo-400" id="statLessons">0</div>
+                        <div class="text-[11px] font-semibold text-slate-400">Bài học</div>
+                    </div>
+                    <div class="glass-panel px-3 sm:px-4 py-2.5 rounded-2xl text-center sm:min-w-[92px]">
+                        <div class="text-lg sm:text-xl font-black text-emerald-400" id="statCompleted">0%</div>
+                        <div class="text-[11px] font-semibold text-slate-400">Đã học</div>
+                    </div>
                 </div>
             </div>
-    </header>
 
+            <!-- Thanh tìm kiếm & Bộ lọc thích nghi -->
+            <div class="relative z-10 mt-6 pt-5 border-t border-slate-500/15 flex flex-col sm:flex-row gap-3">
+                <div class="relative flex-1">
+                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input type="text" id="searchInput" oninput="renderCatalog()" placeholder="Tìm kiếm tên bài học hoặc chủ đề trong Bệnh học..."
+                        class="form-input w-full pl-11 pr-10 py-3 rounded-2xl text-xs sm:text-sm font-medium">
+                    <button onclick="document.getElementById('searchInput').value=''; renderCatalog();" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-rose-400 text-sm p-1">
+                        <i class="fas fa-times-circle"></i>
+                    </button>
+                </div>
 
-        <div id="card-container" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <!-- JavaScript tự động hiển thị cấu trúc thẻ ở đây -->
+                <div class="flex items-center gap-2 justify-between sm:justify-end flex-wrap">
+                    <button onclick="toggleVideoOnlyFilter()" id="videoFilterBtn" class="px-4 py-3 rounded-2xl glass-panel text-xs font-bold text-slate-300 hover:border-rose-400/50 flex items-center justify-center gap-2 transition-all whitespace-nowrap">
+                        <i class="fas fa-play-circle text-rose-400"></i> <span>Có Video (<span id="videoCount">0</span>)</span>
+                    </button>
+
+                    <button onclick="toggleBookmarkFilter()" id="bookmarkFilterBtn" class="px-4 py-3 rounded-2xl glass-panel text-xs font-bold text-slate-300 hover:border-amber-400/50 flex items-center justify-center gap-2 transition-all whitespace-nowrap">
+                        <i class="far fa-bookmark text-amber-400"></i> <span>Đã lưu (<span id="bookmarkCount">0</span>)</span>
+                    </button>
+
+                    <!-- Chuyển đổi bố cục hiển thị thích nghi (Lưới / Danh sách) -->
+                    <div class="flex items-center glass-panel p-1 rounded-2xl shrink-0" title="Chuyển chế độ hiển thị thích nghi">
+                        <button type="button" onclick="setAdaptiveLayout('grid')" id="layoutGridBtn" class="w-9 h-9 rounded-xl bg-sky-500 text-white flex items-center justify-center text-xs transition-all" title="Dạng thẻ lưới">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                        <button type="button" onclick="setAdaptiveLayout('list')" id="layoutListBtn" class="w-9 h-9 rounded-xl text-slate-400 hover:text-white flex items-center justify-center text-xs transition-all" title="Dạng danh sách gọn">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thanh cuộn chọn nhanh Chủ đề (Pills) -->
+            <div id="topicPillsContainer" class="relative z-10 mt-4 flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+                <!-- Render pills tại đây -->
+            </div>
+        </section>
+
+        <!-- KHU VỰC HIỂN THỊ CÁC CHỦ ĐỀ & THẺ CARD BÀI HỌC -->
+        <section id="topicsContainer" class="space-y-8 sm:space-y-10">
+            <!-- Skeleton Loading -->
+            <div class="space-y-4">
+                <div class="skeleton h-8 w-64"></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                    <div class="skeleton h-72 w-full"></div>
+                    <div class="skeleton h-72 w-full"></div>
+                    <div class="skeleton h-72 w-full"></div>
+                    <div class="skeleton h-72 w-full"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trạng thái trống -->
+        <div id="emptyState" class="hidden glass-panel rounded-3xl p-10 sm:p-14 text-center space-y-3">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-sky-500/15 text-sky-400 flex items-center justify-center text-2xl">
+                <i class="fas fa-folder-open"></i>
+            </div>
+            <h3 class="text-lg font-extrabold">Không tìm thấy bài học phù hợp</h3>
+            <p class="text-xs sm:text-sm text-slate-400 max-w-md mx-auto">
+                Hiện chưa có bài giảng video, tài liệu hoặc nội dung nào khớp với từ khóa lọc trong môn "Bệnh học".
+            </p>
+            <button onclick="resetFilters()" class="mt-2 px-5 py-2.5 rounded-xl btn-glow text-white text-xs font-bold">
+                Xem tất cả bài học
+            </button>
+        </div>
+    </main>
+
+    <!-- ================= CHẾ ĐỘ 2: CHI TIẾT BÀI HỌC (VIDEO, TÀI LIỆU, NỘI DUNG & LUYỆN TẬP) ================= -->
+    <section id="detailView" class="hidden w-full max-w-6xl mx-auto px-3 sm:px-6 pt-4 sm:pt-8 space-y-5 sm:space-y-6 animate-enter">
+        
+        <!-- Thanh điều hướng quay lại & Công cụ học tập -->
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <button onclick="closeDetailView()" class="px-4 py-2.5 rounded-2xl glass-panel hover:border-sky-400/50 text-xs sm:text-sm font-bold flex items-center gap-2 transition-all">
+                <i class="fas fa-arrow-left text-sky-400"></i> <span>Quay lại danh sách</span>
+            </button>
+
+            <div class="flex items-center gap-2">
+                <button onclick="toggleCurrentCompleted()" id="markCompletedBtn" class="px-4 py-2.5 rounded-2xl glass-panel text-xs font-bold flex items-center gap-2 transition-all">
+                    <i class="far fa-check-circle"></i> <span>Đánh dấu đã học</span>
+                </button>
+                <button onclick="toggleCurrentBookmark()" id="detailBookmarkBtn" class="w-10 h-10 rounded-2xl glass-panel flex items-center justify-center text-amber-400 hover:scale-105 transition-transform" title="Lưu bài học">
+                    <i class="far fa-bookmark"></i>
+                </button>
+            </div>
         </div>
 
-    <div id="footer-placeholder"></div>
+        <!-- PHẦN TRÊN: MÔN HỌC, CHỦ ĐỀ & TÊN BÀI HỌC -->
+        <div class="glass-panel rounded-3xl p-5 sm:p-8 text-center relative overflow-hidden border-t-4 border-t-sky-500">
+            <div class="absolute inset-0 bg-gradient-to-b from-sky-500/5 to-transparent pointer-events-none"></div>
+            
+            <!-- Tên Môn học -->
+            <div class="flex justify-center mb-3">
+                <span id="detailSubject" class="px-5 py-1.5 rounded-full bg-gradient-to-r from-sky-500/20 to-indigo-500/20 border border-sky-400/30 text-sky-400 font-black text-xs sm:text-sm uppercase tracking-widest shadow-sm">
+                    BỆNH HỌC
+                </span>
+            </div>
 
-      <script src="/script.js"></script>
-      <script type="module" src="/quiz.js"></script>
-      <script src="/benhhoc/benhhoc.js"></script>
+            <!-- Tên Chủ đề -->
+            <div class="flex items-center justify-center gap-2 text-xs sm:text-sm font-bold text-indigo-400 mb-2">
+                <i class="fas fa-layer-group"></i>
+                <span id="detailTopic">Tên chủ đề</span>
+            </div>
+
+            <!-- Tên Bài học -->
+            <h2 id="detailLessonTitle" class="text-lg sm:text-3xl font-black tracking-tight max-w-3xl mx-auto leading-snug">
+                Tên bài học chi tiết
+            </h2>
+
+            <!-- Badges loại học liệu có sẵn -->
+            <div id="detailMediaBadges" class="flex flex-wrap items-center justify-center gap-2 mt-4"></div>
+
+            <!-- Thư viện ảnh minh họa đính kèm -->
+            <div id="detailGallery" class="hidden mt-5 flex items-center justify-center gap-2.5 flex-wrap"></div>
+        </div>
+
+        <!-- THANH CHUYỂN ĐỔI HỌC LIỆU (VIDEO / TÀI LIỆU / NỘI DUNG LÝ THUYẾT) -->
+        <div id="learningModeTabs" class="hidden glass-panel p-1.5 rounded-2xl flex flex-wrap items-center justify-center gap-2">
+            <!-- Render các tab học liệu phù hợp với bài học tại đây -->
+        </div>
+
+        <!-- KHU VỰC 1: TRÌNH PHÁT VIDEO BÀI GIẢNG HIỆN ĐẠI -->
+        <div id="videoViewerCard" class="hidden glass-panel rounded-3xl overflow-hidden border border-rose-500/25 shadow-2xl">
+            <div class="px-4 sm:px-6 py-3.5 border-b border-slate-500/15 bg-gradient-to-r from-rose-500/10 via-indigo-500/5 to-transparent flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shadow-inner">
+                        <i class="fas fa-play text-sm"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-xs sm:text-sm font-extrabold">Video bài giảng trực quan</h3>
+                            <span id="videoProviderBadge" class="px-2 py-0.5 rounded-md bg-rose-500/20 text-rose-300 text-[10px] font-extrabold uppercase tracking-wider">HD Video</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400" id="videoSourceLabel">Phát trực tiếp trên trình duyệt</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="toggleVideoTheaterMode()" id="theaterModeBtn" class="px-3 py-2 rounded-xl glass-panel hover:border-rose-400/40 text-xs font-bold text-slate-300 flex items-center gap-1.5 transition-colors" title="Chế độ rạp chiếu phim">
+                        <i class="fas fa-tv text-rose-400"></i> <span class="hidden sm:inline">Rạp phim</span>
+                    </button>
+                    <a id="openExternalVideoBtn" href="#" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500 text-rose-400 hover:text-white border border-rose-500/30 text-xs font-bold flex items-center gap-1.5 transition-all">
+                        <i class="fas fa-external-link-alt"></i> <span>Mở nguồn gốc</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Khung tỷ lệ chuẩn 16:9 hiện đại cho Video -->
+            <div id="videoPlayerWrapper" class="relative w-full bg-black aspect-video max-h-[76dvh] flex items-center justify-center overflow-hidden">
+                <!-- Video iframe hoặc thẻ <video> sẽ được chèn tại đây -->
+            </div>
+        </div>
+
+        <!-- KHU VỰC 2: HIỂN THỊ TÀI LIỆU GOOGLE DRIVE / PDF / WEB TRỰC TIẾP -->
+        <div id="docViewerCard" class="hidden glass-panel rounded-3xl overflow-hidden border border-slate-500/20">
+            <div class="px-4 sm:px-6 py-3.5 border-b border-slate-500/15 bg-slate-500/5 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-sky-500/15 text-sky-400 flex items-center justify-center">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xs sm:text-sm font-extrabold">Tài liệu học tập trực tuyến</h3>
+                        <p class="text-[11px] text-slate-400" id="docSourceLabel">Trình xem nhúng trực tiếp</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleFullscreenViewer()" class="px-3 py-2 rounded-xl glass-panel hover:border-sky-400/40 text-xs font-bold text-slate-300 flex items-center gap-1.5 transition-colors">
+                        <i class="fas fa-expand"></i> <span class="hidden sm:inline">Toàn màn hình</span>
+                    </button>
+                    <a id="openExternalDocBtn" href="#" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl bg-sky-500/15 hover:bg-sky-500 text-sky-400 hover:text-white border border-sky-500/30 text-xs font-bold flex items-center gap-1.5 transition-all">
+                        <i class="fas fa-external-link-alt"></i> <span>Mở tab mới</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Khung Iframe tự động thích nghi chiều cao màn hình -->
+            <div id="mediaEmbedContainer" class="relative w-full bg-slate-950/95 flex items-center justify-center transition-all duration-300" style="height: 72dvh;">
+                <!-- Nội dung nhúng tài liệu -->
+            </div>
+        </div>
+
+        <!-- KHU VỰC 3: NỘI DUNG TÓM TẮT LÝ THUYẾT & GHI CHÚ BÀI HỌC -->
+        <div id="richContentCard" class="hidden glass-panel rounded-3xl overflow-hidden border border-emerald-500/20">
+            <div class="px-4 sm:px-6 py-3.5 border-b border-slate-500/15 bg-emerald-500/5 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center">
+                        <i class="fas fa-book-medical"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xs sm:text-sm font-extrabold">Nội dung lý thuyết & Trọng tâm lâm sàng</h3>
+                        <p class="text-[11px] text-slate-400">Tổng hợp kiến thức trọng tâm của bài học</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <button type="button" onclick="adjustArticleFontSize(-1)" class="w-8 h-8 rounded-lg glass-panel text-xs font-bold text-slate-300 hover:text-emerald-400" title="Thu nhỏ chữ">A-</button>
+                    <button type="button" onclick="adjustArticleFontSize(1)" class="w-8 h-8 rounded-lg glass-panel text-xs font-bold text-slate-300 hover:text-emerald-400" title="Phóng to chữ">A+</button>
+                </div>
+            </div>
+            <div id="richArticleContent" class="p-5 sm:p-8 text-sm sm:text-base text-slate-200 rich-article-body leading-relaxed">
+                <!-- Nội dung rich-text từ kho dữ liệu -->
+            </div>
+        </div>
+
+        <!-- PHẦN DƯỚI: NÚT LUYỆN TẬP NỔI BẬT -->
+        <div class="glass-panel rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-5 border border-indigo-500/25 bg-gradient-to-r from-indigo-500/10 via-purple-500/5 to-sky-500/10">
+            <div class="text-center sm:text-left space-y-1">
+                <div class="inline-flex items-center gap-2 text-xs font-extrabold text-indigo-400 uppercase tracking-wider">
+                    <i class="fas fa-brain"></i> Củng cố kiến thức bài học
+                </div>
+                <h3 class="text-lg sm:text-xl font-black">Luyện tập trắc nghiệm & câu hỏi ôn tập</h3>
+                <p id="practiceSubtitle" class="text-xs sm:text-sm text-slate-400">
+                    Đang kiểm tra ngân hàng câu hỏi cho bài học này...
+                </p>
+            </div>
+
+            <button onclick="openPracticeSection()" id="startPracticeBtn" class="w-full sm:w-auto px-8 py-4 rounded-2xl btn-glow text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-3 shadow-xl shrink-0">
+                <i class="fas fa-play-circle text-lg"></i>
+                <span>LUYỆN TẬP NGAY</span>
+                <span id="practiceBadgeCount" class="px-2.5 py-0.5 rounded-full bg-white/20 text-xs font-black">0</span>
+            </button>
+        </div>
+
+        <!-- ================= KHU VỰC LÀM BÀI LUYỆN TẬP (HIỂN THỊ KHI NHẤP NÚT LUYỆN TẬP) ================= -->
+        <div id="practiceWorkspace" class="hidden glass-panel rounded-3xl p-5 sm:p-8 space-y-6 border-2 border-indigo-500/30 animate-enter">
+            <!-- Header khu vực luyện tập -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-500/15">
+                <div>
+                    <span class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                        <i class="fas fa-random"></i> Đã xáo trộn thứ tự câu hỏi & đáp án trắc nghiệm
+                    </span>
+                    <h3 class="text-lg sm:text-xl font-black mt-1" id="practiceHeaderTitle">Bài luyện tập</h3>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    <div id="liveScorePill" class="px-3.5 py-2 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-extrabold">
+                        Điểm: <span id="scoreCorrect">0</span>/<span id="scoreTotal">0</span>
+                    </div>
+                    <button onclick="reshufflePractice()" class="px-3.5 py-2 rounded-xl glass-panel hover:border-amber-400/50 text-amber-400 text-xs font-bold flex items-center gap-1.5 transition-all">
+                        <i class="fas fa-sync-alt"></i> Làm lại & Xáo trộn
+                    </button>
+                </div>
+            </div>
+
+            <!-- Danh sách câu hỏi luyện tập -->
+            <div id="practiceQuestionsList" class="space-y-5">
+                <!-- Render câu hỏi đã xáo trộn tại đây -->
+            </div>
+
+            <!-- Bảng tổng kết nộp bài -->
+            <div id="practiceSummaryBox" class="pt-4 border-t border-slate-500/15 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="text-xs sm:text-sm text-slate-400 text-center sm:text-left">
+                    Hoàn thành tất cả các câu hỏi để kiểm tra mức độ nắm vững kiến thức của bạn.
+                </div>
+                <button onclick="submitAllPractice()" id="submitAllBtn" class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 transition-all">
+                    <i class="fas fa-check-double"></i> Chấm điểm & Xem kết quả
+                </button>
+            </div>
+        </div>
+
+        <!-- Điều hướng Bài trước / Bài tiếp theo -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            <button id="prevLessonBtn" onclick="navigateSiblingLesson(-1)" class="glass-panel hover:border-sky-400/40 p-4 rounded-2xl text-left flex items-center gap-3 transition-all disabled:opacity-40 disabled:pointer-events-none">
+                <div class="w-10 h-10 rounded-xl bg-slate-500/10 flex items-center justify-center text-sky-400 shrink-0">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                <div class="min-w-0">
+                    <div class="text-[11px] font-bold text-slate-400 uppercase">Bài trước</div>
+                    <div id="prevLessonName" class="text-xs sm:text-sm font-extrabold truncate">--</div>
+                </div>
+            </button>
+
+            <button id="nextLessonBtn" onclick="navigateSiblingLesson(1)" class="glass-panel hover:border-sky-400/40 p-4 rounded-2xl text-right flex items-center justify-end gap-3 transition-all disabled:opacity-40 disabled:pointer-events-none">
+                <div class="min-w-0">
+                    <div class="text-[11px] font-bold text-slate-400 uppercase">Bài tiếp theo</div>
+                    <div id="nextLessonName" class="text-xs sm:text-sm font-extrabold truncate">--</div>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-slate-500/10 flex items-center justify-center text-sky-400 shrink-0">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </button>
+        </div>
+    </section>
+
+    <!-- NÚT CUỘN NHANH LÊN ĐẦU TRANG -->
+    <button id="scrollTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="hidden fixed bottom-5 right-5 z-40 w-11 h-11 rounded-2xl btn-glow text-white shadow-xl flex items-center justify-center transition-all hover:scale-105" title="Lên đầu trang">
+        <i class="fas fa-arrow-up text-sm"></i>
+    </button>
+
+    <!-- LIGHTBOX XEM ẢNH PHÓNG TO -->
+    <div id="imageLightbox" onclick="closeImageLightbox()" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+        <div class="relative max-w-4xl w-full flex flex-col items-center animate-enter" onclick="event.stopPropagation()">
+            <button onclick="closeImageLightbox()" class="self-end mb-3 w-10 h-10 rounded-xl bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white flex items-center justify-center transition-colors">
+                <i class="fas fa-times"></i>
+            </button>
+            <img id="lightboxImg" src="" alt="Hình ảnh bài học" class="max-h-[80vh] max-w-full rounded-2xl object-contain border border-white/10 shadow-2xl">
+        </div>
+    </div>
+
+    <!-- TOAST THÔNG BÁO -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 px-5 py-3 rounded-2xl glass-panel border-sky-500/40 text-xs font-bold shadow-2xl opacity-0 translate-y-8 transition-all duration-300 z-50 pointer-events-none flex items-center gap-2.5 max-w-[90vw] text-center">
+        <span class="w-2 h-2 rounded-full bg-sky-400 animate-ping shrink-0"></span>
+        <span id="toastMsg">Thông báo</span>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Nạp cấu hình Firebase an toàn
+        let firebaseConfig = null;
+        try {
+            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                firebaseConfig = typeof __firebase_config === 'string' ? JSON.parse(__firebase_config) : __firebase_config;
+            } else {
+                const mod = await import("/dl.js");
+                firebaseConfig = mod.firebaseConfig;
+            }
+        } catch (e) {
+            console.warn("Không thể tải /dl.js trực tiếp, chuyển sang chế độ dữ liệu cục bộ:", e);
+        }
+
+        let app = null, auth = null, db = null;
+        if (firebaseConfig && firebaseConfig.apiKey) {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+        }
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'v2-database-school';
+        const CACHE_KEY_LINKS = `cache_${appId}_links_v2`;
+        const CACHE_KEY_QUIZ = `cache_${appId}_quiz_v2`;
+        const STORAGE_BOOKMARKS = `benhhoc_bookmarks_v1`;
+        const STORAGE_COMPLETED = `benhhoc_completed_v1`;
+
+        // =========================================================
+        // TRẠNG THÁI DỮ LIỆU & THÍCH NGHI MÀN HÌNH
+        // =========================================================
+        let allLinks = [];
+        let allQuestions = [];
+        let benhHocLessons = [];
+        let selectedTopicFilter = 'ALL';
+        let onlyBookmarks = false;
+        let onlyVideoLessons = false;
+        let adaptiveLayoutMode = 'grid'; // 'grid' | 'list'
+        let articleFontSizePx = 15;
+
+        let bookmarkedIds = new Set(JSON.parse(localStorage.getItem(STORAGE_BOOKMARKS) || '[]'));
+        let completedIds = new Set(JSON.parse(localStorage.getItem(STORAGE_COMPLETED) || '[]'));
+
+        let activeLesson = null;
+        let activeMediaTab = 'all'; // 'all' | 'video' | 'doc' | 'content'
+        let currentPracticeSession = [];
+        let userAnswers = {};
+        let isPracticeSubmitted = false;
+
+        // =========================================================
+        // HÀM TIỆN ÍCH CHUẨN HÓA & PHÂN TÍCH VIDEO / TÀI LIỆU / NỘI DUNG
+        // =========================================================
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function normalizeCompare(str) {
+            if (!str) return '';
+            return String(str)
+                .normalize('NFC')
+                .toLowerCase()
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function normalizeMediaPath(rawPath, isImage = false) {
+            if (!rawPath) return '';
+            let path = String(rawPath).trim();
+            if (!path) return '';
+
+            if (!/^(https?:\/\/|data:|blob:)/i.test(path)) {
+                path = path.replace(/\\/g, '/');
+                if (!path.startsWith('/')) path = '/' + path;
+            } else if (isImage) {
+                const driveMatch = path.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([a-zA-Z0-9_-]+)/i);
+                if (driveMatch && driveMatch[1]) {
+                    return `https://lh3.googleusercontent.com/d/${driveMatch[1]}`;
+                }
+            }
+
+            try {
+                return encodeURI(decodeURI(path));
+            } catch (e) {
+                return encodeURI(path);
+            }
+        }
+
+        function getLessonPlainText(item) {
+            if (!item || !item.content) return '';
+            return String(item.content).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+        }
+
+        function hasLessonVideo(item) {
+            return Boolean(item && item.videoUrl && String(item.videoUrl).trim() !== '');
+        }
+
+        function hasLessonDoc(item) {
+            return Boolean(item && item.url && String(item.url).trim() !== '');
+        }
+
+        function hasLessonContent(item) {
+            return getLessonPlainText(item) !== '';
+        }
+
+        /**
+         * Phân tích thông minh đường dẫn Video:
+         * - Hỗ trợ YouTube (watch, youtu.be, shorts, embed) -> tự động trích xuất ID & lấy ảnh bìa YouTube nếu bài chưa có ảnh
+         * - Hỗ trợ Google Drive Video -> chuyển sang /preview
+         * - Hỗ trợ tệp video trực tiếp (.mp4, .webm, .ogg, .mov)
+         */
+        function parseVideoSource(rawVideoUrl) {
+            const url = normalizeMediaPath(rawVideoUrl, false);
+            if (!url) return { embedUrl: '', kind: 'none', provider: '', thumbUrl: '' };
+
+            // 1. YouTube
+            const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
+            if (ytMatch && ytMatch[1]) {
+                const vid = ytMatch[1];
+                return {
+                    embedUrl: `https://www.youtube.com/embed/${vid}?rel=0&modestbranding=1`,
+                    kind: 'iframe',
+                    provider: 'YouTube HD',
+                    thumbUrl: `https://img.youtube.com/vi/${vid}/hqdefault.jpg`
+                };
+            }
+
+            // 2. Vimeo
+            const vimeoMatch = url.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+            if (vimeoMatch && vimeoMatch[1]) {
+                return {
+                    embedUrl: `https://player.vimeo.com/video/${vimeoMatch[1]}`,
+                    kind: 'iframe',
+                    provider: 'Vimeo HD',
+                    thumbUrl: ''
+                };
+            }
+
+            // 3. Google Drive Video
+            const driveMatch = url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([a-zA-Z0-9_-]+)/i);
+            if (driveMatch && driveMatch[1]) {
+                return {
+                    embedUrl: `https://drive.google.com/file/d/${driveMatch[1]}/preview`,
+                    kind: 'iframe',
+                    provider: 'Google Drive Video',
+                    thumbUrl: ''
+                };
+            }
+
+            // 4. Tệp video trực tiếp (.mp4, .webm, .ogg, .mov, .m4v)
+            if (/\.(mp4|webm|ogg|mov|m4v)(\?.*)?$/i.test(url)) {
+                return {
+                    embedUrl: url,
+                    kind: 'html5',
+                    provider: 'Video MP4 Trực Tiếp',
+                    thumbUrl: ''
+                };
+            }
+
+            // 5. Các đường dẫn video nhúng khác
+            return {
+                embedUrl: url,
+                kind: 'iframe',
+                provider: 'Video Trực Tuyến',
+                thumbUrl: ''
+            };
+        }
+
+        function getLessonCoverImage(item) {
+            const rawList = Array.isArray(item.images) ? item.images : (item.image ? [item.image] : []);
+            const normalized = rawList.map(img => normalizeMediaPath(img, true)).filter(Boolean);
+            if (normalized.length > 0) return normalized;
+
+            // Nếu bài chưa có ảnh minh họa nhưng có video YouTube -> tự lấy thumbnail sắc nét từ YouTube
+            if (hasLessonVideo(item)) {
+                const vInfo = parseVideoSource(item.videoUrl);
+                if (vInfo.thumbUrl) return [vInfo.thumbUrl];
+            }
+            return [];
+        }
+
+        function getEmbeddableDocUrl(rawUrl) {
+            const url = normalizeMediaPath(rawUrl, false);
+            if (!url) return { embedUrl: '', type: 'web' };
+
+            if (/\.(mp4|webm|ogg)(\?.*)?$/i.test(url)) {
+                return { embedUrl: url, type: 'video' };
+            }
+
+            const driveFileMatch = url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([a-zA-Z0-9_-]+)/i);
+            if (driveFileMatch && driveFileMatch[1]) {
+                return { embedUrl: `https://drive.google.com/file/d/${driveFileMatch[1]}/preview`, type: 'gdrive' };
+            }
+
+            const docsMatch = url.match(/docs\.google\.com\/(document|presentation|spreadsheets)\/d\/([a-zA-Z0-9_-]+)/i);
+            if (docsMatch && docsMatch[2]) {
+                return { embedUrl: `https://docs.google.com/${docsMatch[1]}/d/${docsMatch[2]}/preview`, type: 'gdocs' };
+            }
+
+            return { embedUrl: url, type: 'web' };
+        }
+
+        function processBenhHocData() {
+            // Lọc tất cả bài học môn "Bệnh học" có ít nhất một loại học liệu (Video, Tài liệu, hoặc Nội dung chữ)
+            benhHocLessons = allLinks
+                .filter(item => {
+                    const sub = normalizeCompare(item.subject);
+                    const isSubjectMatch = (sub === 'bệnh học' || sub.includes('bệnh học'));
+                    const hasAnyMaterial = hasLessonVideo(item) || hasLessonDoc(item) || hasLessonContent(item);
+                    return isSubjectMatch && hasAnyMaterial;
+                })
+                .sort((a, b) => {
+                    const topCmp = (a.topic || '').localeCompare(b.topic || '', 'vi');
+                    if (topCmp !== 0) return topCmp;
+                    return (a.title || '').localeCompare(b.title || '', 'vi');
+                });
+
+            updateHeaderStats();
+            renderTopicPills();
+            renderCatalog();
+        }
+
+        function updateHeaderStats() {
+            const topicsSet = new Set(benhHocLessons.map(l => (l.topic || 'Chủ đề chung').trim()));
+            const total = benhHocLessons.length;
+            const doneCount = benhHocLessons.filter(l => completedIds.has(l.id)).length;
+            const pct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
+            const videoTotal = benhHocLessons.filter(l => hasLessonVideo(l)).length;
+
+            document.getElementById('statTopics').textContent = topicsSet.size;
+            document.getElementById('statLessons').textContent = total;
+            document.getElementById('statCompleted').textContent = `${pct}%`;
+            document.getElementById('videoCount').textContent = videoTotal;
+            document.getElementById('bookmarkCount').textContent = benhHocLessons.filter(l => bookmarkedIds.has(l.id)).length;
+        }
+
+        function renderTopicPills() {
+            const container = document.getElementById('topicPillsContainer');
+            if (!container) return;
+            const topics = [...new Set(benhHocLessons.map(l => (l.topic || 'Chủ đề chung').trim()))];
+
+            let html = `
+                <button type="button" onclick="selectTopicPill('ALL')"
+                    class="px-4 py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all ${selectedTopicFilter === 'ALL' ? 'btn-glow text-white shadow' : 'glass-panel text-slate-300 hover:border-sky-400/40'}">
+                    Tất cả (${benhHocLessons.length})
+                </button>
+            `;
+
+            topics.forEach(t => {
+                const count = benhHocLessons.filter(l => (l.topic || 'Chủ đề chung').trim() === t).length;
+                const active = selectedTopicFilter === t;
+                html += `
+                    <button type="button" onclick="selectTopicPill('${escapeHtml(t).replace(/'/g, "\\'")}')"
+                        class="px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${active ? 'btn-glow text-white shadow' : 'glass-panel text-slate-300 hover:border-sky-400/40'}">
+                        ${escapeHtml(t)} <span class="opacity-75">(${count})</span>
+                    </button>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        window.selectTopicPill = function(topic) {
+            selectedTopicFilter = topic;
+            renderTopicPills();
+            renderCatalog();
+        };
+
+        window.toggleVideoOnlyFilter = function() {
+            onlyVideoLessons = !onlyVideoLessons;
+            const btn = document.getElementById('videoFilterBtn');
+            btn.classList.toggle('border-rose-400', onlyVideoLessons);
+            btn.classList.toggle('bg-rose-500/15', onlyVideoLessons);
+            btn.classList.toggle('text-rose-300', onlyVideoLessons);
+            renderCatalog();
+        };
+
+        window.toggleBookmarkFilter = function() {
+            onlyBookmarks = !onlyBookmarks;
+            const btn = document.getElementById('bookmarkFilterBtn');
+            btn.classList.toggle('border-amber-400', onlyBookmarks);
+            btn.classList.toggle('bg-amber-500/15', onlyBookmarks);
+            btn.classList.toggle('text-amber-300', onlyBookmarks);
+            renderCatalog();
+        };
+
+        function applyScreenAdaptation() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const isLandscape = w > h;
+            const badge = document.getElementById('viewportBadge');
+
+            if (badge) {
+                if (w < 640) {
+                    badge.innerHTML = `<i class="fas fa-mobile-alt text-[10px]"></i> <span>Giao diện Di động</span>`;
+                } else if (w < 1024) {
+                    badge.innerHTML = `<i class="fas fa-tablet-alt text-[10px]"></i> <span>Giao diện Tablet</span>`;
+                } else {
+                    badge.innerHTML = `<i class="fas fa-desktop text-[10px]"></i> <span>Giao diện Màn hình rộng</span>`;
+                }
+            }
+
+            const embedBox = document.getElementById('mediaEmbedContainer');
+            if (embedBox) {
+                if (w < 640) {
+                    embedBox.style.height = isLandscape ? '84dvh' : '64dvh';
+                } else if (w < 1024) {
+                    embedBox.style.height = '72dvh';
+                } else {
+                    embedBox.style.height = '78dvh';
+                }
+            }
+        }
+
+        window.addEventListener('resize', applyScreenAdaptation);
+        window.addEventListener('orientationchange', () => setTimeout(applyScreenAdaptation, 150));
+        applyScreenAdaptation();
+
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('scrollTopBtn');
+            if (btn) btn.classList.toggle('hidden', window.scrollY < 350);
+        });
+
+        window.setAdaptiveLayout = function(mode) {
+            adaptiveLayoutMode = mode;
+            const gridBtn = document.getElementById('layoutGridBtn');
+            const listBtn = document.getElementById('layoutListBtn');
+            if (mode === 'grid') {
+                gridBtn.className = 'w-9 h-9 rounded-xl bg-sky-500 text-white flex items-center justify-center text-xs transition-all';
+                listBtn.className = 'w-9 h-9 rounded-xl text-slate-400 hover:text-white flex items-center justify-center text-xs transition-all';
+            } else {
+                listBtn.className = 'w-9 h-9 rounded-xl bg-sky-500 text-white flex items-center justify-center text-xs transition-all';
+                gridBtn.className = 'w-9 h-9 rounded-xl text-slate-400 hover:text-white flex items-center justify-center text-xs transition-all';
+            }
+            renderCatalog();
+        };
+
+        window.resetFilters = function() {
+            document.getElementById('searchInput').value = '';
+            selectedTopicFilter = 'ALL';
+            onlyBookmarks = false;
+            onlyVideoLessons = false;
+            document.getElementById('bookmarkFilterBtn').classList.remove('border-amber-400', 'bg-amber-500/15', 'text-amber-300');
+            document.getElementById('videoFilterBtn').classList.remove('border-rose-400', 'bg-rose-500/15', 'text-rose-300');
+            renderTopicPills();
+            renderCatalog();
+        };
+
+        function getMatchingQuestionsForLesson(lessonItem) {
+            const subTarget = normalizeCompare(lessonItem.subject);
+            const topTarget = normalizeCompare(lessonItem.topic);
+            const lesTarget = normalizeCompare(lessonItem.title);
+
+            return allQuestions.filter(q => {
+                return normalizeCompare(q.subject) === subTarget &&
+                       normalizeCompare(q.topic) === topTarget &&
+                       normalizeCompare(q.lesson) === lesTarget;
+            });
+        }
+
+        window.renderCatalog = function() {
+            const container = document.getElementById('topicsContainer');
+            const emptyState = document.getElementById('emptyState');
+            const keyword = normalizeCompare(document.getElementById('searchInput').value);
+
+            const filtered = benhHocLessons.filter(item => {
+                const topicName = (item.topic || 'Chủ đề chung').trim();
+                if (selectedTopicFilter !== 'ALL' && topicName !== selectedTopicFilter) return false;
+                if (onlyBookmarks && !bookmarkedIds.has(item.id)) return false;
+                if (onlyVideoLessons && !hasLessonVideo(item)) return false;
+                if (keyword) {
+                    const hay = normalizeCompare(`${item.title} ${item.topic} ${item.subject} ${getLessonPlainText(item)}`);
+                    if (!hay.includes(keyword)) return false;
+                }
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            emptyState.classList.add('hidden');
+
+            const topicGroupsMap = new Map();
+            filtered.forEach(item => {
+                const tKey = (item.topic || 'Chủ đề chung').trim();
+                if (!topicGroupsMap.has(tKey)) topicGroupsMap.set(tKey, []);
+                topicGroupsMap.get(tKey).push(item);
+            });
+
+            let sectionsHtml = '';
+            let topicIdx = 0;
+
+            topicGroupsMap.forEach((cards, topicName) => {
+                topicIdx++;
+                const cardsHtml = cards.map(card => {
+                    const imgs = getLessonCoverImage(card);
+                    const coverSrc = imgs.length > 0 ? imgs[0] : '';
+                    const qCount = getMatchingQuestionsForLesson(card).length;
+                    const isBookmarked = bookmarkedIds.has(card.id);
+                    const isDone = completedIds.has(card.id);
+
+                    const hasVid = hasLessonVideo(card);
+                    const hasDoc = hasLessonDoc(card);
+                    const hasTxt = hasLessonContent(card);
+
+                    const fallbackSvg = `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 240%22><defs><linearGradient id=%22g%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22><stop offset=%220%%22 stop-color=%22%230284c7%22 stop-opacity=%220.28%22/><stop offset=%22100%%22 stop-color=%22%234f46e5%22 stop-opacity=%220.28%22/></linearGradient></defs><rect width=%22400%22 height=%22240%22 fill=%22%230f172a%22/><rect width=%22400%22 height=%22240%22 fill=%22url(%23g)%22/><text x=%2250%%22 y=%2248%%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2254%22>${hasVid ? '🎬' : '🩺'}</text><text x=%2250%%22 y=%2274%%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22bold%22 font-size=%2214%22 fill=%22%2394a3b8%22>BỆNH HỌC</text></svg>`;
+
+                    const mediaPillsHtml = `
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            ${hasVid ? `<span class="px-2 py-0.5 rounded-md bg-rose-500/15 border border-rose-500/30 text-rose-400 text-[10px] font-extrabold flex items-center gap-1"><i class="fas fa-play text-[8px]"></i> Video</span>` : ''}
+                            ${hasDoc ? `<span class="px-2 py-0.5 rounded-md bg-sky-500/15 border border-sky-500/30 text-sky-400 text-[10px] font-extrabold flex items-center gap-1"><i class="fas fa-file-alt text-[9px]"></i> Tài liệu</span>` : ''}
+                            ${hasTxt ? `<span class="px-2 py-0.5 rounded-md bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-extrabold flex items-center gap-1"><i class="fas fa-align-left text-[9px]"></i> Lý thuyết</span>` : ''}
+                        </div>
+                    `;
+
+                    if (adaptiveLayoutMode === 'list') {
+                        return `
+                        <article onclick="openLessonDetail('${card.id}')" class="lesson-card glass-panel rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 cursor-pointer group">
+                            <div class="flex items-center gap-3.5 sm:gap-4 min-w-0 flex-1">
+                                <div class="relative w-24 h-16 sm:w-32 sm:h-20 rounded-xl overflow-hidden bg-slate-900/80 border border-white/10 shrink-0">
+                                    <img src="${coverSrc ? escapeHtml(coverSrc) : fallbackSvg}"
+                                         alt="${escapeHtml(card.title)}"
+                                         loading="lazy"
+                                         onerror="this.onerror=null; this.src='${fallbackSvg}'"
+                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                    ${hasVid ? `
+                                        <div class="absolute inset-0 bg-black/35 flex items-center justify-center">
+                                            <span class="w-8 h-8 rounded-full bg-rose-600/90 text-white flex items-center justify-center shadow-lg">
+                                                <i class="fas fa-play text-[10px] ml-0.5"></i>
+                                            </span>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                                <div class="min-w-0 flex-1 space-y-1.5">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="text-[11px] font-extrabold text-sky-400 uppercase tracking-wider truncate">
+                                            <i class="fas fa-folder text-[10px] mr-1"></i>${escapeHtml(topicName)}
+                                        </span>
+                                        <span class="px-2 py-0.5 rounded-md bg-indigo-500/15 text-indigo-300 text-[10px] font-bold">
+                                            ${qCount} câu trắc nghiệm
+                                        </span>
+                                        ${isDone ? `<span class="px-2 py-0.5 rounded-md bg-emerald-500 text-white text-[10px] font-extrabold"><i class="fas fa-check mr-0.5"></i>Đã học</span>` : ''}
+                                    </div>
+                                    <h3 class="font-extrabold text-sm sm:text-base leading-snug group-hover:text-sky-400 transition-colors line-clamp-2">
+                                        ${escapeHtml(card.title)}
+                                    </h3>
+                                    ${mediaPillsHtml}
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2 justify-end shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/5">
+                                <button type="button" onclick="event.stopPropagation(); toggleCardBookmark('${card.id}')"
+                                    class="w-10 h-10 rounded-xl glass-panel flex items-center justify-center text-amber-400 hover:scale-105 transition-transform"
+                                    title="${isBookmarked ? 'Bỏ lưu' : 'Lưu bài học'}">
+                                    <i class="${isBookmarked ? 'fas' : 'far'} fa-bookmark text-xs"></i>
+                                </button>
+                                <button type="button" class="flex-1 sm:flex-none py-2.5 px-5 rounded-xl btn-glow text-white font-extrabold text-xs tracking-wide flex items-center justify-center gap-2 shadow-md">
+                                    <span>${hasVid ? 'XEM VIDEO & BÀI' : 'VÀO HỌC'}</span>
+                                    <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                                </button>
+                            </div>
+                        </article>
+                        `;
+                    }
+
+                    return `
+                    <article onclick="openLessonDetail('${card.id}')" class="lesson-card glass-panel rounded-3xl overflow-hidden flex flex-col cursor-pointer group relative">
+                        <!-- Hình ảnh / Video Thumbnail bài học -->
+                        <div class="relative aspect-[16/10] w-full overflow-hidden bg-slate-900/80 border-b border-slate-500/10">
+                            <img src="${coverSrc ? escapeHtml(coverSrc) : fallbackSvg}" 
+                                 alt="${escapeHtml(card.title)}" 
+                                 loading="lazy"
+                                 onerror="this.onerror=null; this.src='${fallbackSvg}'"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"></div>
+
+                            <!-- Nút Play nổi ở giữa nếu bài học có Video -->
+                            ${hasVid ? `
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <div class="w-12 h-12 rounded-full bg-rose-600/90 backdrop-blur-md text-white flex items-center justify-center shadow-xl shadow-rose-600/40 group-hover:scale-110 transition-transform border border-white/25">
+                                        <i class="fas fa-play text-sm ml-0.5"></i>
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            <!-- Badge loại học liệu góc trên trái -->
+                            <div class="absolute top-3 left-3 flex items-center gap-1.5">
+                                ${hasVid ? `
+                                    <span class="px-2.5 py-1 rounded-lg bg-rose-600/90 backdrop-blur-md text-white text-[10px] font-extrabold flex items-center gap-1 shadow">
+                                        <i class="fas fa-video"></i> VIDEO
+                                    </span>
+                                ` : ''}
+                            </div>
+
+                            <!-- Nút Bookmark nhanh -->
+                            <button type="button" onclick="event.stopPropagation(); toggleCardBookmark('${card.id}')" 
+                                class="absolute top-3 right-3 w-9 h-9 rounded-xl bg-slate-950/65 backdrop-blur-md border border-white/10 flex items-center justify-center text-amber-400 hover:scale-110 transition-transform"
+                                title="${isBookmarked ? 'Bỏ lưu' : 'Lưu bài học'}">
+                                <i class="${isBookmarked ? 'fas' : 'far'} fa-bookmark text-xs"></i>
+                            </button>
+
+                            <!-- Badge trạng thái đã học & số câu trắc nghiệm -->
+                            <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-2">
+                                <span class="px-2.5 py-1 rounded-lg bg-slate-950/80 backdrop-blur-md border border-white/10 text-[11px] font-bold text-indigo-300 flex items-center gap-1">
+                                    <i class="fas fa-question-circle text-sky-400"></i> ${qCount} câu ôn tập
+                                </span>
+                                ${isDone ? `
+                                    <span class="px-2.5 py-1 rounded-lg bg-emerald-500/90 text-white text-[10px] font-extrabold flex items-center gap-1 shadow">
+                                        <i class="fas fa-check"></i> Đã học
+                                    </span>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        <!-- Nội dung thẻ Card -->
+                        <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                            <div class="space-y-2.5">
+                                <!-- Tên chủ đề -->
+                                <div class="inline-flex items-center gap-1.5 text-[11px] font-extrabold text-sky-400 uppercase tracking-wider">
+                                    <i class="fas fa-folder text-[10px]"></i>
+                                    <span class="line-clamp-1">${escapeHtml(topicName)}</span>
+                                </div>
+
+                                <!-- Tên bài học -->
+                                <h3 class="font-extrabold text-base leading-snug group-hover:text-sky-400 transition-colors line-clamp-2">
+                                    ${escapeHtml(card.title)}
+                                </h3>
+
+                                <!-- Nhãn học liệu đính kèm -->
+                                ${mediaPillsHtml}
+                            </div>
+
+                            <!-- Nút Xem Ngay -->
+                            <div class="pt-1">
+                                <button type="button" class="w-full py-3 px-4 rounded-2xl btn-glow text-white font-extrabold text-xs tracking-wide flex items-center justify-center gap-2 shadow-md">
+                                    <span>${hasVid ? 'XEM VIDEO & BÀI HỌC' : 'XEM BÀI HỌC'}</span>
+                                    <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                    `;
+                }).join('');
+
+                const gridContainerClass = adaptiveLayoutMode === 'list'
+                    ? 'flex flex-col gap-3'
+                    : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5';
+
+                sectionsHtml += `
+                <div class="space-y-4 animate-enter">
+                    <!-- Tiêu đề nhóm Chủ đề -->
+                    <div class="flex flex-wrap items-center justify-between gap-3 px-1">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-500/20 to-indigo-500/20 border border-sky-400/30 text-sky-400 font-black text-sm flex items-center justify-center shadow-sm shrink-0">
+                                ${topicIdx}
+                            </div>
+                            <div>
+                                <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Chủ đề Bệnh học</div>
+                                <h2 class="text-base sm:text-xl font-black tracking-tight">${escapeHtml(topicName)}</h2>
+                            </div>
+                        </div>
+                        <span class="px-3.5 py-1.5 rounded-xl glass-panel text-xs font-bold text-indigo-400">
+                            ${cards.length} bài học
+                        </span>
+                    </div>
+
+                    <!-- Các thẻ Card cùng chủ đề -->
+                    <div class="${gridContainerClass}">
+                        ${cardsHtml}
+                    </div>
+                </div>
+                `;
+            });
+
+            container.innerHTML = sectionsHtml;
+        };
+
+        // =========================================================
+        // XEM CHI TIẾT BÀI HỌC (VIDEO, TÀI LIỆU, NỘI DUNG RICH-TEXT)
+        // =========================================================
+        window.openLessonDetail = function(lessonId) {
+            const lesson = benhHocLessons.find(l => l.id === lessonId);
+            if (!lesson) return;
+
+            activeLesson = lesson;
+            activeMediaTab = 'all';
+            isPracticeSubmitted = false;
+            userAnswers = {};
+
+            document.getElementById('catalogView').classList.add('hidden');
+            document.getElementById('detailView').classList.remove('hidden');
+            document.getElementById('practiceWorkspace').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Cập nhật thông tin tiêu đề
+            document.getElementById('detailSubject').textContent = lesson.subject || 'BỆNH HỌC';
+            document.getElementById('detailTopic').textContent = lesson.topic || 'Chủ đề chung';
+            document.getElementById('detailLessonTitle').textContent = lesson.title || '';
+
+            const hasVid = hasLessonVideo(lesson);
+            const hasDoc = hasLessonDoc(lesson);
+            const hasTxt = hasLessonContent(lesson);
+
+            // Hiển thị các huy hiệu loại nội dung có trong bài
+            const badgesContainer = document.getElementById('detailMediaBadges');
+            badgesContainer.innerHTML = `
+                ${hasVid ? `<span class="px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-400 text-xs font-bold flex items-center gap-1.5"><i class="fas fa-video"></i> Video bài giảng</span>` : ''}
+                ${hasDoc ? `<span class="px-3 py-1 rounded-full bg-sky-500/15 border border-sky-500/30 text-sky-400 text-xs font-bold flex items-center gap-1.5"><i class="fas fa-file-alt"></i> Tài liệu trực tuyến</span>` : ''}
+                ${hasTxt ? `<span class="px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center gap-1.5"><i class="fas fa-book-medical"></i> Nội dung lý thuyết</span>` : ''}
+            `;
+
+            // Hiển thị thư viện ảnh minh họa nếu có
+            const imgs = getLessonCoverImage(lesson);
+            const gallery = document.getElementById('detailGallery');
+            if (imgs.length > 0) {
+                gallery.classList.remove('hidden');
+                gallery.innerHTML = imgs.map((src, idx) => `
+                    <button type="button" onclick="openImageLightbox('${escapeHtml(src)}')" class="w-16 h-12 rounded-xl overflow-hidden border border-white/15 hover:border-sky-400 hover:scale-105 transition-all shadow">
+                        <img src="${escapeHtml(src)}" alt="Ảnh ${idx + 1}" class="w-full h-full object-cover">
+                    </button>
+                `).join('');
+            } else {
+                gallery.classList.add('hidden');
+                gallery.innerHTML = '';
+            }
+
+            // 1. Nạp trình phát VIDEO nếu có videoUrl
+            const videoCard = document.getElementById('videoViewerCard');
+            const videoWrapper = document.getElementById('videoPlayerWrapper');
+            if (hasVid) {
+                const vInfo = parseVideoSource(lesson.videoUrl);
+                videoCard.classList.remove('hidden');
+                document.getElementById('videoProviderBadge').textContent = vInfo.provider;
+                document.getElementById('videoSourceLabel').textContent = `Nguồn phát: ${vInfo.provider}`;
+                document.getElementById('openExternalVideoBtn').href = normalizeMediaPath(lesson.videoUrl, false);
+
+                if (vInfo.kind === 'html5') {
+                    videoWrapper.innerHTML = `
+                        <video src="${escapeHtml(vInfo.embedUrl)}" controls playsinline preload="metadata" class="w-full h-full object-contain bg-black"></video>
+                    `;
+                } else {
+                    videoWrapper.innerHTML = `
+                        <div id="videoLoader" class="absolute inset-0 flex flex-col items-center justify-center gap-3 pointer-events-none bg-slate-950">
+                            <i class="fas fa-circle-notch fa-spin text-3xl text-rose-400"></i>
+                            <span class="text-xs font-semibold text-slate-400">Đang tải trình phát Video...</span>
+                        </div>
+                        <iframe src="${escapeHtml(vInfo.embedUrl)}" class="w-full h-full border-0 relative z-10"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                            allowfullscreen
+                            onload="const vl=document.getElementById('videoLoader'); if(vl) vl.classList.add('hidden')"></iframe>
+                    `;
+                }
+            } else {
+                videoCard.classList.add('hidden');
+                videoWrapper.innerHTML = '';
+            }
+
+            // 2. Nạp TÀI LIỆU trực tuyến nếu có url
+            const docCard = document.getElementById('docViewerCard');
+            const mediaContainer = document.getElementById('mediaEmbedContainer');
+            if (hasDoc) {
+                docCard.classList.remove('hidden');
+                const { embedUrl, type } = getEmbeddableDocUrl(lesson.url);
+                document.getElementById('openExternalDocBtn').href = normalizeMediaPath(lesson.url, false);
+
+                if (type === 'video') {
+                    document.getElementById('docSourceLabel').textContent = 'Tệp Video đính kèm';
+                    mediaContainer.innerHTML = `
+                        <video src="${escapeHtml(embedUrl)}" controls playsinline class="w-full h-full max-h-[76vh] bg-black"></video>
+                    `;
+                } else {
+                    document.getElementById('docSourceLabel').textContent = type === 'gdrive' || type === 'gdocs'
+                        ? 'Tài liệu Google Drive hiển thị trực tiếp'
+                        : 'Tài liệu học tập trực tuyến';
+                    mediaContainer.innerHTML = `
+                        <div id="iframeLoader" class="absolute inset-0 flex flex-col items-center justify-center gap-3 pointer-events-none">
+                            <i class="fas fa-circle-notch fa-spin text-3xl text-sky-400"></i>
+                            <span class="text-xs font-semibold text-slate-400">Đang tải tài liệu trực tuyến...</span>
+                        </div>
+                        <iframe id="driveIframe" src="${escapeHtml(embedUrl)}" class="w-full h-full border-0 relative z-10" allow="autoplay; fullscreen" allowfullscreen onload="const l=document.getElementById('iframeLoader'); if(l) l.classList.add('hidden')"></iframe>
+                    `;
+                }
+            } else {
+                docCard.classList.add('hidden');
+                mediaContainer.innerHTML = '';
+            }
+
+            // 3. Nạp NỘI DUNG LÝ THUYẾT nếu có content
+            const richCard = document.getElementById('richContentCard');
+            const richBody = document.getElementById('richArticleContent');
+            if (hasTxt) {
+                richCard.classList.remove('hidden');
+                richBody.innerHTML = lesson.content;
+                richBody.style.fontSize = `${articleFontSizePx}px`;
+            } else {
+                richCard.classList.add('hidden');
+                richBody.innerHTML = '';
+            }
+
+            renderLearningModeTabs(hasVid, hasDoc, hasTxt);
+            updateDetailActionStates();
+            updatePracticeButtonInfo();
+            updateSiblingNavigation();
+            applyScreenAdaptation();
+        };
+
+        function renderLearningModeTabs(hasVid, hasDoc, hasTxt) {
+            const tabsBar = document.getElementById('learningModeTabs');
+            const count = [hasVid, hasDoc, hasTxt].filter(Boolean).length;
+            if (count <= 1) {
+                tabsBar.classList.add('hidden');
+                return;
+            }
+
+            tabsBar.classList.remove('hidden');
+            const btnStyle = (mode) => activeMediaTab === mode
+                ? 'px-4 py-2 rounded-xl btn-glow text-white text-xs font-extrabold flex items-center gap-2 shadow'
+                : 'px-4 py-2 rounded-xl text-slate-300 hover:bg-white/5 text-xs font-bold flex items-center gap-2 transition-all';
+
+            tabsBar.innerHTML = `
+                <button type="button" onclick="switchLearningMediaTab('all')" class="${btnStyle('all')}">
+                    <i class="fas fa-th-list"></i> <span>Hiển thị tất cả</span>
+                </button>
+                ${hasVid ? `
+                    <button type="button" onclick="switchLearningMediaTab('video')" class="${btnStyle('video')}">
+                        <i class="fas fa-play-circle text-rose-400"></i> <span>Chỉ xem Video</span>
+                    </button>
+                ` : ''}
+                ${hasDoc ? `
+                    <button type="button" onclick="switchLearningMediaTab('doc')" class="${btnStyle('doc')}">
+                        <i class="fas fa-file-alt text-sky-400"></i> <span>Chỉ xem Tài liệu</span>
+                    </button>
+                ` : ''}
+                ${hasTxt ? `
+                    <button type="button" onclick="switchLearningMediaTab('content')" class="${btnStyle('content')}">
+                        <i class="fas fa-book-medical text-emerald-400"></i> <span>Chỉ đọc Lý thuyết</span>
+                    </button>
+                ` : ''}
+            `;
+        }
+
+        window.switchLearningMediaTab = function(mode) {
+            if (!activeLesson) return;
+            activeMediaTab = mode;
+
+            const hasVid = hasLessonVideo(activeLesson);
+            const hasDoc = hasLessonDoc(activeLesson);
+            const hasTxt = hasLessonContent(activeLesson);
+
+            document.getElementById('videoViewerCard').classList.toggle('hidden', !(hasVid && (mode === 'all' || mode === 'video')));
+            document.getElementById('docViewerCard').classList.toggle('hidden', !(hasDoc && (mode === 'all' || mode === 'doc')));
+            document.getElementById('richContentCard').classList.toggle('hidden', !(hasTxt && (mode === 'all' || mode === 'content')));
+
+            renderLearningModeTabs(hasVid, hasDoc, hasTxt);
+        };
+
+        window.toggleVideoTheaterMode = function() {
+            const wrapper = document.getElementById('videoPlayerWrapper');
+            const isTheater = wrapper.classList.toggle('max-h-[88dvh]');
+            if (isTheater) {
+                wrapper.classList.remove('max-h-[76dvh]');
+                showToast("Đã bật chế độ rạp chiếu phim");
+            } else {
+                wrapper.classList.add('max-h-[76dvh]');
+            }
+        };
+
+        window.adjustArticleFontSize = function(delta) {
+            articleFontSizePx = Math.max(13, Math.min(22, articleFontSizePx + delta));
+            const richBody = document.getElementById('richArticleContent');
+            if (richBody) richBody.style.fontSize = `${articleFontSizePx}px`;
+        };
+
+        window.closeDetailView = function() {
+            activeLesson = null;
+            document.getElementById('detailView').classList.add('hidden');
+            document.getElementById('catalogView').classList.remove('hidden');
+            // Dừng phát video & iframe khi thoát
+            document.getElementById('videoPlayerWrapper').innerHTML = '';
+            document.getElementById('mediaEmbedContainer').innerHTML = '';
+            renderCatalog();
+        };
+
+        function updateDetailActionStates() {
+            if (!activeLesson) return;
+            const isDone = completedIds.has(activeLesson.id);
+            const isBookmarked = bookmarkedIds.has(activeLesson.id);
+
+            const doneBtn = document.getElementById('markCompletedBtn');
+            doneBtn.innerHTML = isDone
+                ? `<i class="fas fa-check-circle text-emerald-400"></i> <span class="text-emerald-400">Đã hoàn thành</span>`
+                : `<i class="far fa-check-circle"></i> <span>Đánh dấu đã học</span>`;
+
+            const bmBtn = document.getElementById('detailBookmarkBtn');
+            bmBtn.innerHTML = `<i class="${isBookmarked ? 'fas' : 'far'} fa-bookmark"></i>`;
+        }
+
+        window.toggleCurrentCompleted = function() {
+            if (!activeLesson) return;
+            if (completedIds.has(activeLesson.id)) {
+                completedIds.delete(activeLesson.id);
+                showToast("Đã bỏ đánh dấu hoàn thành");
+            } else {
+                completedIds.add(activeLesson.id);
+                showToast("Tuyệt vời! Đã đánh dấu hoàn thành bài học");
+            }
+            localStorage.setItem(STORAGE_COMPLETED, JSON.stringify([...completedIds]));
+            updateDetailActionStates();
+            updateHeaderStats();
+        };
+
+        window.toggleCurrentBookmark = function() {
+            if (!activeLesson) return;
+            toggleCardBookmark(activeLesson.id);
+            updateDetailActionStates();
+        };
+
+        window.toggleCardBookmark = function(id) {
+            if (bookmarkedIds.has(id)) {
+                bookmarkedIds.delete(id);
+                showToast("Đã xóa khỏi danh sách lưu");
+            } else {
+                bookmarkedIds.add(id);
+                showToast("Đã lưu bài học để xem sau");
+            }
+            localStorage.setItem(STORAGE_BOOKMARKS, JSON.stringify([...bookmarkedIds]));
+            updateHeaderStats();
+            if (!document.getElementById('catalogView').classList.contains('hidden')) {
+                renderCatalog();
+            }
+        };
+
+        window.toggleFullscreenViewer = function() {
+            const card = document.getElementById('docViewerCard');
+            if (!document.fullscreenElement) {
+                card.requestFullscreen?.().catch(() => showToast("Trình duyệt không hỗ trợ toàn màn hình"));
+            } else {
+                document.exitFullscreen?.();
+            }
+        };
+
+        function updateSiblingNavigation() {
+            const idx = benhHocLessons.findIndex(l => l.id === activeLesson?.id);
+            const prevBtn = document.getElementById('prevLessonBtn');
+            const nextBtn = document.getElementById('nextLessonBtn');
+
+            if (idx > 0) {
+                prevBtn.disabled = false;
+                document.getElementById('prevLessonName').textContent = benhHocLessons[idx - 1].title;
+            } else {
+                prevBtn.disabled = true;
+                document.getElementById('prevLessonName').textContent = 'Không có bài trước';
+            }
+
+            if (idx >= 0 && idx < benhHocLessons.length - 1) {
+                nextBtn.disabled = false;
+                document.getElementById('nextLessonName').textContent = benhHocLessons[idx + 1].title;
+            } else {
+                nextBtn.disabled = true;
+                document.getElementById('nextLessonName').textContent = 'Đã đến bài cuối';
+            }
+        }
+
+        window.navigateSiblingLesson = function(delta) {
+            const idx = benhHocLessons.findIndex(l => l.id === activeLesson?.id);
+            const target = benhHocLessons[idx + delta];
+            if (target) openLessonDetail(target.id);
+        };
+
+        // =========================================================
+        // HỆ THỐNG LUYỆN TẬP & XÁO TRỘN ĐÁP ÁN TRẮC NGHIỆM THÔNG MINH
+        // =========================================================
+        function updatePracticeButtonInfo() {
+            if (!activeLesson) return;
+            const matched = getMatchingQuestionsForLesson(activeLesson);
+            const btn = document.getElementById('startPracticeBtn');
+            const badge = document.getElementById('practiceBadgeCount');
+            const sub = document.getElementById('practiceSubtitle');
+
+            badge.textContent = matched.length;
+            if (matched.length > 0) {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                sub.textContent = `Sẵn sàng ${matched.length} câu hỏi ôn tập thuộc bài "${activeLesson.title}".`;
+            } else {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                sub.textContent = `Chưa có câu hỏi luyện tập nào được biên soạn cho bài học này.`;
+            }
+        }
+
+        function smartShuffleQuestion(q) {
+            if (q.type !== 'multiple_choice') return { ...q };
+
+            const originalOpts = [
+                { key: 'A', text: q.opt_A || '' },
+                { key: 'B', text: q.opt_B || '' },
+                { key: 'C', text: q.opt_C || '' },
+                { key: 'D', text: q.opt_D || '' }
+            ].filter(o => o.text.trim() !== '');
+
+            const correctOriginalKey = q.correctAnswer || 'A';
+
+            const isCombo = (text) => {
+                const t = text.toLowerCase().trim();
+                const regexCombo = /(tất cả|cả|đều|không có|đáp án khác|chỉ có|phương án|nhận định|câu)\s*(đều|đúng|sai|trên|dưới|[a-d])/i;
+                const regexLetters = /\b([a-d])\s*(và|,|&|\+)\s*([a-d])\b/i;
+                return regexCombo.test(t) || regexLetters.test(t);
+            };
+
+            let normal = [], combo = [];
+            originalOpts.forEach(o => isCombo(o.text) ? combo.push(o) : normal.push(o));
+
+            for (let i = normal.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [normal[i], normal[j]] = [normal[j], normal[i]];
+            }
+
+            const total = originalOpts.length;
+            const slots = new Array(total).fill(null);
+
+            if (combo.length === 1 && total >= 2) {
+                slots[total - 1] = combo[0];
+            } else if (combo.length >= 2 && total >= 3) {
+                slots[total - 1] = combo[0];
+                slots[total - 2] = combo[1];
+                for (let i = 2; i < combo.length; i++) normal.push(combo[i]);
+            }
+
+            for (let i = 0; i < total; i++) {
+                if (slots[i] === null && normal.length > 0) slots[i] = normal.shift();
+            }
+
+            const combined = slots.filter(Boolean);
+            const labels = ['A', 'B', 'C', 'D'];
+            const labelMap = {};
+            combined.forEach((o, idx) => labelMap[o.key] = labels[idx]);
+
+            const convertText = (text) => text.replace(/\b([A-D])\s*(và|,|&|\+)\s*([A-D])\b/gi, (m, p1, sep, p2) => {
+                let k1 = labelMap[p1.toUpperCase()], k2 = labelMap[p2.toUpperCase()];
+                if (k1 && k2) {
+                    if (k1 > k2) [k1, k2] = [k2, k1];
+                    return `${k1} ${sep} ${k2}`;
+                }
+                return m;
+            });
+
+            const shuffledOpts = combined.map((o, idx) => ({
+                newKey: labels[idx],
+                oldKey: o.key,
+                text: convertText(o.text)
+            }));
+
+            const correctObj = shuffledOpts.find(o => o.oldKey === correctOriginalKey);
+            return {
+                ...q,
+                shuffledOpts,
+                newCorrectAnswer: correctObj ? correctObj.newKey : 'A'
+            };
+        }
+
+        window.openPracticeSection = function() {
+            if (!activeLesson) return;
+            const matched = getMatchingQuestionsForLesson(activeLesson);
+            if (matched.length === 0) {
+                showToast("Bài học này chưa có câu hỏi luyện tập!");
+                return;
+            }
+
+            const workspace = document.getElementById('practiceWorkspace');
+            workspace.classList.remove('hidden');
+            document.getElementById('practiceHeaderTitle').textContent = `Luyện tập: ${activeLesson.title}`;
+            reshufflePractice();
+            workspace.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        window.reshufflePractice = function() {
+            if (!activeLesson) return;
+            const matched = getMatchingQuestionsForLesson(activeLesson);
+            const cloned = [...matched];
+            for (let i = cloned.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cloned[i], cloned[j]] = [cloned[j], cloned[i]];
+            }
+
+            currentPracticeSession = cloned.map(q => smartShuffleQuestion(q));
+            userAnswers = {};
+            isPracticeSubmitted = false;
+
+            document.getElementById('scoreCorrect').textContent = '0';
+            document.getElementById('scoreTotal').textContent = currentPracticeSession.length;
+            document.getElementById('submitAllBtn').classList.remove('hidden');
+
+            renderPracticeQuestions();
+        };
+
+        window.selectPracticeOption = function(qIdx, optKey) {
+            if (isPracticeSubmitted) return;
+            userAnswers[qIdx] = optKey;
+            renderPracticeQuestions();
+        };
+
+        window.inputShortAnswer = function(qIdx, val) {
+            if (isPracticeSubmitted) return;
+            userAnswers[qIdx] = val;
+        };
+
+        function renderPracticeQuestions() {
+            const listEl = document.getElementById('practiceQuestionsList');
+            listEl.innerHTML = currentPracticeSession.map((q, idx) => {
+                const isMcq = q.type === 'multiple_choice';
+                const chosen = userAnswers[idx];
+
+                let bodyHtml = '';
+                if (isMcq) {
+                    bodyHtml = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+                        ${q.shuffledOpts.map(opt => {
+                            const isSelected = chosen === opt.newKey;
+                            const isCorrect = opt.newKey === q.newCorrectAnswer;
+
+                            let cls = 'glass-panel border-slate-500/20 hover:border-sky-400/50 text-slate-200';
+                            let badgeCls = 'bg-slate-500/20 text-slate-300';
+
+                            if (!isPracticeSubmitted && isSelected) {
+                                cls = 'bg-sky-500/20 border-sky-400 text-white shadow-md shadow-sky-500/10';
+                                badgeCls = 'bg-sky-500 text-white';
+                            } else if (isPracticeSubmitted) {
+                                if (isCorrect) {
+                                    cls = 'bg-emerald-500/20 border-emerald-400 text-emerald-200 font-bold';
+                                    badgeCls = 'bg-emerald-500 text-white';
+                                } else if (isSelected && !isCorrect) {
+                                    cls = 'bg-rose-500/20 border-rose-400 text-rose-200';
+                                    badgeCls = 'bg-rose-500 text-white';
+                                } else {
+                                    cls = 'glass-panel border-slate-500/10 opacity-60';
+                                }
+                            }
+
+                            return `
+                            <button type="button" onclick="selectPracticeOption(${idx}, '${opt.newKey}')"
+                                class="w-full p-3.5 rounded-2xl border text-left text-xs sm:text-sm flex items-start gap-3 transition-all ${cls}">
+                                <span class="w-7 h-7 rounded-lg font-black text-xs flex items-center justify-center shrink-0 ${badgeCls}">
+                                    ${opt.newKey}
+                                </span>
+                                <span class="pt-0.5 leading-relaxed">${escapeHtml(opt.text)}</span>
+                            </button>`;
+                        }).join('')}
+                    </div>`;
+                } else {
+                    const userVal = chosen || '';
+                    const isRight = isPracticeSubmitted && normalizeCompare(userVal) === normalizeCompare(q.correctAnswerShort);
+                    bodyHtml = `
+                    <div class="mt-3 space-y-2">
+                        <input type="text" value="${escapeHtml(userVal)}" oninput="inputShortAnswer(${idx}, this.value)"
+                            ${isPracticeSubmitted ? 'disabled' : ''}
+                            placeholder="Nhập câu trả lời của bạn..."
+                            class="form-input w-full px-4 py-3 rounded-2xl text-xs sm:text-sm font-semibold ${isPracticeSubmitted ? (isRight ? 'border-emerald-400 text-emerald-300' : 'border-rose-400 text-rose-300') : ''}">
+                        ${isPracticeSubmitted ? `
+                            <div class="px-4 py-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-xs text-emerald-300">
+                                <strong>Đáp án chuẩn:</strong> ${escapeHtml(q.correctAnswerShort || '')}
+                            </div>
+                        ` : ''}
+                    </div>`;
+                }
+
+                return `
+                <div class="p-4 sm:p-6 rounded-2xl bg-slate-900/60 border border-white/10 space-y-2">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="px-3 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 text-xs font-extrabold">Câu ${idx + 1} / ${currentPracticeSession.length}</span>
+                        ${isPracticeSubmitted ? (
+                            (isMcq ? chosen === q.newCorrectAnswer : normalizeCompare(chosen) === normalizeCompare(q.correctAnswerShort))
+                            ? `<span class="text-xs font-extrabold text-emerald-400"><i class="fas fa-check-circle mr-1"></i>Chính xác</span>`
+                            : `<span class="text-xs font-extrabold text-rose-400"><i class="fas fa-times-circle mr-1"></i>Chưa đúng</span>`
+                        ) : ''}
+                    </div>
+                    <p class="text-sm sm:text-base font-bold leading-relaxed whitespace-pre-wrap pt-1">${escapeHtml(q.content)}</p>
+                    ${bodyHtml}
+                    ${isPracticeSubmitted && q.explanation ? `
+                        <div class="mt-3 p-3.5 rounded-xl bg-sky-500/10 border border-sky-500/25 text-xs text-slate-300 leading-relaxed">
+                            <strong class="text-sky-400"><i class="fas fa-lightbulb mr-1"></i>Giải thích:</strong> ${escapeHtml(q.explanation)}
+                        </div>
+                    ` : ''}
+                </div>`;
+            }).join('');
+        }
+
+        window.submitAllPractice = function() {
+            if (currentPracticeSession.length === 0) return;
+            isPracticeSubmitted = true;
+
+            let correct = 0;
+            currentPracticeSession.forEach((q, idx) => {
+                const ans = userAnswers[idx];
+                if (q.type === 'multiple_choice') {
+                    if (ans === q.newCorrectAnswer) correct++;
+                } else {
+                    if (ans && normalizeCompare(ans) === normalizeCompare(q.correctAnswerShort)) correct++;
+                }
+            });
+
+            document.getElementById('scoreCorrect').textContent = correct;
+            document.getElementById('scoreTotal').textContent = currentPracticeSession.length;
+            document.getElementById('submitAllBtn').classList.add('hidden');
+
+            renderPracticeQuestions();
+            showToast(`Hoàn thành! Bạn trả lời đúng ${correct}/${currentPracticeSession.length} câu.`);
+
+            if (activeLesson && correct === currentPracticeSession.length && !completedIds.has(activeLesson.id)) {
+                completedIds.add(activeLesson.id);
+                localStorage.setItem(STORAGE_COMPLETED, JSON.stringify([...completedIds]));
+                updateDetailActionStates();
+                updateHeaderStats();
+            }
+        };
+
+        // =========================================================
+        // LIGHTBOX & TOAST
+        // =========================================================
+        window.openImageLightbox = function(src) {
+            document.getElementById('lightboxImg').src = src;
+            const lb = document.getElementById('imageLightbox');
+            lb.classList.remove('hidden');
+            lb.classList.add('flex');
+        };
+
+        window.closeImageLightbox = function() {
+            const lb = document.getElementById('imageLightbox');
+            lb.classList.add('hidden');
+            lb.classList.remove('flex');
+        };
+
+        window.showToast = function(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            toast.classList.remove('opacity-0', 'translate-y-8');
+            setTimeout(() => toast.classList.add('opacity-0', 'translate-y-8'), 3000);
+        };
+
+        // =========================================================
+        // ĐỒNG BỘ DỮ LIỆU TỨC THÌ TỪ CACHE & FIREBASE
+        // =========================================================
+        function loadCachedFirst() {
+            try {
+                const cachedLinks = localStorage.getItem(CACHE_KEY_LINKS);
+                const cachedQuiz = localStorage.getItem(CACHE_KEY_QUIZ);
+                if (cachedLinks) allLinks = JSON.parse(cachedLinks);
+                if (cachedQuiz) allQuestions = JSON.parse(cachedQuiz);
+                if (cachedLinks || cachedQuiz) {
+                    processBenhHocData();
+                    return true;
+                }
+            } catch (e) {
+                console.warn("Cache load skipped:", e);
+            }
+            return false;
+        }
+
+        const hasCache = loadCachedFirst();
+
+        if (!auth || !db) {
+            document.getElementById('syncDot').className = 'w-2 h-2 rounded-full bg-amber-400';
+            document.getElementById('syncText').textContent = hasCache ? 'Đang dùng dữ liệu bộ nhớ đệm' : 'Chế độ xem độc lập (Chưa kết nối máy chủ)';
+            if (!hasCache) processBenhHocData();
+        } else {
+            const initAuth = async () => {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (err) {
+                    document.getElementById('syncDot').className = 'w-2 h-2 rounded-full bg-rose-500';
+                    document.getElementById('syncText').textContent = 'Chế độ ngoại tuyến';
+                    if (!hasCache) processBenhHocData();
+                }
+            };
+
+            onAuthStateChanged(auth, (user) => {
+                if (!user) return;
+                document.getElementById('syncDot').className = 'w-2 h-2 rounded-full bg-emerald-400';
+                document.getElementById('syncText').textContent = 'Dữ liệu Bệnh học trực tuyến';
+
+                const linksCol = collection(db, 'artifacts', appId, 'public', 'data', 'links');
+                onSnapshot(linksCol, (snap) => {
+                    allLinks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                    try { localStorage.setItem(CACHE_KEY_LINKS, JSON.stringify(allLinks)); } catch (e) {}
+                    processBenhHocData();
+                });
+
+                const quizCol = collection(db, 'artifacts', appId, 'public', 'data', 'questions');
+                onSnapshot(quizCol, (snap) => {
+                    allQuestions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                    try { localStorage.setItem(CACHE_KEY_QUIZ, JSON.stringify(allQuestions)); } catch (e) {}
+                    processBenhHocData();
+                });
+            });
+
+            initAuth();
+        }
+    </script>
 </body>
 </html>
